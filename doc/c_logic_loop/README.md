@@ -15,12 +15,6 @@
 <hr>
 
 
-
-
-
-
-
-
 #### logic
 
 ```c
@@ -61,13 +55,6 @@ b > c : 0
 <hr>
 
 
-
-
-
-
-
-
-
 #### `if` 
 
 ```c
@@ -100,11 +87,6 @@ i != 3 is false
 [↑ top](#c-logic-loop)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### `switch`
@@ -184,13 +166,6 @@ Breaking out of loop!
 <hr>
 
 
-
-
-
-
-
-
-
 #### `for`
 
 ```c
@@ -224,13 +199,6 @@ Array Updated
 [↑ top](#c-logic-loop)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### `while`
@@ -292,13 +260,6 @@ a: 19
 [↑ top](#c-logic-loop)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### fizzbuzz
