@@ -18,19 +18,19 @@ type Counter interface {
 
 // RWMutexCounter implements Counter with sync.RWMutex.
 type RWMutexCounter struct {
-	sync.RWMutex
+	mu    sync.RWMutex // guards the following sync.
 	value float64
 }
 
 func (c *RWMutexCounter) Get() float64 {
-	c.RLock()
-	defer c.RUnlock()
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 	return c.value
 }
 
 func (c *RWMutexCounter) Add(delta float64) {
-	c.Lock()
-	defer c.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	c.value += delta
 }
 
