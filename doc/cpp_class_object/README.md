@@ -17,13 +17,6 @@
 <hr>
 
 
-
-
-
-
-
-
-
 ### Object Oriented Programming
 
 *Steve Jobs* explains [here](http://www.edibleapple.com/2011/10/29/steve-jobs-explains-object-oriented-programming/):
@@ -41,12 +34,6 @@ An object can contains:
 [↑ top](#c-class-object)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### `class`
@@ -102,15 +89,6 @@ Area is 50
 <hr>
 
 
-
-
-
-
-
-
-
-
-
 #### `class`: `private`, `protected`, `public`
 
 ```cpp
@@ -131,16 +109,6 @@ class MyClass {
 [↑ top](#c-class-object)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
-
 
 
 #### constructor
@@ -196,12 +164,6 @@ Area is 50
 [↑ top](#c-class-object)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### overload constructor
@@ -268,13 +230,6 @@ Area is 20000
 <hr>
 
 
-
-
-
-
-
-
-
 #### overload operator
 
 ```cpp
@@ -309,16 +264,6 @@ int main () {
 [↑ top](#c-class-object)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
-
 
 
 #### inheritance
@@ -361,13 +306,6 @@ int main () {
 [↑ top](#c-class-object)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### template
