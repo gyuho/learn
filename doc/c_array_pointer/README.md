@@ -17,11 +17,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Reference
 
 - [C11 Specification](http://www.open-std.org/JTC1/SC22/WG14/www/docs/n1570.pdf)
@@ -30,10 +25,6 @@
 [↑ top](#c-array-pointer)
 <br><br><br><br>
 <hr>
-
-
-
-
 
 
 #### array
@@ -126,11 +117,6 @@ int main(void)
 <hr>
 
 
-
-
-
-
-
 #### `char`
 
 C represents string literals with double quotes:
@@ -213,12 +199,6 @@ int main(void)
 <hr>
 
 
-
-
-
-
-
-
 #### pointer
 
 Pointer is a variable to store the address value of data(variable).
@@ -252,13 +232,6 @@ int main(void)
 [↑ top](#c-array-pointer)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### array, pointer 
@@ -328,12 +301,6 @@ int main()
 <hr>
 
 
-
-
-
-
-
-
 #### pointer arithmetic
 
 ```c
@@ -364,13 +331,6 @@ int main()
 [↑ top](#c-array-pointer)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### `char` array
@@ -404,13 +364,6 @@ int main()
 [↑ top](#c-array-pointer)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### pointer array
