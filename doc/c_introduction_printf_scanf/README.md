@@ -14,11 +14,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Reference
 
 - [Learn C and Build Your Own Lisp](http://www.buildyourownlisp.com/)
@@ -37,12 +32,6 @@
 <hr>
 
 
-
-
-
-
-
-
 #### Install
 
 Please visit [here](https://gcc.gnu.org/).
@@ -50,11 +39,6 @@ Please visit [here](https://gcc.gnu.org/).
 [↑ top](#c-introduction-printf-scanf)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Hello World!
@@ -88,10 +72,6 @@ tell there's something wrong.
 <hr>
 
 
-
-
-
-
 #### `printf`
 
 ```c
@@ -123,12 +103,6 @@ int main(void)
 [↑ top](#c-introduction-printf-scanf)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### `scanf`
