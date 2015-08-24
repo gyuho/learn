@@ -15,12 +15,6 @@
 <hr>
 
 
-
-
-
-
-
-
 #### Reference
 
 - [Binary Trees, Stanford CS 110](http://cslibrary.stanford.edu/110/BinaryTrees.html)
@@ -28,11 +22,6 @@
 [↑ top](#binary-search-tree)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Binary Search Tree (`bst`)
@@ -50,11 +39,6 @@ with the following properties:
 [↑ top](#binary-search-tree)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### `bst`: insert
@@ -256,12 +240,6 @@ int main()
 [↑ top](#binary-search-tree)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### `bst`: search
@@ -618,11 +596,6 @@ int main()
 [↑ top](#binary-search-tree)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### `bst`: traverse
@@ -1028,14 +1001,7 @@ func (tr *Tree) LevelOrder() []*Node {
 <hr>
 
 
-
-
-
-
-
 #### `bst`: delete
-
-<br>
 
 - `case #1`: **_node has only one child_**
 	- *Update its parent node.*
