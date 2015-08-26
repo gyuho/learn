@@ -12,11 +12,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Reference
 
 - [Computational complexity theory](https://en.wikipedia.org/wiki/Computational_complexity_theory)
@@ -27,11 +22,6 @@
 [↑ top](#computational-complexity-np)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Computational complexity
@@ -68,11 +58,6 @@ than* the **upper bound `O(n)`** when `n` is the size of the inputs.
 <hr>
 
 
-
-
-
-
-
 #### NP
 
 An algorithm is **efficient** if and only if it runs in **polynomial time**.
@@ -106,7 +91,6 @@ All tractable decision problems belong to `NP` class.
 No polynomial-time algorithm is found for any `NP-hard` problems.
 
 ![np](img/np.png)
-
 
 [↑ top](#computational-complexity-np)
 <br><br><br><br>
