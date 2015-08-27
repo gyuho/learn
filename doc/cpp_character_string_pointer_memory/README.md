@@ -19,11 +19,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Reference
 
 - [Pointers and Memory](http://cslibrary.stanford.edu/102/)
@@ -31,11 +26,6 @@
 [↑ top](#c-character-string-pointer-memory)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### character
@@ -96,13 +86,6 @@ int main()
 <hr>
 
 
-
-
-
-
-
-
-
 #### `string`
 
 ```cpp
@@ -132,12 +115,6 @@ int main()
 [↑ top](#c-character-string-pointer-memory)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### reverse string
@@ -220,12 +197,6 @@ string reverseRecursive(string str)
 <hr>
 
 
-
-
-
-
-
-
 #### `string` to character array
 
 ```cpp
@@ -253,13 +224,6 @@ int main()
 <hr>
 
 
-
-
-
-
-
-
-
 #### STL `string`
 
 ```cpp
@@ -283,13 +247,6 @@ int main()
 [↑ top](#c-character-string-pointer-memory)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### pointer
@@ -317,12 +274,6 @@ int main()
 [↑ top](#c-character-string-pointer-memory)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### pointer, array
@@ -397,11 +348,6 @@ int main()
 <hr>
 
 
-
-
-
-
-
 #### ampersand `&`
 
 ```cpp
@@ -451,10 +397,6 @@ int main()
 [↑ top](#c-character-string-pointer-memory)
 <br><br><br><br>
 <hr>
-
-
-
-
 
 
 #### pointer, array, function
