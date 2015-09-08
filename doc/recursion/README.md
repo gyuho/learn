@@ -4,6 +4,8 @@
 ## Recursion
 
 - [Reference](#reference)
+- [recursion, stack overflow](#recursion-stack-overflow)
+- [recursion, stack](#recursion-stack)
 - [recursion, factorial](#recursion-factorial)
 - [recursion, convert to binary number](#recursion-convert-to-binary-number)
 - [recursion, closure, fibonacci](#recursion-closure-fibonacci)
@@ -47,7 +49,11 @@
 
 
 
-#### recursion, factorial
+
+
+
+
+#### recursion, stack overflow
 
 [Recursion](https://en.wikipedia.org/wiki/Recursion) is simple but can 
 be confusing. It is kind of like *iteration* but with **self-referencing**.
@@ -55,6 +61,303 @@ Once a *recursive* function gets called outside first, it keeps **calling
 itself**. Most important is to specify when to end the recursion. Otherwise it
 recurs forever and causes stack overflow (run out of memory).
 So use carefully!
+
+Here's examples of *stack overflow*:
+
+```go
+package main
+
+func f() {
+	g()
+}
+
+func g() {
+	f()
+}
+
+func main() {
+	f()
+	/*
+	   runtime: goroutine stack exceeds 1000000000-byte limit
+	   fatal error: stack overflow
+
+	   ...
+	*/
+}
+
+```
+
+```cpp
+#include <iostream>
+
+int f();
+int g();
+
+int f(){
+	g();
+}
+
+int g() {
+	f();  
+}
+
+int main()
+{
+	f(); // stack overflows
+	// Segmentation fault (core dumped)
+}
+
+```
+
+```go
+package main
+
+func f() {
+	f()
+}
+
+func main() {
+	f()
+}
+
+/*
+runtime: goroutine stack exceeds 1000000000-byte limit
+fatal error: stack overflow
+
+runtime stack:
+runtime.throw(0x465799)
+	/usr/local/go/src/runtime/panic.go:491 +0xad
+runtime.newstack()
+	/usr/local/go/src/runtime/stack.c:784 +0x555
+runtime.morestack()
+	/usr/local/go/src/runtime/asm_amd64.s:324 +0x7e
+
+goroutine 1 [stack growth]:
+
+...
+
+	/home/ubuntu/go/src/github.com/gyuho/learn/doc/recursion/code/00_recursion_stack_overflow_1.go:4 +0x1b fp=0xc228038520 sp=0xc228038518
+...additional frames elided...
+
+...
+*/
+
+```
+
+```cpp
+#include <iostream>
+
+int f(){
+	f();
+}
+
+int main()
+{
+	f(); // stack overflows
+	// Segmentation fault (core dumped)
+}
+
+```
+
+
+[↑ top](#recursion)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+#### recursion, stack
+
+Then in what order do the recursive functions get executed?
+Whenever a function has started, it gets allocated to
+[**_stack frames_** or *call stack*](https://en.wikipedia.org/wiki/Call_stack),
+which means recursion runs whatever is on the top of the stack *first*.
+
+Here's an example:
+
+```go
+package main
+
+import "fmt"
+
+var keys = []string{
+	"A",
+	"B",
+	"C",
+	"D",
+	"E",
+	"F",
+	"G",
+	"H",
+	"I",
+}
+
+func recursion(index int, rmap *map[string]string) {
+	if index == len(keys) {
+		fmt.Println()
+		fmt.Println("recursion is done")
+		fmt.Println()
+		return
+	}
+
+	fmt.Printf("beginning recursion with index %d / key %s / map %v\n", index, keys[index], (*rmap)[keys[index]])
+
+	recursion(index+1, rmap)
+
+	(*rmap)[keys[index]] = "done"
+	fmt.Printf("after     recursion with index %d / key %s / map %v\n", index, keys[index], (*rmap)[keys[index]])
+}
+
+func main() {
+	executed := make(map[string]string)
+	for _, k := range keys {
+		executed[k] = "not yet"
+	}
+	recursion(0, &executed)
+}
+
+/*
+beginning recursion with index 0 / key A / map not yet
+beginning recursion with index 1 / key B / map not yet
+beginning recursion with index 2 / key C / map not yet
+beginning recursion with index 3 / key D / map not yet
+beginning recursion with index 4 / key E / map not yet
+beginning recursion with index 5 / key F / map not yet
+beginning recursion with index 6 / key G / map not yet
+beginning recursion with index 7 / key H / map not yet
+beginning recursion with index 8 / key I / map not yet
+
+recursion is done
+
+after     recursion with index 8 / key I / map done
+after     recursion with index 7 / key H / map done
+after     recursion with index 6 / key G / map done
+after     recursion with index 5 / key F / map done
+after     recursion with index 4 / key E / map done
+after     recursion with index 3 / key D / map done
+after     recursion with index 2 / key C / map done
+after     recursion with index 1 / key B / map done
+after     recursion with index 0 / key A / map done
+*/
+
+```
+
+```cpp
+#include <iostream>
+#include <string>
+#include <map>
+#include <cstdio>
+#include <string.h>
+using namespace std;
+
+char keys[] = {
+	'A',
+	'B',
+	'C',
+	'D',
+	'E',
+	'F',
+	'G',
+	'H',
+	'I',
+	'\0',
+};
+
+void recursion(int index, map<char,string>* rmap) {
+	if (keys[index] == '\0')
+	{
+		cout << endl;
+		cout << "recursion is done" << endl;
+		cout << endl;
+		return;
+	}
+
+	printf("beginning recursion with index %d / key %c / map %s\n", index, keys[index], (*rmap)[keys[index]].c_str());
+
+	recursion(index+1, rmap);
+	(*rmap)[keys[index]] = "done";
+
+	printf("after     recursion with index %d / key %c / map %s\n", index, keys[index], (*rmap)[keys[index]].c_str());
+}
+
+int main()
+{
+	size_t length = strlen(keys);
+	cout << length << endl; // 9
+
+	map<char,string> executed;
+	int i = 0;
+	while (keys[i] != '\0'){
+		executed[keys[i]] = "not yet";
+		i++;
+	}
+
+	recursion(0, &executed);
+}
+
+/*
+beginning recursion with index 0 / key A / map not yet
+beginning recursion with index 1 / key B / map not yet
+beginning recursion with index 2 / key C / map not yet
+beginning recursion with index 3 / key D / map not yet
+beginning recursion with index 4 / key E / map not yet
+beginning recursion with index 5 / key F / map not yet
+beginning recursion with index 6 / key G / map not yet
+beginning recursion with index 7 / key H / map not yet
+beginning recursion with index 8 / key I / map not yet
+
+recursion is done
+
+after     recursion with index 8 / key I / map done
+after     recursion with index 7 / key H / map done
+after     recursion with index 6 / key G / map done
+after     recursion with index 5 / key F / map done
+after     recursion with index 4 / key E / map done
+after     recursion with index 3 / key D / map done
+after     recursion with index 2 / key C / map done
+after     recursion with index 1 / key B / map done
+after     recursion with index 0 / key A / map done
+*/
+
+```
+
+<br>
+Note that the lines after `recursion(index+1, rmap)` run after the **last
+call** on recursion stack, in Last-In-First-Out order from the stack.
+Understanding this recursion behavior is really important.
+A good example is [Tarjan algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
+that puts vertices on the recursion stack, and partitions in Last-In-First-Out order.
+
+<br>
+For more detail, please check out:
+
+- [**_Go: graph, strongly connected components_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_strongly_connected_components)
+
+[↑ top](#recursion)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### recursion, factorial
 
 <br>
 Easiest example of recursion would be *factorial*:
