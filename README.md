@@ -283,7 +283,7 @@ Distributed system provides **_consistency_**, **_availability_**,
 *and* **_partition tolerance ([CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem))_**.
 
 - [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
-- [**_etcd, raft algorithm_**](https://github.com/gyuho/learn/tree/master/doc/etcd_raft_algorithm)
+- [**_etcd, raft algorithm (in progress)_**](https://github.com/gyuho/learn/tree/master/doc/etcd_raft_algorithm)
 
 [↑ top](#contents)
 <br><br>
