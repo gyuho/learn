@@ -71,7 +71,7 @@ A consensus algorithm must be resilient to these failures in order to
 guarantee the correctness.
 
 <br>
-Ultimate **consensus algorithm** achieves:
+An ultimate **consensus algorithm** would achieve:
 - **_consistency_**.
 - **_availability_**.
 - **_partition tolerance_**.
@@ -115,7 +115,7 @@ and returns outputs. **Replicated state machines** in a distributed system
 compute identical copies of the same state, so that even if some servers are
 down, **state machines** can keep running. **Replicated state machines** is
 usually implemented by replicating logs **identically** across the servers.
-And keeping the replicated logs consistent is the overall goal of **raft
+And **keeping the replicated logs consistent** is the overall goal of **raft
 algorithm**.
 
 [↑ top](#etcd-raft-algorithm)
