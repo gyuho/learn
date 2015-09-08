@@ -22,7 +22,7 @@
 
 #### Reference
 
-**_DISCLAIMER_:** This is **my** understanding of the **raft algorithm**.
+**_DISCLAIMER_:** This is **my** understanding of the **raft algorithm**.<br>
 I may say things out of ignorance. Please refer to reading below.
 
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
