@@ -42,6 +42,7 @@
 
 ```cpp
 #include <iostream>
+#include <string.h>
 using namespace std;
 
 int main()
@@ -50,15 +51,21 @@ int main()
 	//
 	// \0 is a null character
 	char bt0[] = {'H', 'e', 'l', 'l', 'o', '\0'};
+	cout << "bt0 length: " << strlen(bt0) << endl;
+	// bt0 length: 5
+
 	char bt1[] = "Hello";
 	char* bt2 = "Hello"; // deprecated conversion from string constant to ‘char*’
+	cout << "bt2 length: " << strlen(bt2) << endl;
+	// bt2 length: 5
+
 	cout << (bt0 == bt1) << endl; // 0
 
 	cout << bt0 << endl << bt1 << endl << bt2 << endl;
 	// Hello
 	// Hello
 	// Hello
-	
+
 	int i = 0;
 	while (bt0[i] != '\0'){
 		cout << bt0[i];
