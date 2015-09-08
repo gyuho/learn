@@ -1,0 +1,53 @@
+{
+	"acKind": "ImageManifest",
+	"acVersion": "0.6.1",
+	"name": "gyuho/code",
+	"labels": [
+		{
+			"name": "version",
+			"value": "0.0.1"
+		},
+		{
+			"name": "arch",
+			"value": "amd64"
+		},
+		{
+			"name": "os",
+			"value": "linux"
+		}
+	],
+	"app": {
+		"user": "root",
+		"group": "root",
+		"exec": [
+			"/bin/code"
+		],
+		"mountPoints": [
+			{
+				"name": "static",
+				"path": "/bin/static"
+			},
+			{
+				"name": "templates",
+				"path": "/bin/templates"
+			}
+		],
+		"ports": [
+			{
+				"name": "web-server",
+				"protocol": "tcp",
+				"port": 8080
+			}
+		]
+	},
+	"mounts": [
+		{"volume": "static", "mountPoint": "static"},
+		{"volume": "templates", "mountPoint": "templates"}
+	],
+	"annotations": [
+		{
+			"name": "authors",
+			"value": "Gyu-Ho Lee <gyuho.cs@gmail.com>"
+		}
+	]
+}

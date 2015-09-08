@@ -1,0 +1,4 @@
+digraph graphname {
+	Google -> Apple -> UCLA [label=ShortestPath, color=blue];
+	Apple -> Stanford [label="A", color=green];
+}

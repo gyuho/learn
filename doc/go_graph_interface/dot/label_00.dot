@@ -1,0 +1,9 @@
+digraph graphname {
+	a [label="Google"]
+	b [label="Apple"]
+	c [label="UCLA"]
+	d [label="Stanford"]
+	a -> b [label=50, color=blue];
+	b -> c [label=-10, color=red];
+	b -> d [label="A", color=green];
+}

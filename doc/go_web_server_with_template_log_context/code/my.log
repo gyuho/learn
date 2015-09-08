@@ -1,0 +1,12 @@
+{"level":"warning","msg":"The group's number increased tremendously!","number":122,"omg":true,"time":"2015-09-01T23:23:44-07:00"}
+{"level":"fatal","msg":"The ice breaks!","number":100,"omg":true,"time":"2015-09-01T23:23:44-07:00"}
+{"animal":"walrus","level":"info","msg":"A group of walrus emerges from the ocean","size":10,"time":"2015-09-01T23:25:48-07:00"}
+{"level":"warning","msg":"The group's number increased tremendously!","number":122,"omg":true,"time":"2015-09-01T23:25:48-07:00"}
+{"level":"panic","msg":"The ice breaks!","number":100,"omg":true,"time":"2015-09-01T23:25:48-07:00"}
+{"animal":"walrus","level":"info","msg":"A group of walrus emerges from the ocean","size":10,"time":"2015-09-01T23:27:00-07:00"}
+{"level":"warning","msg":"The group's number increased tremendously!","number":122,"omg":true,"time":"2015-09-01T23:27:00-07:00"}
+{"level":"panic","msg":"panic","time":"2015-09-01T23:27:00-07:00"}
+{"level":"info","msg":"Hello World!","time":"2015-09-01T23:40:25-07:00"}
+{"animal":"walrus","level":"info","msg":"A group of walrus emerges from the ocean","size":10,"time":"2015-09-01T23:40:25-07:00"}
+{"level":"warning","msg":"The group's number increased tremendously!","number":122,"omg":true,"time":"2015-09-01T23:40:25-07:00"}
+{"level":"panic","msg":"panic","time":"2015-09-01T23:40:25-07:00"}

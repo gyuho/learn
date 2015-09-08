@@ -1,0 +1,7 @@
+// The graph name and the semicolons are optional
+graph graphname {
+	a -- b -- c;
+	b -- a;
+	d -- a;
+	b -- d;
+}

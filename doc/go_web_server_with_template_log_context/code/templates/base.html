@@ -1,0 +1,30 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Gyu-Ho Lee">
+    <link rel="icon" href="/static/img/favicon.ico">
+    <title>{{.Title}}</title>
+
+    {{template "head" .}}
+</head>
+
+<body>
+
+Title is {{.Title}}.
+<br> 
+
+<img src="{{.Picture}}" style="width:25px; height: 25px;"> &thinsp;
+<b>{{.Name}}</b>, {{.Email}} ({{.Authority}}) / <a href="http://google.com">Logout</a>
+<br>
+
+{{template "body" .}}
+
+</body>
+
+</html>
+{{end}}
