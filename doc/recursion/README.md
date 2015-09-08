@@ -329,6 +329,18 @@ after     recursion with index 0 / key A / map done
 
 ```
 
+<br>
+Note that the lines after `recursion(index+1, rmap)` run after the **last
+call** on recursion stack, in Last-In-First-Out order from the stack.
+Understanding this recursion behavior is really important.
+A good example is [Tarjan algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
+that puts vertices on the recursion stack, and partitions in Last-In-First-Out order.
+
+<br>
+For more detail, please check out:
+
+- [**_Go: graph, strongly connected components_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_strongly_connected_components)
+
 [↑ top](#recursion)
 <br><br><br><br>
 <hr>
