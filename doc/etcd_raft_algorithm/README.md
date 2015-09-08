@@ -23,7 +23,7 @@
 #### Reference
 
 **_DISCLAIMER_:** This is **my** understanding of the **raft algorithm**.<br>
-I may say things out of ignorance. Please refer to reading below.
+I may say things out of ignorance. Please refer to the readings below.
 
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
