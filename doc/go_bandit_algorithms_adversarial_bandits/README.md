@@ -21,15 +21,9 @@
 
 
 #### Reference
-- [*The non-stochastic multi-armed bandit
-  problem*](http://cseweb.ucsd.edu/~yfreund/papers/bandits.pdf) *by Peter Auer,
-  Nicolò Cesa-Bianchi, Yoav Freund, Robert E. Schapire*
-- [*Gambling in a rigged casino: The adversarial multi-armed bandit
-  problem*](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.8691&rep=rep1&type=pdf)
-  *by Peter Auer, Nicolò Cesa-Bianchi, Yoav Freund, Robert E. Schapire*
-- [*Adversarial Bandits and the Exp3
-  Algorithm*](http://jeremykun.com/2013/11/08/adversarial-bandits-and-the-exp3-algorithm/)
-  *by [Jeremy Kun](http://jeremykun.com/about/)*
+- [*The non-stochastic multi-armed bandit problem*](http://cseweb.ucsd.edu/~yfreund/papers/bandits.pdf) *by Peter Auer, Nicolò Cesa-Bianchi, Yoav Freund, Robert E. Schapire*
+- [*Gambling in a rigged casino: The adversarial multi-armed bandit problem*](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.8691&rep=rep1&type=pdf) *by Peter Auer, Nicolò Cesa-Bianchi, Yoav Freund, Robert E. Schapire*
+- [*Adversarial Bandits and the Exp3 Algorithm*](http://jeremykun.com/2013/11/08/adversarial-bandits-and-the-exp3-algorithm/) *by [Jeremy Kun](http://jeremykun.com/about/)*
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
 <br><br><br><br>

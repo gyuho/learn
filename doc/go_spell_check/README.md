@@ -5,7 +5,6 @@
 
 - [Reference](#reference)
 - [Spell check algorithm](#spell-check-algorithm)
-- [](#)
 
 [↑ top](#go-spell-check)
 <br><br><br><br>

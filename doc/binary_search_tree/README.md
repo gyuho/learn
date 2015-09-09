@@ -292,7 +292,7 @@ n)`_** = **height**:
 
 <br>
 
-**HOWEVER,** note that *binary search tree* is **_not_** always **_balances_**,
+**HOWEVER,** note that *binary search tree* is **_not always balanced_**,
 as here:
 
 ![bst.png](img/bst.png)

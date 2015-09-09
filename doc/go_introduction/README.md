@@ -43,7 +43,7 @@ In `Ubuntu 14.04.3 LTS` (Linux Debian distribution), you can run:
 cd $HOME;
 mkdir -p $HOME/go/src/github.com;
 mkdir -p $HOME/go/src/golang.org;
-sudo curl -s https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc;
 TEMP_PATH=$PATH':/usr/local/go/bin:/home/ubuntu/go/bin'
