@@ -216,9 +216,11 @@ algorithm**.
 4. If **`election times out`** and `followers` receive no such communication
    from a leader, then it assumes there is no current leader in the cluster,
    and it begins a new `election` and the **`follower` becomes the
-   `candidate`**, **incrementing its current `term` index(number)**.
+   `candidate`**, **incrementing its current `term` index(number)**,
+   and **resetting its `election timer`**.
 5. `Candidate` first votes for itself and sends `RequestVote` RPCs to other
-   servers.
+   servers (followers). A follower as a voter deny its vote if its own log
+   is more up-to-date than `candidate`'s. 
 6. Then the `candiate` either:
 	- *becomes the leader* by *winning the election* when it gets **majority
 	  of votes**. Then it must send out the heartbeat messages to others
@@ -240,6 +242,12 @@ algorithm**.
 Here's how it works:
 
 ![election_00](img/election_00.png)
+![election_01](img/election_01.png)
+![election_02](img/election_02.png)
+![election_03](img/election_03.png)
+![election_04](img/election_04.png)
+![election_05](img/election_05.png)
+![election_06](img/election_06.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
