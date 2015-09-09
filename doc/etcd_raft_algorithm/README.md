@@ -134,28 +134,30 @@ algorithm**.
 
 #### raft algorithm: terminology
 
-- **_state machine_**: any program or application with input and output.
-- **_replicated state machines_**: state machines that are distributed on a
-  collection of servers and compute identical copies of the same state: in
-  doing so, when some of the servers are down, other state machines can keep
-  running. Typically, replicated state machines are implemented **replicating
-  logs of commands** identically on the collection of servers.
-- **_log_**: Logs contains the list of commands, so that *state machines*
+- **_state machine_**: Any program or application with input and output.
+- **_replicated state machines_**: State machines are distributed on a
+  collection of servers and compute identical copies of the same state:
+  those state machines are *replicated state machines*. In doing so, even
+  when some of the servers are down, other state machines can keep running.
+  Typically, **replicated state machines are implemented replicating
+  logs of commands identically on the collection of servers**.
+- **_log_**: A log contains the list of commands, so that *state machines*
   can apply those log entries *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
 - **_leader_**: *Raft algorithm* achieves *consensus* **by first electing a
   leader** that accepts log entries from clients, and replicates them on other
   servers(followers) telling them when it is safe to apply log entries to their
-  state machines. A leader can fail or get disconnected from other servers.
-  Then the algorithm elects a new leader.
+  state machines. When a leader fails or gets disconnected from other servers,
+  then the algorithm elects a new leader.
 - **_client_**: A client requests that **a leader append a new log entry**.
   Then the leader writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
   any machine in the cluster. If a client requests to a follower, the request
   will be returned and the client is notified what the current leader is.
-- **_follower_**: 
-- **_candidate_**:
-
+- **_follower_**: A follower is completely passive, issuing no RPCs and only
+  responds to incoming RPCs from candidates and leaders.
+- **_candidate_**: A candidate is used to elect a new leader.
+- **_..._**: ...
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
