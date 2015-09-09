@@ -277,24 +277,29 @@ Once the cluster has elected a leader, it starts receiving `client` requests.
 
 1. A `client` request contains a command for replicated state machines.
 2. The leader **appends** the command to its log as a **new entry**.
-3. The leader **replicates** the *log entry* to other servers (`followers`),
-   with `AppendEntries` RPCs. The leader keeping send those RPCs until
+3. The leader **replicates** the *log entry* to its `followers`,
+   with `AppendEntries` RPCs. The leader keep sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
    contains `term` number of the leader, and its log entry index.
-4. When the entry has been *safely replicated* on a majority of servers,
+4. When the log entry has been *safely replicated* on a majority of servers,
    the leader applies the entry to its state machine. What its means by
    `apply the entry to state machine` is *execute the command in the log
    entry*.
-5. Once a log entry has been *safely replicated* in such a way, the leader
-   `commits` the log.
-6. After the leader applies the log entry to its state machine, it returns the
-   result of that execution to the client.
+5. Once a log entry has been *safely replicated* in such a way and applied to
+   leader's state machine, the leader `commits` the log.
+6. After the leader applies the log entry to its state machine (`committed`),
+   it returns the result of that execution to the client and notifies its
+   `followers` that the log entry is committed.
 
 
 <br>
 Here's how log replication works:
 
 ![raft_log_replication_00](img/raft_log_replication_00.png)
+![raft_log_replication_01](img/raft_log_replication_01.png)
+![raft_log_replication_02](img/raft_log_replication_02.png)
+![raft_log_replication_03](img/raft_log_replication_03.png)
+![raft_log_replication_04](img/raft_log_replication_04.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
