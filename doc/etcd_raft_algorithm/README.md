@@ -307,6 +307,7 @@ Here's how log replication works:
 
 #### raft algorithm: safety
 
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -319,6 +320,7 @@ Here's how log replication works:
 
 #### raft algorithm: leader changes
 
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -329,6 +331,8 @@ Here's how log replication works:
 
 
 #### `etcd` internals: RPC between machines
+
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -341,6 +345,8 @@ Here's how log replication works:
 
 #### `etcd` internals: leader election
 
+Not ready yet. I am working on it now.
+
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
@@ -351,6 +357,8 @@ Here's how log replication works:
 
 
 #### `etcd` internals: log replication
+
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -363,6 +371,7 @@ Here's how log replication works:
 
 #### `etcd` internals: safety
 
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -375,6 +384,8 @@ Here's how log replication works:
 
 
 #### `etcd` internals: leader changes
+
+Not ready yet. I am working on it now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
