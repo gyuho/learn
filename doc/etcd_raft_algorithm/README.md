@@ -225,24 +225,30 @@ This is a summary of
    servers (followers). A follower as a voter deny its vote if its own log
    is more up-to-date than `candidate`'s. 
 6. Then the `candiate` either:
-	- *becomes the leader* by *winning the election* when it gets **majority
+	- **_becomes the leader_** by *winning the election* when it gets **majority
 	  of votes**. Then it must send out the heartbeat messages to others
 	  to establish itself as a leader.
-	- *reverts back to a follower* when it receives a RPC from a **valid
+	- **_reverts back to a follower_** when it receives a RPC from a **valid
 	  leader**. A valid heartbeat message must have a `term` number that is
 	  equal to or greater than `candidate`'s. The RPCs with lower `term`
 	  numbers are rejected. A leader **only appends to log**. Therefore,
 	  future-leader will have the **most complete** log among electing
 	  majority: a leader's log is the truth and a leader will eventually
 	  make followers' logs identical to the leader's.
-	- *starts a new election and increments its current `term` number* **when
-	  votes are split with no winner** That is, its **`election times out`
-	  receiving no heartbeat message from a valid leader, so it retries**.
-	  *Raft* randomizes `election timeout` duration to avoid split votes.
-	  It remains as a `candidate`.
+	- **_starts a new election and increments its current `term` number_**
+	  **when votes are split with no winner** That is, its **`election
+	  times out` receiving no heartbeat message from a valid leader, so
+	  it retries**. *Raft* randomizes `election timeout` duration to avoid
+	  split votes. It remains as a `candidate`.
 
 <br>
-Here's how it works:
+And this visualizes the server states in *Raft*:
+
+![server_state](img/server_state.png)
+
+
+<br>
+Here's how election works:
 
 ![leader_election_00](img/leader_election_00.png)
 ![leader_election_01](img/leader_election_01.png)
@@ -251,12 +257,6 @@ Here's how it works:
 ![leader_election_04](img/leader_election_04.png)
 ![leader_election_05](img/leader_election_05.png)
 ![leader_election_06](img/leader_election_06.png)
-
-<br>
-And this visualizes the server states in *Raft*:
-
-![server_state](img/server_state.png)
-
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
