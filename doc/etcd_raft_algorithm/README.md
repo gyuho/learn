@@ -356,9 +356,19 @@ Not ready yet. I am working on it now.
 
 
 
+
+
 #### `etcd` internals: RPC between machines
 
 Not ready yet. I am working on it now.
+
+
+[`raft`](https://github.com/coreos/etcd/tree/master/raft) package in `etcd`
+defines [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
+format for sending and receiving data between machines.
+And using those protocols, [`etcdserver`](https://github.com/coreos/etcd/tree/master/etcdserver)
+connect each machine to form a cluster, using `HTTP`.
+
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
