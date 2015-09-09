@@ -241,13 +241,13 @@ algorithm**.
 <br>
 Here's how it works:
 
-![election_00](img/election_00.png)
-![election_01](img/election_01.png)
-![election_02](img/election_02.png)
-![election_03](img/election_03.png)
-![election_04](img/election_04.png)
-![election_05](img/election_05.png)
-![election_06](img/election_06.png)
+![leader_election_00](img/leader_election_00.png)
+![leader_election_01](img/leader_election_01.png)
+![leader_election_02](img/leader_election_02.png)
+![leader_election_03](img/leader_election_03.png)
+![leader_election_04](img/leader_election_04.png)
+![leader_election_05](img/leader_election_05.png)
+![leader_election_06](img/leader_election_06.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
