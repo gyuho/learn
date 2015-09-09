@@ -41,10 +41,10 @@ Please refer to [Reference](#reference) below.
 
 #### Reference
 
+- [The Raft Consensus Algorithm](https://raft.github.io/)
+- [*Raft paper by Diego Ongaro and John Ousterhout*](http://ramcloud.stanford.edu/raft.pdf)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
-- [*Raft paper by Diego Ongaro and John Ousterhout*](http://ramcloud.stanford.edu/raft.pdf)
-- [The Raft Consensus Algorithm](https://raft.github.io/)
 - [Raft (computer science)](https://en.wikipedia.org/wiki/Raft_(computer_science))
 - [Raft lecture (Raft user study)](https://www.youtube.com/watch?v=YbZ3zDzDnrw)
 - [coreos/etcd](https://github.com/coreos/etcd)
@@ -211,25 +211,28 @@ algorithm**.
 1. *Raft* starts a server as a `follower`, with the new `term`.
 2. A `leader` must send periodic heartbeat messages to its followers in order to
    maintain its authority.
-3. If `follower`s receive no such communication from a leader within `election
-   timeout`, then it assumes there is no current leader in the cluster, and it
-   begins a new `election` as a `candidate`.
-4. To begin an `election`, the `follower` increments its current `term`
-   index(number) and becomes the `candidate`.
-5. `Candidate` first votes for itself, and requests `RequestVote` RPCs to other
+3. `Followers` wait for **randomized** `election timeout` until they receive
+   heartbeat messages from a valid leader, with equal or greater `term` number.
+4. If `election times out` and `followers` receive no such communication from a
+   leader, then it assumes there is no current leader in the cluster, and it
+   begins a new `election` and the `follower` becomes the `candidate`,
+   *incrementing its current `term` index(number)*.
+5. `Candidate` first votes for itself and sends `RequestVote` RPCs to other
    servers.
-6. `Candiate` either:
-	- *becomes the leader* by *winning the election* when it gets **majority of votes**.
-	  Once it becomes the leader, it sends out the heartbeat messages to others
+6. Then the `candiate` either:
+	- *becomes the leader* by *winning the election* when it gets **majority
+	  of votes**. Then it must send out the heartbeat messages to others
 	  to establish itself as a leader.
 	- *reverts back to a follower* when it receives a RPC from a **valid
-	  leader**. Valid heartbeat messages must have a `term` number that is
+	  leader**. A valid heartbeat message must have a `term` number that is
 	  equal to or greater than `candidate`'s. The RPCs with lower `term`
-	  numbers are rejected. Future-leader must have the **most complete** log
-	  among electing majority: a leader's log is the truth and a leader will
-	  eventually make followers' logs identical to the leader's.
+	  numbers are rejected. A leader **only appends to log**. Therefore,
+	  future-leader will have the **most complete** log among electing
+	  majority: a leader's log is the truth and a leader will eventually
+	  make followers' logs identical to the leader's.
 	- *starts a new election and increments its current `term` number* **when
-	  votes are split with no winner** (**`election timeout`, and so retry!**).
+	  votes are split with no winner** That is, its **`election times out`
+	  receiving no heartbeat message from a valid leader, so it retries**.
 	  *Raft* randomizes `election timeout` duration to avoid split votes.
 
 <br>
