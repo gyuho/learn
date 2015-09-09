@@ -30,7 +30,7 @@ I will respond within 24-hour.
 
 <br>
 <br>
-`LICENSE` information can be found [here](./LICENSE.md).<br>
+`LICENSE` can be found [here](./LICENSE.md).<br>
 Please share with your friends and colleagues.<br>
 <br>
 <br>
