@@ -131,7 +131,7 @@ This is the definition of **replicated state machine** in the paper.
 and returns outputs. **Replicated state machines** in a distributed system
 compute identical copies of the same state, so that even if some servers are
 down, other **state machines** can keep running. **Replicated state machines**
-is usually implemented by replicating logs **identically** across the servers.
+is usually **implemented by replicating logs identically across the servers**.
 And **keeping the replicated logs consistent** is the overall goal of **raft
 algorithm**.
 
@@ -209,22 +209,33 @@ algorithm**.
 #### raft algorithm: leader election
 
 1. *Raft* starts a server as a `follower`, with the new `term`.
-2. A `leader` sends periodic heartbeat messages to its followers in order to
+2. A `leader` must send periodic heartbeat messages to its followers in order to
    maintain its authority.
-3. If `follower`s receive such communication from a leader within `election
+3. If `follower`s receive no such communication from a leader within `election
    timeout`, then it assumes there is no current leader in the cluster, and it
    begins a new `election` as a `candidate`.
 4. To begin an `election`, the `follower` increments its current `term`
    index(number) and becomes the `candidate`.
 5. `Candidate` first votes for itself, and requests `RequestVote` RPCs to other
    servers.
-6. `Candiate`:
-	- *wins the election* when it gets majority of the votes.
-	- *reverts back to a follower* when another server establishes itself as a
-	  leader.
-	- *starts a new election by incrementing its current `term` number* when
-	  votes are split with no winner.
-7. ...
+6. `Candiate` either:
+	- *becomes the leader* by *winning the election* when it gets **majority of votes**.
+	  Once it becomes the leader, it sends out the heartbeat messages to others
+	  to establish itself as a leader.
+	- *reverts back to a follower* when it receives a RPC from a **valid
+	  leader**. Valid heartbeat messages must have a `term` number that is
+	  equal to or greater than `candidate`'s. The RPCs with lower `term`
+	  numbers are rejected. Future-leader must have the **most complete** log
+	  among electing majority: a leader's log is the truth and a leader will
+	  eventually make followers' logs identical to the leader's.
+	- *starts a new election and increments its current `term` number* **when
+	  votes are split with no winner** (**`election timeout`, and so retry!**).
+	  *Raft* randomizes `election timeout` duration to avoid split votes.
+
+<br>
+Here's how it works:
+
+![election_00](img/election_00.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
