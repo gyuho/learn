@@ -74,13 +74,16 @@
 24. 				prev[v] = u
 25. 				Q.decrease_priority(v, alt)
 26.
-27. 	path = []
-28. 	u = target
-29. 	while prev[u] is defined:
-30. 		path.push_front(u)
-31. 		u = prev[u]
-32.
-33. 	return path, prev
+27. 		reheapify(Q)
+28.
+29.
+30. 	path = []
+31. 	u = target
+32. 	while prev[u] is defined:
+33. 		path.push_front(u)
+34. 		u = prev[u]
+35.
+36. 	return path, prev
 ```
 
 <br>
@@ -119,34 +122,6 @@ import (
 	"strings"
 	"sync"
 )
-
-func main() {
-	f, err := os.Open("graph.json")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	g, err := NewDefaultGraphFromJSON(f, "graph_03")
-	if err != nil {
-		panic(err)
-	}
-	path, distance, err := Dijkstra(g, "S", "T")
-	if err != nil {
-		panic(err)
-	}
-	ts := []string{}
-	for _, v := range path {
-		ts = append(ts, fmt.Sprintf("%s(%.2f)", v, distance[v]))
-	}
-	if strings.Join(ts, " → ") != "S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00)" {
-		log.Fatalf("Expected the shortest path S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00) but %s", strings.Join(ts, " → "))
-	}
-	if distance["T"] != 44.0 {
-		log.Fatalf("Expected 44.0 but %f", distance["T"])
-	}
-	fmt.Println("graph_03:", strings.Join(ts, " → "))
-	// graph_03: S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00)
-}
 
 type vertexDistance struct {
 	vertex   string
@@ -214,13 +189,16 @@ func (h *vertexDistanceHeap) updateDistance(vtx string, val float64) {
 //	24. 				prev[v] = u
 //	25. 				Q.decrease_priority(v, alt)
 //	26.
-//	27. 	path = []
-//	28. 	u = target
-//	29. 	while prev[u] is defined:
-//	30. 		path.push_front(u)
-//	31. 		u = prev[u]
-//	32.
-//	33. 	return path, prev
+//	27. 		reheapify(Q)
+//	28.
+//	29.
+//	30. 	path = []
+//	31. 	u = target
+//	32. 	while prev[u] is defined:
+//	33. 		path.push_front(u)
+//	34. 		u = prev[u]
+//	35.
+//	36. 	return path, prev
 //
 func Dijkstra(g Graph, source, target string) ([]string, map[string]float64, error) {
 
@@ -290,9 +268,9 @@ func Dijkstra(g Graph, source, target string) ([]string, map[string]float64, err
 
 				// Q.decrease_priority(v, alt)
 				minHeap.updateDistance(v, alt)
-				heap.Init(minHeap)
 			}
 		}
+		heap.Init(minHeap)
 	}
 
 	// path = []
@@ -324,6 +302,34 @@ func Dijkstra(g Graph, source, target string) ([]string, map[string]float64, err
 	path = temp
 
 	return path, distance, nil
+}
+
+func main() {
+	f, err := os.Open("graph.json")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	g, err := NewDefaultGraphFromJSON(f, "graph_03")
+	if err != nil {
+		panic(err)
+	}
+	path, distance, err := Dijkstra(g, "S", "T")
+	if err != nil {
+		panic(err)
+	}
+	ts := []string{}
+	for _, v := range path {
+		ts = append(ts, fmt.Sprintf("%s(%.2f)", v, distance[v]))
+	}
+	if strings.Join(ts, " → ") != "S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00)" {
+		log.Fatalf("Expected the shortest path S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00) but %s", strings.Join(ts, " → "))
+	}
+	if distance["T"] != 44.0 {
+		log.Fatalf("Expected 44.0 but %f", distance["T"])
+	}
+	fmt.Println("graph_03:", strings.Join(ts, " → "))
+	// graph_03: S(0.00) → B(14.00) → E(32.00) → F(38.00) → T(44.00)
 }
 
 // Graph describes the methods of graph operations.
