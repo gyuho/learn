@@ -3,10 +3,29 @@
 
 # etcd, raft algorithm
 
+
+*Disclaimer*.
+
+This is high-level overview of *raft algorithm* to understand the internals of
+[`coreos/etcd`](https://github.com/coreos/etcd). You don't need know these
+details to use `etcd`. And I may say things out of ignorance.
+Please refer to [Reference](#reference) below.
+
+<br>
+
 - [Reference](#reference)
 - [consensus algorithm](#consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
+- [raft algorithm: leader election](#raft-algorithm-leader-election)
+- [`etcd` internals: RPC](#etcd-internals-rpc)
+- [`etcd` internals: leader election](#etcd-internals-leader-election)
+- [raft algorithm: log replication](#raft-algorithm-log-replication)
+- [`etcd` internals: log replication](#etcd-internals-log-replication)
+- [raft algorithm: safety](#raft-algorithm-safety)
+- [`etcd` internals: safety](#raft-algorithm-safety)
+- [raft algorithm: leader changes](#raft-algorithm-leader-changes)
+- [`etcd` internals: leader changes](#etcd-internals-leader-changes)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -21,9 +40,6 @@
 
 
 #### Reference
-
-**_DISCLAIMER_:** This is **my** understanding of the **raft algorithm**.<br>
-I may say things out of ignorance. Please refer to the readings below.
 
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
@@ -145,12 +161,17 @@ algorithm**.
 - **`log`**: A log contains the list of commands, so that *state machines*
   can apply those log entries *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
+- **`log commit`**: A leader `commit`s a log entry only after the leader has
+  replicated the entry on a majority of servers in a cluster. Such log entry
+  is considered safe to be applied to state machines. `Commit` includes the
+  preceding entries, such as the ones from previous leaders. This is done by
+  the leader keeping track of the highest index to commit.
 - **`leader`**: *Raft algorithm* achieves *consensus* **by first electing a
   leader** that accepts log entries from clients, and replicates them on other
   servers(followers) telling them when it is safe to apply log entries to their
   state machines. When a leader fails or gets disconnected from other servers,
   then the algorithm elects a new leader. In normal operation, there is
-  **exactly one and only leader** and all of the other servers are followers.
+  **exactly only one leader** and all of the other servers are followers.
   A leader must keep sending heartbeats to maintain its authority.
   A leader handles all requests from clients.
 - **`client`**: A client requests that **a leader append a new log entry**.
@@ -168,7 +189,10 @@ algorithm**.
 - **`term`**: *Raft* divides time into `term`s of arbitrary duration, indexed
   with consecutive integers. Each terms begins with an *election*. And if the
   election ends with no leader (split vote), it creates a new `term`. *Raft*
-  ensures that each `term` has at most one leader in the given `term`. 
+  ensures that each `term` has at most one leader in the given `term`. `Term`
+  index is also used to detect obsolete information. Servers always sync with
+  biggest `term` number(index), and any server with stale `term` number reverts
+  back to `follower` state, and any requests from such servers are rejected.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -182,23 +206,7 @@ algorithm**.
 
 
 
-
-#### 
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
-#### 
+#### raft algorithm: leader election
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -209,11 +217,7 @@ algorithm**.
 
 
 
-
-
-
-
-#### 
+#### `etcd` internals: RPC
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -224,11 +228,77 @@ algorithm**.
 
 
 
+#### `etcd` internals: leader election
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
 
 
 
 
-#### 
+
+
+#### raft algorithm: log replication
+
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### `etcd` internals: log replication
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### raft algorithm: safety
+
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### `etcd` internals: safety
+
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### raft algorithm: leader changes
+
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### `etcd` internals: leader changes
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
