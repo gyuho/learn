@@ -65,7 +65,7 @@ When given the following:
 Binary search tree would **insert** like this:
 
 ![bst_insert_01](img/bst_insert_01.png)
-![bst_insert_01](img/bst_insert_01.png)
+![bst_insert_02](img/bst_insert_02.png)
 
 <br>
 
