@@ -213,10 +213,10 @@ algorithm**.
    maintain its authority.
 3. `Followers` wait for **randomized** `election timeout` until they receive
    heartbeat messages from a valid leader, with equal or greater `term` number.
-4. If `election times out` and `followers` receive no such communication from a
-   leader, then it assumes there is no current leader in the cluster, and it
-   begins a new `election` and the `follower` becomes the `candidate`,
-   *incrementing its current `term` index(number)*.
+4. If **`election times out`** and `followers` receive no such communication
+   from a leader, then it assumes there is no current leader in the cluster,
+   and it begins a new `election` and the **`follower` becomes the
+   `candidate`**, **incrementing its current `term` index(number)**.
 5. `Candidate` first votes for itself and sends `RequestVote` RPCs to other
    servers.
 6. Then the `candiate` either:
