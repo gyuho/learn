@@ -234,6 +234,7 @@ algorithm**.
 	  votes are split with no winner** That is, its **`election times out`
 	  receiving no heartbeat message from a valid leader, so it retries**.
 	  *Raft* randomizes `election timeout` duration to avoid split votes.
+	  It remains as a `candidate`.
 
 <br>
 Here's how it works:
