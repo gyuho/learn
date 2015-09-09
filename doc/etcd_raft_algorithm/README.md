@@ -314,7 +314,9 @@ Here's how log replication works:
 
 #### raft algorithm: log consistency
 
-Not ready yet. I am working on it now.
+![raft_log_consistency_00](img/raft_log_consistency_00.png)
+![raft_log_consistency_01](img/raft_log_consistency_01.png)
+![raft_log_consistency_02](img/raft_log_consistency_02.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
