@@ -244,19 +244,19 @@ This is the summary of
 <br>
 And this visualizes the server states in *Raft*:
 
-![server_state](img/server_state.png)
+![raft_server_state](img/raft_server_state.png)
 
 
 <br>
 Here's how election works:
 
-![leader_election_00](img/leader_election_00.png)
-![leader_election_01](img/leader_election_01.png)
-![leader_election_02](img/leader_election_02.png)
-![leader_election_03](img/leader_election_03.png)
-![leader_election_04](img/leader_election_04.png)
-![leader_election_05](img/leader_election_05.png)
-![leader_election_06](img/leader_election_06.png)
+![raft_leader_election_00](img/raft_leader_election_00.png)
+![raft_leader_election_01](img/raft_leader_election_01.png)
+![raft_leader_election_02](img/raft_leader_election_02.png)
+![raft_leader_election_03](img/raft_leader_election_03.png)
+![raft_leader_election_04](img/raft_leader_election_04.png)
+![raft_leader_election_05](img/raft_leader_election_05.png)
+![raft_leader_election_06](img/raft_leader_election_06.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -294,7 +294,7 @@ Once the cluster has elected a leader, it starts receiving `client` requests.
 <br>
 Here's how log replication works:
 
-![log_replication_00](img/log_replication_00.png)
+![raft_log_replication_00](img/raft_log_replication_00.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
