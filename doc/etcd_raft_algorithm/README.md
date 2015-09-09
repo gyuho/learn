@@ -19,11 +19,13 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
+- [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
 - [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [`etcd` internals: log replication](#etcd-internals-log-replication)
+- [`etcd` internals: log consistency](#etcd-internals-log-consistency)
 - [`etcd` internals: safety](#raft-algorithm-safety)
 - [`etcd` internals: leader changes](#etcd-internals-leader-changes)
 
@@ -304,6 +306,21 @@ Here's how log replication works:
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+#### raft algorithm: log consistency
+
+Not ready yet. I am working on it now.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
 
 
 
