@@ -208,7 +208,7 @@ algorithm**.
 
 #### raft algorithm: leader election
 
-This is a summary of
+This is the summary of
 [§5.2 Leader election](http://ramcloud.stanford.edu/raft.pdf):
 
 1. *Raft* starts a server as a `follower`, with the new `term`.
@@ -269,7 +269,7 @@ Here's how election works:
 
 #### raft algorithm: log replication
 
-This is a summary of
+This is the summary of
 [§5.3 Log replication](http://ramcloud.stanford.edu/raft.pdf).
 
 <br>
