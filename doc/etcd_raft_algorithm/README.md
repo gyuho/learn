@@ -134,7 +134,8 @@ algorithm**.
 
 #### raft algorithm: terminology
 
-- **`state machine`**: Any program or application with input and output.
+- **`state machine`**: Any program or application with *takes input* and
+  *returns output*.
 - **`replicated state machines`**: State machines are distributed on a
   collection of servers and compute identical copies of the same state:
   those state machines are *replicated state machines*. In doing so, even
@@ -148,16 +149,26 @@ algorithm**.
   leader** that accepts log entries from clients, and replicates them on other
   servers(followers) telling them when it is safe to apply log entries to their
   state machines. When a leader fails or gets disconnected from other servers,
-  then the algorithm elects a new leader.
+  then the algorithm elects a new leader. In normal operation, there is
+  **exactly one and only leader** and all of the other servers are followers.
+  A leader must keep sending heartbeats to maintain its authority.
+  A leader handles all requests from clients.
 - **`client`**: A client requests that **a leader append a new log entry**.
   Then the leader writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
-  any machine in the cluster. If a client requests to a follower, the request
-  will be returned and the client is notified what the current leader is.
+  any machine in the cluster. If a client sends request to followers, the
+  followers redirects to the current leader (Raft paper §5.1).
 - **`follower`**: A follower is completely passive, issuing no RPCs and only
-  responds to incoming RPCs from candidates and leaders.
-- **`candidate`**: A candidate is used to elect a new leader.
-- **_`...`_**: ...
+  responds to incoming RPCs from candidates and leaders. All servers start as
+  followers. If a follower receives no communication(heartbeat), it becomes a
+  candidate to start an election. 
+- **`candidate`**: A candidate is used to elect a new leader. It's a state
+  between `follower` and `leader`. If a candidate receives votes from the
+  majority of a cluster, it becomes the new leader.
+- **`term`**: *Raft* divides time into `term`s of arbitrary duration, indexed
+  with consecutive integers. Each terms begins with an *election*. And if the
+  election ends with no leader (split vote), it creates a new `term`. *Raft*
+  ensures that each `term` has at most one leader in the given `term`. 
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
