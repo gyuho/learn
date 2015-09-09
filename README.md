@@ -23,10 +23,17 @@ You can email <a href="mailto:gyuho.cs@gmail.com" target="_blank">gyuho.cs@gmail
 or [`pull request`](https://github.com/gyuho/learn/pulls).
 I will respond within 24-hour.
 
+
 <br>
 ​*Sincerely,*<br>
 *Gyu-Ho Lee*
 
+<br>
+<br>
+`LICENSE` information can be found [here](./LICENSE.md).<br>
+Please share with your friends and colleagues.<br>
+<br>
+<br>
 
 
 <br><hr>
