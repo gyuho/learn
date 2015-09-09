@@ -29,9 +29,10 @@ I will respond within 24-hour.
 *Gyu-Ho Lee*
 
 <br>
-`LICENSE` information can be found [here](./LICENSE.md).
-Please share with your friends and colleagues.
-You can copy whatever you want without permission.
+<br>
+`LICENSE` information can be found [here](./LICENSE.md).<br>
+Please share with your friends and colleagues.<br>
+<br>
 <br>
 
 
