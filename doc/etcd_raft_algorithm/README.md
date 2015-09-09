@@ -22,6 +22,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
+- [`etcd` internals](#etcd-internals)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
 - [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [`etcd` internals: log replication](#etcd-internals-log-replication)
@@ -351,6 +352,22 @@ Not ready yet. I am working on it now.
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+#### `etcd` internals
+
+Not ready yet. I am working on it now.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
 
 
 
