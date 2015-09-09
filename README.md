@@ -23,15 +23,14 @@ You can email <a href="mailto:gyuho.cs@gmail.com" target="_blank">gyuho.cs@gmail
 or [`pull request`](https://github.com/gyuho/learn/pulls).
 I will respond within 24-hour.
 
-<br>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Learn</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Gyu-Ho Lee</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/gyuho/learn" rel="dct:source">https://github.com/gyuho/learn</a>.
-
-
 
 <br>
 ​*Sincerely,*<br>
 *Gyu-Ho Lee*
 
+<br>
+`LICENSE` information can be found [here](./LICENSE.md).
+Please share with your friends and colleagues. 
 
 
 <br><hr>
