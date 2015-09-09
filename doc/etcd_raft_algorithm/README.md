@@ -150,7 +150,7 @@ algorithm**.
 
 #### raft algorithm: terminology
 
-- **`state machine`**: Any program or application with *takes input* and
+- **`state machine`**: Any program or application that *takes input* and
   *returns output*.
 - **`replicated state machines`**: State machines are distributed on a
   collection of servers and compute identical copies of the same state:
@@ -187,7 +187,7 @@ algorithm**.
   between `follower` and `leader`. If a candidate receives votes from the
   majority of a cluster, it becomes the new leader.
 - **`term`**: *Raft* divides time into `term`s of arbitrary duration, indexed
-  with consecutive integers. Each terms begins with an *election*. And if the
+  with consecutive integers. Each term begins with an *election*. And if the
   election ends with no leader (split vote), it creates a new `term`. *Raft*
   ensures that each `term` has at most one leader in the given `term`. `Term`
   index is also used to detect obsolete information. Servers always sync with
@@ -207,6 +207,24 @@ algorithm**.
 
 
 #### raft algorithm: leader election
+
+1. *Raft* starts a server as a `follower`, with the new `term`.
+2. A `leader` sends periodic heartbeat messages to its followers in order to
+   maintain its authority.
+3. If `follower`s receive such communication from a leader within `election
+   timeout`, then it assumes there is no current leader in the cluster, and it
+   begins a new `election` as a `candidate`.
+4. To begin an `election`, the `follower` increments its current `term`
+   index(number) and becomes the `candidate`.
+5. `Candidate` first votes for itself, and requests `RequestVote` RPCs to other
+   servers.
+6. `Candiate`:
+	- *wins the election* when it gets majority of the votes.
+	- *reverts back to a follower* when another server establishes itself as a
+	  leader.
+	- *starts a new election by incrementing its current `term` number* when
+	  votes are split with no winner.
+7. ...
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
