@@ -4,7 +4,7 @@
 # etcd, raft algorithm
 
 
-*Disclaimer*.
+**Disclaimer**.
 
 This is high-level overview of *raft algorithm* to understand the internals of
 [`coreos/etcd`](https://github.com/coreos/etcd). You don't need know these
@@ -18,13 +18,13 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
-- [`etcd` internals: RPC](#etcd-internals-rpc)
-- [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
-- [`etcd` internals: log replication](#etcd-internals-log-replication)
 - [raft algorithm: safety](#raft-algorithm-safety)
-- [`etcd` internals: safety](#raft-algorithm-safety)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
+- [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
+- [`etcd` internals: leader election](#etcd-internals-leader-election)
+- [`etcd` internals: log replication](#etcd-internals-log-replication)
+- [`etcd` internals: safety](#raft-algorithm-safety)
 - [`etcd` internals: leader changes](#etcd-internals-leader-changes)
 
 [↑ top](#etcd-raft-algorithm)
@@ -161,7 +161,7 @@ algorithm**.
 - **`log`**: A log contains the list of commands, so that *state machines*
   can apply those log entries *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
-- **`log commit`**: A leader `commit`s a log entry only after the leader has
+- **`log commit`**: A leader `commits` a log entry only after the leader has
   replicated the entry on a majority of servers in a cluster. Such log entry
   is considered safe to be applied to state machines. `Commit` includes the
   preceding entries, such as the ones from previous leaders. This is done by
@@ -208,6 +208,9 @@ algorithm**.
 
 #### raft algorithm: leader election
 
+This is a summary of
+[§5.2 Leader election](http://ramcloud.stanford.edu/raft.pdf):
+
 1. *Raft* starts a server as a `follower`, with the new `term`.
 2. A `leader` must send periodic heartbeat messages to its followers in order to
    maintain its authority.
@@ -249,27 +252,11 @@ Here's how it works:
 ![leader_election_05](img/leader_election_05.png)
 ![leader_election_06](img/leader_election_06.png)
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+<br>
+And this visualizes the server states in *Raft*:
 
+![server_state](img/server_state.png)
 
-
-
-
-
-#### `etcd` internals: RPC
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-#### `etcd` internals: leader election
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -282,17 +269,32 @@ Here's how it works:
 
 #### raft algorithm: log replication
 
+This is a summary of
+[§5.3 Log replication](http://ramcloud.stanford.edu/raft.pdf).
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+<br>
+Once the cluster has elected a leader, it starts receiving `client` requests.
+
+1. A `client` request contains a command for replicated state machines.
+2. The leader **appends** the command to its log as a **new entry**.
+3. The leader **replicates** the *log entry* to other servers (`followers`),
+   with `AppendEntries` RPCs. The leader keeping send those RPCs until
+   all followers eventually store all log entries. Each `AppendEntries` RPC
+   contains `term` number of the leader, and its log entry index.
+4. When the entry has been *safely replicated* on a majority of servers,
+   the leader applies the entry to its state machine. What its means by
+   `apply the entry to state machine` is *execute the command in the log
+   entry*.
+5. Once a log entry has been *safely replicated* in such a way, the leader
+   `commits` the log.
+6. After the leader applies the log entry to its state machine, it returns the
+   result of that execution to the client.
 
 
+<br>
+Here's how log replication works:
 
-
-
-
-#### `etcd` internals: log replication
+![log_replication_00](img/log_replication_00.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -315,6 +317,50 @@ Here's how it works:
 
 
 
+#### raft algorithm: leader changes
+
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+#### `etcd` internals: RPC between machines
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### `etcd` internals: leader election
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+#### `etcd` internals: log replication
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
 #### `etcd` internals: safety
 
 
@@ -322,17 +368,6 @@ Here's how it works:
 <br><br><br><br>
 <hr>
 
-
-
-
-
-
-#### raft algorithm: leader changes
-
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
 
 
 
