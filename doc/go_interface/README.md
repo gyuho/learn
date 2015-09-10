@@ -148,7 +148,6 @@ Go **struct** controls the layout of **data**, while Go **interface**:
 - is to specify the behavior of an object.
 
 <br>
-
 > Interfaces in Go provide a way to specify the behavior of an object: if
 > **something can do this, then it can be used here**.
 >
@@ -156,8 +155,6 @@ Go **struct** controls the layout of **data**, while Go **interface**:
 > Go_**](https://golang.org/doc/effective_go.html#interfaces_and_types)
 
 <br>
-
-
 For instance,
 [`time.Time`](https://go.googlesource.com/go/+/master/src/time/time.go) is
 **_`struct`_** because it contains **data** of your local time:
@@ -170,6 +167,7 @@ type Time struct {
 }
 ```
 
+<br>
 [**`sort.Interface`**](http://golang.org/pkg/sort/#Interface)
 is **_`interface`_** to specify **_behaviors_** or **_requirements_** for
 [*`sort`*](http://golang.org/pkg/sort/):
@@ -182,6 +180,7 @@ type Interface interface {
 }
 ```
 
+<br>
 **_`struct`_** is a **type** to **contain data with a set of fields for its
 values**. **_`interface`_** is also a **type** to **represent a behavior with a
 set of methods**. **_`interface`_** is a set of **constraints on types with
@@ -233,12 +232,10 @@ the type already implements all three methods: *`Len`*, *`Swap`*, and *`Less`*.
 Then the *type* **_byLength_** satisfies the **_`sort.Interface`_** implicitly. 
 
 <br>
-
 - *`struct`* is a type and contains data with a set of fields.
 - *`interface`* is also a type and represents a behavior with a set of methods. 
 
 <br>
-
 **In practice**, **_interface is mostly used as an argument for a function._** 
 For instance, [**_sort.Sort_**](http://golang.org/pkg/sort/#Sort) **function** takes 
 the **_`sort.Interface`_** as an argument:
@@ -259,7 +256,6 @@ func Sort(data Interface) {
 ```
 
 <br>
-
 *interface* is a set of constraints. Then how possible to pass *`interface`* 
 as an argument?
 
