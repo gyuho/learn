@@ -2491,12 +2491,13 @@ other goroutines to another available thread. Therefore, Go uses relatively
 few OS threads per Go process.
 
 <br>
+<br>
 To summarize:
 - **goroutines**: non-blocking, light-weight thread.
 - **channel**: let the **channel** handle the synchronization for you.
 
 Again, the idea of `Do not communicate by sharing memory; instead,
-**_share memory by communicating._**` is to:
+share memory by communicating.` is to:
 
 - avoid using locking(`sync.Mutex`) if possible, because it's a blocking
   operation and easy to cause deadlocks.
