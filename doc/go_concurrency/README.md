@@ -2484,11 +2484,12 @@ When a goroutine blocks, run-time moves other goroutines to a different,
 available thread, so they won't be blocked. **goroutine** is cheaper than
 **threads**, because **goroutines* are multiplexed onto a small number of
 OS threads. A program may run **thousands of goroutines**
-*in one thread*. We don't need to worry about threads in Go.
-One goroutine may be blocked by waiting for I/O, and the thread would block
-as well, but **other goroutines never block** because Go automatically moves
-other goroutines to another available thread. Therefore, Go uses relatively
-few OS threads per Go process.
+*in one thread*. We do not need to allocate one-thread-per-one-goroutine.
+We don't need to worry about threads in Go. Go handles synchronization.
+One goroutine may be blocked by waiting for I/O, and the thread would
+block as well, but **other goroutines would never block** because Go
+automatically moves other goroutines to another available thread.
+Therefore, Go uses relatively fewer OS threads per Go process.
 
 <br>
 <br>
