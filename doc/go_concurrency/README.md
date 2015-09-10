@@ -2484,7 +2484,7 @@ When a goroutine blocks, run-time moves other goroutines to a different,
 available thread, so they won't be blocked. **goroutine** is cheaper than
 **threads**, because **goroutines* are multiplexed onto a small number of
 OS threads. A program may run **thousands of goroutines**
-*in one thread*. We don't need to worry about the threads in Go.
+*in one thread*. We don't need to worry about threads in Go.
 One goroutine may be blocked by waiting for I/O, and the thread would block
 as well, but **other goroutines never block** because Go automatically moves
 other goroutines to another available thread. Therefore, Go uses relatively
@@ -2506,8 +2506,8 @@ share memory by communicating.` is to:
 If you `communicate by sharing memory`, you need to manually
 *synchronize access to memory between threads* with locking,
 because it shares the same address space. If you `share memory
-by communicating`, which means you use **channel** and let **channel**
-handle the synchronization, you do not worry about locking and race
+by communicating`, which means you use **channel** and let the **channel**
+handle synchronization, you do not worry about locking and race
 conditions.
 
 
