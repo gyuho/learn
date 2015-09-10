@@ -21,12 +21,14 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
+- [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
 - [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [`etcd` internals: log replication](#etcd-internals-log-replication)
 - [`etcd` internals: log consistency](#etcd-internals-log-consistency)
 - [`etcd` internals: safety](#raft-algorithm-safety)
+- [`etcd` internals: membership changes](#etcd-internals-membership-changes)
 - [`etcd` internals: leader changes](#etcd-internals-leader-changes)
 
 [↑ top](#etcd-raft-algorithm)
@@ -333,7 +335,7 @@ Here's how log replication works:
 
 #### raft algorithm: safety
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 <br>
 This is the summary of
@@ -374,9 +376,23 @@ the `AppendEntries` RPC:
 
 
 
+#### raft algorithm: membership changes
+
+Not ready yet. I am researching right now.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
 #### raft algorithm: leader changes
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 <br>
 If a `follower` or `candidate` crashes, `RequestVote` and `AppendEntries` RPCs
@@ -398,7 +414,7 @@ will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 
 #### `etcd` internals: RPC between machines
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 <br>
 *Raft* servers communicate through remote procedure calls (RPCs).
@@ -429,7 +445,7 @@ connects each server in order to form a cluster, using `HTTP`.
 
 #### `etcd` internals: leader election
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -442,7 +458,7 @@ Not ready yet. I am working on it now.
 
 #### `etcd` internals: log replication
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -455,7 +471,7 @@ Not ready yet. I am working on it now.
 
 #### `etcd` internals: safety
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -466,10 +482,22 @@ Not ready yet. I am working on it now.
 
 
 
+#### `etcd` internals: membership changes
+
+Not ready yet. I am researching right now.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
 
 #### `etcd` internals: leader changes
 
-Not ready yet. I am working on it now.
+Not ready yet. I am researching right now.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
