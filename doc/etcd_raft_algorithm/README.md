@@ -358,7 +358,10 @@ as leaders, in order to ensure that:
 <br>
 ##### safety: committing entries from previous terms
 
-
+Leader's log entries overwrites followers' log to handle the conflict entries.
+Leader first *finds the latest log entry* matching with leader's entry,
+and then *deletes follower's enties after that index*. *Raft* does this with
+the `AppendEntries` RPC:
 
 
 
