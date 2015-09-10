@@ -335,9 +335,25 @@ Here's how log replication works:
 
 Not ready yet. I am working on it now.
 
+<br>
+This is the summary of
+[§5.4 Safety](http://ramcloud.stanford.edu/raft.pdf).
+
+*Raft* algorithm ensures **_safety_** when it never returns incorrect
+results under all non-Byzantine conditions: *network delays*, network
+partitions*, *packet loss*, *duplication*, or *reordering*. *Raft*'s
+*safety* property adds a restriction on which servers to be elected
+as leaders, in order to ensure that:
+
+1. each state machine executes exactly the same commands in the same order.
+2. a leader for any given term contains all of the log entries committed
+   in previous terms.
+
+<br>
+
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
-<hr>
+<hr> 
 
 
 
@@ -362,12 +378,22 @@ Not ready yet. I am working on it now.
 
 Not ready yet. I am working on it now.
 
+<br>
+*Raft* servers communicate through remote procedure calls (RPCs).
+The basic Raft algorithm requires only two types of RPCs:
 
-[`raft`](https://github.com/coreos/etcd/tree/master/raft) package in `etcd`
-defines [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
-format for sending and receiving data between machines.
-And using those protocols, [`etcdserver`](https://github.com/coreos/etcd/tree/master/etcdserver)
-connect each machine to form a cluster, using `HTTP`.
+- `RequestVote` RPCs, issued by candidates during elections.
+- `AppendEntries` RPCs, issued by leaders:
+  - **to replicate log entries**.
+  - **to send out heartbeat messages**.
+
+<br>
+`etcd` uses [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
+for such communications between machines:
+[`raft`](https://github.com/coreos/etcd/tree/master/raft) package
+specifies its protocols in more detail.
+And [`etcdserver`](https://github.com/coreos/etcd/tree/master/etcdserver)
+connects each server in order to form a cluster, using `HTTP`.
 
 
 [↑ top](#etcd-raft-algorithm)
