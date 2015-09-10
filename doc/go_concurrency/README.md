@@ -2448,12 +2448,77 @@ There is **no race condition** in this code. There is **no Lock** either. Again:
 
 
 
+in progress.....
+
+
+
 You rarely need low-level `sync.Mutex` in Go concurrent programs,
 if you follow the pattern 
 
 By using **channels** to **_communicate_**, Go **_shares memory_**. 
 Running several goroutines with concurrency are each communicated and
 synchronized by channels and causes no race conditions.
+
+
+
+
+**_Thread_** is a lightweight process since it executes within the context of one
+process. Both threads and processes are independent units of execution.
+**Threads** under the **same process** **_run in one shared memory_** space,
+while **process** **_run in separate memory_** spaces.
+Again **multiple threads share the same address space (memory)**, reading
+and writing on shared data. That is why, in multi-threaded programming,
+you need to synchronize access to memory between threads (not across processes)
+with mutexes.
+
+[*Why goroutines instead of threads?*](https://golang.org/doc/faq#goroutines) explains:
+
+> Goroutines are part of making concurrency easy to use. The idea,
+> which has been around for a while, is to multiplex independently
+> executing functions(coroutines) onto a set of threads. When a
+> coroutine blocks, such as by calling a blocking system call, the
+> run-time automatically **moves other coroutines** on the same operating
+> system thread **to a different, runnable** thread so they won't be blocked.
+> The programmer sees none of this, which is the point. The result, which
+> we call goroutines, can be very cheap: they have little overhead beyond
+> the memory for the stack, which is just a few kilobytes.
+>
+> To make the stacks small, Go's run-time uses resizable, bounded stacks.
+> A newly minted goroutine is given a few kilobytes, which is almost always
+> enough. When it isn't, the run-time grows (and shrinks) the memory for
+> storing the stack automatically, allowing many goroutines to live in a
+> modest amount of memory. The CPU overhead averages about three cheap
+> instructions per function call. It is practical to create hundreds of
+> thousands of goroutines in the same address space.
+>
+> **If goroutines were just threads, system resources would run out at a
+> much smaller number**.
+
+<br>
+This means 
+
+> Goroutines take the idea of threads a step further.
+>
+> Many goroutines are multiplexed onto a single operating system thread.
+>	- Super cheap to create.
+>	- Super cheap to switch between as it all happens in user space.
+>	- Tens of thousands of goroutines in a single process are the norm,
+>	    hundreds of thousands not unexpected.
+>
+> This results in relatively few operating system threads per Go process, with
+> the Go runtime taking care of assigning a runnable Goroutine to a free
+> operating system thread.
+>
+
+in progress.....
+
+
+
+
+
+
+
+
 
 
 
