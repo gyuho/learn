@@ -340,7 +340,7 @@ This is the summary of
 [§5.4 Safety](http://ramcloud.stanford.edu/raft.pdf).
 
 *Raft* algorithm ensures **_safety_** when it never returns incorrect
-results under all non-Byzantine conditions: *network delays*, network
+results under all non-Byzantine conditions: *network delays*, *network
 partitions*, *packet loss*, *duplication*, or *reordering*. *Raft*'s
 *safety* property adds a restriction on which servers to be elected
 as leaders, in order to ensure that:
