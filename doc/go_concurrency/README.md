@@ -2385,7 +2385,11 @@ But idiomatic Go would instead use **channels**:
 
 <br>
 
-Try this [code](http://play.golang.org/p/wW4n_wShkV) with `go run -race race.go`:
+Try this [code](http://play.golang.org/p/jjHd0YyKO7) with
+`go run -race 34_no_race_with_channel.go`.
+Note that we do not need to pass pointer of channel,
+because channels, like `map` and `slice`, are syntactically pointer,
+as explained [here](https://golang.org/doc/faq#references):
 
 ```go
 /*
@@ -2393,6 +2397,8 @@ go run -race 34_no_race_with_channel.go
 */
 package main
 
+// channels were syntactically pointers.
+// No need to pass reference.
 func sendWithChannel(ch chan int, num int) {
 	ch <- num
 }
@@ -2429,13 +2435,39 @@ func main() {
 
 ```
 
-There is **no race condition** in this code. There is **no Lock** either.
+There is **no race condition** in this code. There is **no Lock** either. Again:
+
+> Do not communicate by sharing memory; instead, **_share memory by
+> communicating._**
+
+
+
+
+
+
+
+
+
+You rarely need low-level `sync.Mutex` in Go concurrent programs,
+if you follow the pattern 
+
 By using **channels** to **_communicate_**, Go **_shares memory_**. 
 Running several goroutines with concurrency are each communicated and
 synchronized by channels and causes no race conditions.
 
-<br>
 
+
+
+
+
+
+
+
+
+
+
+
+<br>
 You can now refactor the code above:
 
 ```go
@@ -2631,6 +2663,7 @@ func hosten(dom string) string {
 
 to:
 
+
 ```go
 /*
 go run -race 35_no_race_surbl_with_channel.go
@@ -2765,8 +2798,8 @@ BenchmarkCheck-8              	     100	  74226839 ns/op	  149833 B/op	    1975 
 BenchmarkCheck-16             	      50	  24317567 ns/op	  149880 B/op	    1975 allocs/op
 ```
 
-But not all the time. It depends on the code. Sometimes channel takes
-too much memory and slows down the program.
+(But not all the time. It depends on the code. Sometimes channel takes
+too much memory and slows down the program.)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>

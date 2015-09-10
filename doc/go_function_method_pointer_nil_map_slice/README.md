@@ -10,6 +10,7 @@
 - [Why `list` as a pointer?](#why-list-as-a-pointer)
 - [pointer: copy `struct`](#pointer-copy-struct)
 - [pointer: `map` and `slice`](#pointer-map-and-slice)
+- [pointer: channel](#pointer-channel)
 - [Recap](#recap)
 - [swap: `array` and `slice`](#swap-array-and-slice)
 - [`nil`](#nil)
@@ -753,6 +754,68 @@ This is why array elements are values and slice elements are references.
 <br><br><br><br>
 <hr>
 
+
+
+
+
+
+
+
+#### pointer: channel
+
+Try this [code](http://play.golang.org/p/jjHd0YyKO7) with
+`go run -race 11_channel.go`.
+Note that we do not need to pass pointer of channel,
+because channels, like `map` and `slice`, are syntactically pointer,
+as explained [here](https://golang.org/doc/faq#references):
+
+```go
+/*
+go run -race 11_channel.go
+*/
+package main
+
+// channels were syntactically pointers.
+// No need to pass reference.
+func sendWithChannel(ch chan int, num int) {
+	ch <- num
+}
+
+func main() {
+	ch1 := make(chan int)
+	for i := 0; i < 100; i++ {
+		go sendWithChannel(ch1, i)
+	}
+	cn := 0
+	var sliceData = []int{}
+	for v := range ch1 {
+		sliceData = append(sliceData, v)
+		cn++
+		if cn == 100 {
+			close(ch1)
+		}
+	}
+
+	ch2 := make(chan int)
+	var mapData = map[int]bool{}
+	for i := 0; i < 100; i++ {
+		go sendWithChannel(ch2, i)
+	}
+	cn = 0
+	for v := range ch2 {
+		mapData[v] = true
+		cn++
+		if cn == 100 {
+			close(ch2)
+		}
+	}
+}
+
+```
+
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br>
+<hr>
 
 
 
