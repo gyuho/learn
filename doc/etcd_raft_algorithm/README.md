@@ -375,6 +375,14 @@ as leaders, in order to ensure that:
 
 Not ready yet. I am working on it now.
 
+<br>
+If a `follower` or `candidate` crashes, `RequestVote` and `AppendEntries` RPCs
+will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
+*idempotent*, which means calling multiple times has no additional effects.
+
+<br>
+...
+
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
