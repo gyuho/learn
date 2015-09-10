@@ -82,8 +82,8 @@ failure*](https://en.wikipedia.org/wiki/Byzantine_failure):
 - *Byzantine failure* is the loss of the process presenting different symptoms
   to different observers (*Byzantine fault*).
 
-*Byzantine failures* are far more disruptive because they affect the
-*agreement* or *consensus* services in distributed computing systems.
+*Byzantine failures* are far more disruptive because they affect
+*agreement*, *consensus* services in distributed computing systems.
 Ideally every process must agree on the same value. If a distributed system
 loses one of its communications, it can result in data inconsistency.
 A consensus algorithm must be resilient to these failures in order to
@@ -129,13 +129,13 @@ One way to make your program reliable is:
 - ensure that they all get executed exactly the same way (consistency).
 
 This is the definition of **replicated state machine** in the paper.
-*State machine* can be any program or application that takes inputs
+A *state machine* can be any program or application that takes inputs
 and returns outputs. **Replicated state machines** in a distributed system
-compute identical copies of the same state, so that even if some servers are
-down, other **state machines** can keep running. **Replicated state machines**
-is usually **implemented by replicating logs identically across the servers**.
-And **keeping the replicated logs consistent** is the overall goal of **raft
-algorithm**.
+**compute identical copies** of the same state, so that even if some servers
+are down, other **state machines can keep running**. A **replicated state
+machine** is usually **implemented by replicating logs identically across
+the servers**. And **keeping the replicated logs consistent** is the overall
+goal of **raft algorithm**.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
