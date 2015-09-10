@@ -5,7 +5,7 @@
 
 - [Reference](#reference)
 - [Why Interface: Less is More](#why-interface-less-is-more)
-- [**`struct` for data, `interface` for method, `interface` contains data?**](#struct-for-data-interface-for-method-interface-contains-data)
+- [**`struct` for data, `interface` for method: then how does `interface` contain data?**](#struct-for-data-interface-for-method-then-how-does-interface-contain-data)
 - [empty `interface`](#empty-interface)
 - [interface in `io.Reader` and `io.Writer`](#interface-in-ioreader-and-iowriter)
 - [package `io/ioutil`](#package-ioioutil)
@@ -140,7 +140,7 @@ compatible code.
 
 
 
-#### **`struct` for data, `interface` for method, `interface` contains data?**
+#### **`struct` for data, `interface` for method: then how does `interface` contain data?**
 
 Go **struct** controls the layout of **data**, while Go **interface**:
 - is a set of methods.
@@ -523,14 +523,14 @@ func main() {
 <br>
 Here are types that satisfy **_`io.Reader`_** interface by implementing **_`Read`_** method:
 
-- *bufio.Reader, os.File, os.Stdin, os.Stdout, os.Stderr, bytes.Buffer,
-  net.Conn, http.Request.Body, http.Response.Body, …*
+- `bufio.Reader`, `os.File`, `os.Stdin`, `os.Stdout`, `os.Stderr`, `bytes.Buffer`,
+  `net.Conn`, `http.Request.Body`, `http.Response.Body`, ...
 
 Here are types that satisfy **_`io.Writer`_** interface by implementing
 **_`Write`_** method:
 
-- *bufio.Writer, os.File, os.Stdin, os.Stdout, os.Stderr, bytes.Buffer,
-  net.Conn, …*
+- `bufio.Writer`, `os.File`, `os.Stdin`, `os.Stdout`, `os.Stderr`, `bytes.Buffer`,
+  `net.Conn`, ...
 
 
 [↑ top](#go-interface)
