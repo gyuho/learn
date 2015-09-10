@@ -2262,12 +2262,12 @@ exit status 66
 
 ```
 
-It returns WARNING messages of race conditions. **Go slice and map are [NOT
+This code is creating race conditions. **Go slice and map are [NOT
 thread-safe](https://groups.google.com/d/msg/golang-nuts/3FVAs9dPR8k/Jk9T3s7oIPEJ)
 data structure**.  They do not prevent you from race-conditions. In the code
-above, **_race conditions occure_** when *severl goroutines* try to
-**_communicate_**—writing to non thread-safe data structure—**_by sharing
-memory_**—running with concurrency.
+above, **_race conditions occur_** when *several goroutines* try to
+**_communicate_**—sharing and writing to non thread-safe data structure—**_by sharing
+memory_**—running concurrently.
 
 Then what can we do to prevent this? Go has
 [*Lock*](http://golang.org/pkg/sync/#Locker):
@@ -2368,7 +2368,7 @@ func main() {
 
 <br>
 
-But idiomatic Go would instead use **channels**:
+But idiomatic Go should use **channels**:
 
 > Concurrent programming in many environments is made difficult by the
 > subtleties required to implement correct access to shared variables. 
