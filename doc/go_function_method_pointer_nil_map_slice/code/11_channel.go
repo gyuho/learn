@@ -1,5 +1,5 @@
 /*
-go run -race 34_no_race_with_channel.go
+go run -race 11_channel.go
 */
 package main
 

@@ -614,7 +614,7 @@ func run() {
 
 **Go concurrency is about composition of independently executing functions.**
 Suppose *multiple goroutines* are running independently at the same time. 
-Then how would we **_compose_** and **_coordinate_** them? Go has `channel`:
+Then how would we **_compose_** and **_coordinate_** them? Go has **channel**:
 
 ```go
 ch1 := make(chan int)
@@ -2385,7 +2385,11 @@ But idiomatic Go would instead use **channels**:
 
 <br>
 
-Try this [code](http://play.golang.org/p/wW4n_wShkV) with `go run -race race.go`:
+Try this [code](http://play.golang.org/p/jjHd0YyKO7) with
+`go run -race 34_no_race_with_channel.go`.
+Note that we do not need to pass pointer of channel,
+because channels, like `map` and `slice`, are syntactically pointer,
+as explained [here](https://golang.org/doc/faq#references):
 
 ```go
 /*
@@ -2393,6 +2397,8 @@ go run -race 34_no_race_with_channel.go
 */
 package main
 
+// channels were syntactically pointers.
+// No need to pass reference.
 func sendWithChannel(ch chan int, num int) {
 	ch <- num
 }
@@ -2429,14 +2435,84 @@ func main() {
 
 ```
 
-There is **no race condition** in this code. There is **no Lock** either.
-By using **channels** to **_communicate_**, Go **_shares memory_**. 
-Running several goroutines with concurrency are each communicated and
-synchronized by channels and causes no race conditions.
+There is **no race condition** in this code. There is **NO** *Mutex* either.
+This is what Go means by:
+
+> Do not communicate by sharing memory; instead, **_share memory by
+> communicating._**
 
 <br>
+With **channel**, you do not need low-level `sync.Mutex` for synchronization.
 
-You can now refactor the code above:
+<br>
+**_Thread_** is a lightweight process since it executes within the context of one
+process. Both threads and processes are independent units of execution.
+**Threads** under the **same process** **_run in one shared memory_** space,
+while **process** **_run in separate memory_** spaces.
+Again **multiple threads share the same address space (memory)**, reading
+and writing on shared data. That is why, *in multi-threaded programming*,
+you need to **synchronize access to memory between threads** (not across processes)
+with `Mutex`.
+
+<br>
+[*Why goroutines, instead of threads?*](https://golang.org/doc/faq#goroutines) explains:
+
+> Goroutines are part of making concurrency easy to use. The idea,
+> is to multiplex independently executing functions(**coroutines**)
+> onto a set of threads. When a coroutine blocks, such as by calling
+> a blocking system call, the *run-time* automatically **moves other
+> coroutines** on the same operating system thread
+> **to a different, runnable thread** so they won't be blocked.
+> The programmer sees none of this, which is the point. The result, which
+> we call goroutines, can be very cheap: they have little overhead beyond
+> the memory for the stack, which is just a few kilobytes.
+>
+> To make the stacks small, Go's run-time uses resizable, bounded stacks.
+> A newly minted goroutine is given a few kilobytes, which is almost always
+> enough. When it isn't, the run-time grows (and shrinks) the memory for
+> storing the stack automatically, allowing many goroutines to live in a
+> modest amount of memory. The CPU overhead averages about three cheap
+> instructions per function call. It is practical to create hundreds of
+> thousands of goroutines in the same address space.
+>
+> **If goroutines were just threads, system resources would run out at a
+> much smaller number**.
+
+<br>
+**goroutines** are multiplexed onto a set of threads.
+When a goroutine blocks, run-time moves other goroutines to a different,
+available thread, so they won't be blocked. **goroutine** is cheaper than
+**threads**, because **goroutines* are multiplexed onto a small number of
+OS threads. A program may run **thousands of goroutines**
+*in one thread*. We don't need to worry about the threads in Go.
+One goroutine may be blocked by waiting for I/O, and the thread would block
+as well, but **other goroutines never block** because Go automatically moves
+other goroutines to another available thread. Therefore, Go uses relatively
+few OS threads per Go process.
+
+<br>
+<br>
+- **goroutines**: non-blocking, light-weight thread.
+- **channel**: let the **channel** handle the synchronization for you.
+
+Again, the idea of `Do not communicate by sharing memory; instead,
+**_share memory by communicating._**` is to:
+
+- avoid using locking(`sync.Mutex`) if possible, because it's a blocking
+  operation and easy to cause deadlocks.
+- use **channel** instead, then do not worry about locking.
+
+If you `communicate by sharing memory`, you need to manually
+*synchronize access to memory between threads* with locking,
+because it shares the same address space. If you `share memory
+by communicating`, which means you use **channel** and let **channel**
+handle the synchronization, you do not worry about locking and race
+conditions.
+
+
+<br>
+Now you can refactor this code above, using **channel** instead of
+`sync.Mutex`:
 
 ```go
 /*
@@ -2629,7 +2705,8 @@ func hosten(dom string) string {
 
 ```
 
-to:
+<br>
+With **channel**:
 
 ```go
 /*
@@ -2747,8 +2824,8 @@ func main() {
 
 ```
 
-If you benchmark two versions, you can see that `Check` with `channel`
-is faster than `CheckWithLock` with `sync.Mutex`, as
+If you benchmark two versions, you can see that the code with **channel**
+is faster than the one with `sync.Mutex`, as
 [here](https://github.com/gyuho/surbl/blob/master/benchmark_test.go):
 
 ```bash
@@ -2765,8 +2842,8 @@ BenchmarkCheck-8              	     100	  74226839 ns/op	  149833 B/op	    1975 
 BenchmarkCheck-16             	      50	  24317567 ns/op	  149880 B/op	    1975 allocs/op
 ```
 
-But not all the time. It depends on the code. Sometimes channel takes
-too much memory and slows down the program.
+(*But not all the time. It depends on the code. Sometimes channel takes
+too much memory and slows down the program.*)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
