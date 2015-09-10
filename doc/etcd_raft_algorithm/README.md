@@ -350,6 +350,17 @@ as leaders, in order to ensure that:
    in previous terms.
 
 <br>
+<br>
+##### safety: election restriction
+
+
+<br>
+<br>
+##### safety: committing entries from previous terms
+
+
+
+
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
