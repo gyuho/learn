@@ -2262,7 +2262,7 @@ exit status 66
 
 ```
 
-It returns WARNING messages of race conditions. **Go Go slice and map are [NOT
+It returns WARNING messages of race conditions. **Go slice and map are [NOT
 thread-safe](https://groups.google.com/d/msg/golang-nuts/3FVAs9dPR8k/Jk9T3s7oIPEJ)
 data structure**.  They do not prevent you from race-conditions. In the code
 above, **_race conditions occure_** when *severl goroutines* try to
