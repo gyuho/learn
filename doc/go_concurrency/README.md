@@ -2491,7 +2491,7 @@ other goroutines to another available thread. Therefore, Go uses relatively
 few OS threads per Go process.
 
 <br>
-<br>
+To summarize:
 - **goroutines**: non-blocking, light-weight thread.
 - **channel**: let the **channel** handle the synchronization for you.
 
