@@ -30,7 +30,7 @@
 - [**select for channel**: `select` ≠ `switch`](#select-for-channel-select--switch)
 - [**receive `nil` from channel**](#receive-nil-from-channel)
 - [`sync.Mutex`, race condition](#syncmutex-race-condition)
-- [Share memory by communicating](#share-memory-by-communicating)
+- [**Share memory by communicating**](#share-memory-by-communicating)
 - [memory leak #1](#memory-leak-1)
 - [`sync/atomic`](#syncatomic)
 - [web server](#example-web-server)
@@ -1935,8 +1935,11 @@ look at the following code, where it has to ensure the mutual exclusion for Go
 thread-safe_**](https://groups.google.com/d/msg/golang-nuts/3FVAs9dPR8k/Jk9T3s7oIPEJ):
 
 ```go
+/*
+go run -race 31_no_race_surbl_with_mutex.go
+*/
 package main
- 
+
 import (
 	"log"
 	"net"
@@ -1944,14 +1947,14 @@ import (
 	"strings"
 	"sync"
 )
- 
+
 // Data is a set of data in map data structure.
 // Every element is unique, and it is unordered.
 // It maps its value to frequency.
 type Data struct {
 	// m maps an element to its frequency
 	m map[interface{}]int
- 
+
 	// RWMutex is more expensive
 	// https://blogs.oracle.com/roch/entry/beware_of_the_performance_of
 	// sync.RWMutex
@@ -1960,7 +1963,7 @@ type Data struct {
 	//
 	sync.Mutex
 }
- 
+
 // NewData returns a new Data.
 // Map supports the built-in function "make"
 // so we do not have to use "new" and
@@ -1972,7 +1975,7 @@ func NewData() *Data {
 	}
 	// return make(Data)
 }
- 
+
 // Init initializes the Data.
 func (d *Data) Init() {
 	// (X) d = NewData()
@@ -1981,17 +1984,17 @@ func (d *Data) Init() {
 	//
 	*d = *NewData()
 }
- 
+
 // GetSize returns the size of set.
 func (d Data) GetSize() int {
 	return len(d.m)
 }
- 
+
 // IsEmpty returns true if the set is empty.
 func (d Data) IsEmpty() bool {
 	return d.GetSize() == 0
 }
- 
+
 // Insert insert values to the set.
 func (d *Data) Insert(items ...interface{}) {
 	for _, value := range items {
@@ -2009,7 +2012,7 @@ func (d *Data) Insert(items ...interface{}) {
 		d.Unlock()
 	}
 }
- 
+
 func main() {
 	d := NewData()
 	d.Insert(1, 2, -.9, "A", 0, 2, 2, 2)
@@ -2019,7 +2022,7 @@ func main() {
 	if d.GetSize() != 5 {
 		log.Fatalf("GetSize() should return 5: %#v", d)
 	}
- 
+
 	rmap2 := Check(goodSlice...)
 	for k, v := range rmap2 {
 		if v.IsSpam {
@@ -2027,22 +2030,22 @@ func main() {
 		}
 	}
 }
- 
+
 var goodSlice = []string{
 	"google.com",
 }
- 
+
 // DomainInfo contains domain information from Surbl.org.
 type DomainInfo struct {
 	IsSpam bool
 	Types  []string
 }
- 
+
 var nonSpam = DomainInfo{
 	IsSpam: false,
 	Types:  []string{"none"},
 }
- 
+
 var addressMap = map[string]string{
 	"2":  "SC: SpamCop web sites",
 	"4":  "WS: sa-blacklist web sited",
@@ -2052,7 +2055,7 @@ var addressMap = map[string]string{
 	"64": "JP: jwSpamSpy + Prolocation sites",
 	"68": "WS JP: sa-blacklist web sited jwSpamSpy + Prolocation sites",
 }
- 
+
 // Check concurrently checks SURBL spam list.
 // http://www.surbl.org/guidelines
 // http://www.surbl.org/surbl-analysis
@@ -2102,7 +2105,7 @@ func Check(domains ...string) map[string]DomainInfo {
 	wg.Wait()
 	return final
 }
- 
+
 // hosten returns the host of url.
 func hosten(dom string) string {
 	dom = strings.TrimSpace(dom)
@@ -2119,6 +2122,7 @@ func hosten(dom string) string {
 	}
 	return domain
 }
+
 ```
 
 [↑ top](#go-concurrency)
@@ -2152,11 +2156,13 @@ really need locking** if you use **channel**. High-level **synchronization** is
 **better done via communication of channels**. Then what do we mean by *share
 memory by communicating*?
 
-Let's first create some race conditions, by running `go test -race` 
-or `go run -race race.go` as [below](http://play.golang.org/p/Z_fmQ52vys):
+Let's first create some race conditions, with
+`go run -race 32_race.go` as [below](http://play.golang.org/p/ROz2Y31Vnb):
 
 ```go
-// race.go
+/*
+go run -race 32_race.go
+*/
 package main
 
 import "sync"
@@ -2171,9 +2177,8 @@ func updateMapData(mapData *map[int]bool, num int, wg *sync.WaitGroup) {
 	(*mapData)[num] = true
 }
 
-var wg sync.WaitGroup
-
 func main() {
+	var wg sync.WaitGroup
 	var sliceData = []int{}
 	wg.Add(100)
 	for i := 0; i < 100; i++ {
@@ -2254,6 +2259,7 @@ Found 3 data race(s)
 exit status 66
 
 */
+
 ```
 
 It returns WARNING messages of race conditions. **Go Go slice and map are [NOT
@@ -2267,50 +2273,97 @@ Then what can we do to prevent this? Go has
 [*Lock*](http://golang.org/pkg/sync/#Locker):
 
 ```go
-package example
- 
+/*
+go run -race 33_no_race_with_mutex.go
+*/
+package main
+
 import (
+	"fmt"
 	"sync"
-	"testing"
 )
- 
+
 func updateSliceDataWithLock(sliceData *[]int, num int, wg *sync.WaitGroup, mutex *sync.Mutex) {
 	defer wg.Done()
 	mutex.Lock()
 	*sliceData = append(*sliceData, num)
 	mutex.Unlock()
 }
- 
+
 func updateMapDataWithLock(mapData *map[int]bool, num int, wg *sync.WaitGroup, mutex *sync.Mutex) {
 	defer wg.Done()
 	mutex.Lock()
 	(*mapData)[num] = true
 	mutex.Unlock()
 }
- 
-var (
-	wg    sync.WaitGroup
-	mutex sync.Mutex
-)
- 
-func TestRace(t *testing.T) {
-	var sliceData = []int{}
-	wg.Add(100)
-	for i := 0; i < 100; i++ {
-		go updateSliceDataWithLock(&sliceData, i, &wg, &mutex)
-	}
-	wg.Wait()
- 
-	var mapData = map[int]bool{}
-	wg.Add(100)
-	for i := 0; i < 100; i++ {
-		go updateMapDataWithLock(&mapData, i, &wg, &mutex)
-	}
-	wg.Wait()
+
+// Mutexes can be created as part of other structures
+type sliceData struct {
+	sync.Mutex
+	s []int
 }
- 
-// go test -race
-// no race condition
+
+func updateSliceDataWithLockStruct(data *sliceData, num int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	data.Lock()
+	data.s = append(data.s, num)
+	data.Unlock()
+}
+
+// Mutexes can be created as part of other structures
+type mapData struct {
+	sync.Mutex
+	m map[int]bool
+}
+
+func updateMapDataWithLockStruct(data *mapData, num int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	data.Lock()
+	data.m[num] = true
+	data.Unlock()
+}
+
+func main() {
+	var (
+		wg    sync.WaitGroup
+		mutex sync.Mutex
+	)
+
+	var ds1 = []int{}
+	wg.Add(100)
+	for i := 0; i < 100; i++ {
+		go updateSliceDataWithLock(&ds1, i, &wg, &mutex)
+	}
+	wg.Wait()
+	fmt.Println(ds1)
+
+	var dm1 = map[int]bool{}
+	wg.Add(100)
+	for i := 0; i < 100; i++ {
+		go updateMapDataWithLock(&dm1, i, &wg, &mutex)
+	}
+	wg.Wait()
+	fmt.Println(dm1)
+
+	ds2 := sliceData{}
+	ds2.s = []int{}
+	wg.Add(100)
+	for i := 0; i < 100; i++ {
+		go updateSliceDataWithLockStruct(&ds2, i, &wg)
+	}
+	wg.Wait()
+	fmt.Println(ds2)
+
+	dm2 := mapData{}
+	dm2.m = make(map[int]bool)
+	wg.Add(100)
+	for i := 0; i < 100; i++ {
+		go updateMapDataWithLockStruct(&dm2, i, &wg)
+	}
+	wg.Wait()
+	fmt.Println(dm2)
+}
+
 ```
 
 <br>
@@ -2332,10 +2385,12 @@ But idiomatic Go would instead use **channels**:
 
 <br>
 
-Try this [code](http://play.golang.org/p/cmWTveJqgs) with `go run -race race.go`:
+Try this [code](http://play.golang.org/p/wW4n_wShkV) with `go run -race race.go`:
 
 ```go
-// race.go
+/*
+go run -race 34_no_race_with_channel.go
+*/
 package main
 
 func sendWithChannel(ch chan int, num int) {
@@ -2372,8 +2427,6 @@ func main() {
 	}
 }
 
-// go run -race race.go
-// no race condition
 ```
 
 There is **no race condition** in this code. There is **no Lock** either.
@@ -2386,28 +2439,117 @@ synchronized by channels and causes no race conditions.
 You can now refactor the code above:
 
 ```go
+/*
+go run -race 31_no_race_surbl_with_mutex.go
+*/
 package main
- 
+
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/url"
 	"strings"
 	"sync"
 )
- 
+
+// Data is a set of data in map data structure.
+// Every element is unique, and it is unordered.
+// It maps its value to frequency.
+type Data struct {
+	// m maps an element to its frequency
+	m map[interface{}]int
+
+	// RWMutex is more expensive
+	// https://blogs.oracle.com/roch/entry/beware_of_the_performance_of
+	// sync.RWMutex
+	//
+	// to synchronize access to shared state across multiple goroutines.
+	//
+	sync.Mutex
+}
+
+// NewData returns a new Data.
+// Map supports the built-in function "make"
+// so we do not have to use "new" and
+// "make" does not return pointer.
+func NewData() *Data {
+	nmap := make(map[interface{}]int)
+	return &Data{
+		m: nmap,
+	}
+	// return make(Data)
+}
+
+// Init initializes the Data.
+func (d *Data) Init() {
+	// (X) d = NewData()
+	// This only updates its pointer
+	// , not the Data itself
+	//
+	*d = *NewData()
+}
+
+// GetSize returns the size of set.
+func (d Data) GetSize() int {
+	return len(d.m)
+}
+
+// IsEmpty returns true if the set is empty.
+func (d Data) IsEmpty() bool {
+	return d.GetSize() == 0
+}
+
+// Insert insert values to the set.
+func (d *Data) Insert(items ...interface{}) {
+	for _, value := range items {
+		d.Lock()
+		v, ok := d.m[value]
+		d.Unlock()
+		if ok {
+			d.Lock()
+			d.m[value] = v + 1
+			d.Unlock()
+			continue
+		}
+		d.Lock()
+		d.m[value] = 1
+		d.Unlock()
+	}
+}
+
+func main() {
+	d := NewData()
+	d.Insert(1, 2, -.9, "A", 0, 2, 2, 2)
+	if d.IsEmpty() {
+		log.Fatalf("IsEmpty() should return false: %#v", d)
+	}
+	if d.GetSize() != 5 {
+		log.Fatalf("GetSize() should return 5: %#v", d)
+	}
+
+	rmap2 := Check(goodSlice...)
+	for k, v := range rmap2 {
+		if v.IsSpam {
+			log.Fatalf("Check | Unexpected %+v %+v but it's ok", k, v)
+		}
+	}
+}
+
+var goodSlice = []string{
+	"google.com",
+}
+
 // DomainInfo contains domain information from Surbl.org.
 type DomainInfo struct {
 	IsSpam bool
 	Types  []string
 }
- 
+
 var nonSpam = DomainInfo{
 	IsSpam: false,
 	Types:  []string{"none"},
 }
- 
+
 var addressMap = map[string]string{
 	"2":  "SC: SpamCop web sites",
 	"4":  "WS: sa-blacklist web sited",
@@ -2417,7 +2559,7 @@ var addressMap = map[string]string{
 	"64": "JP: jwSpamSpy + Prolocation sites",
 	"68": "WS JP: sa-blacklist web sited jwSpamSpy + Prolocation sites",
 }
- 
+
 // Check concurrently checks SURBL spam list.
 // http://www.surbl.org/guidelines
 // http://www.surbl.org/surbl-analysis
@@ -2467,7 +2609,7 @@ func Check(domains ...string) map[string]DomainInfo {
 	wg.Wait()
 	return final
 }
- 
+
 // hosten returns the host of url.
 func hosten(dom string) string {
 	dom = strings.TrimSpace(dom)
@@ -2484,22 +2626,17 @@ func hosten(dom string) string {
 	}
 	return domain
 }
- 
-var goodSlice = []string{
-	"google.com", "amazon.com", "yahoo.com", "gmail.com", "walmart.com",
-	"stanford.edu", "intel.com", "github.com", "surbl.org", "wikipedia.org",
-}
- 
-func main() {
-	fmt.Println(Check(goodSlice...))
-}
+
 ```
 
 to:
 
 ```go
+/*
+go run -race 35_no_race_surbl_with_channel.go
+*/
 package main
- 
+
 import (
 	"fmt"
 	"log"
@@ -2507,14 +2644,14 @@ import (
 	"net/url"
 	"strings"
 )
- 
+
 // DomainInfo contains domain information from Surbl.org.
 type DomainInfo struct {
 	Domain string
 	IsSpam bool
 	Types  []string
 }
- 
+
 var addressMap = map[string]string{
 	"2":  "SC: SpamCop web sites",
 	"4":  "WS: sa-blacklist web sited",
@@ -2524,7 +2661,7 @@ var addressMap = map[string]string{
 	"64": "JP: jwSpamSpy + Prolocation sites",
 	"68": "WS JP: sa-blacklist web sited jwSpamSpy + Prolocation sites",
 }
- 
+
 // Check concurrently checks SURBL spam list.
 // http://www.surbl.org/guidelines
 // http://www.surbl.org/surbl-analysis
@@ -2581,7 +2718,7 @@ func Check(domains ...string) map[string]DomainInfo {
 	}
 	return final
 }
- 
+
 // hosten returns the host of url.
 func hosten(dom string) string {
 	dom = strings.TrimSpace(dom)
@@ -2598,15 +2735,16 @@ func hosten(dom string) string {
 	}
 	return domain
 }
- 
+
 var goodSlice = []string{
 	"google.com", "amazon.com", "yahoo.com", "gmail.com", "walmart.com",
 	"stanford.edu", "intel.com", "github.com", "surbl.org", "wikipedia.org",
 }
- 
+
 func main() {
 	fmt.Println(Check(goodSlice...))
 }
+
 ```
 
 If you benchmark two versions, you can see that `Check` with `channel`

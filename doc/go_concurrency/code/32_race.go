@@ -1,4 +1,6 @@
-// race.go
+/*
+go run -race 32_race.go
+*/
 package main
 
 import "sync"
@@ -13,9 +15,8 @@ func updateMapData(mapData *map[int]bool, num int, wg *sync.WaitGroup) {
 	(*mapData)[num] = true
 }
 
-var wg sync.WaitGroup
-
 func main() {
+	var wg sync.WaitGroup
 	var sliceData = []int{}
 	wg.Add(100)
 	for i := 0; i < 100; i++ {

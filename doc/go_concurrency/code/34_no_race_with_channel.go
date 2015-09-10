@@ -1,4 +1,6 @@
-// race.go
+/*
+go run -race 34_no_race_with_channel.go
+*/
 package main
 
 func sendWithChannel(ch chan int, num int) {
@@ -34,6 +36,3 @@ func main() {
 		}
 	}
 }
-
-// go run -race race.go
-// no race condition

@@ -1,3 +1,6 @@
+/*
+go run -race 35_no_race_surbl_with_channel.go
+*/
 package main
 
 import (

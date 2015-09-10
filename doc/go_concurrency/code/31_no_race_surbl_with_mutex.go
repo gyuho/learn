@@ -1,3 +1,6 @@
+/*
+go run -race 31_no_race_surbl_with_mutex.go
+*/
 package main
 
 import (
