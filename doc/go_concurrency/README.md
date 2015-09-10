@@ -2435,7 +2435,7 @@ func main() {
 
 ```
 
-There is **no race condition** in this code. There is **NO** *Mutex* either.
+There is **no race condition** in this code. There is **NO `sync.Mutex`** either.
 This is what Go means by:
 
 > Do not communicate by sharing memory; instead, **_share memory by
