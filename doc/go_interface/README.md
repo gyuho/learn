@@ -31,17 +31,15 @@
 
 There are many great articles on *Go interfaces*:
 
-- [*Less is exponentially more by Rob
-  Pike*](http://commandcenter.blogspot.co.il/2012/06/less-is-exponentially-more.html)
+- [*Less is exponentially more by Rob Pike*](http://commandcenter.blogspot.co.il/2012/06/less-is-exponentially-more.html)
 - [*Go at Google by Rob Pike*](https://talks.golang.org/2012/splash.article)
 - [*Laws of reflection by Rob Pike*](http://blog.golang.org/laws-of-reflection)
 - [*Interfaces by Russ Cox*](http://research.swtch.com/interfaces)
-- [*Expressiveness of Go by Rob
-  Pike*](http://talks.golang.org/2010/ExpressivenessOfGo-2010.pdf)
-- [*How to use interfaces in Go by Jordan
-  Orelli*](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go)
-- [*Interface pollution in Go by Burcu
-  Dogan*](https://medium.com/@rakyll/interface-pollution-in-go-7d58bccec275)
+- [*Expressiveness of Go by Rob Pike*](http://talks.golang.org/2010/ExpressivenessOfGo-2010.pdf)
+- [*How to use interfaces in Go by Jordan Orelli*](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go)
+- [*Interface pollution in Go by Burcu Dogan*](https://medium.com/@rakyll/interface-pollution-in-go-7d58bccec275)
+- [Interface pointer](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
+- [**_Go Data Structures: Interfaces_** *by Russ Cox*](http://research.swtch.com/interfaces)
 
 And Go has great documentation at [*golang.org*](http://golang.org/doc/), with
 almost everything you need. But for some reason, *interface* never felt clear
