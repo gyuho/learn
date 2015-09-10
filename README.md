@@ -286,8 +286,6 @@ I will show how to build web applications from scratch, with full-working code.
 You have one machine to run your program. What if that one machine fails? 
 The whole system goes down. You want to have multiple, distributed machines
 always available, so that even if one fails, others can keep running.
-Distributed system provides **_consistency_**, **_availability_**,
-*and* **_partition tolerance ([CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem))_**.
 
 - [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
 - [**_etcd, raft algorithm_**](https://github.com/gyuho/learn/tree/master/doc/etcd_raft_algorithm)
