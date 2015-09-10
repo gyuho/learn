@@ -38,7 +38,7 @@ There are many great articles on *Go interfaces*:
 - [*Expressiveness of Go by Rob Pike*](http://talks.golang.org/2010/ExpressivenessOfGo-2010.pdf)
 - [*How to use interfaces in Go by Jordan Orelli*](http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go)
 - [*Interface pollution in Go by Burcu Dogan*](https://medium.com/@rakyll/interface-pollution-in-go-7d58bccec275)
-- [Interface pointer](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
+- [**_Interface pointer_** (*Golang Nuts*)](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
 - [**_Go Data Structures: Interfaces_** *by Russ Cox*](http://research.swtch.com/interfaces)
 
 And Go has great documentation at [*golang.org*](http://golang.org/doc/), with
