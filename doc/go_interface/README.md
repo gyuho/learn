@@ -241,7 +241,7 @@ Then the *type* **_byLength_** satisfies the **_`sort.Interface`_** implicitly.
 
 <br>
 
-**In practice**, **_interface tends to be used as an argument for a function._** 
+**In practice**, **_interface is mostly used as an argument for a function._** 
 For instance, [**_sort.Sort_**](http://golang.org/pkg/sort/#Sort) **function** takes 
 the **_`sort.Interface`_** as an argument:
 
@@ -343,8 +343,15 @@ func main() {
 	// {Japan 7.23} {USA 8.4} {San Francisco 8.4} {California 9.9}
 	// {Mountain View 9.9} {Los Angeles 23.1}] 10
 }
+
 ```
 
+<br>
+To summarize, `struct` is for data. `interface` is for a set of constrains on
+types. Any type that implements such methods satisfies the `interface`.
+Go passes `interface` as an argument to a function. Then one can just
+build a generic function that takes an `interface`, such as `sort.Sort`,
+and accept any type as long as it satisfies the `interface`.
 
 [↑ top](#go-interface)
 <br><br><br><br>
