@@ -128,7 +128,10 @@ CREATE TABLE IF NOT EXISTS myschema.example_table (
   PRIMARY KEY(col1, col2)
 )
 ;
- 
+
+CREATE TABLE IF NOT EXISTS myschema.example_table LIKE myschema.example_table_2
+;
+
 # to create an index
 CREATE UNIQUE INDEX 'MY_INDEX_NAME'
 ON myschema.example_table (col1)
