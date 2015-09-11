@@ -21,6 +21,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
+- [raft algorithm: RPC summary](#raft-algorithm-rpc-summary)
 - [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
@@ -254,7 +255,7 @@ This is the summary of
 	  split votes. It remains as a `candidate`.
 
 <br>
-And this visualizes the server states in *Raft*:
+And server states in *Raft*:
 
 ![raft_server_state](img/raft_server_state.png)
 
@@ -382,11 +383,32 @@ Leader first *finds the latest log entry* matching with leader's entry,
 and then *deletes follower's enties after that index*. *Raft* does this with
 the `AppendEntries` RPC:
 
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr> 
 
+
+
+
+
+
+
+
+#### raft algorithm: RPC summary
+
+*Raft* servers communicate through remote procedure calls (RPCs).
+The basic Raft algorithm requires only two types of RPCs:
+
+- `RequestVote` RPCs, issued by candidates during elections.
+- `AppendEntries` RPCs, issued by leaders:
+  - **to replicate log entries**.
+  - **to send out heartbeat messages**.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr> 
+
+
 
 
 
