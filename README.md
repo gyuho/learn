@@ -346,7 +346,7 @@ algorithms, machine learning algorithms, etc.
 
 ## Problems
 
-- [*problems_set_0*](https://github.com/gyuho/learn/tree/master/doc/problems_set_0)
+- [*problems*](https://github.com/gyuho/learn/tree/master/doc/problems)
 
 [↑ top](#contents)
 <br><br>
