@@ -53,6 +53,7 @@ Please refer to [Reference](#reference) below.
 - [Raft lecture (Raft user study)](https://www.youtube.com/watch?v=YbZ3zDzDnrw)
 - [coreos/etcd](https://github.com/coreos/etcd)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
+- [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -426,9 +427,6 @@ will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 
 #### `etcd` internals: RPC between machines
 
-Not ready yet. I am researching right now.
-
-<br>
 *Raft* servers communicate through remote procedure calls (RPCs).
 The basic Raft algorithm requires only two types of RPCs:
 
@@ -439,12 +437,17 @@ The basic Raft algorithm requires only two types of RPCs:
 
 <br>
 `etcd` uses [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
-for such communications between machines:
-[`raft`](https://github.com/coreos/etcd/tree/master/raft) package
-specifies its protocols in more detail.
-And [`etcdserver`](https://github.com/coreos/etcd/tree/master/etcdserver)
-connects each server in order to form a cluster, using `HTTP`.
+for inter-machine communication of structured data. Below are some of
+the related, core packages:
 
+- [`raft`](http://godoc.org/github.com/coreos/etcd/raft): implements of the raft consensus algorithm.
+- [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb):
+- [`rafthttp`](http://godoc.org/github.com/coreos/etcd/rafthttp):
+- [`etcdserver`](http://godoc.org/github.com/coreos/etcd/etcdserver): connects servers in the cluster, using `HTTP`.
+- [`etcdserver/etcdhttp`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdhttp):
+- [`etcdserver/etcdserverpb`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdserverpb):
+- [`discovery`](http://godoc.org/github.com/coreos/etcd/discovery):
+- [`client`](http://godoc.org/github.com/coreos/etcd/client):
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
