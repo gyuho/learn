@@ -21,7 +21,6 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
-- [raft algorithm: RPC summary](#raft-algorithm-rpc-summary)
 - [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
@@ -235,8 +234,10 @@ This is the summary of
    `candidate`**, **incrementing its current `term` index(number)**,
    and **resetting its `election timer`**.
 5. **`Candidate` first votes for itself** and **sends `RequestVote` RPCs**
-   to other servers(followers). A follower as a voter deny its voting
-   if its own log is more up-to-date than `candidate`'s. 
+   to other servers(followers). `RequestVote` RPC includes `candidate`'s log
+   information so that a follower can deny its voting if the follower's log
+   is more up-to-date than `candidate`'s. *Raft* compares log's index and
+   `term` number to determine the up-to-date log.
 6. Then the **`candiate`** either:
 	- **_becomes the leader_** by *winning the election* when it gets **majority
 	  of votes**. Then it must send out the heartbeat messages to others
@@ -313,6 +314,7 @@ Once the cluster has elected a leader, it starts receiving `client` requests.
    it returns the execution result to the client and tell `followers` that
    the log entry is committed.
 
+Note that **a leader only appends**, never overwriting nor deleting entries.
 
 <br>
 Here's how log replication works:
@@ -353,61 +355,32 @@ Here's how log replication works:
 
 #### raft algorithm: safety
 
-Not ready yet. I am researching right now.
-
-<br>
 This is the summary of
 [§5.4 Safety](http://ramcloud.stanford.edu/raft.pdf).
 
-*Raft* algorithm ensures **_safety_** when it never returns incorrect
-results under all non-Byzantine conditions: *network delays*, *network
-partitions*, *packet loss*, *duplication*, or *reordering*. *Raft*'s
-*safety* property adds a restriction on which servers to be elected
-as leaders, in order to ensure that:
+*Raft* algorithm's **_safety_** is ensured when:
 
 1. each state machine executes exactly the same commands in the same order.
 2. a leader for any given term contains all of the log entries committed
    in previous terms.
 
 <br>
-<br>
-##### safety: election restriction
+And to guarantee the safety requirement:
 
+- A leader never overwrites nor deletes log entries.
+- Only leader log entries can be committed.
+- Entries must be committed before applying to a state machine.
+- Elect the candidate with most complete log.
 
-<br>
-<br>
-##### safety: committing entries from previous terms
-
-Leader's log entries overwrites followers' log to handle the conflict entries.
+In order to commit entries from previous terms, a leader
+overwrites followers' log to handle the conflict entries.
 Leader first *finds the latest log entry* matching with leader's entry,
-and then *deletes follower's enties after that index*. *Raft* does this with
-the `AppendEntries` RPC:
+and then *deletes follower's extraneous entries after that index*.
+This is done by `AppendEntries` RPC.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr> 
-
-
-
-
-
-
-
-
-#### raft algorithm: RPC summary
-
-*Raft* servers communicate through remote procedure calls (RPCs).
-The basic Raft algorithm requires only two types of RPCs:
-
-- `RequestVote` RPCs, issued by candidates during elections.
-- `AppendEntries` RPCs, issued by leaders:
-  - **to replicate log entries**.
-  - **to send out heartbeat messages**.
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr> 
-
 
 
 
