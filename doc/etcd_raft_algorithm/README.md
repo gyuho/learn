@@ -181,7 +181,7 @@ goal of **raft algorithm**.
   any machine in the cluster. If a client sends request to a follower, it
   redirects to the current leader (Raft paper §5.1). A leader sends out
   `AppendEntries` RPCs with its `leaderId` to other servers, so that a
-  follower knows where to redirect its client requests.
+  follower knows where to redirect client requests.
 - **`follower`**: A follower is completely passive, issuing no RPCs and only
   responds to incoming RPCs from candidates and leaders. All servers start as
   followers. If a follower receives no communication(heartbeat), it becomes a
@@ -299,18 +299,18 @@ Once the cluster has elected a leader, it starts receiving `client` requests.
 1. A `client` request contains a command for replicated state machines.
 2. The leader **appends** the command to its log as a **new entry**.
 3. The leader **replicates** the *log entry* to its `followers`,
-   with `AppendEntries` RPCs. The leader keep sending those RPCs until
+   with `AppendEntries` RPC. The leader keeps sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
-   contains `term` number of the leader, and its log entry index.
+   contains `term` number of the leader, its log entry index, its `leaderId`.
 4. When the log entry has been *safely replicated* on a majority of servers,
    the leader applies the entry to its state machine. What its means by
    `apply the entry to state machine` is *execute the command in the log
    entry*.
-5. Once a log entry has been *safely replicated* in such a way and applied to
-   leader's state machine, the leader `commits` the log.
+5. Once a log entry has been *safely replicated* and applied to the leader's
+   state machine, the leader `commits` the log.
 6. After the leader applies the log entry to its state machine (`committed`),
-   it returns the result of that execution to the client and notifies its
-   `followers` that the log entry is committed.
+   it returns the execution result to the client and tell `followers` that
+   the log entry is committed.
 
 
 <br>
