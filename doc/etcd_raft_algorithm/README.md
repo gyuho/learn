@@ -156,33 +156,32 @@ goal of **raft algorithm**.
 
 - **`state machine`**: Any program or application that *takes input* and
   *returns output*.
-- **`replicated state machines`**: State machines are distributed on a
-  collection of servers and compute identical copies of the same state:
-  those state machines are *replicated state machines*. In doing so, even
-  when some of the servers are down, other state machines can keep running.
-  Typically, **replicated state machines are implemented replicating
-  logs of commands identically on the collection of servers**.
+- **`replicated state machines`**: State machines that are distributed on a
+  collection of servers and compute identical copies of the same state.
+  Even when some of the servers are down, other state machines can keep
+  running. Typically **replicated state machines are implemented by
+  replicating log entries identically on the collection of servers**.
 - **`log`**: A log contains the list of commands, so that *state machines*
   can apply those log entries *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
-  replicated the entry on a majority of servers in a cluster. Such log entry
-  is considered safe to be applied to state machines. `Commit` includes the
+  replicated the entry on a majority of servers in the cluster. Such log entry
+  is considered safe to be applied to state machines. `Commit` also includes
   preceding entries, such as the ones from previous leaders. This is done by
   the leader keeping track of the highest index to commit.
 - **`leader`**: *Raft algorithm* achieves *consensus* **by first electing a
-  leader** that accepts log entries from clients, and replicates them on other
-  servers(followers) telling them when it is safe to apply log entries to their
-  state machines. When a leader fails or gets disconnected from other servers,
-  then the algorithm elects a new leader. In normal operation, there is
-  **exactly only one leader** and all of the other servers are followers.
-  A leader must keep sending heartbeats to maintain its authority.
-  A leader handles all requests from clients.
+  leader**. A leader handles client requests and replicates log entries to
+  other servers(followers), and telling them when to apply log entries to
+  their state machines. When a leader fails or gets disconnected from other servers, then the algorithm elects a new leader. In normal operation,
+  there is **exactly only one leader**. A leader must keep sending heartbeat
+  messages to other servers to maintain its authority.
 - **`client`**: A client requests that **a leader append a new log entry**.
   Then the leader writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
-  any machine in the cluster. If a client sends request to followers, the
-  followers redirects to the current leader (Raft paper §5.1).
+  any machine in the cluster. If a client sends request to a follower, it
+  redirects to the current leader (Raft paper §5.1). A leader sends out
+  `AppendEntries` RPCs with its `leaderId` to other servers, so that a
+  follower knows where to redirect its client requests.
 - **`follower`**: A follower is completely passive, issuing no RPCs and only
   responds to incoming RPCs from candidates and leaders. All servers start as
   followers. If a follower receives no communication(heartbeat), it becomes a
@@ -190,7 +189,7 @@ goal of **raft algorithm**.
 - **`candidate`**: A candidate is used to elect a new leader. It's a state
   between `follower` and `leader`. If a candidate receives votes from the
   majority of a cluster, it becomes the new leader.
-- **`term`**: *Raft* divides time into `term`s of arbitrary duration, indexed
+- **`term`**: *Raft* divides time into `terms` of arbitrary duration, indexed
   with consecutive integers. Each term begins with an *election*. And if the
   election ends with no leader (split vote), it creates a new `term`. *Raft*
   ensures that each `term` has at most one leader in the given `term`. `Term`
@@ -212,6 +211,15 @@ goal of **raft algorithm**.
 
 #### raft algorithm: leader election
 
+*Raft* servers communicate through remote procedure calls (RPCs).
+The basic Raft algorithm requires only two types of RPCs:
+
+- `RequestVote` RPCs, issued by candidates during elections.
+- `AppendEntries` RPCs, issued by leaders:
+  - **to replicate log entries**.
+  - **to send out heartbeat messages**.
+
+<br>
 This is the summary of
 [§5.2 Leader election](http://ramcloud.stanford.edu/raft.pdf):
 
@@ -225,10 +233,10 @@ This is the summary of
    and it begins a new `election` and the **`follower` becomes the
    `candidate`**, **incrementing its current `term` index(number)**,
    and **resetting its `election timer`**.
-5. `Candidate` first votes for itself and sends `RequestVote` RPCs to other
-   servers (followers). A follower as a voter deny its vote if its own log
-   is more up-to-date than `candidate`'s. 
-6. Then the `candiate` either:
+5. **`Candidate` first votes for itself** and **sends `RequestVote` RPCs**
+   to other servers(followers). A follower as a voter deny its voting
+   if its own log is more up-to-date than `candidate`'s. 
+6. Then the **`candiate`** either:
 	- **_becomes the leader_** by *winning the election* when it gets **majority
 	  of votes**. Then it must send out the heartbeat messages to others
 	  to establish itself as a leader.
@@ -273,6 +281,15 @@ Here's how election works:
 
 #### raft algorithm: log replication
 
+*Raft* servers communicate through remote procedure calls (RPCs).
+The basic Raft algorithm requires only two types of RPCs:
+
+- `RequestVote` RPCs, issued by candidates during elections.
+- `AppendEntries` RPCs, issued by leaders:
+  - **to replicate log entries**.
+  - **to send out heartbeat messages**.
+
+<br>
 This is the summary of
 [§5.3 Log replication](http://ramcloud.stanford.edu/raft.pdf).
 
