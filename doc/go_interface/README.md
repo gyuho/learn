@@ -10,7 +10,7 @@
 - [interface in `io.Reader` and `io.Writer`](#interface-in-ioreader-and-iowriter)
 - [package `io/ioutil`](#package-ioioutil)
 - [interface in `container/heap`](#interface-in-containerheap)
-- [**review `interface`**, and `interface` pointer, `interface` internal](#review-interface-interface-pointer-interface-internal)
+- [**review `interface`**, and `interface` pointer, `interface` internal](#review-interface-and-interface-pointer-interface-internal)
 - [`ioprogress`](#ioprogress)
 - [`sort`](#sort)
 - [sort table](#sort-table)
