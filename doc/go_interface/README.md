@@ -10,7 +10,7 @@
 - [interface in `io.Reader` and `io.Writer`](#interface-in-ioreader-and-iowriter)
 - [package `io/ioutil`](#package-ioioutil)
 - [interface in `container/heap`](#interface-in-containerheap)
-- [**review `interface`**](#review-interface)
+- [**review `interface`**, and `interface` pointer, `interface` internal](#review-interface-interface-pointer-interface-internal)
 - [`ioprogress`](#ioprogress)
 - [`sort`](#sort)
 - [sort table](#sort-table)
@@ -750,7 +750,7 @@ func main() {
 
 
 
-#### **review `interface`**
+#### **review `interface`**, and `interface` pointer, `interface` internal
 
 > **Note too that the elimination of the type hierarchy also eliminates a form
 > of dependency hierarchy. Interface satisfaction allows the program to grow
@@ -772,12 +772,59 @@ own. This has a huge impact on program design and encourages to write
 compatible code.
 
 <br>
-
 > One important category of type is interface types, which represent fixed sets
 > of methods. **An interface variable can store any concrete (non-interface)
 > value as long as that value implements the `interface`’s methods.**
 >
 > [**_Laws of Reflection by Rob Pike_**](http://blog.golang.org/laws-of-reflection)
+
+<br>
+- *`struct`* is a type and contains data with a set of fields.
+- *`interface`* is also a type and represents a behavior with a set of methods. 
+
+<br>
+To summarize, `struct` is for data. `interface` is for a set of constrains on
+types. Any type that implements such methods satisfies the `interface`.
+Go passes `interface` as an argument to a function. Then one can just
+build a generic function that takes an `interface`, such as `sort.Sort`,
+and accept any type as long as it satisfies the `interface`.
+
+<br>
+*Russ Cox* explains in his [blog](http://research.swtch.com/interfaces):
+
+- `interface` value has one pointer to information about the type stored in the interface
+- and another pointer to the associated data.
+
+For example, `sort.Interface`:
+
+```go
+type Interface interface {
+        // Len is the number of elements in the collection.
+        Len() int
+        // Less reports whether the element with
+        // index i should sort before the element with index j.
+        Less(i, j int) bool
+        // Swap swaps the elements with indexes i and j.
+        Swap(i, j int)
+}
+
+```
+
+![interface](img/interface.png)
+
+<br>
+Since `interface` itself contains the pointer to data,
+you do not need to use pointer type of `interface`. For more detail:
+
+- [**_Interface pointer_** (*Golang Nuts*)](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
+- [When should I use a pointer to an interface?](https://golang.org/doc/faq#pointer_to_interface)
+
+<br>
+Go internally has `itable` to store the mapping between concrete type's methods
+and `interface` type's methods. The interface runtime computes the itable *only
+once* and caches it. For more detail, please read:
+
+- [**_Go Data Structures: Interfaces_** *by Russ Cox*](http://research.swtch.com/interfaces)
 
 [↑ top](#go-interface)
 <br><br><br><br>
