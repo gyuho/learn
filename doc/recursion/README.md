@@ -1,7 +1,7 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-## Recursion
+# Recursion
 
 - [Reference](#reference)
 - [recursion, stack overflow](#recursion-stack-overflow)
