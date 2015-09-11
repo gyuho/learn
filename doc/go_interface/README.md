@@ -814,7 +814,58 @@ type Interface interface {
 
 <br>
 Since `interface` itself contains the pointer to data,
-you do not need to use pointer type of `interface`. For more detail:
+you do not need to pass `interface` pointer, as [here](http://play.golang.org/p/rdr8R8NhvA):
+
+```go
+package main
+
+import (
+	"container/heap"
+	"fmt"
+)
+
+// An IntHeap is a min-heap of ints.
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+// func Push(h Interface, x interface{})
+// no need to pass pointer
+func (h *IntHeap) Push(x interface{}) {
+	// Push and Pop use pointer receivers because they modify the slice's length,
+	// not just its contents.
+	*h = append(*h, x.(int))
+}
+
+func (h *IntHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+func main() {
+	h := &IntHeap{2, 1, 5}
+
+	// func Init(h Interface)
+	// no need to pass pointer
+	heap.Init(h)
+
+	heap.Push(h, 3)
+	fmt.Printf("minimum: %d\n", (*h)[0])
+	for h.Len() > 0 {
+		fmt.Printf("%d ", heap.Pop(h))
+	}
+}
+
+```
+
+
+<br>
+For more detail:
 
 - [**_Interface pointer_** (*Golang Nuts*)](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
 - [When should I use a pointer to an interface?](https://golang.org/doc/faq#pointer_to_interface)
