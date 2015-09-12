@@ -1,8 +1,9 @@
-package example;
+// datapb.proto
+package datapb;
 	
 enum FOO { X = 17; };
 	
-message Test {
+message SampleData {
 	required string label = 1;
 	optional int32 type = 2 [default=77];
 	repeated int64 reps = 3;
