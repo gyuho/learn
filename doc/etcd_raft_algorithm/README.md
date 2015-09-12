@@ -647,18 +647,15 @@ func becameLeader(server *ServerState) {
 		}
 	}
 
-	find := func() int {
-		for index := range server.logs {
-			if index > server.commitIndex {
-				if server.logs[index].term == server.currentTerm {
-					if majority of matchIndex[followers] >= index {
-						server.commitIndex = index
-					}					
-				}
+	for index := range server.logs {
+		if index > server.commitIndex {
+			if server.logs[index].term == server.currentTerm {
+				if majority of matchIndex[followers] >= index {
+					server.commitIndex = index
+				}					
 			}
 		}
 	}
-	find()
 }
 
 ```
@@ -690,7 +687,11 @@ for inter-machine communication of structured data. Below are some of
 the related, core packages:
 
 - [`raft`](http://godoc.org/github.com/coreos/etcd/raft): implements of the raft consensus algorithm.
-- [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb):
+- [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb): This
+  package is
+  [auto-generated](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.pb.go#L1-L3)
+  by the protocol buffer compiler. It defines `MessageType`, `Entry`,
+  `Message`, `State`, and other structured data required for *Raft* algorithm.
 - [`rafthttp`](http://godoc.org/github.com/coreos/etcd/rafthttp):
 - [`etcdserver`](http://godoc.org/github.com/coreos/etcd/etcdserver): connects servers in the cluster, using `HTTP`.
 - [`etcdserver/etcdhttp`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdhttp):
