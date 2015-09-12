@@ -23,6 +23,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
+- [raft algorithm: summary](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
 - [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [`etcd` internals: log replication](#etcd-internals-log-replication)
@@ -177,7 +178,7 @@ consistent**.
   other servers, then the algorithm elects a new leader. In normal operation,
   there is **exactly only one leader**. A leader sends periodic heartbeat
   messages to other servers to maintain its authority.
-- **`client`**: A client requests that **a leader append a new log entry**.
+- **`client`**: A client *requests* that **a leader append a new log entry**.
   Then the leader writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
   any machine in the cluster. If a client sends a request to a follower, it
@@ -413,6 +414,74 @@ Not ready yet. I am researching right now.
 If a `follower` or `candidate` crashes, `RequestVote` and `AppendEntries` RPCs
 will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 *idempotent*, which means calling multiple times has no additional effects.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+#### raft algorithm: summary
+
+Here's pseudo-code that summarizes *Raft* algorithm:
+
+```go
+// ServerState contains persistent, volatile states of
+// all servers(follower, candidate, leader).
+type ServerState struct {
+
+	// Persistent state on all servers.
+	// This should be updated on stable storage
+	// before responding to RPCs.
+	//
+	// currentTerm is the latest term that server
+	// has been in. A server begins with currentTerm 0,
+	// and it increases monotonically
+	currentTerm int
+	//
+	// votedFor is the candidateId that received vote
+	// in current term, from this server.
+	votedFor string
+	//
+	// logs is a list of log entries, of which contains
+	// command for state machine, and the term when the
+	// entry was received by a leader.
+	logs []string
+
+	// Volatile state on all servers.
+	//
+	// commitIndex is the index of latest(or highest)
+	// committed log entry. It starts with 0 and increases
+	// monotonically.
+	commitIndex int
+	//
+	// lastApplied is the index of the highest log entry
+	// applied to state machine. It is the index of last
+	// executed command. It starts with 0 and increases
+	// monotonically.
+	lastApplied int
+
+	// Volatile state on leaders.
+	// This must be reinitialized after election.
+	//
+	// serverToNextIndex maps serverID to the index of
+	// next log entry to send to that server.
+	// NextIndex gets initialized with the last leader
+	// log index + 1.
+	serverToNextIndex map[string]int
+	//
+	// serverToMatchIndex maps serverID to the index of
+	// highest log entry that has been replicated on that server.
+	// The MatchIndex begins with 0, increases monotonically.
+	serverToMatchIndex map[string]int
+}
+
+```
+
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
