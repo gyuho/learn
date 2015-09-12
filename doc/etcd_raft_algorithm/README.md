@@ -137,8 +137,8 @@ and returns outputs. **Replicated state machines** in a distributed system
 **compute identical copies** of the same state, so that even if some servers
 are down, other **state machines can keep running**. A **replicated state
 machine** is usually **implemented by replicating logs identically across
-the servers**. And **keeping the replicated logs consistent** is the overall
-goal of **raft algorithm**.
+the servers**. The goal of *Raft* algorithm is to **keep the replicated logs
+consistent**.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -162,7 +162,7 @@ goal of **raft algorithm**.
   Even when some of the servers are down, other state machines can keep
   running. Typically **replicated state machines are implemented by
   replicating log entries identically on the collection of servers**.
-- **`log`**: A log contains the list of commands, so that *state machines*
+- **`log`**: A log contains a list of commands, so that *state machines*
   can apply those log entries *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
@@ -170,16 +170,17 @@ goal of **raft algorithm**.
   is considered safe to be applied to state machines. `Commit` also includes
   preceding entries, such as the ones from previous leaders. This is done by
   the leader keeping track of the highest index to commit.
-- **`leader`**: *Raft algorithm* achieves *consensus* **by first electing a
-  leader**. A leader handles client requests and replicates log entries to
-  other servers(followers), and telling them when to apply log entries to
-  their state machines. When a leader fails or gets disconnected from other servers, then the algorithm elects a new leader. In normal operation,
-  there is **exactly only one leader**. A leader must keep sending heartbeat
+- **`leader`**: *Raft algorithm* first elects a `leader` to handle
+  client requests and replicate log entries to other servers(followers).
+  Once logs are replicated, the leader tells when to apply log entries to
+  their state machines. When a leader fails or gets disconnected from
+  other servers, then the algorithm elects a new leader. In normal operation,
+  there is **exactly only one leader**. A leader sends periodic heartbeat
   messages to other servers to maintain its authority.
 - **`client`**: A client requests that **a leader append a new log entry**.
   Then the leader writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
-  any machine in the cluster. If a client sends request to a follower, it
+  any machine in the cluster. If a client sends a request to a follower, it
   redirects to the current leader (Raft paper §5.1). A leader sends out
   `AppendEntries` RPCs with its `leaderId` to other servers, so that a
   follower knows where to redirect client requests.
@@ -187,16 +188,17 @@ goal of **raft algorithm**.
   responds to incoming RPCs from candidates and leaders. All servers start as
   followers. If a follower receives no communication(heartbeat), it becomes a
   candidate to start an election. 
-- **`candidate`**: A candidate is used to elect a new leader. It's a state
-  between `follower` and `leader`. If a candidate receives votes from the
-  majority of a cluster, it becomes the new leader.
+- **`candidate`**: A candidate is used to elect a new leader. It's a server
+  state between `follower` and `leader`. If a candidate receives votes from
+  the majority of servers, it becomes the new `leader`.
 - **`term`**: *Raft* divides time into `terms` of arbitrary duration, indexed
   with consecutive integers. Each term begins with an *election*. And if the
   election ends with no leader (split vote), it creates a new `term`. *Raft*
   ensures that each `term` has at most one leader in the given `term`. `Term`
   index is also used to detect obsolete information. Servers always sync with
-  biggest `term` number(index), and any server with stale `term` number reverts
-  back to `follower` state, and any requests from such servers are rejected.
+  biggest `term` number(index), and any *server with stale `term`* number
+  **reverts back to `follower` state**, and any requests from such servers
+  are rejected.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -224,11 +226,11 @@ The basic Raft algorithm requires only two types of RPCs:
 This is the summary of
 [§5.2 Leader election](http://ramcloud.stanford.edu/raft.pdf):
 
-1. *Raft* starts a server as a `follower`, with the new `term`.
-2. A `leader` must send periodic heartbeat messages to its followers in order to
+1. A server begins as a `follower` with a new `term`.
+2. A `leader` sends periodic heartbeat messages to its followers in order to
    maintain its authority.
 3. `Followers` wait for **randomized** `election timeout` until they receive
-   heartbeat messages from a valid leader, with equal or greater `term` number.
+   heartbeats from a valid leader of equal or greater `term` number.
 4. If **`election times out`** and `followers` receive no such communication
    from a leader, then it assumes there is no current leader in the cluster,
    and it begins a new `election` and the **`follower` becomes the
@@ -241,11 +243,11 @@ This is the summary of
    `term` number to determine the up-to-date log.
 6. Then the **`candiate`** either:
 	- **_becomes the leader_** by *winning the election* when it gets **majority
-	  of votes**. Then it must send out the heartbeat messages to others
+	  of votes**. Then it must send out heartbeats to others
 	  to establish itself as a leader.
 	- **_reverts back to a follower_** when it receives a RPC from a **valid
 	  leader**. A valid heartbeat message must have a `term` number that is
-	  equal to or greater than `candidate`'s. The RPCs with lower `term`
+	  equal to or greater than `candidate`'s. RPCs with lower `term`
 	  numbers are rejected. A leader **only appends to log**. Therefore,
 	  future-leader will have the **most complete** log among electing
 	  majority: a leader's log is the truth and a leader will eventually
@@ -362,7 +364,7 @@ This is the summary of
 *Raft* algorithm's **_safety_** is ensured when:
 
 1. each state machine executes exactly the same commands in the same order.
-2. a leader for any given term contains all of the log entries committed
+2. a leader for any given term contains all of log entries committed
    in previous terms.
 
 <br>
@@ -411,9 +413,6 @@ Not ready yet. I am researching right now.
 If a `follower` or `candidate` crashes, `RequestVote` and `AppendEntries` RPCs
 will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 *idempotent*, which means calling multiple times has no additional effects.
-
-<br>
-...
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
