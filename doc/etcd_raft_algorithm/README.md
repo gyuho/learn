@@ -562,7 +562,45 @@ func AppendEntries(
 	return currentTerm, true
 }
 
+// RequestVote is invoked by candidates to gather votes.
 //
+// lastLogIndex is the index of candiate's last log entry.
+// lastLogTerm is the term number of lastLogIndex.
+//
+// It returns currentTerm, and boolean value if the candidate
+// has received vote or not.
+//
+func RequestVote(
+	targetServer  string,
+
+	candidateTerm int,
+	candidateID   string,
+	lastLogIndex  int,
+	lastLogTerm   int,
+) (int, bool) {
+
+	currentTerm := getCurrentTerm(targetServer)
+	if candidateTerm < currentTerm {
+		return currentTerm, false
+	}
+
+	// votedFor is the candidateID that received vote
+	// in the current term.
+	votedFor := targetServer.vote()
+	if votedFor == nil || votedFor == candidateID {
+		// candidate's log is at least up-to-date
+		// as receiver's log, so grant vote.
+		return currentTerm, true
+	}
+
+	return currentTerm, false
+}
+
+
+func doServer(server *ServerState) {
+	// All servers.
+	if server.
+}
 
 ```
 
