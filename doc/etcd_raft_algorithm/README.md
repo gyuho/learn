@@ -23,7 +23,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
-- [raft algorithm: summary](#raft-algorithm-summary)
+- [**raft algorithm: summary**](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
 - [`etcd` internals: leader election](#etcd-internals-leader-election)
 - [`etcd` internals: log replication](#etcd-internals-log-replication)
@@ -425,9 +425,9 @@ will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 
 
 
-#### raft algorithm: summary
+#### **raft algorithm: summary**
 
-Here's pseudo-code that summarizes *Raft* algorithm:
+Here's a pseudo-code that summarizes *Raft* algorithm:
 
 ```go
 // ServerState contains persistent, volatile states of
@@ -454,7 +454,7 @@ type ServerState struct {
 
 	// Volatile state on all servers.
 	//
-	// commitIndex is the index of latest(or highest)
+	// commitIndex is the index of the latest(or highest)
 	// committed log entry. It starts with 0 and increases
 	// monotonically.
 	commitIndex int
@@ -479,6 +479,90 @@ type ServerState struct {
 	// The MatchIndex begins with 0, increases monotonically.
 	serverToMatchIndex map[string]int
 }
+
+
+// AppendEntries is invoked by a leader to:
+//	- replicate log entries.
+//	- send heartbeat messages.
+//
+//
+// leaderTerm is the term number of the leader.
+//
+// leaderID is the serverID of the leader so that
+// followers can redirect clients to the leader.
+//
+// prevLogIndex is the index of immediate preceding
+// log entry (log entry before the new ones).
+//
+// prevLogTerm is the term number of prevLogIndex entry.
+//
+// entries contains log entries to store. It's empty for
+// heartbeats. And it is a list so that a leader can be
+// more efficient replicating log entries.
+//
+// leaderCommit is the leader's commitIndex.
+//
+// It returns the currentTerm and its success.
+// Current terms are exchanged whenever servers
+// communicate. It always updates its current term
+// with a larger value, so that if a candidate or
+// leader discovers that its term is out of date,
+// it immediately reverts to follower state (§5.1).
+//
+// It returns true if the follower has the matching
+// entry with the prevLogIndex and prevLogTerm.
+//
+func AppendEntries(
+	targetServer      string,
+
+	leaderTerm        int,
+	leaderID          string,
+	prevLogIndex      int,
+	prevLogTerm       int,
+	entries           []string,
+	leaderCommitIndex int,
+) (int, bool) {
+	
+	currentTerm := getCurrentTerm(targetServer)
+	if leaderTerm < currentTerm {
+		// so that the leader can update itself.
+		// This means the leader is out of date.
+		// The leader will revert back to a follower state.
+		return currentTerm, false
+	}
+
+	logs := getLogs(targetServer)
+	if v, exist := logs[prevLogIndex]; exist {
+		if v['term'] != prevLogTerm {
+			// An existing entry conflicts with a new entry.
+			// The entry at prevLogIndex has a different term.
+			// We need to delete the existing entry and
+			// all the following entries.
+			delete(logs, prevLogTerm)
+			delete(logs, prevLogTerm + 1 ...)
+		}
+	} else {
+		// the log entry with prevLogIndex
+		// and prevLogTerm does not exist
+		return currentTerm, false
+	}
+
+	// append any new entries that are not already in the log.
+	for _, entry := range entries {
+		if !findEntry(logs, entry) {
+			logs = append(logs, entry)
+		}
+	}
+
+	commitIndex := getCommitIndex(targetServer)
+	if leaderCommitIndex > commitIndex {
+		setCommitIndex(targetServer, min(leaderCommit, indexOfLastNewEntry))
+	}
+
+	return currentTerm, true
+}
+
+//
 
 ```
 
