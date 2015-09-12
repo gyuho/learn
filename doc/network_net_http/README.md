@@ -129,7 +129,7 @@ through your own [ISP](https://en.wikipedia.org/wiki/Internet_service_provider).
 
 <br>
 <br>
-**NAT** remapps one IP address space into another by modifying
+**NAT** remaps one IP address space into another by modifying
 network address information. It helps conserve IPv4 addresses by abstracting
 the entire IP address space with private network IP addresses.
 ![nat](img/nat.png)
