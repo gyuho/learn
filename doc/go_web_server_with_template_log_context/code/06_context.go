@@ -83,6 +83,7 @@ sendRequest1 done!
 
 sendRequest2 started
 sendRequest2 timed out!
+context deadline exceeded
 */
 
 func handlerRoot(ctx context.Context, w http.ResponseWriter, req *http.Request) error {
@@ -171,6 +172,7 @@ func sendRequest(ctx context.Context, msg string, duration time.Duration) {
 	case <-ctx.Done():
 		// Done channel is closed when the deadline expires(times out)
 		fmt.Println(msg, "timed out!")
+		fmt.Println(ctx.Err())
 		return
 	}
 }

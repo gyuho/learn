@@ -82,43 +82,15 @@ func main() {
 	func() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-		go sendRequest(ctx, time.Second)
 		defer cancel()
-		select {
-		case <-time.After(200 * time.Millisecond):
-			panic("overslept")
-		case <-ctx.Done():
-			// Done channel is closed when the deadline expires(times out)
-			fmt.Println("Done 3 timed out:", ctx)
-			fmt.Println("Done 3 timed out:", ctx.Err()) // prints "context deadline exceeded"
-		}
-	}()
-	time.Sleep(time.Second)
-	/*
-	   Started: sendRequest
-	   Done 3 timed out: context.Background.WithDeadline(2015-09-02 22:38:00.841432965 -0700 PDT [-105.376µs])
-	   Done 3 timed out: context deadline exceeded
-	   Done: sendRequest
-	*/
-
-	fmt.Println()
-	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-		go sendRequest(ctx, time.Millisecond)
-		defer cancel()
-		select {
-		case <-ctx.Done():
-			// Done channel is closed when the deadline expires(times out)
-			fmt.Println("Done 4 timed out:", ctx)
-			fmt.Println("Done 4 timed out:", ctx.Err()) // prints "context deadline exceeded"
-		}
+		sendRequestWithWaitTime(ctx, 500*time.Millisecond)
+		fmt.Println("Done 3")
 	}()
 	/*
-		Started: sendRequest
-		Done: sendRequest
-		Done 4 timed out: context.Background.WithDeadline(2015-09-02 23:41:38.874000873 -0700 PDT [-139.856µs])
-		Done 4 timed out: context deadline exceeded
+		Started: sendRequestWithWaitTime
+		Timed out: sendRequestWithWaitTime
+		context deadline exceeded
+		Done 3
 	*/
 
 	fmt.Println()
@@ -126,27 +98,13 @@ func main() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 		defer cancel()
-		sendRequestCorrectWay(ctx, 500*time.Millisecond)
-		fmt.Println("Done 5")
+		sendRequestWithWaitTime(ctx, time.Millisecond)
+		fmt.Println("Done 4")
 	}()
 	/*
-		Started: sendRequestCorrectWay
-		Timed out: sendRequestCorrectWay
-		Done 5
-	*/
-
-	fmt.Println()
-	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-		defer cancel()
-		sendRequestCorrectWay(ctx, time.Millisecond)
-		fmt.Println("Done 6")
-	}()
-	/*
-		Started: sendRequestCorrectWay
-		Done: sendRequestCorrectWay
-		Done 6
+		Started: sendRequestWithWaitTime
+		wait is Done: sendRequestWithWaitTime
+		Done 4
 	*/
 
 	fmt.Println()
@@ -154,30 +112,27 @@ func main() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 		cancel()
-		sendRequestCorrectWay(ctx, time.Millisecond)
-		fmt.Println("Done 7")
+		sendRequestWithWaitTime(ctx, time.Millisecond)
+		fmt.Println("Done 5")
 	}()
 	/*
-		Started: sendRequestCorrectWay
-		Timed out: sendRequestCorrectWay
-		Done 7
+		Started: sendRequestWithWaitTime
+		Timed out: sendRequestWithWaitTime
+		context canceled
+		Done 5
 	*/
 }
 
-func sendRequest(ctx context.Context, duration time.Duration) {
-	fmt.Println("Started: sendRequest")
-	time.Sleep(duration)
-	fmt.Println("Done: sendRequest")
-}
-
-func sendRequestCorrectWay(ctx context.Context, duration time.Duration) {
-	fmt.Println("Started: sendRequestCorrectWay")
+func sendRequestWithWaitTime(ctx context.Context, wait time.Duration) {
+	fmt.Println("Started: sendRequestWithWaitTime")
 	select {
-	case <-time.After(duration):
-		fmt.Println("Done: sendRequestCorrectWay")
+	case <-time.After(wait):
+		fmt.Println("wait is Done: sendRequestWithWaitTime")
 		return
 	case <-ctx.Done():
-		fmt.Println("Timed out: sendRequestCorrectWay")
+		// Done channel is closed when the deadline expires(times out)
+		fmt.Println("Timed out: sendRequestWithWaitTime")
+		fmt.Println(ctx.Err())
 		return
 	}
 }
