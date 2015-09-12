@@ -126,12 +126,12 @@ func main() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 		defer cancel()
-		sendRequestCorrectWawy(ctx, 500*time.Millisecond)
+		sendRequestCorrectWay(ctx, 500*time.Millisecond)
 		fmt.Println("Done 5")
 	}()
 	/*
-		Started: sendRequestCorrectWawy
-		Timed out: sendRequestCorrectWawy
+		Started: sendRequestCorrectWay
+		Timed out: sendRequestCorrectWay
 		Done 5
 	*/
 
@@ -140,12 +140,12 @@ func main() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 		defer cancel()
-		sendRequestCorrectWawy(ctx, time.Millisecond)
+		sendRequestCorrectWay(ctx, time.Millisecond)
 		fmt.Println("Done 6")
 	}()
 	/*
-		Started: sendRequestCorrectWawy
-		Done: sendRequestCorrectWawy
+		Started: sendRequestCorrectWay
+		Done: sendRequestCorrectWay
 		Done 6
 	*/
 
@@ -154,12 +154,12 @@ func main() {
 		// Done channel is closed when the deadline expires(times out)
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 		cancel()
-		sendRequestCorrectWawy(ctx, time.Millisecond)
+		sendRequestCorrectWay(ctx, time.Millisecond)
 		fmt.Println("Done 7")
 	}()
 	/*
-		Started: sendRequestCorrectWawy
-		Timed out: sendRequestCorrectWawy
+		Started: sendRequestCorrectWay
+		Timed out: sendRequestCorrectWay
 		Done 7
 	*/
 }
@@ -170,14 +170,14 @@ func sendRequest(ctx context.Context, duration time.Duration) {
 	fmt.Println("Done: sendRequest")
 }
 
-func sendRequestCorrectWawy(ctx context.Context, duration time.Duration) {
-	fmt.Println("Started: sendRequestCorrectWawy")
+func sendRequestCorrectWay(ctx context.Context, duration time.Duration) {
+	fmt.Println("Started: sendRequestCorrectWay")
 	select {
 	case <-time.After(duration):
-		fmt.Println("Done: sendRequestCorrectWawy")
+		fmt.Println("Done: sendRequestCorrectWay")
 		return
 	case <-ctx.Done():
-		fmt.Println("Timed out: sendRequestCorrectWawy")
+		fmt.Println("Timed out: sendRequestCorrectWay")
 		return
 	}
 }
