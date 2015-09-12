@@ -686,13 +686,14 @@ The basic Raft algorithm requires only two types of RPCs:
 for inter-machine communication of structured data. Below are some of
 the related, core packages:
 
-- [`raft`](http://godoc.org/github.com/coreos/etcd/raft): implements of the raft consensus algorithm.
+- [`raft`](http://godoc.org/github.com/coreos/etcd/raft): implements the raft consensus algorithm.
 - [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb): This
   package is
   [auto-generated](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.pb.go#L1-L3)
   by the protocol buffer compiler. It defines `MessageType`, `Entry`,
   `Message`, `State`, and other structured data required for *Raft* algorithm.
-- [`rafthttp`](http://godoc.org/github.com/coreos/etcd/rafthttp):
+- [`rafthttp`](http://godoc.org/github.com/coreos/etcd/rafthttp): implements
+  `http` operations in *Raft*.
 - [`etcdserver`](http://godoc.org/github.com/coreos/etcd/etcdserver): connects servers in the cluster, using `HTTP`.
 - [`etcdserver/etcdhttp`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdhttp):
 - [`etcdserver/etcdserverpb`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdserverpb):
