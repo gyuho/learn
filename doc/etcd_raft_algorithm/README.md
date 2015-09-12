@@ -718,15 +718,42 @@ the related, core packages:
 - [**`client`**](http://godoc.org/github.com/coreos/etcd/client): is the official
   *Go* `etcd` client.
 
-<br>
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
 ##### **`raft`**
 
-<br>
+Package `raft` implements the raft consensus algorithm.
+Let's look at the actual code.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
 ##### **`etcdserver`**
 
-<br>
+Package `etcdserver` defines interfaces for `etcd` cluster and servers.
+Let's look at the actual code.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
 ##### **`client`**
 
+Package `client` is the official Go `etcd` client.
+Let's look at the actual code.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
