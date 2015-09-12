@@ -596,10 +596,69 @@ func RequestVote(
 	return currentTerm, false
 }
 
-
 func doServer(server *ServerState) {
 	// All servers.
-	if server.
+	if server.commitIndex > server.lastApplied {
+		server.lastApplied++
+		execute(server.logs[server.lastApplied])
+	}
+}
+
+func candidate(server *ServerState) {
+	// All servers.
+	if server.commitIndex > server.lastApplied {
+		server.lastApplied++
+		execute(server.logs[server.lastApplied])
+	}
+
+	// on conversion to candidate
+	server.currentTerm++
+	
+	// vote for itself
+	vote(server)
+
+	// reset election timer
+	server.electionTimer.init()
+
+	if SendRequestVote(allServers) > majority {
+		becameLeader(server)
+	}
+
+	if electionTimeOut() {
+		startNewElection()
+	}
+}
+
+func becameLeader(server *ServerState) {
+	// this needs to be sent periodically
+	// while idle.
+	SendHeartBeats(allServers)
+
+	select {
+	case entry := <-command:
+		server.logs = append(server.logs, entry)
+		execute(entry) // apply to state machine
+		respond(entry.client)
+	}
+
+	for follower, nextIndex := range server.serverToNextIndex {
+		if server.lastLogIndex >= nextIndex {
+			AppendEntries(server.logs[nextIndex:])
+		}
+	}
+
+	find := func() int {
+		for index := range server.logs {
+			if index > server.commitIndex {
+				if server.logs[index].term == server.currentTerm {
+					if majority of matchIndex[followers] >= index {
+						server.commitIndex = index
+					}					
+				}
+			}
+		}
+	}
+	find()
 }
 
 ```
