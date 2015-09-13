@@ -843,14 +843,13 @@ type Storage interface {
 
 So
 [`raft/storage.go`](https://github.com/coreos/etcd/blob/master/raft/storage.go)
-implements `Storage` interface, and package `raft` defines `MemoryStorage` type
-that satisfies `Storage` interface by implementing all methods in `Storage`
+defines `Storage` interface, and package `raft` defines `MemoryStorage` type
+that satisfies `Storage` interface by implementing methods in `Storage`
 method.
 
 <br>
-From this configuration(`Config`),
 [`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go)
-defines raft [`Node`](https://godoc.org/github.com/coreos/etcd/raft#Node)
+defines [`Node`](https://godoc.org/github.com/coreos/etcd/raft#Node)
 interface, as below:
 
 ```go
