@@ -290,6 +290,7 @@ always available, so that even if one fails, others can keep running.
 
 - [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
 - [**_etcd, raft algorithm_**](https://github.com/gyuho/learn/tree/master/doc/etcd_raft_algorithm)
+- [**_etcd, go-fuzz_**](https://github.com/gyuho/learn/tree/master/doc/etcd_go_fuzz)
 
 [↑ top](#contents)
 <br><br>
