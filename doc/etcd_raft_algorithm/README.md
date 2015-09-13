@@ -901,9 +901,64 @@ type Node interface {
 
 ```
 
+Then what types satisfy this `Node` interface?
+[`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go)
+has internal type `node` that satisfies `Node` interface.
 
+```go
+// node is the canonical implementation of the Node interface
+type node struct {
+	propc      chan pb.Message
+	recvc      chan pb.Message
+	confc      chan pb.ConfChange
+	confstatec chan pb.ConfState
+	readyc     chan Ready
+	advancec   chan struct{}
+	tickc      chan struct{}
+	done       chan struct{}
+	stop       chan struct{}
+	status     chan chan Status
+}
 
+func newNode() node {
+	return node{
+		propc:      make(chan pb.Message),
+		recvc:      make(chan pb.Message),
+		confc:      make(chan pb.ConfChange),
+		confstatec: make(chan pb.ConfState),
+		readyc:     make(chan Ready),
+		advancec:   make(chan struct{}),
+		tickc:      make(chan struct{}),
+		done:       make(chan struct{}),
+		stop:       make(chan struct{}),
+		status:     make(chan chan Status),
+	}
+}
 
+```
+
+By doing this, the type `node` is implicitly exported
+as an interface type `Node`. And other packages use `Node`
+with methods implemented in `node` type. For example:
+
+```go
+func StartNode(c *Config, peers []Peer) Node {
+	...
+	n := newNode()
+	go n.run(r)
+	return &n
+}
+
+```
+
+Please check out
+[this](https://github.com/gyuho/learn/tree/master/doc/go_interface#implicitly-exporting-interface)
+for more detailed explanation of Go `interface` behavior.
+
+Most operations in *Raft* is based on `raft.Node`, and states and data are
+stored through `raft.MemoryStorage`. For the full source code and
+documentation, please go to
+[godoc.org/github.com/coreos/etcd/raft](http://godoc.org/github.com/coreos/etcd/raft).
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
