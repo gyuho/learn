@@ -11,6 +11,7 @@
 - [package `io/ioutil`](#package-ioioutil)
 - [interface in `container/heap`](#interface-in-containerheap)
 - [**review `interface`**, and `interface` pointer, `interface` internal](#review-interface-and-interface-pointer-interface-internal)
+- [implicitly exporting `interface`](#implicitly-exporting-interface)
 - [`ioprogress`](#ioprogress)
 - [`sort`](#sort)
 - [sort table](#sort-table)
@@ -880,6 +881,161 @@ once* and caches it. For more detail, please read:
 [↑ top](#go-interface)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+
+
+#### implicitly exporting `interface`
+
+For example,
+[`raft.StartNode`](http://godoc.org/github.com/coreos/etcd/raft#StartNode)
+returns `raft.Node` interface, with its methods to be used in other packages:
+
+```go
+type Node interface {
+    // Tick increments the internal logical clock for the Node by a single tick. Election
+    // timeouts and heartbeat timeouts are in units of ticks.
+    Tick()
+
+    // Campaign causes the Node to transition to candidate state and start campaigning to become leader.
+    Campaign(ctx context.Context) error
+
+    // Propose proposes that data be appended to the log.
+    Propose(ctx context.Context, data []byte) error
+
+    // ProposeConfChange proposes config change.
+    // At most one ConfChange can be in the process of going through consensus.
+    // Application needs to call ApplyConfChange when applying EntryConfChange type entry.
+    ProposeConfChange(ctx context.Context, cc pb.ConfChange) error
+    
+    // Step advances the state machine using the given message. ctx.Err() will be returned, if any.
+    Step(ctx context.Context, msg pb.Message) error
+
+    // Ready returns a channel that returns the current point-in-time state
+    // Users of the Node must call Advance after applying the state returned by Ready
+    Ready() <-chan Ready
+
+    // Advance notifies the Node that the application has applied and saved progress up to the last Ready.
+    // It prepares the node to return the next available Ready.
+    Advance()
+
+    // ApplyConfChange applies config change to the local node.
+    // Returns an opaque ConfState protobuf which must be recorded
+    // in snapshots. Will never return nil; it returns a pointer only
+    // to match MemoryStorage.Compact.
+    ApplyConfChange(cc pb.ConfChange) *pb.ConfState
+
+    // Status returns the current status of the raft state machine.
+    Status() Status
+
+    // Report reports the given node is not reachable for the last send.
+    ReportUnreachable(id uint64)
+
+    // ReportSnapshot reports the stutus of the sent snapshot.
+    ReportSnapshot(id uint64, status SnapshotStatus)
+
+    // Stop performs any necessary termination of the Node
+    Stop()
+}
+
+```
+
+But what types satisfy this `Node` interface? There is only one type `node` in
+lowercase located in
+[`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go).
+Since `node` type satisfies `Node` interface, `StartNode` can create a
+`node` type value and return `Node` interface type.
+
+```go
+func StartNode(c *Config, peers []Peer) Node {
+	...
+	n := newNode()
+	go n.run(r)
+	return &n
+}
+
+// node is the canonical implementation of the Node interface
+type node struct {
+    propc      chan pb.Message
+    recvc      chan pb.Message
+    confc      chan pb.ConfChange
+    confstatec chan pb.ConfState
+    readyc     chan Ready
+    advancec   chan struct{}
+    tickc      chan struct{}
+    done       chan struct{}
+    stop       chan struct{}
+    status     chan chan Status
+}
+
+func newNode() node {
+    return node{
+        propc:      make(chan pb.Message),
+        recvc:      make(chan pb.Message),
+        confc:      make(chan pb.ConfChange),
+        confstatec: make(chan pb.ConfState),
+        readyc:     make(chan Ready),
+        advancec:   make(chan struct{}),
+        tickc:      make(chan struct{}),
+        done:       make(chan struct{}),
+        stop:       make(chan struct{}),
+        status:     make(chan chan Status),
+    }
+}
+
+```
+
+<br>
+A similar example:
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/gyuho/learn/doc/go_interface/code/implicit"
+)
+
+type Node interface {
+	GetName() string
+}
+
+type node struct {
+	name string
+}
+
+func (n node) GetName() string {
+	return n.name
+}
+
+func StartNode(name string) Node {
+	nd := node{}
+	nd.name = name
+	return &nd
+}
+
+func main() {
+	nd := StartNode("Gyu-Ho")
+	fmt.Println(nd.GetName())
+	// Gyu-Ho
+
+	ndi := implicit.StartNode("A")
+	fmt.Println(ndi.GetName())
+	// A
+}
+
+```
+
+[↑ top](#go-interface)
+<br><br><br><br>
+<hr>
+
 
 
 

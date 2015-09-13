@@ -353,8 +353,22 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coreos/go-etcd/etcd"
+	"github.com/coreos/etcd/client"
+	"golang.org/x/net/context"
 )
+
+var machines = []string{
+	"http://1.2.3.4:2379", // etcd0
+	"http://1.2.3.5:2379", // etcd1
+	"http://1.2.3.6:2379", // etcd2
+}
+
+var cfg = client.Config{
+	Endpoints: machines,
+	Transport: client.DefaultTransport,
+	// set timeout per request to fail fast when the target endpoint is unavailable
+	HeaderTimeoutPerRequest: time.Second,
+}
 
 func main() {
 	recursiveRun()
@@ -367,22 +381,14 @@ func recursiveRun() {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("recovered but here's the error:", err)
-			panic("panic for this time. Gyu-Ho. debug this!")
-
 			count++
-			if count == 30 {
-				fmt.Println("too much error:", err)
+			if count == 2 {
+				panic("panic for this time. Debug this!")
 			}
 			run()
 		}
 	}()
 	run()
-}
-
-var machines = []string{
-	"http://1.2.3.4:2379", // etcd0
-	"http://1.2.3.5:2379", // etcd1
-	"http://1.2.3.6:2379", // etcd2
 }
 
 func run() {
@@ -391,15 +397,20 @@ func run() {
 
 	for {
 		totalCount++
-		cli := etcd.NewClient(machines)
-		log.Println("Running client.RunJobs...")
-		if err := execute(cli, "queue"); err != nil {
-			log.Println("error:", err)
+
+		c, err := client.New(cfg)
+		if err != nil {
+			panic(err)
+		}
+		kapi := client.NewKeysAPI(c)
+
+		if err := execute(kapi, "queue"); err != nil {
+			fmt.Println("error:", err)
 			fmt.Println("running duration:", time.Since(now))
 			fmt.Println("total count:", totalCount)
 			panic(err)
 		}
-		cli.Close()
+
 		time.Sleep(5 * time.Second)
 	}
 }
@@ -424,25 +435,33 @@ type Job struct {
 //
 //   curl http://$INFRA_PUBLIC_IP_0:2379/v2/keys/queue
 //
-func get(client *etcd.Client, queueName string) (map[string]*Job, error) {
-	response, err := client.Get(queueName, true, true)
+func get(kapi client.KeysAPI, queueName string) (map[string]*Job, error) {
+	resp, err := kapi.Get(context.Background(), ctx, queueName, nil)
 	if err != nil {
-		return nil, err
+		if err == context.Canceled {
+			return nil, fmt.Errorf("ctx is canceled by another routine")
+		} else if err == context.DeadlineExceeded {
+			return nil, fmt.Errorf("ctx is attached with a deadline and it exceeded")
+		} else if cerr, ok := err.(*client.ClusterError); ok {
+			return nil, fmt.Errorf("*client.ClusterError %v", cerr.Errors())
+		} else {
+			return nil, fmt.Errorf("bad cluster endpoints, which are not etcd servers: %+v", err)
+		}
 	}
-	if response == nil {
-		log.Printf("Empty Response: %+v\n", response)
+	if resp == nil {
+		log.Printf("Empty resp: %+v\n", resp)
 		return nil, nil
 	}
-	if response.Node == nil {
-		log.Printf("Empty Queue: %+v\n", response)
+	if resp.Node == nil {
+		log.Printf("Empty Queue: %+v\n", resp)
 		return nil, nil
 	}
-	if response.Node.Nodes.Len() == 0 {
-		log.Printf("Empty Queue: %+v\n", response)
+	if resp.Node.Nodes.Len() == 0 {
+		log.Printf("Empty Queue: %+v\n", resp)
 		return nil, nil
 	}
 	queueMap := make(map[string]*Job)
-	for _, elem := range response.Node.Nodes {
+	for _, elem := range resp.Node.Nodes {
 		if _, ok := queueMap[elem.Key]; !ok {
 			job := Job{}
 			if err := json.NewDecoder(strings.NewReader(elem.Value)).Decode(&job); err != nil {
@@ -464,15 +483,23 @@ func get(client *etcd.Client, queueName string) (map[string]*Job, error) {
 }
 
 // put updates/creates the job.
-func put(client *etcd.Client, job *Job) error {
+func put(kapi client.KeysAPI, job *Job) error {
 	job.FinishedTimestamp = time.Now().UTC().String()[:19]
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(job); err != nil {
 		return err
 	}
 	value := buf.String()
-	if _, err := client.Set(job.ETCDKey, value, 0); err != nil {
-		return err
+	if _, err := kapi.Set(context.Background(), ctx, job.ETCDKey, value, nil); err != nil {
+		if err == context.Canceled {
+			return fmt.Errorf("ctx is canceled by another routine")
+		} else if err == context.DeadlineExceeded {
+			return fmt.Errorf("ctx is attached with a deadline and it exceeded")
+		} else if cerr, ok := err.(*client.ClusterError); ok {
+			return fmt.Errorf("*client.ClusterError %v", cerr.Errors())
+		} else {
+			return fmt.Errorf("bad cluster endpoints, which are not etcd servers: %+v", err)
+		}
 	}
 	return nil
 }
@@ -516,9 +543,9 @@ func (pq *priorityQueue) Pop() interface{} {
 	return lastNode
 }
 
-func execute(client *etcd.Client, queueName string) error {
+func execute(kapi *client.KeysAPI, queueName string) error {
 	log.Println("#1. get")
-	jobMap, err := get(client, queueName)
+	jobMap, err := get(kapi, queueName)
 	if err != nil {
 		return err
 	}
@@ -556,6 +583,7 @@ func execute(client *etcd.Client, queueName string) error {
 
 	log.Println("Done with queue...")
 }
+
 ```
 
 [↑ top](#etcd-priority-queue-aws-gcp)
