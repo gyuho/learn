@@ -430,7 +430,7 @@ will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
 
 #### **raft algorithm: summary**
 
-Here's a pseudo-code that summarizes *Raft* algorithm:
+Here's pseudo-code that summarizes *Raft* algorithm:
 
 ```go
 // ServerState contains persistent, volatile states of
@@ -729,7 +729,129 @@ the related, core packages:
 ##### **`raft`**
 
 Package `raft` implements the raft consensus algorithm.
-Let's look at the actual code.
+And package `etcdserver` imports `raft` and `raftpb` package
+to create and run `etcd` clusters:
+
+- https://github.com/coreos/etcd/blob/master/etcdserver/server.go
+- https://github.com/coreos/etcd/blob/master/etcdserver/raft.go
+- https://github.com/coreos/etcd/blob/master/etcdserver/storage.go
+
+
+<br>
+Here's how `raft` and `raftpb` are **used** in `etcdserver`:
+
+- `Server` interface requires `Process` method to take `raftpb.Message`
+  and to apply(execute) the message to its state machine.
+- `raftNode` struct embeds `raft.Node` interface that represents a node in a
+  cluster. `raftNode` also embeds `raft.MemoryStorage` to store data
+  in-memory.
+- `raftNode` has `applyc chan apply` as a channel to do `apply` (execute
+  commands in log entry). And `apply` is defined as a struct that contains
+  a slice of `raftpb.Entry` which contains `Type`, `Term`, `Index`, `Data`.
+  `apply` struct also contains `snapshot raftpb.SnapShot`, which represents
+  current state of the system, with member `conf_state`, `index`, `term`.
+
+<br>
+First, it's helpful to look at
+[`raft/raftpb.raft.proto`](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.proto)
+because it defines structured data format for *Raft* RPCs.
+
+<br>
+Here's how `raft` gets implemented. First, to define the server state:
+
+```go
+// Possible values for StateType.
+const (
+	StateFollower StateType = iota
+	StateCandidate
+	StateLeader
+)
+
+// StateType represents the role of a node in a cluster.
+type StateType uint64
+
+```
+
+<br>
+`Config` struct contains the configuration of a *Raft* node.
+
+```go
+type Config struct {
+	ID             uint64     // non-zero ID of a raft node.
+	peers          []uint64   // slice of all node IDs, including the node itself.
+
+    ElectionTick   int        // election timeout, must be greater than
+	                          // HeartbeatTick
+
+	HearbeatTick   int        // heartbeat interval
+
+	Storage Storage  // storage for a raft node.
+
+	Applied         uint64   // the index of last applied entry.
+	MaxSizePerMsg   uint64   // maximum size of each appending message.
+	MaxInflightMsgs int      // maximum number of in-flight append-waiting
+	                         // messages. TCP/UDP has its own buffer but useful
+	                         // for avoid overflowing.
+
+    Logger Logger
+}
+
+```
+
+Please look at https://godoc.org/github.com/coreos/etcd/raft#Config for full
+comments. And here's the definition of `Storage` in the `Config`:
+
+```go
+// Storage is an interface that may be implemented by the application
+// to retrieve log entries from storage.
+//
+// If any Storage method returns an error, the raft instance will
+// become inoperable and refuse to participate in elections; the
+// application is responsible for cleanup and recovery in this case.
+type Storage interface {
+	// InitialState returns the saved HardState and ConfState information.
+	InitialState() (pb.HardState, pb.ConfState, error)
+	
+	// Entries returns a slice of log entries in the range [lo,hi).
+	// MaxSize limits the total size of the log entries returned, but
+	// Entries returns at least one entry if any.
+	Entries(lo, hi, maxSize uint64) ([]pb.Entry, error)
+	
+	// Term returns the term of entry i, which must be in the range
+	// [FirstIndex()-1, LastIndex()]. The term of the entry before
+	// FirstIndex is retained for matching purposes even though the
+	// rest of that entry may not be available.
+	Term(i uint64) (uint64, error)
+	
+	// LastIndex returns the index of the last entry in the log.
+	LastIndex() (uint64, error)
+	
+	// FirstIndex returns the index of the first log entry that is
+	// possibly available via Entries (older entries have been incorporated
+	// into the latest Snapshot; if storage only contains the dummy entry the
+	// first log entry is not available).
+	FirstIndex() (uint64, error)
+
+	// Snapshot returns the most recent snapshot.
+	Snapshot() (pb.Snapshot, error)
+}
+
+```
+
+So
+[`raft/storage.go`](https://github.com/coreos/etcd/blob/master/raft/storage.go)
+implements `Storage` interface, and package `raft` defines `MemoryStorage` type
+that satisfies `Storage` interface by implementing all methods in `Storage`
+method.
+
+<br>
+From this configuration(`Config`),
+[`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go)
+defines raft `Node` interface:
+
+
+
+
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
