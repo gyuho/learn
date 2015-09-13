@@ -740,8 +740,11 @@ to create and run `etcd` clusters:
 <br>
 Here's how `raft` and `raftpb` are **used** in `etcdserver`:
 
-- `Server` interface requires `Process` method to take `raftpb.Message`
-  and to apply(execute) the message to its state machine.
+- [`Server`](https://godoc.org/github.com/coreos/etcd/etcdserver#Server)
+  interface requires `Process` method to take `raftpb.Message` and
+  to apply(execute) the message to its state machine. `Server` interface in
+  `etcdserver` package is satisfied by type
+  [`EtcdServer`](https://godoc.org/github.com/coreos/etcd/etcdserver#EtcdServer).
 - `raftNode` struct embeds `raft.Node` interface that represents a node in a
   cluster. `raftNode` also embeds `raft.MemoryStorage` to store data
   in-memory.
