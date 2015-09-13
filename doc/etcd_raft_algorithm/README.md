@@ -21,13 +21,10 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
-- [raft algorithm: membership changes](#raft-algorithm-membership-changes)
-- [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [**raft algorithm: summary**](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
   - [**`raft`**](#raft)
   - [**`etcdserver`**](#etcdserver)
-  - [**`client`**](#client)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
