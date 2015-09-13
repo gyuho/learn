@@ -173,6 +173,16 @@ and [User Datagram Protocol (UDP)](https://en.wikipedia.org/wiki/User_Datagram_P
 > [*Transmission Control
 > Protocol*](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) *by Wikipedia*
 
+So, `TCP` is good for static contens, where you need to transfer relatively
+large chunck data at punctual intervals. For example, you would use `TCP` to
+download a file that won't change for the next 5 minutes (*static*). `UDP` is
+for real-time and continuous stream of data, when you do not want to wait to
+check its packet consistency. You might lose your data but get performance and
+responsiveness. VOIP uses `UDP` and  `TCP` is more universal these days.
+Some network devices do not support `UDP`. Many video streamings are served
+via `TCP` if the data are stored statically. Online live streaming would use
+`UDP`.
+
 [↑ top](#network-net-http)
 <br><br><br>
 
