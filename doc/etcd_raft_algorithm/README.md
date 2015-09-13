@@ -858,33 +858,44 @@ type Node interface {
     // Tick increments the internal logical clock for the Node by a single tick. Election
     // timeouts and heartbeat timeouts are in units of ticks.
     Tick()
+
     // Campaign causes the Node to transition to candidate state and start campaigning to become leader.
     Campaign(ctx context.Context) error
+
     // Propose proposes that data be appended to the log.
     Propose(ctx context.Context, data []byte) error
+
     // ProposeConfChange proposes config change.
     // At most one ConfChange can be in the process of going through consensus.
     // Application needs to call ApplyConfChange when applying EntryConfChange type entry.
     ProposeConfChange(ctx context.Context, cc pb.ConfChange) error
+
     // Step advances the state machine using the given message. ctx.Err() will be returned, if any.
     Step(ctx context.Context, msg pb.Message) error
+
     // Ready returns a channel that returns the current point-in-time state
     // Users of the Node must call Advance after applying the state returned by Ready
     Ready() <-chan Ready
+
     // Advance notifies the Node that the application has applied and saved progress up to the last Ready.
     // It prepares the node to return the next available Ready.
     Advance()
+
     // ApplyConfChange applies config change to the local node.
     // Returns an opaque ConfState protobuf which must be recorded
     // in snapshots. Will never return nil; it returns a pointer only
     // to match MemoryStorage.Compact.
     ApplyConfChange(cc pb.ConfChange) *pb.ConfState
+
     // Status returns the current status of the raft state machine.
     Status() Status
+
     // Report reports the given node is not reachable for the last send.
     ReportUnreachable(id uint64)
+
     // ReportSnapshot reports the stutus of the sent snapshot.
     ReportSnapshot(id uint64, status SnapshotStatus)
+
     // Stop performs any necessary termination of the Node
     Stop()
 }
