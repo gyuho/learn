@@ -757,7 +757,7 @@ Here's how `raft` and `raftpb` are **used** in `etcdserver`:
 <br>
 First, it's helpful to look at
 [`raft/raftpb/raft.proto`](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.proto)
-because it defines structured data format for *Raft* RPCs.
+because it defines structured data format used in *Raft* RPCs.
 
 <br>
 Here's how `raft` gets implemented. First, to define the server state:
