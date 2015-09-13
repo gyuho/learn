@@ -948,8 +948,8 @@ type Node interface {
 But what types satisfy this `Node` interface? There is only one type `node` in
 lowercase located in
 [`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go).
-Since `node` type satisfies `Node` interface, `StartServer` can create a value
-with `node` type and return as a `Node` interface type.
+Since `node` type satisfies `Node` interface, `StartNode` can create a
+`node` type value and return `Node` interface type.
 
 ```go
 func StartNode(c *Config, peers []Peer) Node {
@@ -957,6 +957,35 @@ func StartNode(c *Config, peers []Peer) Node {
 	n := newNode()
 	go n.run(r)
 	return &n
+}
+
+// node is the canonical implementation of the Node interface
+type node struct {
+    propc      chan pb.Message
+    recvc      chan pb.Message
+    confc      chan pb.ConfChange
+    confstatec chan pb.ConfState
+    readyc     chan Ready
+    advancec   chan struct{}
+    tickc      chan struct{}
+    done       chan struct{}
+    stop       chan struct{}
+    status     chan chan Status
+}
+
+func newNode() node {
+    return node{
+        propc:      make(chan pb.Message),
+        recvc:      make(chan pb.Message),
+        confc:      make(chan pb.ConfChange),
+        confstatec: make(chan pb.ConfState),
+        readyc:     make(chan Ready),
+        advancec:   make(chan struct{}),
+        tickc:      make(chan struct{}),
+        done:       make(chan struct{}),
+        stop:       make(chan struct{}),
+        status:     make(chan chan Status),
+    }
 }
 
 ```
@@ -985,18 +1014,18 @@ func (n node) GetName() string {
 	return n.name
 }
 
-func StartServer(name string) Node {
+func StartNode(name string) Node {
 	nd := node{}
 	nd.name = name
 	return &nd
 }
 
 func main() {
-	nd := StartServer("Gyu-Ho")
+	nd := StartNode("Gyu-Ho")
 	fmt.Println(nd.GetName())
 	// Gyu-Ho
 
-	ndi := implicit.StartServer("A")
+	ndi := implicit.StartNode("A")
 	fmt.Println(ndi.GetName())
 	// A
 }

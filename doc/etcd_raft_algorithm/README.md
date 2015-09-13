@@ -24,16 +24,10 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: membership changes](#raft-algorithm-membership-changes)
 - [raft algorithm: leader changes](#raft-algorithm-leader-changes)
 - [**raft algorithm: summary**](#raft-algorithm-summary)
-	- [**`raft`**](#raft)
-	- [**`etcdserver`**](#etcdserver)
-	- [**`client`**](#client)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
-- [`etcd` internals: leader election](#etcd-internals-leader-election)
-- [`etcd` internals: log replication](#etcd-internals-log-replication)
-- [`etcd` internals: log consistency](#etcd-internals-log-consistency)
-- [`etcd` internals: safety](#raft-algorithm-safety)
-- [`etcd` internals: membership changes](#etcd-internals-membership-changes)
-- [`etcd` internals: leader changes](#etcd-internals-leader-changes)
+  - [**`raft`**](#raft)
+  - [**`etcdserver`**](#etcdserver)
+  - [**`client`**](#client)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -391,36 +385,6 @@ This is done by `AppendEntries` RPC.
 
 
 
-
-
-
-
-#### raft algorithm: membership changes
-
-Not ready yet. I am researching right now.
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-#### raft algorithm: leader changes
-
-Not ready yet. I am researching right now.
-
-<br>
-If a `follower` or `candidate` crashes, `RequestVote` and `AppendEntries` RPCs
-will fail. *Raft* simply keeps retrying until they succeed. *Raft* RPCs are
-*idempotent*, which means calling multiple times has no additional effects.
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
 
 
 
@@ -972,82 +936,174 @@ documentation, please go to
 Package `etcdserver` defines interfaces for `etcd` cluster and servers.
 Let's look at the actual code.
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+<br>
+[`etcdserver/raft.go`](https://github.com/coreos/etcd/blob/master/etcdserver/raft.go)
+imports package
+[`raft`](http://godoc.org/github.com/coreos/etcd/raft)
+and [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb).
+
+<br>
+[`etcdserver/member.go`](https://github.com/coreos/etcd/blob/master/etcdserver/member.go)
+implements `Member` as a member in a cluster. `Member` contains attributes of
+peers and clients.
+
+```go
+// RaftAttributes represents the raft related attributes of an etcd member.
+type RaftAttributes struct {
+	PeerURLs []string `json:"peerURLs"`
+}
+
+// Attributes represents all the non-raft related attributes of an etcd member.
+type Attributes struct {
+	Name       string   `json:"name,omitempty"`
+	ClientURLs []string `json:"clientURLs,omitempty"`
+}
+
+type Member struct {
+	ID types.ID `json:"id"`
+	RaftAttributes
+	Attributes
+}
+
+```
 
 
+<br>
+[`etcdserver/cluster.go`](https://github.com/coreos/etcd/blob/master/etcdserver/cluster.go)
+defines `Cluster` interface:
+
+```go
+type Cluster interface {
+	// ID returns the cluster ID
+	ID() types.ID
+
+	// ClientURLs returns an aggregate set of all URLs on which this
+	// cluster is listening for client requests
+	ClientURLs() []string
+
+	// Members returns a slice of members sorted by their ID
+	Members() []*Member
+
+	// Member retrieves a particular member based on ID, or nil if the
+	// member does not exist in the cluster
+	Member(id types.ID) *Member
+
+	// IsIDRemoved checks whether the given ID has been removed from this
+	// cluster at some point in the past
+	IsIDRemoved(id types.ID) bool
+
+	// ClusterVersion is the cluster-wide minimum major.minor version.
+	Version() *semver.Version
+}
+
+```
+
+And it has internal type `cluster` to satisfy this interface:
+
+```go
+type cluster struct {
+	id    types.ID
+	token string
+	store store.Store
+
+	sync.Mutex // guards the fields below
+	version    *semver.Version
+	members    map[types.ID]*Member
+	// removed contains the ids of removed members in the cluster.
+	// removed id cannot be reused.
+	removed map[types.ID]bool
+}
+
+```
+
+You can add, remove, update members in a cluster.
 
 
-##### **`client`**
+<br>
+[`etcdserver/server.go`](https://github.com/coreos/etcd/blob/master/etcdserver/server.go)
+defines `Server` interface:
 
-Package `client` is the official Go `etcd` client.
-Let's look at the actual code.
+```go
+type Server interface {
+	// Start performs any initialization of the Server necessary for it to
+	// begin serving requests. It must be called before Do or Process.
+	// Start must be non-blocking; any long-running server functionality
+	// should be implemented in goroutines.
+	Start()
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+	// Stop terminates the Server and performs any necessary finalization.
+	// Do and Process cannot be called after Stop has been invoked.
+	Stop()
 
+	// ID returns the ID of the Server.
+	ID() types.ID
 
+	// Leader returns the ID of the leader Server.
+	Leader() types.ID
 
+	// Do takes a request and attempts to fulfill it, returning a Response.
+	Do(ctx context.Context, r pb.Request) (Response, error)
 
+	// Process takes a raft message and applies it to the server's raft state
+	// machine, respecting any timeout of the given context.
+	Process(ctx context.Context, m raftpb.Message) error
 
+	// AddMember attempts to add a member into the cluster. It will return
+	// ErrIDRemoved if member ID is removed from the cluster, or return
+	// ErrIDExists if member ID exists in the cluster.
+	AddMember(ctx context.Context, memb Member) error
 
-#### `etcd` internals: leader election
+	// RemoveMember attempts to remove a member from the cluster. It will
+	// return ErrIDRemoved if member ID is removed from the cluster, or return
+	// ErrIDNotFound if member ID is not in the cluster.
+	RemoveMember(ctx context.Context, id uint64) error
 
-Not ready yet. I am researching right now.
+	// UpdateMember attempts to update a existing member in the cluster. It will
+	// return ErrIDNotFound if the member ID does not exist.
+	UpdateMember(ctx context.Context, updateMemb Member) error
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+	ClusterVersion() *semver.Version
+}
 
+```
 
+And `EtcdServer` type satisfies the `Server` interface:
 
+```go
+// EtcdServer is the production implementation of the Server interface
+type EtcdServer struct {
+	// r must be the first element to keep 64-bit alignment for atomic
+	// access to fields
+	r raftNode
 
+	cfg       *ServerConfig
+	snapCount uint64
 
+	w          wait.Wait
+	stop       chan struct{}
+	done       chan struct{}
+	errorc     chan error
+	id         types.ID
+	attributes Attributes
 
-#### `etcd` internals: log replication
+	cluster *cluster
 
-Not ready yet. I am researching right now.
+	store store.Store
+	kv    dstorage.KV
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
+	stats  *stats.ServerStats
+	lstats *stats.LeaderStats
 
+	SyncTicker <-chan time.Time
 
+	reqIDGen *idutil.Generator
 
+	// forceVersionC is used to force the version monitor loop
+	// to detect the cluster version immediately.
+	forceVersionC chan struct{}
+}
 
-
-
-#### `etcd` internals: safety
-
-Not ready yet. I am researching right now.
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-#### `etcd` internals: membership changes
-
-Not ready yet. I am researching right now.
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-#### `etcd` internals: leader changes
-
-Not ready yet. I am researching right now.
+```
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
