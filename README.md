@@ -1,6 +1,6 @@
 My name is *Gyu-Ho Lee*, and I work at <a href="http://www.openmail.com" target="_blank">*OpenMail*</a>.
 
-- **Email**: <a href="mailto:gyuho.cs@gmail.com" target="_blank">gyuho.cs@gmail.com</a>
+- **Email**: <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>
 - **Projects**: <a href="http://gyuho.github.io/" target="_blank">gyuho.github.io</a>
 - **LinkedIn**: <a href="https://www.linkedin.com/in/gyuho" target="_blank">linkedin.com/in/gyuho</a>
 
@@ -19,7 +19,7 @@ This is a **_personal white-board_** where I *scribble* anything,
 explain ideas from various fields.
 
 I appreciate any kind of *feedback* or *suggestions*.
-You can email <a href="mailto:gyuho.cs@gmail.com" target="_blank">gyuho.cs@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
+You can email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
 or [`pull request`](https://github.com/gyuho/learn/pulls).
 I will respond within 24-hour.
 
