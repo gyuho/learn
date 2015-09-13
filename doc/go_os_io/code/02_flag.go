@@ -22,18 +22,18 @@ func main() {
 }
 
 /*
-go run 00_flag.go -h
+go run 02_flag.go -h
 
-Usage of /tmp/go-build105642507/command-line-arguments/_obj/exe/00_flag:
+Usage of /tmp/go-build105642507/command-line-arguments/_obj/exe/02_flag:
   -description string
-    	Describe the argument. (default "None")
+        Describe the argument. (default "None")
   -index int
-    	Specify the index.
+        Specify the index.
 exit status 2
 
 
 
-go run 00_flag.go -index=10 \
+go run 02_flag.go -index=10 \
 -description="Hello World!"
 ;
 

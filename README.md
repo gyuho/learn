@@ -164,7 +164,6 @@ This will help my transition to other languages or frameworks if needed.
 - [**_Go: function, method, pointer, nil, map, slice_**](https://github.com/gyuho/learn/tree/master/doc/go_function_method_pointer_nil_map_slice)
 - [*Go: struct*](https://github.com/gyuho/learn/tree/master/doc/go_struct)
 - [**_Go: interface_**](https://github.com/gyuho/learn/tree/master/doc/go_interface)
-- [*Go: argument, flag*](https://github.com/gyuho/learn/tree/master/doc/go_argument_flag)
 - [**_Go: os, io_**](https://github.com/gyuho/learn/tree/master/doc/go_os_io)
 - [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
