@@ -295,9 +295,10 @@ func main() {
 }
 ```
 
+<br>
 Basically Go map is a [**hash
 table**](https://en.wikipedia.org/wiki/Hash_table), like
-[below](http://play.golang.org/p/3V2zvcZZ9J):
+[this code](http://play.golang.org/p/3V2zvcZZ9J):
 
 ```go
 // A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital
@@ -789,8 +790,8 @@ And about `for` loop:
 
 #### `map` implementation
 
-The actual implementation is much more complicated, which I can only cover the
-fraction of. Source can be found here
+The actual implementation is much more complicated.
+Source can be found at
 [**_`/master/src/runtime/hashmap.go`_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go):
 
 > **A map is just a hash table. The data is arranged
