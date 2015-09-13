@@ -12,12 +12,6 @@
 <hr>
 
 
-
-
-
-
-
-
 #### type
 
 - [Basic Types and Operators](http://cslibrary.stanford.edu/101/EssentialC.pdf)
@@ -25,13 +19,6 @@
 [↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### variable
@@ -139,13 +126,6 @@ In more detail:
 [↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### operator
