@@ -46,9 +46,11 @@ Please refer to [Reference](#reference) below.
 - [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
 - [Raft (computer science)](https://en.wikipedia.org/wiki/Raft_(computer_science))
 - [Raft lecture (Raft user study)](https://www.youtube.com/watch?v=YbZ3zDzDnrw)
-- [coreos/etcd](https://github.com/coreos/etcd)
+- [`coreos/etcd`](https://github.com/coreos/etcd)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
 - [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
+- [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
+- [`gyuho/go-fuzz-etcd`](https://github.com/gyuho/go-fuzz-etcd)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -648,7 +650,7 @@ The basic Raft algorithm requires only two types of RPCs:
 <br>
 `etcd` uses [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
 for inter-machine communication of structured data. Below are some of
-the related, core packages:
+core packages:
 
 - [**`raft`**](http://godoc.org/github.com/coreos/etcd/raft):
   implements the raft consensus algorithm.
@@ -1101,6 +1103,9 @@ type EtcdServer struct {
 }
 
 ```
+
+And please check out [`gyuho/go-fuzz-etcd`](https://github.com/gyuho/go-fuzz-etcd)
+for more fuzz testing on `etcd`.
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
