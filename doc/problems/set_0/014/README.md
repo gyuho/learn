@@ -6,7 +6,7 @@
 **Word-search game.** Implement a program that finds all instances of the word
 `code` in the board *below*:
 
-![word_search_board](img/word_search_board.png)
+![board](img/board.png)
 
 [↑ top](#problem)
 <br><br><br><br>
