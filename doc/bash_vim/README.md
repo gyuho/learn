@@ -59,13 +59,13 @@ sudo apt-get -y install git;
 sudo apt-get -y install lm-sensors;
 
 # git
-ssh-keygen -t rsa -C "gyuho.cs@gmail.com" -f $HOME/.ssh/id_rsa -N "";
+ssh-keygen -t rsa -C "gyuhox@gmail.com" -f $HOME/.ssh/id_rsa -N "";
 eval "$(ssh-agent -s)";
 ssh-add /home/ubuntu/.ssh/id_rsa;
 xclip -sel clip < $HOME/.ssh/id_rsa.pub;
 
 echo "[user]
-  email = gyuho.cs@gmail.com
+  email = gyuhox@gmail.com
   name = Gyu-Ho Lee
 
 [color]
@@ -75,7 +75,7 @@ echo "[user]
   ui = auto" > $HOME/.gitconfig;
   
 git config --global user.name "Gyu-Ho Lee";
-git config --global user.email "gyuho.cs@gmail.com";
+git config --global user.email "gyuhox@gmail.com";
 
 sudo apt-get -y install ubuntu-restricted-extras update-manager-core;
 sudo apt-get -y check;
