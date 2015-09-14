@@ -608,7 +608,7 @@ uses:
 
 <br>
 
-In [**_AWS_**](http://aws.amazon.com/), you can first launch 3 [EC2](https://aws.amazon.com/ec2/_
+In [**_AWS_**](http://aws.amazon.com/), you can first launch 3 [EC2](https://aws.amazon.com/ec2]
 instances within the same `VPC` like below:
 
 ![aws_00](img/aws_00.png)
