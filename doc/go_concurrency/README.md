@@ -227,7 +227,8 @@ cheap, lightweight thread**. A program may have **thousands of goroutines**
 
 goroutines are **multiplexed into multiple OS threads**: when one goroutine
 blocks such as waiting for I/O, the thread blocks too but **no other goroutine
-blocks**.
+blocks**. When a goroutine blocks on a thread, Go run-time moves other goroutines
+to a different, available thread, so they won't be blocked.
 
 As of [Go 1.4](http://golang.org/doc/go1.4#runtime), the garbage collector has
 become precise enough that **goroutine stack now takes only 2048 bytes of
@@ -2479,10 +2480,10 @@ with `Mutex`.
 > much smaller number**.
 
 <br>
-**goroutines** are multiplexed onto a set of threads.
-When a goroutine blocks, run-time moves other goroutines to a different,
-available thread, so they won't be blocked. **goroutine** is cheaper than
-**threads**, because **goroutines* are multiplexed onto a small number of
+**goroutines** are multiplexed onto multiple OS threads.
+When a goroutine blocks on a thread, Go run-time moves other goroutines to a
+different, available thread, so they won't be blocked. **goroutine** is cheaper
+than **threads**, because **goroutines** are multiplexed onto a small number of
 OS threads. A program may run **thousands of goroutines**
 *in one thread*. We do not need to allocate one-thread-per-one-goroutine.
 We don't need to worry about threads in Go. Go handles synchronization.
