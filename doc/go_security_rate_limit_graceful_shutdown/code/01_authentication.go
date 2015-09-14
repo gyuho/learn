@@ -54,8 +54,8 @@ func secreteHandler(w http.ResponseWriter, req *http.Request) {
 			fmt.Fprintln(w, err)
 			return
 		}
-		if user.Email() != "gyuho.cs@gmail.com" {
-			fmt.Println("only gyuho.cs@gmail.com can access")
+		if user.Email() != "gyuhox@gmail.com" {
+			fmt.Println("only gyuhox@gmail.com can access")
 			auth.DeleteUserCookie(w, req)
 			http.Redirect(w, req, "http://google.com", http.StatusSeeOther)
 		}

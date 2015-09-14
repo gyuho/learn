@@ -237,7 +237,7 @@ var (
 
 	// people from here can only access this web site.
 	accessibleEmail = map[string]bool{
-		"gyuho.cs@gmail.com": true,
+		"gyuhox@gmail.com": true,
 	}
 
 	globalStorage storage
@@ -511,7 +511,7 @@ func handlerMain(ctx context.Context, w http.ResponseWriter, req *http.Request) 
 		//
 		// panic(mainTemplate.ExecuteTemplate(w, "base", &page{
 		// 	Title:     "Test Title",
-		// 	Email:     "gyuho.cs@gmail.com",
+		// 	Email:     "gyuhox@gmail.com",
 		// 	Name:      "Gyu-Ho Lee",
 		// 	Picture:   "/static/img/gopher.png",
 		// 	Authority: "Owner",
@@ -1098,7 +1098,7 @@ sudo docker run --publish 8080:8080 --name test --rm code;
 	"annotations": [
 		{
 			"name": "authors",
-			"value": "Gyu-Ho Lee <gyuho.cs@gmail.com>"
+			"value": "Gyu-Ho Lee <gyuhox@gmail.com>"
 		}
 	]
 }
