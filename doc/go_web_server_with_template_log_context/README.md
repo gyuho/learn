@@ -1438,7 +1438,7 @@ func handlerHello(ctx context.Context, w http.ResponseWriter, req *http.Request)
 		}
 		if err := helloTemplate.ExecuteTemplate(w, "base", &page{
 			Title:     "Test Title",
-			Email:     "gyuho.cs@gmail.com",
+			Email:     "gyuhox@gmail.com",
 			Name:      "Gyu-Ho Lee",
 			Picture:   "/static/img/gopher.png",
 			Authority: "Owner",
@@ -1455,7 +1455,7 @@ func handlerHello(ctx context.Context, w http.ResponseWriter, req *http.Request)
 		//
 		// panic(helloTemplate.ExecuteTemplate(w, "base", &page{
 		// 	Title:     "Test Title",
-		// 	Email:     "gyuho.cs@gmail.com",
+		// 	Email:     "gyuhox@gmail.com",
 		// 	Name:      "Gyu-Ho Lee",
 		// 	Picture:   "/static/img/gopher.png",
 		// 	Authority: "Owner",
