@@ -288,7 +288,7 @@ queue](http://en.wikipedia.org/wiki/Priority_queue) (or *heap*). You would have
 to implement [your own priority
 queue](https://groups.google.com/d/msg/nsq-users/QvgCsQ861Lw/z6H6uColDZcJ),
 which is also fine. You can *dequeue* the first few elements in the *queue* and
-build **heap** in memory and execute them in order. You can do this same thing
+build **heap** in memory and execute them in order. You can do the same thing
 in key/value storage, and it's just easier with *key/value* storage.
 
 [↑ top](#etcd-priority-queue-aws-gcp)
