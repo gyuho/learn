@@ -16,6 +16,7 @@
 - [`nil`](#nil)
 - [initialize and empty `map`](#initialize-and-empty-map)
 - [*non-deterministic* `range` `map`](#non-deterministic-range-map)
+- [`map` internals](#map-internals)
 - [slice tricks](#slice-tricks)
 - [permute](#example-permute)
 - [destroy `struct`](#destroy-struct)
@@ -984,146 +985,98 @@ func swapSlice2(i, j int, slice *[]int) {
 #### `nil`
 
 Since **maps are slices are references** in Go, we can assign
-[**nil**](https://golang.org/doc/faq#nil_error) **to them**. To sum, `nil` can
-be used for:
+[**nil**](https://golang.org/doc/faq#nil_error) **to them**. Below are a list
+of Go objects that can be `nil`, **because** internally they are pointers
+or `error`:
 
-- [*`error`*](http://golang.org/pkg/builtin/#error) interface
-- interface
-- `struct` pointer
-- `byte` slice (bytes, but not for `string`)
+- `interface`
+- [`error`](http://golang.org/pkg/builtin/#error) interface
+- `pointer` of a type
 - `map`
-- slice
+- `slice`
+- `byte` slice (bytes, but not for `string`)
+- `channel`
 
 
-Try this [code](http://play.golang.org/p/8iX7DFKSKA) below:
-
+Try this [code](http://play.golang.org/p/1CRip2lgsS) below:
 
 ```go
 package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"io"
 )
 
-type Data struct {
-	Root *Node
-}
-
-func New(root *Node) *Data {
-	d := &Data{}
-	d.Root = root
-	return d
-}
-
-type Interface interface {
-	Less(than Interface) bool
-}
-
-type Node struct {
-	Left  *Node
-	Key   Interface
-	Right *Node
-}
-
-func NewNode(key Interface) *Node {
-	nd := &Node{}
-	nd.Key = key
-	return nd
-}
-
-func (d *Data) Insert(nd *Node) {
-	if d.Root == nd {
-		return
-	}
-	d.Root = d.Root.insert(nd)
-}
-
-func (nd *Node) insert(node *Node) *Node {
-	if nd == nil {
-		return node
-	}
-	if nd.Key.Less(node.Key) {
-		nd.Right = nd.Right.insert(node)
-	} else {
-		nd.Left = nd.Left.insert(node)
-	}
-	return nd
-}
-
-func (d Data) Search(key Interface) *Node {
-	nd := d.Root
-	for nd != nil {
-		if nd.Key == nil {
-			break
-		}
-		switch {
-		case nd.Key.Less(key):
-			nd = nd.Right
-		case key.Less(nd.Key):
-			nd = nd.Left
-		default:
-			return nd
-		}
-	}
-	return nil
-}
-
-type Int int
-
-func (n Int) Less(b Interface) bool {
-	return n < b.(Int)
-}
+// - interface
+// - error interface
+// - pointer of a type
+// - map
+// - slice (not array)
+// - byte slice
+// - channel
 
 func main() {
-	// nil for error(interface)
-	resp, err := http.Get("http://google.com")
-	if err != nil {
-		panic(err)
-	}
-	_, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
+	func() {
+		var v io.Reader
+		v = nil
+		fmt.Println("interface became nil:", v)
+	}()
 
-	root := NewNode(Int(5))
-	data := New(root)
-	data.Insert(NewNode(Int(7)))
+	func() {
+		v := fmt.Errorf("error")
+		v = nil
+		fmt.Println("error interface became nil:", v)
+	}()
 
-	// nil for interface
-	fmt.Println(NewNode(Int(7)).Key == nil) // false
+	func() {
+		type t struct {
+			a string
+		}
+		v := &t{}
+		v = nil
+		fmt.Println("pointer of a type became nil:", v)
+	}()
 
-	// nil for struct pointer
-	root = nil
-	fmt.Println(root == nil) // true
+	func() {
+		v := make(map[string]bool)
+		v = nil
+		fmt.Println("map became nil:", v)
+	}()
 
-	// nil for bytes (not for string)
-	b := []byte("abc")
-	fmt.Println(b, string(b)) // [97 98 99] abc
-	b = nil
-	fmt.Println(b, string(b)) // []
-	//
-	// str := "abc"
-	// str = nil (x) value cannot be nil
+	func() {
+		v := []int{}
+		v = nil
+		fmt.Println("slice became nil:", v)
 
-	// nil for map
-	mmap := make(map[string]bool)
-	mmap["A"] = true
-	fmt.Println(mmap) // map[A:true]
-	mmap = nil
-	fmt.Println(mmap) // map[]
+		// v := [3]int{}
+		// v = nil
+		// cannot use nil as type [3]int in assignment
+	}()
 
-	// nil for slice (not for array)
-	slice := []int{1}
-	fmt.Println(slice) // [1]
-	slice = nil
-	fmt.Println(slice) // []
-	//
-	// array := [1]int{1}
-	// array = nil
-	// (X) cannot use nil as type [1]int in assignment
+	func() {
+		v := []byte("Hello")
+		v = nil
+		fmt.Println("byte slice became nil:", v)
+	}()
+
+	func() {
+		v := make(chan int)
+		v = nil
+		fmt.Println("channel became nil:", v)
+	}()
 }
+
+/*
+interface became nil: <nil>
+error interface became nil: <nil>
+pointer of a type became nil: <nil>
+map became nil: map[]
+slice became nil: []
+byte slice became nil: []
+channel became nil: <nil>
+*/
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
@@ -1132,6 +1085,293 @@ func main() {
 
 
 
+
+
+#### `map`
+
+[*Go maps in action by Andrew
+Gerrand*](http://blog.golang.org/go-maps-in-action) covers all you need know to
+use Go map. This is me trying to understand the internals of Go map. First
+here's [how](http://play.golang.org/p/MNOl4o_s3X) I use map:
+
+```go
+package main
+ 
+import (
+	"fmt"
+	"sort"
+)
+ 
+// key/value pair of map[string]float64
+type MapSF struct {
+	key   string
+	value float64
+}
+ 
+// Sort map pairs implementing sort.Interface
+// to sort by value
+type MapSFList []MapSF
+ 
+// sort.Interface
+// Define our custom sort: Swap, Len, Less
+func (p MapSFList) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p MapSFList) Len() int      { return len(p) }
+func (p MapSFList) Less(i, j int) bool {
+	return p[i].value < p[j].value
+}
+ 
+// Sort the struct from a map and return a MapSFList
+func sortMapByValue(m map[string]float64) MapSFList {
+	p := make(MapSFList, len(m))
+	i := 0
+	for k, v := range m {
+		p[i] = MapSF{k, v}
+		i++
+	}
+	sort.Sort(p)
+	return p
+}
+ 
+func main() {
+	// with sort.Interface and struct
+	// we can automatically handle the duplicates
+	sfmap := map[string]float64{
+		"California":    9.9,
+		"Japan":         7.23,
+		"Korea":         -.3,
+		"Hello":         1.5,
+		"USA":           8.4,
+		"San Francisco": 8.4,
+		"Ohio":          -1.10,
+		"New York":      1.23,
+		"Los Angeles":   23.1,
+		"Mountain View": 9.9,
+	}
+	fmt.Println(sortMapByValue(sfmap), len(sortMapByValue(sfmap)))
+	// [{Ohio -1.1} {Korea -0.3} {New York 1.23} {Hello 1.5}
+	// {Japan 7.23} {USA 8.4} {San Francisco 8.4} {California 9.9}
+	// {Mountain View 9.9} {Los Angeles 23.1}] 10
+ 
+	if v, ok := sfmap["California"]; !ok {
+		fmt.Println("California does not exist")
+	} else {
+		fmt.Println(v, "exists")
+	}
+	// 9.9 exists
+ 
+	fmt.Println(sfmap["California"]) // 9.9
+ 
+	if v, ok := sfmap["California2"]; !ok {
+		fmt.Println("California2 does not exist")
+	} else {
+		fmt.Println(v, "exists")
+	}
+	// California2 does not exist
+ 
+	delete(sfmap, "Ohio")
+	if v, ok := sfmap["Ohio"]; !ok {
+		fmt.Println("Ohio does not exist")
+	} else {
+		fmt.Println(v, "exists")
+	}
+	// Ohio does not exist
+}
+```
+
+<br>
+Basically Go map is a [**hash
+table**](https://en.wikipedia.org/wiki/Hash_table), like
+[this code](http://play.golang.org/p/3V2zvcZZ9J):
+
+```go
+// A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital
+// networks and storage devices to detect accidental changes to raw data.
+//
+// https://github.com/golang/go/blob/master/src/hash/crc32/crc32.go
+// https://github.com/golang/go/blob/master/src/runtime/hashmap.go
+ 
+// A map is just a hash table.  The data is arranged
+// into an array of buckets.  Each bucket contains up to
+// 8 key/value pairs.  The low-order bits of the hash are
+// used to select a bucket.  Each bucket contains a few
+// high-order bits of each hash to distinguish the entries
+// within a single bucket.
+//
+// If more than 8 keys hash to a bucket, we chain on
+// extra buckets.
+//
+// When the hashtable grows, we allocate a new array
+// of buckets twice as big.  Buckets are incrementally
+// copied from the old bucket array to the new bucket array.
+ 
+package main
+ 
+import (
+	"bytes"
+	"fmt"
+	"hash/crc32"
+	"strings"
+)
+ 
+func main() {
+	// hash table using array
+	ht := newHashTable()
+	for _, elem := range strings.Split("aaaaaaaaaaabbbbcdeftghiklmnopr", "") {
+		ht.insert([]byte(elem))
+	}
+	for _, bucket := range ht.bucketSlice {
+		fmt.Println(bucket)
+	}
+	/*
+	   &{true [[102] [98] [101] [97] [100] [116] [103] [99]]}
+	   &{true [[109] [105] [110] [112] [111] [107] [108] [104]]}
+	   &{false [[] [] [] [] [] [114] [] []]}
+	*/
+ 
+	fmt.Println(ht.search([]byte("f"))) // true
+	fmt.Println(ht.search([]byte("x"))) // false
+}
+ 
+func hashFuncCrc32(val []byte) uint32 {
+	// crc64.Checksum(val, crc64.MakeTable(crc64.ISO))
+	return crc32.Checksum(val, crc32.MakeTable(crc32.IEEE))
+}
+ 
+func hashFunc(val []byte) uint32 {
+	return checksum(val, makePolyTable(crc32.IEEE))
+}
+ 
+// polyTable is a 256-word table representing the polynomial for efficient processing.
+type polyTable [256]uint32
+ 
+func makePolyTable(poly uint32) *polyTable {
+	t := new(polyTable)
+	for i := 0; i < 256; i++ {
+		crc := uint32(i)
+		for j := 0; j < 8; j++ {
+			if crc&1 == 1 {
+				crc = (crc >> 1) ^ poly
+			} else {
+				crc >>= 1
+			}
+		}
+		t[i] = crc
+	}
+	return t
+}
+ 
+// checksum returns the CRC-32 checksum of data
+// using the polynomial represented by the polyTable.
+func checksum(data []byte, tab *polyTable) uint32 {
+	crc := ^uint32(0)
+	for _, v := range data {
+		crc = tab[byte(crc)^v] ^ (crc >> 8)
+	}
+	return ^crc
+}
+ 
+const (
+	bucketCntBits = 3
+	bucketCnt     = 1 << bucketCntBits // 8, Maximum number of key/value pairs a bucket can hold
+)
+ 
+type hashTable struct {
+	bucketSlice []*bucket
+}
+ 
+func newHashTable() *hashTable {
+	table := new(hashTable)
+	// table.bucketSlice = make([]*bucket, hashTableSize)
+	table.bucketSlice = []*bucket{}
+	return table
+}
+ 
+type bucket struct {
+	wrapped bool // already wrapped around from end of bucket array to beginning
+	data    [bucketCnt][]byte
+	// type byteData []byte
+	// []byte == []uint8
+}
+ 
+func newBucket() *bucket {
+	newBucket := &bucket{}
+	newBucket.wrapped = false
+	newBucket.data = [bucketCnt][]byte{}
+	return newBucket
+}
+ 
+func (h *hashTable) search(val []byte) bool {
+	if len(h.bucketSlice) == 0 {
+		return false
+	}
+	probeIdx := hashFunc(val) % uint32(bucketCnt)
+	for _, bucket := range h.bucketSlice {
+		// check the probeIdx
+		if bucket.data[probeIdx] != nil {
+			if bytes.Equal(bucket.data[probeIdx], val) {
+				return true
+			}
+		}
+		// linear probe
+		for idx, elem := range bucket.data {
+			if uint32(idx) == probeIdx {
+				continue
+			}
+			if bytes.Equal(elem, val) {
+				return true
+			}
+		}
+	}
+	return false
+}
+ 
+// hashFunc -> probeIdx -> linear probe to fill up bucket
+func (h *hashTable) insert(val []byte) {
+	if h.search(val) {
+		return
+	}
+	if len(h.bucketSlice) == 0 {
+		h.bucketSlice = append(h.bucketSlice, newBucket())
+	}
+	probeIdx := hashFunc(val) % uint32(bucketCnt)
+	isInserted := false
+Loop:
+	for _, bucket := range h.bucketSlice {
+		// if the bucket is already full, skip it
+		if bucket.wrapped {
+			continue
+		}
+		// if the index is not taken yet, map it
+		if bucket.data[probeIdx] == nil {
+			bucket.data[probeIdx] = val
+			isInserted = true
+			break
+		}
+		// linear probe
+		for idx, elem := range bucket.data {
+			if uint32(idx) == probeIdx {
+				continue
+			}
+			if elem == nil {
+				bucket.data[idx] = val
+				isInserted = true
+				break Loop
+			}
+		}
+		bucket.wrapped = true
+	}
+	if !isInserted {
+		nb := newBucket()
+		nb.data[probeIdx] = val
+		h.bucketSlice = append(h.bucketSlice, nb)
+	}
+}
+
+```
+
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br>
+<hr>
 
 
 
@@ -1160,7 +1400,7 @@ mmap2["A"] = 1
 
 You assign `nil` only when you **_nullify_** the whole map pointer.
 If you need to empty(*initialize*) an existing map, you must use `make`
-to reassign an empty map, as [here](http://play.golang.org/p/k1DHm_lpIB):
+to reassign an empty map, as [here](http://play.golang.org/p/g4zAhsUACO):
 
 ```go
 package main
@@ -1168,22 +1408,52 @@ package main
 import "fmt"
 
 func main() {
-	mmap1 := map[string]int{
-		"hello": 10,
-	}
-	mmap1 = make(map[string]int)
-	mmap1["A"] = 1
-	fmt.Println(mmap1)
-	// map[A:1]
+	func() {
+		m := map[string]bool{"A": true}
+		m = make(map[string]bool)
+		m["A"] = true
+		fmt.Println(m)
+		// map[A:true]
+	}()
 
-	mmap2 := map[string]int{
-		"hello": 10,
-	}
-	mmap2 = nil
-	mmap2["A"] = 1
-	fmt.Println(mmap2)
-	// panic: assignment to entry in nil map
+	func() {
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println(err)
+			}
+		}()
+		func() {
+			m := map[string]bool{"A": true}
+			m = nil
+			m["A"] = true
+			fmt.Println(m)
+		}()
+		// panic: assignment to entry in nil map
+	}()
+
+	func() {
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println(err)
+			}
+		}()
+		func() {
+			m := new(map[string]bool)
+			(*m)["A"] = true
+			fmt.Println(*m)
+		}()
+		// panic: assignment to entry in nil map
+	}()
+
+	func() {
+		m := new(map[string]bool)
+		*m = make(map[string]bool)
+		(*m)["A"] = true
+		fmt.Println(*m)
+		// map[A:true]
+	}()
 }
+
 ```
 
 
@@ -1309,6 +1579,7 @@ func main() {
 	// (o) change
 	// (*mapType)(&m2).initializeMap2: map[]
 }
+
 ```
 
 **_All function calls in Go are pass-by-value: values are copied, so the
@@ -1395,7 +1666,7 @@ More detailed discussion can be found
 
 #### *non-deterministic* `range` `map`
 
-Try [this](http://play.golang.org/p/CgDbiFTJDX):
+Try [this](http://play.golang.org/p/yCC6mx_nQN):
 
 ```go
 package main
@@ -1405,229 +1676,170 @@ import (
 	"strings"
 )
 
-func nonDeterministicMapUpdateV1() {
-	for i := 0; i < 10; i++ {
-		fmt.Println("nonDeterministicMapUpdateV1 TRY =", i)
-		mmap := map[string]int{
-			"hello": 10,
-			"world": 50,
-			"here":  5,
-			"go":    7,
-			"code":  11,
+func deterministic_map_update_0() {
+	for i := 0; i < 500; i++ {
+		m := make(map[int]bool)
+		for i := 0; i < 500; i++ {
+			m[i] = true
 		}
-		length := len(mmap)
-		for k, v := range mmap {
-			mmap[strings.ToUpper(k)] = v * v
-			delete(mmap, k)
-		}
-		if length == len(mmap) {
-			fmt.Println("Luckily, Deterministic with nonDeterministicMapUpdateV1:", length, len(mmap))
+		if len(m) != 500 {
+			fmt.Println("deterministic_map_update_0 got non-determinstic:", len(m), "at", i)
 			return
 		}
-		fmt.Println("Non-Deterministic with nonDeterministicMapUpdateV1:", length, len(mmap))
 	}
 }
 
-func nonDeterministicMapUpdateV2() {
-	for i := 0; i < 10; i++ {
-		fmt.Println("nonDeterministicMapUpdateV2 TRY =", i)
-		mmap := map[string]int{
-			"hello": 10,
-			"world": 50,
-			"here":  5,
-			"go":    7,
-			"code":  11,
+func deterministic_map_update_1() {
+	for i := 0; i < 500; i++ {
+		m := make(map[int]bool)
+		for i := 0; i < 500; i++ {
+			m[i] = true
 		}
-		ks := []string{}
-		length := len(mmap)
-		for k, v := range mmap {
-			mmap[strings.ToUpper(k)] = v * v
-			ks = append(ks, k)
+		for k := range m {
+			m[k] = false
 		}
-		for _, k := range ks {
-			delete(mmap, k)
+		for _, v := range m {
+			if v {
+				fmt.Println("deterministic_map_update_1 got non-determinstic:", len(m), "at", i)
+				return
+			}
 		}
-		if length == len(mmap) {
-			fmt.Println("Luckily, Deterministic with nonDeterministicMapUpdateV2:", length, len(mmap))
+		for k := range m {
+			m[(k+1)*-1] = true
+		}
+		if len(m) != 2*500 {
+			fmt.Println("deterministic_map_update_1 got non-determinstic:", len(m), "at", i)
 			return
 		}
-		fmt.Println("Non-Deterministic with nonDeterministicMapUpdateV2:", length, len(mmap))
 	}
 }
 
-func nonDeterministicMapUpdateV3() {
-	for i := 0; i < 10; i++ {
-		fmt.Println("nonDeterministicMapUpdateV3 TRY =", i)
-		mmap := map[string]int{
-			"hello": 10,
-			"world": 50,
-			"here":  5,
-			"go":    7,
-			"code":  11,
+func deterministic_map_update_2() {
+	for i := 0; i < 500; i++ {
+		m := make(map[int]bool)
+		for i := 0; i < 500; i++ {
+			m[i] = true
 		}
-		length := len(mmap)
-		for k := range mmap {
-			v := mmap[k]
-			mmap[strings.ToUpper(k)] = v * v
-			delete(mmap, k)
+		for k, v := range m {
+			_ = v
+			m[k] = false
 		}
-		if length == len(mmap) {
-			fmt.Println("Luckily, Deterministic with nonDeterministicMapUpdateV3:", length, len(mmap))
+		for _, v := range m {
+			if v {
+				fmt.Println("deterministic_map_update_2 got non-determinstic:", len(m), "at", i)
+				return
+			}
+		}
+		for k, v := range m {
+			_ = v
+			m[(k+1)*-1] = true
+		}
+		if len(m) != 2*500 {
+			fmt.Println("deterministic_map_update_2 got non-determinstic:", len(m), "at", i)
 			return
 		}
-		fmt.Println("Non-Deterministic with nonDeterministicMapUpdateV3:", length, len(mmap))
 	}
 }
 
-func deterministicMapSet() {
-	for i := 0; i < 10000; i++ {
-		mmap := make(map[int]bool)
-		for i := 0; i < 10000; i++ {
-			mmap[i] = true
+func deterministic_map_delete_0() {
+	for i := 0; i < 500; i++ {
+		m := make(map[int]bool)
+		for i := 0; i < 500; i++ {
+			m[i] = true
 		}
-		length := len(mmap)
-		for k := range mmap {
-			delete(mmap, k)
+		for k := range m {
+			delete(m, k)
 		}
-		if len(mmap) == 0 {
-			fmt.Println("Deterministic with deterministicMapSet:", length, len(mmap))
+		if len(m) != 0 {
+			fmt.Println("deterministic_map_delete_0 got non-determinstic:", len(m), "at", i)
 			return
 		}
-		fmt.Println("Non-Deterministic with deterministicMapSet:", length, len(mmap))
 	}
 }
 
-func deterministicMapDelete() {
-	for i := 0; i < 10000; i++ {
-		fmt.Println("deterministicMapDelete TRY =", i)
-		mmap := map[string]int{
-			"hello": 10,
-			"world": 50,
-			"here":  5,
-			"go":    7,
-			"code":  11,
+func deterministic_map_delete_1() {
+	for i := 0; i < 500; i++ {
+		m := make(map[int]bool)
+		for i := 0; i < 500; i++ {
+			m[i] = true
 		}
-		length := len(mmap)
-		for k := range mmap {
-			delete(mmap, k)
+		for k, v := range m {
+			_ = v
+			delete(m, k)
 		}
-		if len(mmap) == 0 {
-			fmt.Println("Deterministic with deterministicMapDelete:", length, len(mmap))
+		if len(m) != 0 {
+			fmt.Println("deterministic_map_delete_1 got non-determinstic:", len(m), "at", i)
 			return
 		}
-		fmt.Println("Non-Deterministic with deterministicMapDelete:", length, len(mmap))
 	}
 }
 
-func deterministicMapUpdate() {
-	for i := 0; i < 10000; i++ {
-		fmt.Println("deterministicMapUpdate TRY =", i)
-		mmap := map[string]int{
-			"hello": 10,
-			"world": 50,
-			"here":  5,
-			"go":    7,
-			"code":  11,
+func non_deterministic_map_0() {
+	for i := 0; i < 500; i++ {
+		m := map[string]int{
+			"a": 1,
+			"b": 2,
+			"c": 3,
+			"d": 4,
+			"e": 5,
 		}
-		mmapCopy := make(map[string]int)
-		length := len(mmap)
-		for k, v := range mmap {
-			mmapCopy[strings.ToUpper(k)] = v * v
+		len1 := len(m)
+		for k := range m {
+			m[strings.ToUpper(k)] = 100
+			delete(m, k)
 		}
-		for k := range mmap {
-			delete(mmap, k)
-		}
-		if length == len(mmapCopy) || len(mmap) != 0 {
-			fmt.Println("Deterministic with deterministicMapUpdate:", length, len(mmapCopy))
+		len2 := len(m)
+		if len1 != len2 {
+			fmt.Println("non_deterministic_map_0 is non-determinstic:", len1, len2, "at", i, "/", m)
 			return
-		} else {
-			mmapCopy = make(map[string]int) // to initialize(empty)
-			//
-			// (X)
-			// mmapCopy = nil
 		}
-		fmt.Println("Non-Deterministic with deterministicMapUpdate:", length, len(mmap))
+	}
+}
+
+func non_deterministic_map_1() {
+	for i := 0; i < 500; i++ {
+		m := map[string]int{
+			"a": 1,
+			"b": 2,
+			"c": 3,
+			"d": 4,
+			"e": 5,
+		}
+		len1 := len(m)
+		for k, v := range m {
+			m[strings.ToUpper(k)] = v * v
+			delete(m, k)
+		}
+		len2 := len(m)
+		if len1 != len2 {
+			fmt.Println("non_deterministic_map_1 is non-determinstic:", len1, len2, "at", i, "/", m)
+			return
+		}
 	}
 }
 
 func main() {
-	nonDeterministicMapUpdateV1()
-	fmt.Println()
-	nonDeterministicMapUpdateV2()
-	fmt.Println()
-	nonDeterministicMapUpdateV3()
+	deterministic_map_update_0()
+	deterministic_map_update_1()
+	deterministic_map_update_2()
 
-	fmt.Println()
+	deterministic_map_delete_0()
+	deterministic_map_delete_1()
 
-	deterministicMapSet()
-	fmt.Println()
-	deterministicMapDelete()
-	fmt.Println()
-	deterministicMapUpdate()
+	// non-deterministic when updating, deleting at the same time
+	non_deterministic_map_0()
+	non_deterministic_map_1()
+	/*
+	   non_deterministic_map_0 is non-determinstic: 5 4 at 0 / map[B:100 C:100 D:100 E:100]
+	   non_deterministic_map_1 is non-determinstic: 5 4 at 0 / map[A:1 B:4 D:16 E:25]
+	*/
 }
 
-/*
-These are all non-deterministic.
-If you are lucky, the map gets updated inside range.
-
-nonDeterministicMapUpdateV1 TRY = 0
-Non-Deterministic with nonDeterministicMapUpdateV1: 5 4
-nonDeterministicMapUpdateV1 TRY = 1
-Non-Deterministic with nonDeterministicMapUpdateV1: 5 4
-nonDeterministicMapUpdateV1 TRY = 2
-Luckily, Deterministic with nonDeterministicMapUpdateV1: 5 5
-
-nonDeterministicMapUpdateV2 TRY = 0
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 1
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 2
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 3
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 4
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 5
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 6
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 3
-nonDeterministicMapUpdateV2 TRY = 7
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 4
-nonDeterministicMapUpdateV2 TRY = 8
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 2
-nonDeterministicMapUpdateV2 TRY = 9
-Non-Deterministic with nonDeterministicMapUpdateV2: 5 4
-
-nonDeterministicMapUpdateV3 TRY = 0
-Non-Deterministic with nonDeterministicMapUpdateV3: 5 4
-nonDeterministicMapUpdateV3 TRY = 1
-Non-Deterministic with nonDeterministicMapUpdateV3: 5 4
-nonDeterministicMapUpdateV3 TRY = 2
-Non-Deterministic with nonDeterministicMapUpdateV3: 5 4
-nonDeterministicMapUpdateV3 TRY = 3
-Luckily, Deterministic with nonDeterministicMapUpdateV3: 5 5
-
-Deterministic with deterministicMapSet: 10000 0
-
-deterministicMapDelete TRY = 0
-Deterministic with deterministicMapDelete: 5 0
-
-deterministicMapUpdate TRY = 0
-Deterministic with deterministicMapUpdate: 5 5
-*/
 ```
 
 <br>
-This tells that `map` is:
-- **_Non-deterministic_** on **update** when it *updates* with `for range` of the map. 
-- **_Deterministic_** on **`update`** when it *deletes* with `for range`, **NOT** on the map. 
-	- `for i := 0; i < 10000; i++ {mmap[i] = true}`
-- **_Deterministic_** on **`delete`** when it *deletes* with `for range` of the map. 
-- **_Deterministic_** on **`update`** when it *updates* with `for range` of the **COPIED** map. 
-
-
-<br>
-[Go FAQ](http://golang.org/doc/faq#atomic_maps) explains:
+`map` is **non-deterministic** when you update and delete with `for range`
+at the same time. More details are explained here:
 
 > Why are map operations not defined to be atomic?
 >
@@ -1644,7 +1856,7 @@ This tells that `map` is:
 >
 > [*Go FAQ*](http://golang.org/doc/faq#atomic_maps)
 
-
+<br>
 And about `for` loop:
 
 > The iteration order over maps is not specified and is not guaranteed to be
@@ -1657,10 +1869,291 @@ And about `for` loop:
 >
 > [Go Spec](https://golang.org/ref/spec#For_statements)
 
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+#### `map` internals
+
+The actual implementation is much more complicated.
+Source can be found at
+[**_`/master/src/runtime/hashmap.go`_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go):
+
+> **A map is just a hash table. The data is arranged
+> into an array of buckets. Each bucket contains up to
+> 8 key/value pairs. The low-order bits of the hash are
+> used to select a bucket. Each bucket contains a few
+> high-order bits of each hash to distinguish the entries
+> within a single bucket.**
+>
+> If more than 8 keys hash to a bucket, we chain on
+> extra buckets.
+>
+> When the hashtable grows, we allocate a new array
+> of buckets twice as big. Buckets are incrementally
+> copied from the old bucket array to the new bucket array.
+> 
+> Map iterators walk through the array of buckets and
+> return the keys in walk order (bucket #, then overflow
+> chain order, then bucket index). To maintain iteration
+> semantics, we never move keys within their bucket (if
+> we did, keys might be returned 0 or 2 times). When
+> growing the table, iterators remain iterating through the
+> old table and must check the new table if the bucket
+> they are iterating through has been moved (“evacuated”)
+> to the new table.
+
+First take a look at [**_runtime type
+represenation_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go):
+
+```go
+// Copyright 2009 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+ 
+// Runtime type representation.
+ 
+package runtime
+ 
+type _type struct {
+	size       uintptr
+	ptrdata    uintptr // size of memory prefix holding all pointers
+	hash       uint32
+	_unused    uint8
+	align      uint8
+	fieldalign uint8
+	kind       uint8
+	alg        *typeAlg
+	// gcdata stores the GC type data for the garbage collector.
+	// If the KindGCProg bit is set in kind, gcdata is a GC program.
+	// Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+	gcdata  *byte
+	_string *string
+	x       *uncommontype
+	ptrto   *_type
+	zero    *byte // ptr to the zero value for this type
+}
+ 
+type maptype struct {
+	typ           _type
+	key           *_type
+	elem          *_type
+	bucket        *_type // internal type representing a hash bucket
+	hmap          *_type // internal type representing a hmap
+	keysize       uint8  // size of key slot
+	indirectkey   bool   // store ptr to key instead of key itself
+	valuesize     uint8  // size of value slot
+	indirectvalue bool   // store ptr to value instead of value itself
+	bucketsize    uint16 // size of bucket
+	reflexivekey  bool   // true if k==k for all keys
+}
+```
+
+And also [type
+algorithms](https://github.com/golang/go/blob/master/src/runtime/alg.go) for
+compiler—[alg.go](https://github.com/golang/go/blob/master/src/runtime/alg.go)
+contains the hash functions that are used in Go map implementation:
+
+```go
+package runtime
+ 
+// typeAlg is also copied/used in reflect/type.go.
+// keep them in sync.
+type typeAlg struct {
+	// function for hashing objects of this type
+	// (ptr to object, seed) -> hash
+	hash func(unsafe.Pointer, uintptr) uintptr
+	// function for comparing objects of this type
+	// (ptr to object A, ptr to object B) -> ==?
+	equal func(unsafe.Pointer, unsafe.Pointer) bool
+}
+```
+
+If you look at
+[**_/master/src/runtime/hashmap.go_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go),
+Go map has two parts:
+[**_hmap_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L102)
+as a header for a Go map, and
+[**_bmap_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L127)
+as a bucket in a Go map. And
+[**_makemap_**](https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L187)
+function **initializes a map** and returns **_hmap_** **pointer**:
+
+```go
+func makemap(
+	t *maptype,
+	hint int64,
+	h *hmap,
+	bucket unsafe.Pointer,
+) *hmap {
+	...
+```
+
+```go
+package runtime
+ 
+ 
+const (
+	bucketCntBits = 3
+	bucketCnt = 1 << bucketCntBits // 8
+)
+ 
+// A header for a Go map.
+type hmap struct {
+	// Note: the format of the Hmap is encoded in ../../cmd/internal/gc/reflect.go and
+	// ../reflect/type.go.  Don't change this structure without also changing that code!
+	count int // # live cells == size of map.  Must be first (used by len() builtin)
+	flags uint8
+	B     uint8  // log_2 of # of buckets (can hold up to loadFactor * 2^B items)
+	hash0 uint32 // hash seed
+ 
+	buckets    unsafe.Pointer // array of 2^B Buckets. may be nil if count==0.
+	oldbuckets unsafe.Pointer // previous bucket array of half the size, non-nil only when growing
+	nevacuate  uintptr        // progress counter for evacuation (buckets less than this have been evacuated)
+ 
+	// If both key and value do not contain pointers and are inline, then we mark bucket
+	// type as containing no pointers. This avoids scanning such maps.
+	// However, bmap.overflow is a pointer. In order to keep overflow buckets
+	// alive, we store pointers to all overflow buckets in hmap.overflow.
+	// Overflow is used only if key and value do not contain pointers.
+	// overflow[0] contains overflow buckets for hmap.buckets.
+	// overflow[1] contains overflow buckets for hmap.oldbuckets.
+	// The first indirection allows us to reduce static size of hmap.
+	// The second indirection allows to store a pointer to the slice in hiter.
+	overflow *[2]*[]*bmap
+}
+ 
+// A bucket for a Go map.
+type bmap struct {
+	tophash [bucketCnt]uint8
+	// Followed by bucketCnt keys and then bucketCnt values.
+	// NOTE: packing all the keys together and then all the values together makes the
+	// code a bit more complicated than alternating key/value/key/value/... but it allows
+	// us to eliminate padding which would be needed for, e.g., map[int64]int8.
+	// Followed by an overflow pointer.
+}
+```
+
+Note that **bucket stores 8 key/value pairs.**
+
+> *Followed by bucketCnt(8) keys and then bucketCnt values.*
+
+Bucket consists of *key1/key2/key3/value1/value2/value3/…* and internally it
+calculates the hash values and fills up the bucket as
+[here](https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L411):
+
+```go
+hash := alg.hash(key, uintptr(h.hash0))
+top := uint(hash >> (ptrSize*8 - 8))
+```
+
+To understand this snippet, you need to look at
+[stubs.go](https://github.com/golang/go/blob/master/src/runtime/stubs.go):
+
+```go
+// https://github.com/golang/go/blob/master/src/runtime/stubs.go
+package runtime
+ 
+import "unsafe"
+ 
+// Declarations for runtime services implemented in C or assembly.
+ 
+const ptrSize = 4 << (^uintptr(0) >> 63) // unsafe.Sizeof(uintptr(0)) but an ideal const
+const regSize = 4 << (^uintreg(0) >> 63) // unsafe.Sizeof(uintreg(0)) but an ideal const
+ 
+// Should be a built-in for unsafe.Pointer?
+//go:nosplit
+func add(p unsafe.Pointer, x uintptr) unsafe.Pointer {
+	return unsafe.Pointer(uintptr(p) + x)
+}
+```
+
+And here's
+[code](https://github.com/golang/go/blob/master/src/runtime/hashmap.go) to
+access the map value by key:
+
+```go
+// https://github.com/golang/go/blob/master/src/runtime/hashmap.go
+package runtime
+ 
+// mapaccess1 returns a pointer to h[key].  Never returns nil, instead
+// it will return a reference to the zero object for the value type if
+// the key is not in the map.
+// NOTE: The returned pointer may keep the whole map live, so don't
+// hold onto it for very long.
+func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
+	if raceenabled && h != nil {
+		callerpc := getcallerpc(unsafe.Pointer(&t))
+		pc := funcPC(mapaccess1)
+		racereadpc(unsafe.Pointer(h), callerpc, pc)
+		raceReadObjectPC(t.key, key, callerpc, pc)
+	}
+	if h == nil || h.count == 0 {
+		return unsafe.Pointer(t.elem.zero)
+	}
+	alg := t.key.alg
+	hash := alg.hash(key, uintptr(h.hash0))
+	m := uintptr(1)<<h.B - 1
+	b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
+	if c := h.oldbuckets; c != nil {
+		oldb := (*bmap)(add(c, (hash&(m>>1))*uintptr(t.bucketsize)))
+		if !evacuated(oldb) {
+			b = oldb
+		}
+	}
+	top := uint8(hash >> (ptrSize*8 - 8))
+	if top < minTopHash {
+		top += minTopHash
+	}
+	for {
+		for i := uintptr(0); i < bucketCnt; i++ {
+			if b.tophash[i] != top {
+				continue
+			}
+			k := add(unsafe.Pointer(b), dataOffset+i*uintptr(t.keysize))
+			if t.indirectkey {
+				k = *((*unsafe.Pointer)(k))
+			}
+			if alg.equal(key, k) {
+				v := add(unsafe.Pointer(b), dataOffset+bucketCnt*uintptr(t.keysize)+i*uintptr(t.valuesize))
+				if t.indirectvalue {
+					v = *((*unsafe.Pointer)(v))
+				}
+				return v
+			}
+		}
+		b = b.overflow(t)
+		if b == nil {
+			return unsafe.Pointer(t.elem.zero)
+		}
+	}
+}
+```
+
+What this does:
+
+1. `alg := t.key.alg` loads the *type algorithm(or hash function)* from the
+   `maptype`.
+2. `alg.hash(key, uintptr(h.hash0)` calculates the hash value by its key.
+3. `h.hash0` is just a random integer generated by a assembly code.
+4. **_for-loop_** is process of **iterating buckets inside map** *until it
+   finds the key from the function arguments.*
+5. If the key is not found, `unsafe.Pointer(t.elem.zero)` returns a reference
+   to the zero object for the value type—it never returns `nil`.
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
 <br><br><br><br>
 <hr>
+
+
+
 
 
 
