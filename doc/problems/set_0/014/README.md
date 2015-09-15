@@ -55,7 +55,7 @@ recursion when:
 
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
    just found the last letter (`e` for `code`).
-2. No more position to move (at the end of board).
+2. No more position to move. Out of array range, at the end of board.
 
 <br>
 **SECOND**, decide what you need to carry around or pass out to *recursive*
