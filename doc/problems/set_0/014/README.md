@@ -52,6 +52,7 @@ see if we can do better.
 <br>
 **FIRST**, what would be the **base case** of *recursion*? You want to end the
 recursion when:
+
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
    have just found the last letter (`e` for `code`).
 2. No more position to move (at the end of board).
@@ -59,6 +60,7 @@ recursion when:
 <br>
 **SECOND**, decide what you need to carry around or pass out to *recursive*
 functions:
+
 1. Target letter. A target letter being empty means you do not want to
    proceed the search anymore, therefore ending recursion. A target
 2. Position on board (row, column in two dimensional array) to search for the
