@@ -50,3 +50,30 @@
 > think you're thinking.
 >
 > [*Lesli Lamport: Thinking Above the Code*](https://youtu.be/-4Yp3j_jk8Q)
+
+<br>
+
+> A senior developer understands that everything in our field involves 
+> tradeoff, and will look for what that is for design patterns, libraries,
+> frameworks, and processes.
+>
+> A senior developer thinks of more than just themselves. They are aware
+> of how their organization and their clients work, what their values are,
+> and what is both important and not important for success. When a ball is
+> dropped, a senior developer will do what they can to pick it up. The
+> phrase “this is not my job” is never, ever said in those situations.
+>
+> A senior developer will understand that this job is to provide solutions
+> to problems, not write code. Because of that, a senior developer will
+> always think of what they are doing in terms of how much value it brings
+> to their organization and their clients vs how much effort they are putting
+> in.
+>
+> While an intermediate will plow through days of boring work, a senior
+> developer will take a step back and question what is breaking down to
+> cause all that boring work to begin with. They will evaluate the cost of
+> fixing root problems, and either fix them directly, or put things in
+> motion so they will be fixed eventually.
+>
+> [*The Role of a Senior Developer by Matt 
+> Briggs*](http://mattbriggs.net/blog/2015/06/01/the-role-of-a-senior-developer/)
