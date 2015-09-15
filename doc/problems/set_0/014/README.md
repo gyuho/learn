@@ -4,7 +4,7 @@
 # Problem
 
 **Word-search game.** Implement a program that finds all instances of the word
-`code` in the board *below*:
+`CODE` in the board *below*:
 
 ![word_search](img/word_search.png)
 
