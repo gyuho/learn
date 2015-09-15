@@ -54,17 +54,17 @@ see if we can do better.
 recursion when:
 
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
-   have just found the last letter (`e` for `code`).
+   just found the last letter (`e` for `code`).
 2. No more position to move (at the end of board).
 
 <br>
 **SECOND**, decide what you need to carry around or pass out to *recursive*
 functions:
 
-1. Target letter. A target letter being empty means you do not want to
-   proceed the search anymore, therefore ending recursion. A target
-2. Position on board (row, column in two dimensional array) to search for the
-   target letter. This tells which direction to move.
+1. Target letter. This being empty means you do not want to
+   proceed search anymore, therefore ending the recursion.
+2. Position on board to search for the target letter.
+   This tells which direction to move.
 3. You want to store previously found instances (full letters),
    so not to overcount.
 
@@ -73,7 +73,7 @@ functions:
 Start with the first letter as a target letter, at the position
 *(0, 0)* in a two dimensional array. And if it finds the target letter,
 call *recursive* function onto other directions. Otherwise, keep moving from
-*left-top to right-bottom* until it reaches the end.
+*left-top to right-bottom* until it reaches the end *(N, N)*.
 
 [↑ top](#problem)
 <br><br><br><br>
