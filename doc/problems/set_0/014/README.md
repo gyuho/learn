@@ -105,10 +105,9 @@ see if we can do better.
 **SECOND**. Decide what to pass around to *recursive* functions:
 
 1. Slice(array) of target letters (e.g. `C`, `O`, `D`, `E`).
-2. Letter to find. This being empty means you do not want to
-   proceed search anymore, therefore ending the recursion.
-3. Position on board to search for the target letter.
-   This tells which direction to move.
+2. Letter index in the target slice. 
+3. Position on board to search for the target letter,
+   to tell which direction to move.
 4. You want to store previously found instances (full letters),
    so not to overcount.
 
