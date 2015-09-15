@@ -50,16 +50,14 @@ brute-forcing with recursion at every single row and column. And later
 see if we can do better.
 
 <br>
-**FIRST**, what would be the **base case** of *recursion*? You want to end the
-recursion when:
+**FIRST**, what would be the **base case** of *recursion*? End recursion when:
 
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
    just found the last letter (`e` for `code`).
 2. No more position to move. Out of array range, at the end of board.
 
 <br>
-**SECOND**, decide what you need to carry around or pass out to *recursive*
-functions:
+**SECOND**, decide what to pass around to *recursive* functions:
 
 1. Target letter. This being empty means you do not want to
    proceed search anymore, therefore ending the recursion.
