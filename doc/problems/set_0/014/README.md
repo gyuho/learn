@@ -18,10 +18,14 @@
 <br><br><br><br>
 <hr>
 
+
+
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 <hr>
+
+
 
 #### Algorithm #1
 
@@ -35,6 +39,7 @@ to move *left*, *right*, *up*, *down*, or *diagonals*.
 
 
 
+
 #### Solution #1, in Go
 
 ```go
@@ -44,6 +49,8 @@ to move *left*, *right*, *up*, *down*, or *diagonals*.
 [↑ top](#problem)
 <br><br><br><br>
 <hr>
+
+
 
 
 #### Solution #1, in C++
