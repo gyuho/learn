@@ -21,3 +21,16 @@ var board [][]string = [][]string{
 	{"P", "L", "G", "E", "V", "F", "G", "I", "C", "V"},
 	{"A", "T", "E", "A", "S", "X", "G", "J", "D", "B"},
 }
+
+func search(target string, row, col int, found map[string]bool) {
+	// base case
+	if row > len(board)-1 || col > len(board[0])-1 {
+		// not valid move
+		// because exceeding the slice range
+		return
+	}
+}
+
+func main() {
+
+}
