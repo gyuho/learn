@@ -52,7 +52,7 @@ func search(
 	// base case
 	if row < 0 || col < 0 || row > len(board)-1 || col > len(board[0])-1 {
 		// not valid move
-		// because exceeding the slice range
+		// because it exceeds array(slice) range
 		return
 	}
 
@@ -68,8 +68,8 @@ func search(
 	lastTargetLetter := target[len(target)-1]
 	if targetLetter == lastTargetLetter && len(target) == len(subPath) {
 		ts := []string{}
-		for _, k := range target {
-			ts = append(ts, subPath[k])
+		for _, v := range target {
+			ts = append(ts, subPath[v])
 		}
 		found[strings.Join(ts, "->")] = true
 		return
