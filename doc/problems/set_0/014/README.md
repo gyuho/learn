@@ -10,10 +10,39 @@
 
 **Input:**
 
-```
+```cpp
+char[][] board = {
+	{'A', 'X', 'F', 'H', 'K', 'C', 'O', 'F', 'Q', 'R'},
+	{'C', 'U', 'Y', 'T', 'X', 'B', 'V', 'H', 'F', 'D'},
+	{'U', 'J', 'X', 'B', 'O', 'D', 'E', 'N', 'D', 'S'},
+	{'B', 'E', 'N', 'C', 'X', 'M', 'L', 'O', 'I', 'L'},
+	{'Q', 'B', 'D', 'O', 'Z', 'P', 'K', 'O', 'C', 'K'},
+	{'C', 'T', 'H', 'D', 'Y', 'X', 'E', 'R', 'T', 'M'},
+	{'A', 'O', 'B', 'E', 'U', 'C', 'O', 'D', 'E', 'E'},
+	{'H', 'A', 'D', 'F', 'F', 'P', 'H', 'P', 'O', 'W'},
+	{'P', 'L', 'G', 'E', 'V', 'F', 'G', 'I', 'C', 'V'},
+	{'A', 'T', 'E', 'A', 'S', 'X', 'G', 'J', 'D', 'B'},
+};
 
 ```
 
+```go
+var board [][]string = [][]string{
+	{"A", "X", "F", "H", "K", "C", "O", "F", "Q", "R"},
+	{"C", "U", "Y", "T", "X", "B", "V", "H", "F", "D"},
+	{"U", "J", "X", "B", "O", "D", "E", "N", "D", "S"},
+	{"B", "E", "N", "C", "X", "M", "L", "O", "I", "L"},
+	{"Q", "B", "D", "O", "Z", "P", "K", "O", "C", "K"},
+	{"C", "T", "H", "D", "Y", "X", "E", "R", "T", "M"},
+	{"A", "O", "B", "E", "U", "C", "O", "D", "E", "E"},
+	{"H", "A", "D", "F", "F", "P", "H", "P", "O", "W"},
+	{"P", "L", "G", "E", "V", "F", "G", "I", "C", "V"},
+	{"A", "T", "E", "A", "S", "X", "G", "J", "D", "B"},
+}
+
+```
+
+<br>
 **Output:** 6 
 
 <br><br><br>
@@ -32,7 +61,7 @@
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 
-*Do not at at my soluition yet. Please try by yourself first.*
+*Please do not at my soluition yet. Please try it by yourself first.*
 
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
