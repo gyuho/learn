@@ -160,7 +160,6 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: character, string*](https://github.com/gyuho/learn/tree/master/doc/go_character_string)
 - [*Go: strings, regex*](https://github.com/gyuho/learn/tree/master/doc/go_strings_regex)
 - [*Go: sequence*](https://github.com/gyuho/learn/tree/master/doc/go_sequence)
-- [*Go: map*](https://github.com/gyuho/learn/tree/master/doc/go_map)
 - [**_Go: function, method, pointer, nil, map, slice_**](https://github.com/gyuho/learn/tree/master/doc/go_function_method_pointer_nil_map_slice)
 - [*Go: struct*](https://github.com/gyuho/learn/tree/master/doc/go_struct)
 - [**_Go: interface_**](https://github.com/gyuho/learn/tree/master/doc/go_interface)
