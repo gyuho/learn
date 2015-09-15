@@ -8,6 +8,12 @@
 
 ![board](img/board.png)
 
+<br>
+<br>
+- [Algorithm](#algorithm)
+- [Solution in Go](#solution-in-go)
+- [Solution in C++](#solution-in-c)
+
 [↑ top](#problem)
 <br><br><br><br>
 <hr>
@@ -17,6 +23,15 @@
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 <hr>
+
+#### Algorithm
+
+
+[↑ top](#problem)
+<br><br><br><br>
+<hr>
+
+
 
 #### Solution in Go
 
