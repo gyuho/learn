@@ -31,10 +31,8 @@
 - [Recursion](https://en.wikipedia.org/wiki/Recursion)
 - [Tail call](https://en.wikipedia.org/wiki/Tail_call)
 - [Recursion And Tail Calls In Go](http://www.goinggo.net/2013/09/recursion-and-tail-calls-in-go_26.html)
-- [Closure (computer
-  science)](https://simple.wikipedia.org/wiki/Closure_(computer_science))
-- [Closure (computer
-  programming)](https://en.wikipedia.org/wiki/Closure_(computer_programming))
+- [Closure (computer science)](https://simple.wikipedia.org/wiki/Closure_(computer_science))
+- [Closure (computer programming)](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 - [Dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming)
 - [Memoization](https://en.wikipedia.org/wiki/Memoization)
 - [Greedy algorithm](https://en.wikipedia.org/wiki/Greedy_algorithm)
@@ -58,9 +56,15 @@
 [Recursion](https://en.wikipedia.org/wiki/Recursion) is simple but can 
 be confusing. It is kind of like *iteration* but with **self-referencing**.
 Once a *recursive* function gets called outside first, it keeps **calling
-itself**. Most important is to specify when to end the recursion. Otherwise it
-recurs forever and causes stack overflow (run out of memory).
-So use carefully!
+itself**.
+
+<br>
+**Use recursion for multiple related decisions.**
+<br>
+
+Most important is to specify when to end the recursion (**base case**).
+Otherwise it recurs forever, *causing stack overflows* (running out of
+memory). So use carefully!
 
 Here's examples of *stack overflow*:
 
@@ -188,6 +192,14 @@ package main
 
 import "fmt"
 
+func r(num int) {
+	if num < 0 {
+		return
+	}
+	fmt.Println("r with", num)
+	r(num - 1)
+}
+
 var keys = []string{
 	"A",
 	"B",
@@ -217,6 +229,22 @@ func recursion(index int, rmap *map[string]string) {
 }
 
 func main() {
+	r(10)
+	println()
+	/*
+	   r with 10
+	   r with 9
+	   r with 8
+	   r with 7
+	   r with 6
+	   r with 5
+	   r with 4
+	   r with 3
+	   r with 2
+	   r with 1
+	   r with 0
+	*/
+
 	executed := make(map[string]string)
 	for _, k := range keys {
 		executed[k] = "not yet"
@@ -258,6 +286,15 @@ after     recursion with index 0 / key A / map done
 #include <string.h>
 using namespace std;
 
+void r(int num) {
+	if (num < 0)
+	{
+		return;
+	}
+	cout << "r with " << num << endl;
+	r(num - 1);
+}
+
 char keys[] = {
 	'A',
 	'B',
@@ -290,6 +327,22 @@ void recursion(int index, map<char,string>* rmap) {
 
 int main()
 {
+	r(10);
+	cout << endl;
+	/*
+		r with 10
+		r with 9
+		r with 8
+		r with 7
+		r with 6
+		r with 5
+		r with 4
+		r with 3
+		r with 2
+		r with 1
+		r with 0
+	*/
+
 	size_t length = strlen(keys);
 	cout << length << endl; // 9
 

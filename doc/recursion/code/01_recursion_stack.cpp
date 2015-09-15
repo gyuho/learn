@@ -5,6 +5,15 @@
 #include <string.h>
 using namespace std;
 
+void r(int num) {
+	if (num < 0)
+	{
+		return;
+	}
+	cout << "r with " << num << endl;
+	r(num - 1);
+}
+
 char keys[] = {
 	'A',
 	'B',
@@ -37,6 +46,22 @@ void recursion(int index, map<char,string>* rmap) {
 
 int main()
 {
+	r(10);
+	cout << endl;
+	/*
+		r with 10
+		r with 9
+		r with 8
+		r with 7
+		r with 6
+		r with 5
+		r with 4
+		r with 3
+		r with 2
+		r with 1
+		r with 0
+	*/
+
 	size_t length = strlen(keys);
 	cout << length << endl; // 9
 
