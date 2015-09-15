@@ -49,6 +49,7 @@ multiple related decisions, so it's natural to try *recursion*. I will try
 brute-forcing with recursion at every single row and column. And later
 see if we can do better.
 
+<br>
 **FIRST**, what would be the **base case** of *recursion*? You want to end the
 recursion when:
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
