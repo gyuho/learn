@@ -96,8 +96,8 @@ see if we can do better.
 <br>
 **FIRST**. Specify the **base case** of *recursion*? End recursion when:
 
-1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
-   just found the last letter (`e` for `code`).
+1. Have found all the previous letters (e.g. `C`, `O`, `D` for `CODE`), and 
+   just found the last letter (`E` for `CODE`).
 2. No more position to move. Out of array range, at the end of board.
 
 <br>
