@@ -105,7 +105,7 @@ see if we can do better.
 **SECOND**. Decide what to pass around to *recursive* functions:
 
 1. Slice(array) of target letters (e.g. `C`, `O`, `D`, `E`).
-2. Current letter. This being empty means you do not want to
+2. Letter to find. This being empty means you do not want to
    proceed search anymore, therefore ending the recursion.
 3. Position on board to search for the target letter.
    This tells which direction to move.

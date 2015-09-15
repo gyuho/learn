@@ -22,7 +22,7 @@ var board [][]string = [][]string{
 	{"A", "T", "E", "A", "S", "X", "G", "J", "D", "B"},
 }
 
-func search(target string, row, col int, found map[string]bool) {
+func search(target []string, current string, row, col int, found map[string]bool) {
 	// base case
 	if row > len(board)-1 || col > len(board[0])-1 {
 		// not valid move
