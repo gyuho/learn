@@ -31,10 +31,8 @@
 - [Recursion](https://en.wikipedia.org/wiki/Recursion)
 - [Tail call](https://en.wikipedia.org/wiki/Tail_call)
 - [Recursion And Tail Calls In Go](http://www.goinggo.net/2013/09/recursion-and-tail-calls-in-go_26.html)
-- [Closure (computer
-  science)](https://simple.wikipedia.org/wiki/Closure_(computer_science))
-- [Closure (computer
-  programming)](https://en.wikipedia.org/wiki/Closure_(computer_programming))
+- [Closure (computer science)](https://simple.wikipedia.org/wiki/Closure_(computer_science))
+- [Closure (computer programming)](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 - [Dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming)
 - [Memoization](https://en.wikipedia.org/wiki/Memoization)
 - [Greedy algorithm](https://en.wikipedia.org/wiki/Greedy_algorithm)
@@ -60,7 +58,9 @@ be confusing. It is kind of like *iteration* but with **self-referencing**.
 Once a *recursive* function gets called outside first, it keeps **calling
 itself**.
 
-
+<br>
+**Use recursion for multiple related decisions.**
+<br>
 
 Most important is to specify when to end the recursion (**base case**).
 Otherwise it recurs forever, *causing stack overflows* (running out of
