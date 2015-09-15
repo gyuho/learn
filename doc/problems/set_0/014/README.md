@@ -50,14 +50,14 @@ brute-forcing with recursion at every single row and column. And later
 see if we can do better.
 
 <br>
-**FIRST**, what would be the **base case** of *recursion*? End recursion when:
+**FIRST**. Specify the **base case** of *recursion*? End recursion when:
 
 1. Have found all the previous letters (e.g. `c`, `o`, `d` for `code`), and 
    just found the last letter (`e` for `code`).
 2. No more position to move. Out of array range, at the end of board.
 
 <br>
-**SECOND**, decide what to pass around to *recursive* functions:
+**SECOND**. Decide what to pass around to *recursive* functions:
 
 1. Target letter. This being empty means you do not want to
    proceed search anymore, therefore ending the recursion.
@@ -67,10 +67,10 @@ see if we can do better.
    so not to overcount.
 
 <br>
-**THIRD**, create a two dimensional array with values from the board.
-Start with the first letter as a target letter, at the position
-*(0, 0)* in a two dimensional array. And if it finds the target letter,
-call *recursive* function onto other directions. Otherwise, keep moving from
+**THIRD**. Create a two dimensional array with values from the board.
+Start with the *first letter as a target letter*, at the position
+*(0, 0)* in a two dimensional array. And if it *finds the target letter*,
+call *recursive* function *onto other directions*. Otherwise, keep moving from
 *left-top to right-bottom* until it reaches the end *(N, N)*.
 
 [↑ top](#problem)
