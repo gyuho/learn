@@ -8,7 +8,15 @@
 
 ![word_search](img/word_search.png)
 
-<br><br>
+**Input:**
+
+```
+
+```
+
+**Output:** 6 
+
+<br><br><br>
 - [Reference](#reference)
 - [Algorithm #1](#algorithm-1)
 - [Solution #1, in Go](#solution-1-in-go)
@@ -24,7 +32,7 @@
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 
-**DON'T LOOK AT THE SOLUTION YET. PLEASE TRY BY YOURSELF FIRST.**
+*Do not at at my soluition yet. Please try by yourself first.*
 
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>

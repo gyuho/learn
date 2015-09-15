@@ -21,7 +21,7 @@
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 
-**DON'T LOOK AT THE SOLUTION YET. PLEASE TRY BY YOURSELF FIRST.**
+*Do not at at my soluition yet. Please try by yourself first.*
 
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
