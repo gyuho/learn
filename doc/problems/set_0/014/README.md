@@ -95,7 +95,7 @@ brute-forcing with recursion at every single row and column. And later
 see if we can do better.
 
 <br>
-**FIRST**. Specify the **base case** of *recursion*? End recursion when:
+**FIRST**. Specify the **base case** of *recursion*. End recursion when:
 
 1. Have found all the previous letters (e.g. `C`, `O`, `D` for `CODE`), and 
    just found the last letter (`E` for `CODE`).
