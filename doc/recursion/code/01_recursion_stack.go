@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+func r(num int) {
+	if num < 0 {
+		return
+	}
+	fmt.Println("r with", num)
+	r(num - 1)
+}
+
 var keys = []string{
 	"A",
 	"B",
@@ -31,6 +39,22 @@ func recursion(index int, rmap *map[string]string) {
 }
 
 func main() {
+	r(10)
+	println()
+	/*
+	   r with 10
+	   r with 9
+	   r with 8
+	   r with 7
+	   r with 6
+	   r with 5
+	   r with 4
+	   r with 3
+	   r with 2
+	   r with 1
+	   r with 0
+	*/
+
 	executed := make(map[string]string)
 	for _, k := range keys {
 		executed[k] = "not yet"
