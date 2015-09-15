@@ -3,7 +3,7 @@
 
 # Problem
 
-**Word-search game.** Finds all instances of the word `CODE` in the board:
+Find all instances of the word `CODE` in the board:
 
 ![word_search](img/word_search.png)
 
