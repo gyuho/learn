@@ -113,6 +113,14 @@ data retrieval**.
 >
 > [*Wikipedia*](https://en.wikipedia.org/wiki/B-tree)
 
+**B-tree** is useful for large chunks of data, while minimizing the disk
+access. It has bigger index than binary trees, since it can have more
+than two child nodes in one sector. This decreases the *height* or
+*depth* of the tree, thus decreasing the average number of disk accesses.
+For example, B-tree with branching factor of 1000 and height of 2 can
+store *1000 x 1000 x 1000* keys. And since the root node can be
+kept in main memory, you only need 2 disk accesses to tree search.
+
 [↑ top](#go-b-tree)
 <br><br><br><br>
 <hr>
