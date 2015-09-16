@@ -35,8 +35,8 @@ var (
 	logPath = "web.log"
 
 	isProd             = false
-	googleClientID     = "CLIENT_ID"
-	googleClientSecret = "SECRET"
+	googleClientID     = "YOUR_KEY"
+	googleClientSecret = "YOUR_SECRET"
 
 	// people from here can only access this web site.
 	accessibleEmail = map[string]bool{
