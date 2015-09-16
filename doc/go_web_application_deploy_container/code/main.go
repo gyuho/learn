@@ -27,7 +27,7 @@ import (
 
 /*
 sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
-go run 00_web_server.go 1>>stdout.log 2>>stderr.log;
+go run main.go 1>>stdout.log 2>>stderr.log;
 */
 
 var (
@@ -35,8 +35,8 @@ var (
 	logPath = "web.log"
 
 	isProd             = false
-	googleClientID     = "883943096730-780g2kk9pinusp94qgm6orrad5qt316v.apps.googleusercontent.com"
-	googleClientSecret = "I4rws53mkbPp0288EpdBGzyT"
+	googleClientID     = "CLIENT_ID"
+	googleClientSecret = "SECRET"
 
 	// people from here can only access this web site.
 	accessibleEmail = map[string]bool{

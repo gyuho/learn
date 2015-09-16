@@ -6,17 +6,22 @@ file code;
 ldd code;
 sudo ./actool --debug validate manifest.json;
 
-mkdir -p code-layout/rootfs;
-mkdir -p code-layout/rootfs/bin;
+mkdir -p image/rootfs/usr/bin;
 
-cp manifest.json code-layout/manifest;
+sudo cp manifest.json image/manifest;
 
-cp code code-layout/rootfs/bin;
-cp -rf static/ code-layout/rootfs/bin;
-cp -rf templates/ code-layout/rootfs/bin;
+sudo cp code image/rootfs/usr/bin;
+sudo cp -rf static/ image/rootfs/usr/bin;
+sudo cp -rf templates/ image/rootfs/usr/bin;
 
-sudo ./actool build --overwrite code-layout/ code-0.0.1-linux-amd64.aci;
+sudo ./actool build --overwrite image/ code-0.0.1-linux-amd64.aci;
 sudo ./actool --debug validate code-0.0.1-linux-amd64.aci;
 
-sudo ./rkt metadata-service  &
-sudo ./rkt --insecure-skip-verify run code-0.0.1-linux-amd64.aci;
+sudo ./rkt metadata-service >/dev/null 2>&1 & # run in background
+
+sudo ./rkt --insecure-skip-verify run \
+code-0.0.1-linux-amd64.aci \
+--volume static,kind=host,source=/usr/bin/static \
+--volume templates,kind=host,source=/usr/bin/templates \
+-- \
+;

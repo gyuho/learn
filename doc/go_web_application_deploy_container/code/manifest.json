@@ -20,16 +20,16 @@
 		"user": "root",
 		"group": "root",
 		"exec": [
-			"/bin/code"
+			"/usr/bin/code"
 		],
 		"mountPoints": [
 			{
 				"name": "static",
-				"path": "/bin/static"
+				"path": "/usr/bin/static"
 			},
 			{
 				"name": "templates",
-				"path": "/bin/templates"
+				"path": "/usr/bin/templates"
 			}
 		],
 		"ports": [
@@ -40,10 +40,6 @@
 			}
 		]
 	},
-	"mounts": [
-		{"volume": "static", "mountPoint": "static"},
-		{"volume": "templates", "mountPoint": "templates"}
-	],
 	"annotations": [
 		{
 			"name": "authors",
