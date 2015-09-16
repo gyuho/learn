@@ -10,7 +10,7 @@
 - [Why `list` as a pointer?](#why-list-as-a-pointer)
 - [pointer: copy `struct`](#pointer-copy-struct)
 - [pointer: `map` and `slice`](#pointer-map-and-slice)
-- [pointer: channel](#pointer-channel)
+- [pointer: `channel`](#pointer-channel)
 - [Recap](#recap)
 - [swap: `array` and `slice`](#swap-array-and-slice)
 - [`nil`](#nil)
@@ -762,7 +762,7 @@ This is why array elements are values and slice elements are references.
 
 
 
-#### pointer: channel
+#### pointer: `channel`
 
 Try this [code](http://play.golang.org/p/jjHd0YyKO7) with
 `go run -race 11_channel.go`.
