@@ -260,10 +260,9 @@ processes (requests from users in web application). Executing only when the
 atomic variable is 0, you can limit multiple requests to one resource. It’s
 fast with everything done in memory, but not the best way: other jobs have to
 keep hitting the atomic variable to check the availability. It’s hard to
-schedule jobs with priorities:
-[atomic](http://en.wikipedia.org/wiki/Linearizability) only supports integer
-values.
-
+prioritize jobs with `atomic` variable because
+[`atomic`](http://en.wikipedia.org/wiki/Linearizability) is usually only
+defined as an integer type.
 
 [↑ top](#etcd-priority-queue-aws-gcp)
 <br><br><br><br>
@@ -281,15 +280,23 @@ values.
 
 You serialize concurrent requests into a queue and execute them in
 *First-In-First-Out (FIFO)* order. There are [many open source
-projects](http://queues.io/) for this. By running the first element at a time,
-you can limit multiple requests into one single resource. But most messaging
-queue systems do not support [priority
-queue](http://en.wikipedia.org/wiki/Priority_queue) (or *heap*). You would have
-to implement [your own priority
-queue](https://groups.google.com/d/msg/nsq-users/QvgCsQ861Lw/z6H6uColDZcJ),
-which is also fine. You can *dequeue* the first few elements in the *queue* and
-build **heap** in memory and execute them in order. You can do the same thing
-in key/value storage, and it's just easier with *key/value* storage.
+projects](http://queues.io/) for queue. Running only the first element
+at a time can order multiple, concurrent requests into one single
+line, and limit it to one single resource. But most messaging
+queue systems do not support
+[priority queue](http://en.wikipedia.org/wiki/Priority_queue).
+You would have to implement
+[your own priority queue](https://groups.google.com/d/msg/nsq-users/QvgCsQ861Lw/z6H6uColDZcJ),
+which is fine. You *dequeue* the first few elements in the *queue* and
+build **heap** in memory and execute them in order.
+If it had millions of requests, messaging queue should be better.
+But this particular problem is more about coordinating, prioritizing
+a small number of jobs (*small enough to fit in memory*). Additionally
+we needed to keep the record of job execution results, which can be done
+by updating the value of the job key. In queue, once you *dequeue*, it
+has to be consumed with nowhere to save the results.
+
+So I decided to try key/value storage.
 
 [↑ top](#etcd-priority-queue-aws-gcp)
 <br><br><br><br>
@@ -304,11 +311,6 @@ in key/value storage, and it's just easier with *key/value* storage.
 
 #### Solution #3: Centralized Key/Value Storage
 
-If it had millions of requests, messaging queue would be a better choice. But
-this particular problem is more about coordinating, prioritizing a relatively
-small set of jobs, rather than processing a large number of requests. So I
-decided to try key/value storage.
-
 ![solution_03](img/solution_03.png)
 
 There are many [key/value databases](http://nosql-database.org/) but I chose
@@ -321,24 +323,28 @@ store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
 distributed. The directory `/etc` in Linux contains system configuration files for
 program controls. Then `etcd` is a distributed key-value store for system
-configurations. **_Redis_** and **_etcd_** have the same premise: **_key-value
-store_**. None is better than the other. They are just different. With that
-said, *etcd* is:
+configurations. **_Redis_** and **_`etcd`_** have the same premise: **_key-value
+store_**. They are just different.
 
-- Written in Go with nicer interface.
+<br>
+`etcd` is:
+
+- Written in Go.
 - You can `cURL` without any special client libraries.
 - Designed for distributed systems.
 
-I used *etcd* as follows:
 
-- **Requests go to** **_etcd_** and [**atomically create in-order
-  keys**](https://coreos.com/etcd/docs/0.4.7/etcd-api/).
-- Each request **sends** with its **priority value**.
-- Regularly **_retreive_** all *keys* from *etcd*.
+<br>
+So here's how I used `etcd`:
+
+- **Requests go to** `etcd` server and [**atomically create in-order
+  keys**](https://coreos.com/etcd/docs/2.0.8/api.html).
+- Each request is **sent** with **priority value**.
+- Periodically `**_retreive_** all *keys* from *etcd*.
 - In memory, **_build a [heap](http://en.wikipedia.org/wiki/Priority_queue)_**,
-  by **_indexes_** and its **_priorities_**.
+  with job's priorities and indexes.
 - **_Execute_** in the **order** of the **priorities**.
-- **Update each index/key** with results.
+- **Update each index/key** with execution results.
 
 ```go
 package main
@@ -636,8 +642,8 @@ export INFRA_PUBLIC_IP_2=52.0.0.2;
 
 # deploy in each machine with
 curl -L  https://github.com/coreos/etcd/releases/download/v2.1.0-rc.0/etcd-v2.1.0-rc.0-linux-amd64.tar.gz -o etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-cd etcd-v2.1.0-rc.0-linux-amd64
+tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz;
+cd etcd-v2.1.0-rc.0-linux-amd64;
 ./etcd \
 -name infra0 \
 -initial-cluster-token my-infra \
@@ -650,8 +656,8 @@ cd etcd-v2.1.0-rc.0-linux-amd64
 ;
 
 curl -L  https://github.com/coreos/etcd/releases/download/v2.1.0-rc.0/etcd-v2.1.0-rc.0-linux-amd64.tar.gz -o etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-cd etcd-v2.1.0-rc.0-linux-amd64
+tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz;
+cd etcd-v2.1.0-rc.0-linux-amd64;
 ./etcd \
 -name infra1 \
 -initial-cluster-token my-infra \
@@ -664,8 +670,8 @@ cd etcd-v2.1.0-rc.0-linux-amd64
 ;
 
 curl -L  https://github.com/coreos/etcd/releases/download/v2.1.0-rc.0/etcd-v2.1.0-rc.0-linux-amd64.tar.gz -o etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz
-cd etcd-v2.1.0-rc.0-linux-amd64
+tar xzvf etcd-v2.1.0-rc.0-linux-amd64.tar.gz;
+cd etcd-v2.1.0-rc.0-linux-amd64;
 ./etcd \
 -name infra2 \
 -initial-cluster-token my-infra \
@@ -687,19 +693,17 @@ curl -L -XPUT http://$INFRA_PUBLIC_IP_0:2379/v2/keys/test/55 -d value="Hello";
 curl -L -XDELETE http://$INFRA_PUBLIC_IP_0:2379/v2/keys/queue/350;
 ```
 
-Additionally, if you need access to *`etcd`* servers outside of `VPC`, make
+Additionally, if you need access to `etcd` servers outside of `VPC`, make
 sure to open **client port `2379`** to your external client IP.
 
 <br>
-
 In [**_GCP_**](https://cloud.google.com/), you can just launch from default
 [*CoreOS*](https://coreos.com/) images.
 
 ![gcp_00](img/gcp_00.png)
 ![gcp_01](img/gcp_01.png)
 
-[*CoreOS
-disk*](https://coreos.com/docs/running-coreos/cloud-providers/google-compute-engine/)
+[*CoreOS disk*](https://coreos.com/docs/running-coreos/cloud-providers/google-compute-engine/)
 ships with built-in `etcd`, so you do not need to install `etcd` unless you
 want to install the latest versions manually. 
 
