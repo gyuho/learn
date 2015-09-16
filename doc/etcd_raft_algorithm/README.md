@@ -160,41 +160,41 @@ consistent**.
   running. Typically **replicated state machines are implemented by
   replicating log entries identically on the collection of servers**.
 - **`log`**: A log contains a list of commands, so that *state machines*
-  can apply those log entries *when it is safe to do so*. A log entry is the
+  can apply those commands *when it is safe to do so*. A log entry is the
   primary work unit of *Raft algorithm*.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
-  replicated the entry on a majority of servers in the cluster. Such log entry
-  is considered safe to be applied to state machines. `Commit` also includes
-  preceding entries, such as the ones from previous leaders. This is done by
-  the leader keeping track of the highest index to commit.
-- **`leader`**: *Raft algorithm* first elects a `leader` to handle
-  client requests and replicate log entries to other servers(followers).
-  Once logs are replicated, the leader tells when to apply log entries to
-  their state machines. When a leader fails or gets disconnected from
-  other servers, then the algorithm elects a new leader. In normal operation,
-  there is **exactly only one leader**. A leader sends periodic heartbeat
+  replicated the entry on the majority of servers in a cluster. Such log entry
+  is safe to be applied to state machines. `Commit` also includes preceding
+  entries, such as the ones from previous leaders. This is done by the leader
+  keeping track of the highest index to commit.
+- **`leader`**: *Raft algorithm* first elects a `leader` that handles
+  client requests and replicates log entries to other servers(followers).
+  Once logs are replicated, `leader` tells followers when to apply log
+  entries to their state machines. When a leader fails or gets disconnected,
+  *Raft* elects a new leader. In normal operation, there is **exactly only
+  one leader** for each term. A leader sends periodic heartbeat
   messages to other servers to maintain its authority.
 - **`client`**: A client *requests* that **a leader append a new log entry**.
-  Then the leader writes and replicates them to its followers. A client does
+  Then `leader` writes and replicates them to its followers. A client does
   **not need to know which machine is the leader**, sending write requests to
   any machine in the cluster. If a client sends a request to a follower, it
   redirects to the current leader (Raft paper §5.1). A leader sends out
   `AppendEntries` RPCs with its `leaderId` to other servers, so that a
   follower knows where to redirect client requests.
 - **`follower`**: A follower is completely passive, issuing no RPCs and only
-  responds to incoming RPCs from candidates and leaders. All servers start as
+  responding to incoming RPCs from candidates or leaders. All servers start as
   followers. If a follower receives no communication(heartbeat), it becomes a
-  candidate to start an election. 
+  candidate and then starts an election. 
 - **`candidate`**: A candidate is used to elect a new leader. It's a server
   state between `follower` and `leader`. If a candidate receives votes from
-  the majority of servers, it becomes the new `leader`.
+  the majority, it becomes the new `leader`.
 - **`term`**: *Raft* divides time into `terms` of arbitrary duration, indexed
   with consecutive integers. Each term begins with an *election*. And if the
   election ends with no leader (split vote), it creates a new `term`. *Raft*
-  ensures that each `term` has at most one leader in the given `term`. `Term`
-  index is also used to detect obsolete information. Servers always sync with
+  ensures that each `term` has at most one leader for the given `term`. `Term`
+  `index` is used to detect obsolete information. Servers always sync with
   biggest `term` number(index), and any *server with stale `term`* number
-  **reverts back to `follower` state**, and any requests from such servers
+  **reverts back to `follower` state**, and requests from such servers
   are rejected.
 
 [↑ top](#etcd-raft-algorithm)
@@ -211,8 +211,8 @@ consistent**.
 
 #### raft algorithm: leader election
 
-*Raft* servers communicate through remote procedure calls (RPCs).
-The basic Raft algorithm requires only two types of RPCs:
+*Raft* inter-server communication is done by remote procedure calls
+(RPCs). The basic Raft algorithm requires only two types of RPCs:
 
 - `RequestVote` RPCs, issued by candidates during elections.
 - `AppendEntries` RPCs, issued by leaders:
@@ -283,8 +283,8 @@ Here's how election works:
 
 #### raft algorithm: log replication
 
-*Raft* servers communicate through remote procedure calls (RPCs).
-The basic Raft algorithm requires only two types of RPCs:
+*Raft* inter-server communication is done by remote procedure calls
+(RPCs). The basic Raft algorithm requires only two types of RPCs:
 
 - `RequestVote` RPCs, issued by candidates during elections.
 - `AppendEntries` RPCs, issued by leaders:
@@ -639,8 +639,8 @@ func becameLeader(server *ServerState) {
 
 #### `etcd` internals: RPC between machines
 
-*Raft* servers communicate through remote procedure calls (RPCs).
-The basic Raft algorithm requires only two types of RPCs:
+*Raft* inter-server communication is done by remote procedure calls
+(RPCs). The basic Raft algorithm requires only two types of RPCs:
 
 - `RequestVote` RPCs, issued by candidates during elections.
 - `AppendEntries` RPCs, issued by leaders:
