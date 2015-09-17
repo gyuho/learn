@@ -226,11 +226,17 @@ func main() {
 }
 ```
 
-
 There is **no explicit declaration** that the *type* **_byLength_** implements
 the interface [**_`sort.Interface`_**](http://golang.org/pkg/sort/#Interface) because
 the type already implements all three methods: *`Len`*, *`Swap`*, and *`Less`*. 
-Then the *type* **_byLength_** satisfies the **_`sort.Interface`_** implicitly. 
+Then the *type* **_byLength_** satisfies the **_`sort.Interface`_** implicitly.
+
+In this example, **_byLength_** represents an [identical type](https://golang.org/ref/spec#Type_identity)
+to **_[]string_**. Giving it a meaninful name allows a
+[type conversion](https://golang.org/ref/spec#Conversions) `byLength(words)` to be done in-line
+with the `sort.Sort()` call, satisfying the interface and leading to clean, understandable syntax.
+Similar **_byX_** types could be created in the same way for sorting by other criteria, so long as
+they satisfy [**_`sort.Interface`_**](http://golang.org/pkg/sort/#Interface).
 
 <br>
 - *`struct`* is a type and contains data with a set of fields.
