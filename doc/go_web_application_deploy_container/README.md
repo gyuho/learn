@@ -203,7 +203,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	stdlog "log"
 	"net"
 	"net/http"
 	"os"
@@ -216,6 +215,8 @@ import (
 
 	"golang.org/x/net/context"
 
+	stdlog "log"
+
 	log "github.com/Sirupsen/logrus"
 	auth "github.com/bradrydzewski/go.auth"
 	uuid "github.com/satori/go.uuid"
@@ -224,8 +225,26 @@ import (
 
 /*
 sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
-go run 00_web_server.go 1>>stdout.log 2>>stderr.log;
+go run main.go 1>>stdout.log 2>>stderr.log;
 */
+
+type (
+	key int
+
+	storage struct {
+		sync.Mutex
+		userIdentifierToData map[string]*data
+	}
+
+	data struct {
+		ID string
+	}
+)
+
+const (
+	UserKey key = 0
+	DBKey   key = 1
+)
 
 var (
 	port    = ":8080"
@@ -243,11 +262,6 @@ var (
 	globalStorage storage
 )
 
-type storage struct {
-	sync.Mutex
-	userIdentifierToData map[string]string
-}
-
 func init() {
 	// Log as JSON instead of the default ASCII formatter.
 	log.SetFormatter(new(log.JSONFormatter))
@@ -260,7 +274,9 @@ func init() {
 	// log.SetLevel(log.InfoLevel)
 	log.SetLevel(log.DebugLevel)
 
-	globalStorage.userIdentifierToData = make(map[string]string)
+	globalStorage.Lock()
+	globalStorage.userIdentifierToData = make(map[string]*data)
+	globalStorage.Unlock()
 }
 
 func main() {
@@ -346,10 +362,6 @@ func main() {
 	// }
 	graceful.Run(port, 10*time.Second, wrapRouterWithLogrus(mainRouter))
 }
-
-type key int
-
-const UserKey key = 0
 
 // https://github.com/bradrydzewski/go.auth/blob/master/auth.go
 func WithAuthentication(h ContextHandler) ContextHandler {
