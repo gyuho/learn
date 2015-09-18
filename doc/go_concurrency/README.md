@@ -1008,8 +1008,6 @@ func Serve(queue chan *Request) {
 
 #### #1-3. **be careful with buffered channel!**
 
-<br>
-
 > just fixed a bug where we blocked during shutdown sending
 > to an error channel;  if **it was buffered we'd have silently**
 > **ignored them!** #golang
