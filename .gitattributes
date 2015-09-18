@@ -1,0 +1,8 @@
+*.sh linguist-language=Shell
+*.go linguist-language=Go
+*.cpp linguist-language=C++
+*.c linguist-language=C
+*.py linguist-language=Python
+*.js linguist-language=Javascript
+*.html linguist-language=HTML
+*.md linguist-language=Markdown
