@@ -1,5 +1,4 @@
 doc/*    linguist-documentation=false
-docs/*   linguist-documentation=false
 *.sh     linguist-language=Shell
 *.go     linguist-language=Go
 *.cpp    linguist-language=C++
