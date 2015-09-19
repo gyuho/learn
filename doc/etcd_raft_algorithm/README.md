@@ -22,6 +22,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
+- [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [**raft algorithm: summary**](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
   - [**`raft`**](#raft)
@@ -425,6 +426,77 @@ Summary of
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+
+
+#### raft algorithm: client interaction
+
+Summary of
+[§8 Client interaction](http://ramcloud.stanford.edu/raft.pdf):
+
+> If a client sends a request to a follower, it
+> redirects to the current leader
+>
+> [*Raft paper §5.1*](http://ramcloud.stanford.edu/raft.pdf)
+
+<br>
+> In concurrent programming, an operation (or set of operations) is atomic,
+> **linearizable**, indivisible or uninterruptible if it appears to the rest
+> of the system to occur instantaneously. Atomicity is a guarantee of isolation
+> from concurrent processes.
+>
+> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability) *by Wikipedia*
+
+<br>
+Again, *clients send all requests to the Raft leader*. A client first connects
+to a randomly chosen server. And if the server is not the leader, the server
+will reject the requests from the client, and tell the client which server is
+the most recent leader. `AppendEntries` RPCs to `followers` include `leader`'s
+network address.
+
+<br>
+In *Raft*, each operation should appear to execute instantaneously, only once,
+at some point between the call and response: **_linearizable semantics_**.
+However, **if a leader crashes**, *client requests* will **time out** and
+try again with randomly-chosen servers. If it were after the leader had
+committed the log entry but before responding to the client, the client
+tries the same command with the new leader: *the command would get executed
+a second time*.
+
+To prevent this, clients assign unique serial number to each command. Then the
+state machine in a server stores the most recent serial number processes for
+each client with the associated response. If the state machine finds a command
+whose serial number has already been executed, it immediately returns the
+response without re-executing the request the second time.
+
+<br>
+But still, *Raft* client does not need to know which machine is the `leader`.
+Then how do we redirect clients to `leader`, which send requests to
+`followers`? 
+
+> Yes, a client can submit a write request to any machine in the cluster. What
+> happens is the etcd machine you contact **creates a raft RPC** and **tags it
+> with a unique id**. When the machine sees that unique id, tag come back as a
+> raft log commit, then it returns a 200 OK to the client.
+>
+> [*Brandon
+> Phillips*](https://groups.google.com/d/msg/coreos-user/et7-Lm0gQxo/jkeZPKo0uaEJ)
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
 
 
 

@@ -22,6 +22,9 @@ func init() {
 	log.SetFormatter(new(log.JSONFormatter))
 
 	// https://godoc.org/github.com/Sirupsen/logrus#Level
+	// log.SetLevel(log.PanicLevel)
+	// log.SetLevel(log.FatalLevel)
+	// log.SetLevel(log.ErrorLevel)
 	// log.SetLevel(log.WarnLevel)
 	// log.SetLevel(log.InfoLevel)
 	log.SetLevel(log.DebugLevel)

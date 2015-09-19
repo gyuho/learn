@@ -60,79 +60,61 @@ func main() {
 
 	fmt.Println()
 	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-		ctx = setContextWithUserAgent(ctx, "Linux")
+		timeout := 100 * time.Millisecond
+		processingTime := time.Nanosecond
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		cancel()
-		select {
-		case <-time.After(200 * time.Millisecond):
-			panic("overslept")
-		case <-ctx.Done():
-			// Done channel is closed when the deadline expires(times out)
-			fmt.Println("Done 2:", ctx)
-			fmt.Println("Done 2:", ctx.Err()) // prints "context canceled"
-		}
+		send(ctx, processingTime)
+		fmt.Println("Done 2")
 	}()
 	/*
-	   Done 2: context.Background.WithDeadline(2015-09-02 22:38:00.841406346 -0700 PDT [99.990302ms]).WithValue(2, "Linux")
-	   Done 2: context canceled
+		send Timeout: context canceled
+		Done 2
 	*/
 
 	fmt.Println()
 	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+		timeout := 100 * time.Millisecond
+		processingTime := time.Nanosecond
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
-		sendRequestWithWaitTime(ctx, 500*time.Millisecond)
+		send(ctx, processingTime)
 		fmt.Println("Done 3")
 	}()
 	/*
-		Started: sendRequestWithWaitTime
-		Timed out: sendRequestWithWaitTime
-		context deadline exceeded
+		send Done!
 		Done 3
 	*/
 
 	fmt.Println()
 	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+		timeout := 100 * time.Millisecond
+		processingTime := time.Minute
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
-		sendRequestWithWaitTime(ctx, time.Millisecond)
+		send(ctx, processingTime)
 		fmt.Println("Done 4")
 	}()
 	/*
-		Started: sendRequestWithWaitTime
-		wait is Done: sendRequestWithWaitTime
+		send Timeout: context deadline exceeded
 		Done 4
-	*/
-
-	fmt.Println()
-	func() {
-		// Done channel is closed when the deadline expires(times out)
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-		cancel()
-		sendRequestWithWaitTime(ctx, time.Millisecond)
-		fmt.Println("Done 5")
-	}()
-	/*
-		Started: sendRequestWithWaitTime
-		Timed out: sendRequestWithWaitTime
-		context canceled
-		Done 5
 	*/
 }
 
-func sendRequestWithWaitTime(ctx context.Context, wait time.Duration) {
-	fmt.Println("Started: sendRequestWithWaitTime")
+func send(ctx context.Context, processingTime time.Duration) {
+	done := make(chan struct{})
+	go func() {
+		time.Sleep(processingTime)
+		done <- struct{}{}
+	}()
 	select {
-	case <-time.After(wait):
-		fmt.Println("wait is Done: sendRequestWithWaitTime")
+	case <-done:
+		fmt.Println("send Done!")
 		return
 	case <-ctx.Done():
 		// Done channel is closed when the deadline expires(times out)
-		fmt.Println("Timed out: sendRequestWithWaitTime")
-		fmt.Println(ctx.Err())
+		// or canceled.
+		fmt.Println("send Timeout:", ctx.Err())
 		return
 	}
 }

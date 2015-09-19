@@ -1,9 +1,3 @@
-My name is *Gyu-Ho Lee*, and I work at <a href="http://www.openmail.com" target="_blank">*OpenMail*</a>.
-
-- **Email**: <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>
-- **Projects**: <a href="http://gyuho.github.io/" target="_blank">gyuho.github.io</a>
-- **LinkedIn**: <a href="https://www.linkedin.com/in/gyuho" target="_blank">linkedin.com/in/gyuho</a>
-
 I am an endless, active learner. I embrace challenges beyond my current abilities
 to broaden my knowledge the most. I want to know a little about a lot,
 and a lot about little: my favorites are C++ and Go.
@@ -25,7 +19,8 @@ I will respond within 24-hour.
 
 
 <br>
-​*Sincerely,*<br>
+*Sincerely,*
+<br>
 *Gyu-Ho Lee*
 
 <br>
@@ -271,7 +266,7 @@ I will show how to build web applications from scratch, with full-working code.
 
 - [**_network, net, http_**](https://github.com/gyuho/learn/tree/master/doc/network_net_http)
 - [**_ssh, scp_**](https://github.com/gyuho/learn/tree/master/doc/ssh_scp)
-- [**_Go: web server with template, log, context_**](https://github.com/gyuho/learn/tree/master/doc/go_web_server_with_template_log_context)
+- [**_Go: log, context_**](https://github.com/gyuho/learn/tree/master/doc/go_log_context)
 - [**_Go: security, rate limit, graceful shutdown_**](https://github.com/gyuho/learn/tree/master/doc/go_security_rate_limit_graceful_shutdown)
 - [**_Go: web application, deploy, container_**](https://github.com/gyuho/learn/tree/master/doc/go_web_application_deploy_container)
 
