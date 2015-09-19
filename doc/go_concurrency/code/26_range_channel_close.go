@@ -5,15 +5,19 @@ import "fmt"
 func main() {
 	ch := make(chan int)
 
-	go func() {
-		defer close(ch)
-		for i := 0; i < 5; i++ {
+	for i := 0; i < 5; i++ {
+		go func(i int) {
 			ch <- i
-		}
-	}()
+		}(i)
+	}
 
+	cn := 0
 	for v := range ch {
 		fmt.Println(v)
+		cn++
+		if cn == 5 {
+			close(ch)
+		}
 	}
 	// 0
 	// 1

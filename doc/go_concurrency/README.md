@@ -19,6 +19,7 @@
 - [**Concurrency is not parallelism**](#concurrency-is-not-parallelism)
 - [goroutine ≠ thread](#goroutine--thread)
 - [`defer`, `recover`](#defer-recover)
+- [**Be careful with `defer` and deadlock**](#be-careful-with-defer-and-deadlock)
 - [channel to communicate](#channel-to-communicate)
 - [questions](#questions)
 	- [#1-1. synchronous, asynchronous channel](#1-1-synchronous-asynchronous-channel)
@@ -307,7 +308,7 @@ b() called
 
 #### `defer`, `recover`
 
-**defer** **_delays the function execution_** **until just before the enclosing
+**`defer`** **_delays the function execution_** **until just before the enclosing
 function exit(return)**. The order of execution is:
 
 - **`defer`**: Stack(*Last-In-First-Out*)
@@ -602,11 +603,74 @@ func keepRunning(limit int) {
 func run() {
 	panic(time.Now().String())
 }
+
 ```
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+
+#### **Be careful with `defer` and deadlock**
+
+Again, **`defer`** **_delays the function execution_** **until just
+before the enclosing function exit(return)**. That means if the function
+does not exit `defer` statement never gets executed:
+
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"sync"
+)
+
+type storage struct {
+	sync.Mutex
+	data string
+}
+
+var globalStorage storage
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	globalStorage.Lock()
+	defer globalStorage.Unlock()
+
+	fmt.Fprintf(w, "Hi %s, I love %s!", globalStorage.data, r.URL.Path[1:])
+}
+
+func main() {
+	globalStorage.Lock()
+	// (X) deadlock!
+	// defer globalStorage.Unlock()
+	globalStorage.data = "start"
+	globalStorage.Unlock()
+
+	http.HandleFunc("/", handler)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
 
 
 
