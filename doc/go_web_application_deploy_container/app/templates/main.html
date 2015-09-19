@@ -1,0 +1,36 @@
+{{define "head"}}
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="/static/js/main.js"></script>
+{{end}}
+
+{{define "body"}}
+
+<br>
+<hr>
+<h3>Welcome to Main Page</h3>
+I found some cool images from:
+<ul>
+    <li><a href="https://github.com/golang-samples/gopher-vector" target="_blank">golang-samples/gopher-vector</a></li>
+    <li><a href="https://twitter.com/rob_pike" target="_blank">twitter.com/rob_pike</a></li>
+</ul>
+<br>
+<br>
+<br>
+<b>Type any sentence:</b>
+<br>
+<div class="input-group">
+	<form method="POST" id="form_trigger_id_sentence">
+		<input
+		name="form_name_sentence"
+		type="text"
+		placeholder="please type any sentence...">
+	</form>
+	<button form="form_trigger_id_sentence" type="submit">Save</button>
+</div>
+<br>
+<br>
+<b>Output:</b> <span id="Sentence"></span>
+<br>
+<button id="button_trigger_id_reset" type="submit">Reset</button>
+<br>
+{{end}}

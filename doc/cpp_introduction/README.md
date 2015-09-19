@@ -24,6 +24,7 @@
 - [Standard C++](https://isocpp.org/)
 - [cppreference.com](http://en.cppreference.com/w/)
 - [cplusplus.com/reference](http://www.cplusplus.com/reference/)
+- [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines)
 - [C++ Language Reference](https://msdn.microsoft.com/en-us/library/3bstk3k5.aspx)
 - [C/C++ Language and Standard Libraries](https://msdn.microsoft.com/en-us/library/hh875057.aspx)
 - [cplusplus.com](http://www.cplusplus.com)
