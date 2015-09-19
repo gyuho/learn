@@ -1,19 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"math/rand"
+)
 
 func main() {
 	ch := make(chan int)
 
-	for i := 0; i < 5; i++ {
+	for {
 		go func() {
-			ch <- i
+			ch <- rand.Intn(10)
 		}()
 	}
 
-	fmt.Println(<-ch) // 5
-	fmt.Println(<-ch) // 5
-	fmt.Println(<-ch) // 5
-	fmt.Println(<-ch) // 5
-	fmt.Println(<-ch) // 5
+	<-ch
+
+	// process took too long
 }

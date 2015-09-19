@@ -11,20 +11,9 @@ func main() {
 		}()
 	}
 
-	i := 0
-	for v := range ch {
-		fmt.Println(v)
-		i++
-		if i == 5 {
-			close(ch)
-		}
-	}
+	fmt.Println(<-ch) // 5
+	fmt.Println(<-ch) // 5
+	fmt.Println(<-ch) // 5
+	fmt.Println(<-ch) // 5
+	fmt.Println(<-ch) // 5
 }
-
-/*
-5
-5
-5
-5
-5
-*/
