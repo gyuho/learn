@@ -1,7 +1,7 @@
 {
 	"acKind": "ImageManifest",
 	"acVersion": "0.6.1",
-	"name": "gyuho/code",
+	"name": "gyuho/app",
 	"labels": [
 		{
 			"name": "version",
@@ -20,7 +20,7 @@
 		"user": "root",
 		"group": "root",
 		"exec": [
-			"/usr/bin/code"
+			"/usr/bin/app"
 		],
 		"mountPoints": [
 			{
