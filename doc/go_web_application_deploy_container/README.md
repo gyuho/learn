@@ -310,6 +310,7 @@ func sendRequestBlue() {
 
 Output of [**sample web application source code by gyuho**](./app):
 
+<br>
 ![main](img/app0.png)
 
 <img src="img/app01.png"
