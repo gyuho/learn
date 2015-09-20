@@ -1,8 +1,3 @@
-
-
-" vimrc
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of https://github.com/VundleVim/Vundle.vim
 
@@ -20,14 +15,16 @@ call vundle#begin('~/.vim/bundle')
 Plugin 'gmarik/Vundle.vim'
 
 " Plugins
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-commentary'
-Plugin 'terryma/vim-multiple-cursors'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'Yggdroot/indentLine'
 
 call vundle#end('~/.vim/bundle')
 filetype plugin indent on
@@ -53,7 +50,6 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 
-
 " https://github.com/scrooloose/syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -69,15 +65,8 @@ let g:syntastic_mode_map = {
 let g:syntastic_cpp_compiler_options = '-std=c++11'
 
 " NERDTree
-"
-" autocmd vimenter * NERDTree
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-" autocmd VimEnter * wincmd p
 map <F2> :NERDTreeToggle<cr>
 map <F3> <C-w><C-w>
-
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
 set nowrap        " don't wrap lines
@@ -86,7 +75,7 @@ set formatoptions+=t
 
 set tabstop=4     " a tab is four spaces
 set backspace=indent,eol,start
-                    " allow backspacing over everything in insert mode
+                  " allow backspacing over everything in insert mode
 set autoindent    " always set autoindenting on
 set copyindent    " copy the previous indentation on autoindenting
 set number        " always show line numbers
@@ -95,9 +84,9 @@ set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
 set showmatch     " set show matching parenthesis
 set ignorecase    " ignore case when searching
 set smartcase     " ignore case if search pattern is all lowercase,
-                    "    case-sensitive otherwise
+                  "    case-sensitive otherwise
 set smarttab      " insert tabs on the start of a line according to
-                    "    shiftwidth, not tabstop
+                  "    shiftwidth, not tabstop
 set hlsearch      " highlight search terms
 set incsearch     " show search matches as you type
 
@@ -112,11 +101,12 @@ map k gk
 autocmd BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn set filetype=markdown
 au FileType python setl autoindent tabstop=4 expandtab shiftwidth=4 softtabstop=4
 au FileType html setl autoindent tabstop=2 expandtab shiftwidth=2 softtabstop=2
+
 autocmd FileType c,cpp,go,java setlocal commentstring=//\ %s
 let g:delimitMate_expand_cr=1
+let g:indentLine_char = '︙'
 
 " spellcheck default for markdown files
 autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
-

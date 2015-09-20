@@ -3,17 +3,17 @@ case $- in
     *i*) ;;
       *) return;;
 esac
- 
+
 export HISTFILESIZE=20000
-export HISTSIZE=10000
+export HISTSIZE=20000
 shopt -s histappend
 shopt -s cmdhist # Combine multiline commands into one in history
 HISTCONTROL=ignoreboth # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoredups # Ignore duplicates, ls without options and builtin commands
 export HISTIGNORE="&:ls:[bf]g:exit"
- 
+
 shopt -s checkwinsize # check the window size after each command and, if necessary,
- 
+
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 # shopt -s globstar
@@ -35,7 +35,7 @@ esac
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
 #force_color_prompt=yes
- 
+
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
     # We have color support; assume it's compliant with Ecma-48
@@ -46,7 +46,7 @@ if [ -n "$force_color_prompt" ]; then
     color_prompt=
     fi
 fi
- 
+
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
@@ -62,7 +62,7 @@ xterm*|rxvt*)
 *)
     ;;
 esac
- 
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -74,7 +74,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
- 
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -82,7 +82,7 @@ fi
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
- 
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -93,7 +93,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
- 
  
 # Unzip... Extract...
 extract () {
@@ -120,16 +119,6 @@ extract () {
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
- 
-# cat /proc/cpuinfo | grep 'model name' | head -1
-# lsb_release -a
-# df -h
-# free -h
-# vmstat -sSM
-# cat /proc/meminfo
-# uname -r
-# cat /proc/version
-# sudo do-release-upgrade -d
  
 green='\e[0;32m'
 NC='\e[0m'
@@ -159,16 +148,15 @@ alias memory='free -h;'
 alias reboot='sudo reboot;'
 alias shutdown='sudo telinit 0;'
  
-alias ipp='curl icanhazip.com | xclip -selection clipboard;'
- 
 alias v='vim'
 alias t='tmux'
  
+alias ipp='curl icanhazip.com | xclip -selection clipboard;'
 alias cleanpkg='cd /home/ubuntu/go/pkg; rm -rf *; cd -;'
-alias gotest='go test -v ./...; go test -v -race ./...;'
 
 alias cs='cd /home/ubuntu/go/src;'
-alias gh='cd /home/ubuntu/go/src/github.com/gyuho;'
+alias gh='cd /home/ubuntu/go/src/github.com;'
 alias learn='cd /home/ubuntu/go/src/github.com/gyuho/learn/doc;'
-alias c11='g++ -std=c++11'
 
+alias gotest='go test -v ./...; go test -v -race ./...;'
+alias c11='g++ -std=c++11'
