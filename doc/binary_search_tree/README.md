@@ -279,7 +279,7 @@ requires a series of **binary** (*left* or *right*) decisions.
 And here's how you get the time complexity *`O(log n)`*, which is the height of
 a binary tree of *n* elements:
 
-![heap_height_01](img/heap_height_01.png)
+![heap_height_00](img/heap_height_00.png)
 ![heap_height_01](img/heap_height_01.png)
 
 <br>
