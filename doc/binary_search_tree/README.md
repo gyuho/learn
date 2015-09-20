@@ -269,7 +269,7 @@ int main()
 Suppose a database of n items and one needs to search for a certain value. Then
 time complexity of search is **_`O(n)`_**. But what if the *n* is very large?
 
-![why_bst_00](img/why_bst_00.png)
+![why_bst](img/why_bst.png)
 
 In **Binary Search Tree**, we can **search** in **_logarithmic time O(log
 n)_**, which is much faster than linear time search. A binary search tree keeps
@@ -279,7 +279,8 @@ requires a series of **binary** (*left* or *right*) decisions.
 And here's how you get the time complexity *`O(log n)`*, which is the height of
 a binary tree of *n* elements:
 
-![why_bst_01](img/why_bst_01.png)
+![heap_height_01](img/heap_height_01.png)
+![heap_height_01](img/heap_height_01.png)
 
 <br>
 
