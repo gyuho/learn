@@ -22,7 +22,8 @@ I primarily work with Ubuntu, bash, vim.
 
 #### Reference
 
-- [The art of command line](https://github.com/jlevy/the-art-of-command-line)
+- [*Learn Enough Command Line to Be Dangerous by Michael Hartl*](http://www.learnenough.com/command-line)
+- [*The art of command line*](https://github.com/jlevy/the-art-of-command-line)
 
 [↑ top](#bash-vim)
 <br><br><br><br>
