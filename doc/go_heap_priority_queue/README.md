@@ -37,7 +37,8 @@ lowest level.
 Suppose a binary tree of height *h* with *n* number of nodes. Then the heap
 height would be:
 
-![heap_height](img/heap_height.png)
+![heap_height_00](img/heap_height_00.png)
+![heap_height_01](img/heap_height_01.png)
 
 Keep this in mind. This is *important* when we calculate the *time complexities*
 of data structures.
