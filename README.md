@@ -4,32 +4,16 @@ and a lot about little: my favorites are C++ and Go.
 
 **The best way to learn is to teach what you have learned to other people.**
 I tried [YouTube channel](https://www.youtube.com/channel/UCWzSgIp_DYRQnEsJuH32Fww),
-which was nice but *hard to maintain*. So I decided to write my own textbook
-because it's more flexible and challenging. **I am still learning, and I may
-say things out of ignorance.** Every post is *working in progress*,
-non-committal on a timeline. The point is to review and improve over time.
+which was *hard to maintain*. So I decided to write my own textbook.
+**I am still learning, and I may say things out of ignorance.**
+Every post is *working in progress*, non-committal on a timeline.
+The point is to review and improve over time.
 This is a **_personal white-board_** where I *scribble* anything,
-*organize* my code, learning experiences, and *display* my ability to
-explain ideas from various fields.
+*organize* my code, learning experiences.
 
 I appreciate any kind of *feedback* or *suggestions*.
 You can email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
 or [`pull request`](https://github.com/gyuho/learn/pulls).
-I will respond within 24-hour.
-
-
-<br>
-*Sincerely,*
-<br>
-*Gyu-Ho Lee*
-
-<br>
-<br>
-`LICENSE` can be found [here](./LICENSE.md).<br>
-Please share with your friends and colleagues.<br>
-<br>
-<br>
-
 
 <br><hr>
 ### Contents
