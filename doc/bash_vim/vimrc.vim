@@ -17,6 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 " Plugins
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
+Plugin 'godlygeek/tabular'
 Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
@@ -39,7 +40,14 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 nnoremap <Leader>fq :q!<CR>
 nnoremap <Leader>e :SyntasticCheck gcc<CR>
+
+nnoremap <Leader>t= :Tabularize /=<CR>
+nnoremap <Leader>t: :Tabularize /:\zs<CR>
+" :Tab/|
+" for |
+
 nmap <Leader><Leader> V
+
 
 " Vim-Go
 let g:go_fmt_command = "goimports"
