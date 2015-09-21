@@ -43,9 +43,9 @@ func (ca *ContextAdapter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		// recovered from panic: runtime error: invalid memory address
 		// or nil pointer dereference
 
-		ip, err := getIP(req)
+		ip, ierr := getIP(req)
 		if err != nil {
-			log.Warnf("getIP error: %v", err)
+			log.Warnf("getIP error: %v", ierr)
 		}
 		log.WithFields(log.Fields{
 			"event_type": "error",
