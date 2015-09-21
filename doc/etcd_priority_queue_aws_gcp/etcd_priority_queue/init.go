@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -36,7 +37,7 @@ var (
 	panicCount   int
 	recoverLimit = 100
 
-	logPath = fmt.Sprintf("%s.log", nowPacific().String()[:10])
+	logPath = fmt.Sprintf("etcd_server_%s.log", strings.Replace(nowPacific().String()[:10], "-", "", -1))
 
 	odb *sql.DB
 	xdb *sql.DB
