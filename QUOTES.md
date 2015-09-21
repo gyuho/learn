@@ -2,6 +2,14 @@
 
 <br>
 
+> An alleged scientific discovery has no merit unless it can be explained to
+> a barmaid.
+>
+> [*Einstein, the Man and His
+> Achievement*](https://books.google.com/books?id=Bn_6c7SjprYC&q=barmaid&hl=en#v=snippet&q=barmaid&f=false)
+
+<br>
+
 > The competent programmer is fully aware of the strictly
 > limited size of his own skull; therefore he approaches 
 > the programming task in full humility, and among other 
@@ -77,3 +85,5 @@
 >
 > [*The Role of a Senior Developer by Matt 
 > Briggs*](http://mattbriggs.net/blog/2015/06/01/the-role-of-a-senior-developer/)
+
+<br>
