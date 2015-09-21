@@ -1,4 +1,4 @@
-// go run 03_log.go 1>>stdout.log 2>>stderr.log;
+// go run 00_log.go 1>>stdout.log 2>>stderr.log;
 package main
 
 import (
