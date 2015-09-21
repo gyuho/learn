@@ -58,22 +58,6 @@ go run temp.go;
 rm -rf temp.go;
 go version;
 
-cd $HOME;
-mkdir -p $HOME/go/src/github.com;
-mkdir -p $HOME/go/src/golang.org;
-sudo curl -s https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
-
-echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc;
-TEMP_PATH=$PATH':/usr/local/go/bin:/home/ubuntu/go/bin'
-echo "export PATH=$(echo $TEMP_PATH)" >> $HOME/.bashrc;
-source $HOME/.bashrc;
-
-cd $HOME;
-printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Successfully installed Go\")\n}" > $HOME/temp.go; 
-go run temp.go; 
-rm -rf temp.go;
-go version;
-
 go get -v -u github.com/tools/godep;
 go get -v -u golang.org/x/tools/cmd/goimports;
 go get -v -u github.com/golang/lint/golint;
