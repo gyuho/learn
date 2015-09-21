@@ -23,6 +23,7 @@ Please refer to [Reference](#reference) below.
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
+- [raft algorithm: log compaction](#raft-algorithm-log-compaction)
 - [**raft algorithm: summary**](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
   - [**`raft`**](#raft)
@@ -488,11 +489,43 @@ Then how do we redirect clients to `leader`, which send requests to
 > [*Brandon
 > Phillips*](https://groups.google.com/d/msg/coreos-user/et7-Lm0gQxo/jkeZPKo0uaEJ)
 
+<br>
+`TODO: find related code in etcd`
+
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
 
 
+
+
+
+
+
+
+
+
+#### raft algorithm: log compaction
+
+Summary of
+[§7 Log compaction](http://ramcloud.stanford.edu/raft.pdf):
+
+Most critical case for performance is when a leader replicates log entries.
+*Raft* algorithm minimizes the number of messages by sending a single
+round-trip request to half of the cluster. For stored logs, *Raft* has
+mechanism to discard obsolete information accumulated in the log.
+
+<br>
+*Raft* uses `snapshot` to save the state of the entire system on a stable
+storage, so that the log up to that `snapshot` point can be discarded.
+Here's how `snapshot` works in *Raft* log:
+
+![raft_log_compaction_00](img/raft_log_compaction_00.png)
+![raft_log_compaction_01](img/raft_log_compaction_01.png)
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
 
 
 
