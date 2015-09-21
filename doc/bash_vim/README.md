@@ -95,45 +95,6 @@ sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
 sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
 
-
-# go
-cd $HOME;
-mkdir -p $HOME/go/src/github.com;
-mkdir -p $HOME/go/src/golang.org;
-sudo curl -s https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
-
-echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc;
-TEMP_PATH=$PATH':/usr/local/go/bin:/home/ubuntu/go/bin'
-echo "export PATH=$(echo $TEMP_PATH)" >> $HOME/.bashrc;
-source $HOME/.bashrc;
-
-cd $HOME;
-printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Successfully installed Go\")\n}" > $HOME/temp.go; 
-go run temp.go; 
-rm -rf temp.go;
-go version;
-
-go get -v github.com/tools/godep;
-go get -v github.com/lib/pq;
-go get -v github.com/go-sql-driver/mysql;
-go get -v golang.org/x/tools/cmd/goimports;
-go get -v github.com/golang/lint/golint;
-go get -v github.com/nsf/gocode;
-go get -v github.com/motain/gocheck;
-go get -v github.com/vaughan0/go-ini;
-cd $GOPATH/src/github.com/nsf/gocode/vim; sudo ./update.sh;
-
-
-# python
-sudo apt-get -y install python-pip python-dev python-all \
-python-psycopg2 python-numpy python-pandas python-mysqldb;
-
-sudo pip install --upgrade pip;
-sudo pip install --upgrade psycopg2;
-sudo pip install --upgrade pyyaml;
-sudo pip install --upgrade gevent;
-sudo pip install --upgrade sqlalchemy;
-sudo pip install --upgrade boto;
 ```
 
 [↑ top](#bash-vim)
