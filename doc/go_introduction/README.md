@@ -82,6 +82,7 @@ go get -v -u github.com/motain/gocheck;
 go get -v -u github.com/vaughan0/go-ini;
 cd $GOPATH/src/github.com/nsf/gocode/vim; sudo ./update.sh;
 
+cd $HOME;
 go get -v -u github.com/bradrydzewski/go.auth;
 go get -v -u github.com/coreos/etcd/...;
 go get -v -u github.com/coreos/etcd/...;
@@ -98,6 +99,8 @@ go get -v -u github.com/tylerb/graceful;
 go get -v -u golang.org/x/net/context;
 go get -v -u golang.org/x/net/context;
 go get -v -u gopkg.in/yaml.v2;
+
+cd $HOME;
 
 ```
 
