@@ -242,6 +242,7 @@ func runJobs(ctx context.Context, kapi client.KeysAPI) error {
 	}()
 	select {
 	case <-done:
+		fmt.Println("runJobs done.")
 		return nil
 
 	case v := <-errChan:
