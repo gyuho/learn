@@ -234,6 +234,8 @@ func runJobs(ctx context.Context, kapi client.KeysAPI) error {
 
 			switch j.Action {
 			case "doSomething":
+				done <- struct{}{}
+				return
 			default:
 				errChan <- fmt.Errorf("unknown action: %+v", *j)
 				return
