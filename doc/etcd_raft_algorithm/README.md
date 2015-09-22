@@ -115,8 +115,8 @@ them all.
 #### raft algorithm: introduction
 
 To make your program reliable, you can:
-- execute the program in a collection of machines (distributed system).
-- ensure that they all get executed exactly the same way (consistency).
+- execute program in a collection of machines (distributed system).
+- ensure that they all run exactly the same way (consistency).
 
 This is the definition of **replicated state machine**.
 And a *state machine* can be any program or application with inputs and
@@ -166,7 +166,7 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
   calls, so that the minority of slow servers do not affect the overall
   performance.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
-  replicated the entry on the majority of servers in a cluster. Such log entry
+  replicated the entry on majority of servers in a cluster. Then such entry
   is safe to be applied to state machines. `commit` also includes preceding
   entries, such as the ones from previous leaders. This is done by the leader
   keeping track of the highest index to commit.
@@ -237,10 +237,10 @@ Summary of
    message from `leader` is **valid** only when the `leader`'s `term number`
    is equal to or greater than `follower`'s `term number`.
 4. Each `follower` has its own **randomized** `election timeout`, in order to
-   avoid *split voite*. So in most cases, only a single `follower` server
+   avoid *split vote*. So in most cases, only a single `follower` server
    times out. If the follower has not received such heartbeats within timeout,
    it assumes that there is no current `leader` in cluster.
-5. Then the `follower` starts a new `election` becoming a `candidate`.
+5. Then the `follower` starts a new `election` and becomes `candidate`.
 6. When a `follower` becomes a `candidate`, it:
 	- increments its `term number`.
 	- resets its `election timeout`.
@@ -248,8 +248,8 @@ Summary of
 8. `candidate` then **sends `RequestVote` RPCs** to other servers.
 9. `RequestVote` RPC includes the information of `candidate`'s log
    (`index`, `term number`, etc).
-10. `follower` denies its voting if the `follower` has more complete
-   log than the `candidate`.
+10. `follower` denies voting if its log is more complete
+   log than `candidate`.
 11. Then **`candiate`** either:
 	- **_becomes the leader_** by *winning the election* when it gets **majority
 	  of votes**. Then it must send out heartbeats to others
@@ -258,8 +258,8 @@ Summary of
 	  leader**. A valid `leader` must have `term number` that is
 	  equal to or greater than `candidate`'s. RPCs with lower `term`
 	  numbers are rejected. A leader **only appends to log**. Therefore,
-	  future-leader will have the **most complete** log among electing
-	  majority: a leader's log is the truth and a leader will eventually
+	  future-leader will have **most complete** log among electing
+	  majority: a leader's log is the truth and `leader` will eventually
 	  make followers' logs identical to the leader's.
 	- **_starts a new election and increments its current `term` number_**
 	  **when votes are split with no winner** That is, its **`election
@@ -321,7 +321,7 @@ Summary of
 4. Again `command` can complete as soon as a majority of cluster has
    responded to a single round of `AppendEntries` RPCs. The leader does
    not need to wait for all servers' responses..
-5. When the *log entry* has been *safely replicated* on a majority of servers,
+5. When `log entry` has been *safely replicated* on a majority of servers,
    the **`leader`** applies the entry to its state machine. What its means by
    `apply the entry to state machine` is *execute the command in the log
    entry*.
@@ -331,7 +331,8 @@ Summary of
 8. Future `AppendEntries` RPCs from the `leader` has the highest index of
    `committed` log entry, so that `followers` could learn that a log entry is
    `committed`, and they can apply the entry to their local state machines as
-   well.
+   well. *Raft* ensures all committed entries are durable and eventually
+   executed by all of available state machines.
 
 <br>
 Here's how log replication works:
@@ -359,6 +360,39 @@ Here's how log replication works:
 ![raft_log_consistency_01](img/raft_log_consistency_01.png)
 <br>
 ![raft_log_consistency_02](img/raft_log_consistency_02.png)
+
+<br>
+**Log Matching Property**:
+- If two entries in different logs have the same `index` and `term`, then they
+  store the same `command`. This is because `leader` creates maximum one entry
+  per `index` for the given `term`, and log entries never change their position
+  in the log.
+- If two entries in different logs have the same `index` and `term`, then the
+  `logs` are identical in all preceding entries. This is guaranteed by
+  `AppendEntries` RPC that does consistency check: the RPC contains `index`
+  and `term` that immediately precede new entries, and if `follower` does not
+  find an entry in its log with the same `index` and `term`, then it refuses
+  the new entries. As a result, whenever `AppendEntries` returns successfully,
+  `leader` learns that the `follower`'s log is identical to `leader`'s.
+
+<br>
+Then what if `AppendEntries` RPC fails? It fails when **`follower` does not
+have the entry at immediate-preceding `index` and `term`**. And the `leader`
+keeps sending `AppendEntries` RPCs until all `followers` eventually contain all
+log entries in order to maintain the log consistency.
+
+<br>
+Then how does `leader` achieve this by keep sending `AppendEntries` RPCs?
+<br>
+
+A `follower` may have extraneous entries. The `leader` checks the log with its
+latest log entry that two logs agree. And it deletes logs after that point.
+A `follower` may be missing some entries. In this case, `leader` keeps sending
+`AppendEntries` RPCs until it finds the matching entry.
+
+![raft_log_matching_00](img/raft_log_matching_00.png)
+![raft_log_matching_01](img/raft_log_matching_01.png)
+![raft_log_matching_02](img/raft_log_matching_02.png)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
@@ -1255,3 +1289,4 @@ for more fuzz testing on `etcd`.
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
+
