@@ -859,7 +859,7 @@ func main() {
 
 #### `exist`: files, directories
 
-```
+```go
 package main
 
 import (
