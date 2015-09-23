@@ -29,19 +29,24 @@ func main() {
 		// , returning the zero value of channel type and false.
 	}()
 	func() {
-		ch := make(chan struct{})
 		slice := []string{"A", "B", "C", "D", "E"}
-		for _, v := range slice {
-			go func(v string) {
-				fmt.Println("Printing:", v)
-				ch <- struct{}{}
-			}(v)
-		}
-		cn := 0
-		for range ch {
-			cn++
-			if cn == len(slice) {
-				close(ch)
+		if len(slice) > 0 {
+			// this only works when slice length
+			// is greater than 0. Otherwise, it will
+			// be deadlocking receiving no done message.
+			done := make(chan struct{})
+			for _, v := range slice {
+				go func(v string) {
+					fmt.Println("Printing:", v)
+					done <- struct{}{}
+				}(v)
+			}
+			cn := 0
+			for range done {
+				cn++
+				if cn == len(slice) {
+					close(done)
+				}
 			}
 		}
 		/*
