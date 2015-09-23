@@ -1,7 +1,7 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# Go: concurrency 
+# Go: concurrency
 
 <br>
 
@@ -1509,8 +1509,7 @@ This panics with [deadlock](http://en.wikipedia.org/wiki/Deadlock) message
 because when we *iterate a channel*, `range` **_ends only after the channel is
 closed_**. We MUST **make sure to** **_close the channel_** **after the last
 sent value is received by the channel**, as
-[here](http://play.golang.org/p/wiK2yjYWcC) and
-[here](http://play.golang.org/p/gjPJ1Lrfv1):
+[here](http://play.golang.org/p/wiK2yjYWcC):
 
 ```go
 package main
@@ -1545,6 +1544,10 @@ func main() {
 */
 ```
 
+<br>
+And try [this](http://play.golang.org/p/gjPJ1Lrfv1). Note that this code
+is not concurrent though:
+
 ```go
 package main
  
@@ -1576,7 +1579,8 @@ func main() {
 }
 ```
 
-But **the second code is not concurrent**. It should be like [this](http://play.golang.org/p/lEGxurzhLg):
+<br>
+It should be like [this](http://play.golang.org/p/lEGxurzhLg):
 
 ```go
 package main
