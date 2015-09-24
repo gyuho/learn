@@ -44,17 +44,19 @@ func wrapHandlerFunc2(fn func(w http.ResponseWriter, req *http.Request)) func(w 
 		fn(w, req) // execute the handler
 		took := time.Since(start)
 
-		ip, err := getIP(req)
-		if err != nil {
-			log.Warnf("getIP error: %v", err)
-		}
+		// ip, err := getIP(req)
+		// if err != nil {
+		// 	log.Warnf("getIP error: %v", err)
+		// }
+
 		log.WithFields(log.Fields{
 			"event_type": runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name(),
 			"referrer":   req.Referer(),
 			"ua":         req.UserAgent(),
 			"method":     req.Method,
 			"path":       req.URL.Path,
-			"ip":         ip,
+			"ip":         req.RemoteAddr,
+			"real_ip":    getRealIP(req),
 			"uuid":       uuid.NewV4(),
 		}).Debugf("took %s", took)
 	}
