@@ -2306,24 +2306,20 @@ BenchmarkAdd           1618754       1559698       -3.65%
 BenchmarkAdd-2         1627498       1560684       -4.11%
 BenchmarkAdd-4         1657596       1562932       -5.71%
 BenchmarkAdd-8         1642772       1565968       -4.68%
-BenchmarkAdd-16        1653736       1557481       -5.82%
 BenchmarkDelete        41958671      1604537       -96.18%
 BenchmarkDelete-2      41950813      1611548       -96.16%
 BenchmarkDelete-4      42214644      1620672       -96.16%
 BenchmarkDelete-8      41993457      1601052       -96.19%
-BenchmarkDelete-16     41915331      1614640       -96.15%
 
 benchmark              old allocs     new allocs     delta
 BenchmarkAdd           0              0              +0.00%
 BenchmarkAdd-2         0              0              +0.00%
 BenchmarkAdd-4         0              0              +0.00%
 BenchmarkAdd-8         0              0              +0.00%
-BenchmarkAdd-16        0              0              +0.00%
 BenchmarkDelete        0              0              +0.00%
 BenchmarkDelete-2      0              0              +0.00%
 BenchmarkDelete-4      0              0              +0.00%
 BenchmarkDelete-8      0              0              +0.00%
-BenchmarkDelete-16     0              0              +0.00%
 
 benchmark              old bytes     new bytes     delta
 BenchmarkAdd           423502        370           -99.91%
