@@ -9,7 +9,7 @@ echo "TEST #2 $ go test -v -race ./.."
 go test -v -race ./...;
 
 printf "\n"
-echo "TEST #3 $ go test -bench . -benchmem -cpu 1,2,4,8,16"
+echo "TEST #3 $ go test -bench . -benchmem -cpu 1,2,4,8"
 go test -opt="Slice" -bench . -benchmem -cpu 1,2,4,8 > slice.txt;
 go test -opt="Map"   -bench . -benchmem -cpu 1,2,4,8 > map.txt;
 
