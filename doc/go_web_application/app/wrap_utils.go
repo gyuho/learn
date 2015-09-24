@@ -43,17 +43,19 @@ func (ca *ContextAdapter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		// recovered from panic: runtime error: invalid memory address
 		// or nil pointer dereference
 
-		ip, ierr := getIP(req)
-		if err != nil {
-			log.Warnf("getIP error: %v", ierr)
-		}
+		// ip, ierr := getIP(req)
+		// if err != nil {
+		// 	log.Warnf("getIP error: %v", ierr)
+		// }
+
 		log.WithFields(log.Fields{
 			"event_type": "error",
 			"referrer":   req.Referer(),
 			"ua":         req.UserAgent(),
 			"method":     req.Method,
 			"path":       req.URL.Path,
-			"ip":         ip,
+			"ip":         req.RemoteAddr,
+			"real_ip":    getRealIP(req),
 			"error":      err,
 		}).Errorln("ServeHTTP error")
 
@@ -109,11 +111,6 @@ func WithDatabase(h ContextHandler) ContextHandler {
 func WithLogrus(h http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		ip, err := getIP(req)
-		if err != nil {
-			log.Warnf("getIP error: %v", err)
-		}
-
 		defer func() {
 			if err := recover(); err != nil {
 				log.WithFields(log.Fields{
@@ -122,7 +119,8 @@ func WithLogrus(h http.Handler) http.HandlerFunc {
 					"ua":         req.UserAgent(),
 					"method":     req.Method,
 					"path":       req.URL.Path,
-					"ip":         ip,
+					"ip":         req.RemoteAddr,
+					"real_ip":    getRealIP(req),
 					"error":      err,
 				}).Errorln("WithLogrus error")
 			}
@@ -138,7 +136,8 @@ func WithLogrus(h http.Handler) http.HandlerFunc {
 			"ua":         req.UserAgent(),
 			"method":     req.Method,
 			"path":       req.URL.Path,
-			"ip":         ip,
+			"ip":         req.RemoteAddr,
+			"real_ip":    getRealIP(req),
 			"uuid":       uuid.NewV4(),
 		}).Debugf("took %s", took)
 	}
@@ -165,6 +164,16 @@ func getIP(req *http.Request) (net.IP, error) {
 		return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
 	return userIP, nil
+}
+
+func getRealIP(req *http.Request) string {
+	ts := []string{"X-Forwarded-For", "x-forwarded-for", "X-FORWARDED-FOR"}
+	for _, k := range ts {
+		if v := req.Header.Get(k); v != "" {
+			return v
+		}
+	}
+	return ""
 }
 
 func cleanUp(str string) string {
