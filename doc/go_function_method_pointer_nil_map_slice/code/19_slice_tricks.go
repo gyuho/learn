@@ -48,8 +48,6 @@ func main() {
 	slice06 := []int{1, 2, 3, 4, 5}
 	copy(slice06[3:], slice06[4:])
 	slice06 = slice06[:len(slice06)-1 : len(slice06)-1]
-	// copy(d.OutEdges[edge1.Vtx][idx:], d.OutEdges[edge1.Vtx][idx+1:])
-	// d.OutEdges[src][len(d.OutEdges[src])-1] = nil // zero value of type or nil
 	fmt.Println(slice06, len(slice06), cap(slice06)) // [1 2 3 5] 4 4
 
 	make2DSlice := func(row, column int) [][]string {
