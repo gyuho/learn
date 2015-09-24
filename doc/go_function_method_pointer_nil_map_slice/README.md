@@ -18,6 +18,7 @@
 - [*non-deterministic* `range` `map`](#non-deterministic-range-map)
 - [`map` internals](#map-internals)
 - [slice tricks](#slice-tricks)
+- [slice vs. map](#slice-vs-map)
 - [permute `string`](#permute-string)
 - [destroy `struct`](#destroy-struct)
 - [tree](#tree)
@@ -2170,7 +2171,7 @@ from [*David Symonds*](https://github.com/dsymonds):
 
 ![linked_list_reddit](img/linked_list_reddit.png)
 
-Here's a list of [slice tricks](http://play.golang.org/p/uPpzivsWxj):
+Here's a list of [slice tricks](http://play.golang.org/p/LZ88bVbqcF):
 
 ```go
 package main
@@ -2223,8 +2224,6 @@ func main() {
 	slice06 := []int{1, 2, 3, 4, 5}
 	copy(slice06[3:], slice06[4:])
 	slice06 = slice06[:len(slice06)-1 : len(slice06)-1]
-	// copy(d.OutEdges[edge1.Vtx][idx:], d.OutEdges[edge1.Vtx][idx+1:])
-	// d.OutEdges[src][len(d.OutEdges[src])-1] = nil // zero value of type or nil
 	fmt.Println(slice06, len(slice06), cap(slice06)) // [1 2 3 5] 4 4
 
 	make2DSlice := func(row, column int) [][]string {
@@ -2263,6 +2262,7 @@ func main() {
 	*/
 	fmt.Println(mat[1], len(mat[1]), cap(mat[1])) // [1x0 1x1 1x2 1x3 1x4] 5 5
 }
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
@@ -2273,6 +2273,75 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+#### slice vs. map
+
+Here's the [benchmark](./slice_vs_map) results. Go
+[benchmark](https://golang.org/pkg/testing/#BenchmarkResult) contains:
+
+```go
+type BenchmarkResult struct {
+        N         int           // The number of iterations.
+        T         time.Duration // The total time taken.
+        Bytes     int64         // Bytes processed in one iteration.
+        MemAllocs uint64        // The total number of memory allocations.
+        MemBytes  uint64        // The total number of bytes allocated.
+}
+
+```
+
+<br>
+In my results, old is `slice`, and new is `map`. And you can clearly
+tell `map` is faster for `Delete` and takes less bytes for `Add`:
+
+```
+benchmark              old ns/op     new ns/op     delta
+BenchmarkAdd           1618754       1559698       -3.65%
+BenchmarkAdd-2         1627498       1560684       -4.11%
+BenchmarkAdd-4         1657596       1562932       -5.71%
+BenchmarkAdd-8         1642772       1565968       -4.68%
+BenchmarkAdd-16        1653736       1557481       -5.82%
+BenchmarkDelete        41958671      1604537       -96.18%
+BenchmarkDelete-2      41950813      1611548       -96.16%
+BenchmarkDelete-4      42214644      1620672       -96.16%
+BenchmarkDelete-8      41993457      1601052       -96.19%
+BenchmarkDelete-16     41915331      1614640       -96.15%
+
+benchmark              old allocs     new allocs     delta
+BenchmarkAdd           0              0              +0.00%
+BenchmarkAdd-2         0              0              +0.00%
+BenchmarkAdd-4         0              0              +0.00%
+BenchmarkAdd-8         0              0              +0.00%
+BenchmarkAdd-16        0              0              +0.00%
+BenchmarkDelete        0              0              +0.00%
+BenchmarkDelete-2      0              0              +0.00%
+BenchmarkDelete-4      0              0              +0.00%
+BenchmarkDelete-8      0              0              +0.00%
+BenchmarkDelete-16     0              0              +0.00%
+
+benchmark              old bytes     new bytes     delta
+BenchmarkAdd           423502        370           -99.91%
+BenchmarkAdd-2         423502        373           -99.91%
+BenchmarkAdd-4         423502        373           -99.91%
+BenchmarkAdd-8         423502        373           -99.91%
+BenchmarkAdd-16        423502        371           -99.91%
+BenchmarkDelete        1             0             -100.00%
+BenchmarkDelete-2      1             0             -100.00%
+BenchmarkDelete-4      1             0             -100.00%
+BenchmarkDelete-8      1             0             -100.00%
+BenchmarkDelete-16     1             0             -100.00%
+
+```
+
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br>
+<hr>
 
 
 

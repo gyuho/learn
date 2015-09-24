@@ -1,0 +1,15 @@
+
+testing with Map
+
+PASS
+BenchmarkAdd	    1000	   1559698 ns/op	     370 B/op	       0 allocs/op
+BenchmarkAdd-2	    1000	   1560684 ns/op	     373 B/op	       0 allocs/op
+BenchmarkAdd-4	    1000	   1562932 ns/op	     373 B/op	       0 allocs/op
+BenchmarkAdd-8	    1000	   1565968 ns/op	     373 B/op	       0 allocs/op
+BenchmarkAdd-16	    1000	   1557481 ns/op	     371 B/op	       0 allocs/op
+BenchmarkDelete	    1000	   1604537 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-2	    1000	   1611548 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-4	    1000	   1620672 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-8	    1000	   1601052 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-16	    1000	   1614640 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/gyuho/learn/doc/go_function_method_pointer_nil_map_slice/slice_vs_map	27.482s
