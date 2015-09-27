@@ -185,7 +185,6 @@ sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle
 - <kbd>i</kbd>  : `insert mode`
 - <kbd>o</kbd>  : `insert a new line and start insert mode`
 - <kbd>:</kbd> + <kbd>1</kbd> : `beginning of a file`
-- <kbd>H</kbd>  : `beginning of a file`
 - <kbd>G</kbd> : `end of a file`
 - <kbd>0</kbd> : `beginning of a line`
 - <kbd>$</kbd> : `end of a line`
@@ -227,8 +226,6 @@ sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle
 - <kbd>ctrl</kbd> + <kbd>p</kbd> : `in insert mode, autocomplete`
 - <kbd>ctrl</kbd> + <kbd>p</kbd> : `in visual mode, fuzzy file search`
 - <kbd>ctrl</kbd> + <kbd>p</kbd>, <kbd>p</kbd> : `in visual mode, repeat fuzzy file search`
-- <kbd>:GoDoc</kbd> : `see the documentation`
-- <kbd>:GoPlay</kbd> : `Go playground`
 - <kbd>space</kbd> + <kbd>w</kbd> : `:w`
 - <kbd>space</kbd> + <kbd>q</kbd> : `:wq`
 

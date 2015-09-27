@@ -341,8 +341,11 @@ store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
 distributed. The directory `/etc` in Linux contains system configuration files for
 program controls. Then `etcd` is a distributed key-value store for system
-configurations. **_Redis_** and **_`etcd`_** have the same premise: **_key-value
-store_**. They are just different.
+configurations.
+
+**_Redis_** and **_`etcd`_** have the same premise: **_key-value store_**.
+But they are different in that `etcd` is designed for distributed system and
+for storing system configurations.
 
 <br>
 `etcd` is:
