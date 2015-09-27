@@ -6,7 +6,7 @@
 <br>
 
 - [Reference](#reference)
-- [distributed system](etcd-kubernetes-distributed-system)
+- [distributed system](#distributed-system)
 - [consensus algorithm](#consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
@@ -17,10 +17,10 @@
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
-- [**raft algorithm: summary**](#raft-algorithm-summary)
+- [raft algorithm: summary](#raft-algorithm-summary)
 - [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
-  - [**`raft`**](#raft)
-  - [**`etcdserver`**](#etcdserver)
+  - [`raft`](#raft)
+  - [`etcdserver`](#etcdserver)
 
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
