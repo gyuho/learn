@@ -14,7 +14,7 @@ Please refer to [Reference](#reference) below.
 <br>
 
 - [Reference](#reference)
-- [consensus algorithm](#consensus-algorithm)
+- [consensus algorithm vs. replication](#consensus-algorithm-vs-replication)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
@@ -67,7 +67,7 @@ Please refer to [Reference](#reference) below.
 
 
 
-#### consensus algorithm
+#### consensus algorithm vs. replication
 
 > A fundamental problem in **distributed computing** is to achieve overall **system
 > reliability** in the presence of a number of *faulty processes*. This often
@@ -100,6 +100,20 @@ An ultimate **consensus algorithm** should achieve:
 it is impossible that a distributed computer system simultaneously satisfies
 them all. 
 
+<br>
+> In concurrent programming, an operation (or set of operations) is atomic,
+> **linearizable**, indivisible or uninterruptible if it appears to the rest
+> of the system to occur instantaneously. Atomicity is a guarantee of isolation
+> from concurrent processes. Additionally, atomic operations commonly have a
+> succeed-or-fail definition — they either successfully change the state of
+> the system, or have no apparent effect.
+>
+> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
+> *by Wikipedia*
+
+
+database replication, elb, redis cluster
+
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
@@ -114,7 +128,7 @@ them all.
 
 #### raft algorithm: introduction
 
-To make your program reliable, you can:
+To make your program reliable, you would:
 - execute program in a collection of machines (distributed system).
 - ensure that they all run exactly the same way (consistency).
 
@@ -484,9 +498,12 @@ Summary of
 > In concurrent programming, an operation (or set of operations) is atomic,
 > **linearizable**, indivisible or uninterruptible if it appears to the rest
 > of the system to occur instantaneously. Atomicity is a guarantee of isolation
-> from concurrent processes.
+> from concurrent processes. Additionally, atomic operations commonly have a
+> succeed-or-fail definition — they either successfully change the state of
+> the system, or have no apparent effect.
 >
-> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability) *by Wikipedia*
+> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
+> *by Wikipedia*
 
 <br>
 Again, *clients send all requests to the Raft leader*. A client first connects
@@ -498,11 +515,12 @@ network address.
 <br>
 In *Raft*, each operation should appear to execute instantaneously, only once,
 at some point between the call and response: **_linearizable semantics_**.
-However, **if a leader crashes**, *client requests* will **time out** and
-try again with randomly-chosen servers. If it were after the leader had
-committed the log entry but before responding to the client, the client
-tries the same command with the new leader: *the command would get executed
-a second time*.
+And changes in the cluster should appear in the same order to all of the
+machines in the cluster. However, **if a leader crashes**, *client requests*
+will **time out** and try again with randomly-chosen servers. If it were
+after the leader had committed the log entry but before responding to
+the client, the client tries the same command with the new leader:
+*the command would get executed a second time*.
 
 To prevent this, clients assign unique serial number to each command. Then the
 state machine in a server stores the most recent serial number processes for

@@ -226,17 +226,25 @@ statement. **goroutine** is **NOT a thread**. Think of goroutine as a **very
 cheap, lightweight thread**. A program may have **thousands of goroutines**
 *but with only one thread*.
 
-goroutines are **multiplexed into multiple OS threads**: when one goroutine
-blocks such as waiting for I/O, the thread blocks too but **no other goroutine
-blocks**. When a goroutine blocks on a thread, Go run-time moves other goroutines
-to a different, available thread, so they won't be blocked.
+> In telecommunications and computer networks, **multiplexing** (sometimes
+> contracted to **muxing**) is a method by which multiple analog message
+> signals or digital data streams are combined into one signal over a shared
+> medium.
+>
+> [*Multiplexing*](https://en.wikipedia.org/wiki/Multiplexing) *by Wikipedia*
+
+Go runtime multiplexes *goroutines* into multiple OS threads**: when one
+goroutine blocks such as waiting for I/O, the thread blocks too but
+**no other goroutine blocks**. When a goroutine blocks on a thread,
+Go runtime moves other goroutines to a different, available thread,
+so they won't be blocked.
 
 As of [Go 1.4](http://golang.org/doc/go1.4#runtime), the garbage collector has
 become precise enough that **goroutine stack now takes only 2048 bytes of
 memory**. goroutine has its own call stack that grows and shrinks as required.
 It starts small and allocates, frees heap storage automatically. Go allows you
-to write high-performance program without much expert knowledge or dealing with
-OS threads.
+to write high-performance program without much expert knowledge or dealing
+with OS threads.
 
 <br>
 
