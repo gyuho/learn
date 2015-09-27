@@ -131,9 +131,11 @@ operations:
 Note that each linearizable operation applied by concurrent processes
 takes effect instantaneously at some point between its invocation and its
 response. It's an atomic, *or linearizable* operation. But what if a system
-cannot satisfy this requirements? There's a weaker way of making the system
-still **consistent**. **Sequential consistency** is another consistency model
-in which operations' can take effect *before invocation* or *after response*.
+cannot satisfy this requirement?
+
+**Sequential consistency** is another consistency model, *weaker than
+linearizability*, in which operations' can take effect *before invocation*
+or *after response*, but is still considered *consistent*.
 
 > Many caches also behave like sequentially consistent systems. If I write a
 > tweet on Twitter, or post to Facebook, it takes time to percolate through
