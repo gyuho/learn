@@ -33,7 +33,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 - [Linguistics, natural language processing](#linguistics-natural-language-processing)
 - [Mathematics, statistics](#mathematics-statistics)
 - [Data structures and algorithms](#data-structures-and-algorithms)
-- [Problems](#problems)
 
 [↑ top](#contents)
 <br><br>
@@ -317,11 +316,3 @@ algorithms, machine learning algorithms, etc.
 [↑ top](#contents)
 <br><br>
 
-
-
-## Problems
-
-- [*problems*](https://github.com/gyuho/learn/tree/master/doc/problems)
-
-[↑ top](#contents)
-<br><br>

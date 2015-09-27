@@ -3,17 +3,10 @@
 
 # etcd, raft algorithm
 
-
-**Disclaimer**.
-
-This is high-level overview of *raft algorithm* to understand the internals of
-[`coreos/etcd`](https://github.com/coreos/etcd). You don't need know these
-details to use `etcd`. And I may say things out of ignorance.
-Please refer to [Reference](#reference) below.
-
 <br>
 
 - [Reference](#reference)
+- [distributed system](etcd-kubernetes-distributed-system)
 - [consensus algorithm](#consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
@@ -43,6 +36,7 @@ Please refer to [Reference](#reference) below.
 
 #### Reference
 
+- [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
 - [The Raft Consensus Algorithm](https://raft.github.io/)
 - [*Raft paper by Diego Ongaro and John Ousterhout*](http://ramcloud.stanford.edu/raft.pdf)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
@@ -58,6 +52,131 @@ Please refer to [Reference](#reference) below.
 [↑ top](#etcd-raft-algorithm)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+#### distributed system
+
+> In distributed computing, a problem is divided into many tasks, each of which
+> is solved by one or more computers, which communicate with each other by
+> message passing.
+>
+> A distributed system may have a common goal, such as solving a large
+> computational problem. Alternatively, each computer may have its own user
+> with individual needs, and the **purpose of the distributed system** is to
+> **coordinate the use of shared resources** or provide communication services
+> to the users.
+> 
+> [*Distributed computing*](https://en.wikipedia.org/wiki/Distributed_computing)
+> *by Wikipedia*
+
+In parallel computing, multiple processors may have access to a globally
+shared memory to exchange data between processors. In distributed computing,
+each processor has its own private memory exchanging data by passing messages
+between processors.
+
+<br>
+One of the most important properties of distributed computing is
+*linearizability*:
+
+> In concurrent programming, an operation (or set of operations) is atomic,
+> **linearizable**, indivisible or uninterruptible if it appears to the rest
+> of the system to occur instantaneously. Atomicity is a guarantee of isolation
+> from concurrent processes. Additionally, atomic operations commonly have a
+> succeed-or-fail definition — they either successfully change the state of
+> the system, or have no apparent effect.
+>
+> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
+> *by Wikipedia*
+>
+>
+> Linearizability provides **the illusion that each operation applied by
+> concurrent processes takes effect instantaneously** at some point between
+> its invocation and its response, implying that the meaning of a concurrent
+> object's operations can be given by pre- and post-conditions.
+>
+> [*Linearizability: A Correct Condition for Concurrent
+> Objects*](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf)
+
+In other words, once an operation finishes, every other machine in the cluster
+must see it. And while operations are concurrent in distributed system, every
+single machine sees every single operation in the same linear order. Think of
+*linearizability* as *atomic consistency* with an atomic operation where a set
+of operations occur atomically with respect to other parts of the system.
+
+*Linearizability* is *local* because an operation on each object is linearized,
+then all operations in the system are linearizable. Then linearizability is
+non-blocking, since a pending invocation does not need to wait for other
+pending invocation to complete, or an object with a pending operation does
+not block the total operation, which makes it suitable for
+concurrent and real-time systems.
+
+*Serializability* is *global* because it's a property of an entire history of
+operations:
+
+> Serializability is a guarantee about transactions, or groups of one or more
+> operations over one or more objects. It guarantees that the execution of a
+> set of transactions (usually containing read and write operations) over
+> multiple items is equivalent to some serial execution (total ordering) of the
+> transactions.
+> 
+> [*Serializability*](http://www.bailis.org/blog/linearizability-versus-serializability/)
+> *by Peter Bailis*
+
+<br>
+Note that each linearizable operation applied by concurrent processes
+takes effect instantaneously at some point between its invocation and its
+response. It's an atomic, *or linearizable* operation. But what if a system
+cannot satisfy this requirements? There's a weaker way of making the system
+still **consistent**. **Sequential consistency** is another consistency model
+in which operations' can take effect *before invocation* or *after response*.
+
+> Many caches also behave like sequentially consistent systems. If I write a
+> tweet on Twitter, or post to Facebook, it takes time to percolate through
+> layers of caching systems. Different users will see my message at different
+> times–but each user will see my operations in order. Once seen, a post
+> shouldn’t disappear. If I write multiple comments, they’ll become visible
+> sequentially, not out of order.
+>
+> [*Sequential
+> consistency*](https://aphyr.com/posts/313-strong-consistency-models)
+> *by aphyr*
+
+<br>
+[**_etcd_**](https://github.com/coreos/etcd) is a **distributed key-value**
+store,
+[*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
+distributed. The directory `/etc` in Linux contains system configuration files
+for program controls. Then `etcd` is a distributed key-value store for system
+configurations. There are many [key/value databases](http://nosql-database.org/).
+For example, [**_Redis_**](http://redis.io/) is an **key-value** cache and
+store, a data structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
+
+**_Redis_** and **_`etcd`_** have the same premise: **_key-value store_**.
+But they are different in that `etcd` is designed for distributed system and
+for storing system configurations.
+
+<br>
+`etcd`'s goal is the **sequential consistency**:
+
+> etcd tries to ensure sequential consistency, which means each replica have
+> the same command execution ordering.
+>
+> [*Xiang Li*](https://github.com/coreos/etcd/issues/741)
+
+<br>
+Now you have this distributed key-value storage `etcd`. Then what can we do
+with it? [*Kubernetes*](http://kubernetes.io/) uses `etcd` to manage a cluster
+of application containers in a distributed system.
+
+[↑ top](#etcd-raft-algorithm)
+<br><br><br><br>
+<hr>
+
 
 
 
@@ -100,11 +219,6 @@ An ultimate **consensus algorithm** should achieve:
 it is impossible that a distributed computer system simultaneously satisfies
 them all. 
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
 
 
 
@@ -114,7 +228,7 @@ them all.
 
 #### raft algorithm: introduction
 
-To make your program reliable, you can:
+To make your program reliable, you would:
 - execute program in a collection of machines (distributed system).
 - ensure that they all run exactly the same way (consistency).
 
@@ -484,9 +598,12 @@ Summary of
 > In concurrent programming, an operation (or set of operations) is atomic,
 > **linearizable**, indivisible or uninterruptible if it appears to the rest
 > of the system to occur instantaneously. Atomicity is a guarantee of isolation
-> from concurrent processes.
+> from concurrent processes. Additionally, atomic operations commonly have a
+> succeed-or-fail definition — they either successfully change the state of
+> the system, or have no apparent effect.
 >
-> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability) *by Wikipedia*
+> [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
+> *by Wikipedia*
 
 <br>
 Again, *clients send all requests to the Raft leader*. A client first connects
@@ -498,11 +615,12 @@ network address.
 <br>
 In *Raft*, each operation should appear to execute instantaneously, only once,
 at some point between the call and response: **_linearizable semantics_**.
-However, **if a leader crashes**, *client requests* will **time out** and
-try again with randomly-chosen servers. If it were after the leader had
-committed the log entry but before responding to the client, the client
-tries the same command with the new leader: *the command would get executed
-a second time*.
+And changes in the cluster should appear in the same order to all of the
+machines in the cluster. However, **if a leader crashes**, *client requests*
+will **time out** and try again with randomly-chosen servers. If it were
+after the leader had committed the log entry but before responding to
+the client, the client tries the same command with the new leader:
+*the command would get executed a second time*.
 
 To prevent this, clients assign unique serial number to each command. Then the
 state machine in a server stores the most recent serial number processes for
