@@ -92,19 +92,18 @@ One of the most important properties of distributed computing is
 >
 > [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
 > *by Wikipedia*
->
->
+
 > Linearizability provides **the illusion that each operation applied by
-> concurrent processes takes effect instantaneously** at some point between
-> its invocation and its response, implying that the meaning of a concurrent
+> concurrent processes takes effect instantaneously at some point between
+> its invocation and its response**, implying that the meaning of a concurrent
 > object's operations can be given by pre- and post-conditions.
 >
 > [*Linearizability: A Correct Condition for Concurrent
 > Objects*](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf)
 
 In other words, once an operation finishes, every other machine in the cluster
-must see it. And while operations are concurrent in distributed system, every
-single machine sees every single operation in the same linear order. Think of
+must see it. While operations are concurrent in distributed system, every
+machine sees every single operation in the **same linear order**. Think of
 *linearizability* as *atomic consistency* with an atomic operation where a set
 of operations occur atomically with respect to other parts of the system.
 
@@ -130,7 +129,7 @@ operations:
 <br>
 Note that each linearizable operation applied by concurrent processes
 takes effect instantaneously at some point between its invocation and its
-response. It's an atomic, *or linearizable* operation. But what if a system
+response. It's an atomic, *or linearizable*, operation. But what if a system
 cannot satisfy this requirements? There's a weaker way of making the system
 still **consistent**. **Sequential consistency** is another consistency model
 in which operations' can take effect *before invocation* or *after response*.
@@ -161,7 +160,7 @@ But they are different in that `etcd` is designed for distributed system and
 for storing system configurations.
 
 <br>
-`etcd`'s goal is the **sequential consistency**:
+`etcd`'s goal is **sequential consistency**:
 
 > etcd tries to ensure sequential consistency, which means each replica have
 > the same command execution ordering.
