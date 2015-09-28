@@ -15,7 +15,7 @@
 - [graceful shutdown](#graceful-shutdown)
 - [**_Web application with Javascript frontend_**](#web-application-with-javascript-frontend)
 - [proxy](#proxy)
-- [docker, rkt](#docker-rkt)
+- [container: docker, rkt](#container-docker-rkt)
 
 [↑ top](#go-web-application)
 <br><br><br><br>
@@ -1680,7 +1680,7 @@ For more, please visit [Nginx wiki](http://wiki.nginx.org/Main).
 
 
 
-#### docker, rkt
+#### container: docker, rkt
 
 These are great introductory articles about Docker, rkt, containers:
 
@@ -1694,6 +1694,7 @@ And this is just how I understand them.
 **Docker** is like a big binary file for an application.
 Just like Unix, you can compile an application into one file, and run it as a
 process. **Docker** is an application container, not a system container.
+
 Then what is *container*? Containers *contain* the *application* and all its
 *dependencies*, but they share the kernel with other containers. And containers
 are running as a separate process under its host operating system. (It's
@@ -1716,10 +1717,22 @@ It's usually faster, lighter than VMs. Pre-existing techonologies include:
 <br>
 Software engineering becomes frustrating when you have to deal with
 inconsistent development, production environments. This is the core problem
-that containerization solves, in that developers can now **document** those
-processes in `Dockerfile` or `App Container Specification`.
-It helps define and maintain homogeneous dev/test/prod environments
-in a reproduceable way.
+that containerization solves, by **documenting** those processes in
+`Dockerfile` or `App Container Specification`. It helps define and maintain
+homogeneous *dev/test/prod* environments in a reproduceable way. There are
+many other reasons why you would use
+[containers](http://kubernetes.io/v1.0/docs/whatisk8s.html):
+
+- Application centric development with higher level of abstraction running an
+  application on an OS using logical resources, not having to worry about
+  running an OS on virtual hardware.
+- Separation of development and operation, build and deployment.
+- Container image immutability provides continous development, quick and easy
+  way to roll-back.
+- Good for distributed, independent micro-services.
+- Consistent development, testing, production environments.
+- Portable with any Cloud and OS.
+- Resource isolation and utilization.
 
 <br>
 Then let's write actual `Dockerfile` and `App Container Specification`
