@@ -153,6 +153,7 @@ alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
 alias gbra='git branch;'
+alias gmas='git checkout -B master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 alias gaut='git add -A .; git commit -m "updates"; git push origin master;'
