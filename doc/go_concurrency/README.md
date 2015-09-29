@@ -233,8 +233,8 @@ cheap, lightweight thread**. A program may have **thousands of goroutines**
 >
 > [*Multiplexing*](https://en.wikipedia.org/wiki/Multiplexing) *by Wikipedia*
 
-Go runtime multiplexes *goroutines* into multiple OS threads**: when one
-goroutine blocks such as waiting for I/O, the thread blocks too but
+**Go runtime multiplexes goroutines into multiple OS threads**: when one
+goroutine blocks such as waiting for I/O, the **thread blocks** too but
 **no other goroutine blocks**. When a goroutine blocks on a thread,
 Go runtime moves other goroutines to a different, available thread,
 so they won't be blocked.
