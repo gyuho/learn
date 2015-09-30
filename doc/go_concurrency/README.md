@@ -2491,8 +2491,8 @@ But idiomatic Go should use **channels**:
 
 Try this [code](http://play.golang.org/p/jjHd0YyKO7) with
 `go run -race 34_no_race_with_channel.go`.
-Note that we do not need to pass pointer of channel,
-because channels, like `map` and `slice`, are syntactically pointer,
+Note that we do **not need to pass pointer of channel**,
+because channels, like `map` and `slice`, are **syntactically pointer**,
 as explained [here](https://golang.org/doc/faq#references):
 
 ```go
