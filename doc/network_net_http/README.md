@@ -13,7 +13,7 @@
 	- [presentation layer](#presentation-layer)
 	- [application layer](#application-layer)
 - [`http`, `proxy`, `https`, `http2`](#http-proxy-https-http2)
-	- [`cache`](#cache)
+	- [cache](#cache)
 	- [`proxy`](#proxy)
 	- [`http` session](#http-session)
 	- [`https`](#https)
@@ -240,6 +240,7 @@ to the server, then the server returns **response** message (*or resource*)
 to client.
 
 ![http](img/http.png)
+
 
 <br>
 #### cache
