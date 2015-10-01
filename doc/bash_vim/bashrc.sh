@@ -152,6 +152,7 @@ alias learn='cd /home/ubuntu/go/src/github.com/gyuho/learn/doc;'
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
+alias g='git '
 alias gbra='git branch;'
 alias gmas='git checkout -B master;'
 alias gadd='git add -A .;'

@@ -1594,16 +1594,19 @@ width="150" height="120" />
 
 #### proxy
 
+**`HTTP` allows intermediate networks**. `HTTP` proxy sits between client and
+server.
+
 > In computer networks, a **proxy server** is a server (a computer system or an
-> application) that acts as an intermediary for requests from clients seeking
-> resources from other servers. A client connects to the proxy server,
+> application) that acts as an **intermediary** for **requests from clients**
+> seeking resources from other servers. A client connects to the proxy server,
 > requesting some service, such as a file, connection, web page, or other
-> resource available from a different server and the proxy server evaluates the
-> request as a way to simplify and control its complexity.
+> resource available from a different server and the proxy server **evaluates
+> the request** as a way to simplify and control its complexity.
 >
 > A reverse proxy is usually an Internet-facing proxy used as a front-end to
-> control and protect access to a server on a private network. A reverse proxy
-> commonly also performs tasks such as load-balancing, authentication,
+> control and **protect access to a server** on a private network. A reverse
+> proxy commonly also performs tasks such as load-balancing, authentication,
 > decryption or caching.
 >
 > A **reverse proxy** (or surrogate) is a proxy server that *appears to clients* to
@@ -1628,7 +1631,7 @@ width="150" height="120" />
 We can use [Nginx](http://wiki.nginx.org/Main) as an HTTP server, reverse proxy
 along with Go web servers:
 
-![reverse_proxy](img/reverse_proxy.png)
+![proxy_reverse](img/proxy_reverse.png)
 
 <br>
 Then why do we bother to run another web server, or reverse proxy while we can
@@ -1664,7 +1667,6 @@ another module to `Nginx` configuration. `Nginx` provides:
 - Auth, compression support.
 - Serve cached contents while the application is down.
 
-<br>
 For more, please visit [Nginx wiki](http://wiki.nginx.org/Main).
 
 [↑ top](#go-web-application)

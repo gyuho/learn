@@ -12,6 +12,11 @@
 	- [session layer](#session-layer)
 	- [presentation layer](#presentation-layer)
 	- [application layer](#application-layer)
+- [`http`, `proxy`, `https`, `http2`](#http-proxy-https-http2)
+	- [`proxy`](#proxy)
+	- [`http` session](#http-session)
+	- [`https`](#https)
+	- [`proxy`](#proxy)
 - [communicate between networks](#communicate-between-networks)
 	- [simple echo server](#simple-echo-server)
 	- [simple rpc server](#simple-rpc-server)
@@ -212,6 +217,212 @@ SMTP (which will be covered separately).
 [↑ top](#network-net-http)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+
+
+
+#### `http`, `proxy`, `https`, `http2`
+
+*Hypertext Transfer Protocol (`HTTP`)* is the application protocol for exchange
+or transfer of hypertext in World Wide Web. It presumes underlying *transport
+layer*, such as
+[TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) and
+[UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol).
+Between client and server, `HTTP` functions as a request-response protocol.
+When a client, *for example a web browser*, sends `HTTP` **request** message
+to the server, then the server returns **response** message (*or resource*)
+to client.
+
+![http](img/http.png)
+
+<br>
+**`HTTP` allows intermediate networks**. Web cache server between client and
+server can decrease the workloads of high-traffic websites by serving cached
+contents on behalf of upstream servers, which can decrease the response time.
+A [forward cache](https://en.wikipedia.org/wiki/Web_cache) is a cache outside
+web server's network, that is stored in client's computer(or *browser*).
+A [reverse cache](https://en.wikipedia.org/wiki/Web_cache) is a cache
+to serves contents in front of web servers, such as
+[CDN](https://en.wikipedia.org/wiki/Content_delivery_network), providing
+multiple content resources distributed over several regions.
+
+![http_cache_forward](img/http_cache_forward.png)
+![http_cache_reverse](img/http_cache_reverse.png)
+
+<br>
+#### `proxy`
+
+**`HTTP` allows intermediate networks**. `HTTP` proxy sits between client and
+server.
+
+> In computer networks, a **proxy server** is a server (a computer system or an
+> application) that acts as an **intermediary** for **requests from clients**
+> seeking resources from other servers. A client connects to the proxy server,
+> requesting some service, such as a file, connection, web page, or other
+> resource available from a different server and the proxy server **evaluates
+> the request** as a way to simplify and control its complexity.
+>
+> A reverse proxy is usually an Internet-facing proxy used as a front-end to
+> control and **protect access to a server** on a private network. A reverse
+> proxy commonly also performs tasks such as load-balancing, authentication,
+> decryption or caching.
+>
+> A **reverse proxy** (or surrogate) is a proxy server that *appears to clients* to
+> be an *ordinary server*. **Requests are forwarded to** one or more **proxy servers**
+> which handle the request. The **response from the proxy server** is returned *as
+> if* it came directly from the **original server**, leaving the client no knowledge
+> of the origin servers.
+>
+> [*Proxy server*](https://en.wikipedia.org/wiki/Proxy_server) *by Wikipedia*
+
+<br>
+> A reverse proxy taking requests from the Internet and forwarding them to
+> servers in an internal network. Those making requests to the proxy may not be
+> aware of the internal network.
+> 
+> Reverse proxies can hide the existence and characteristics of an origin
+> server or servers.
+>
+> [*Reverse proxy*](https://en.wikipedia.org/wiki/Reverse_proxy) *by Wikipedia*
+
+<br>
+We can use [Nginx](http://wiki.nginx.org/Main) as an HTTP server, reverse proxy
+along with Go web servers:
+
+![proxy_reverse](img/proxy_reverse.png)
+
+<br>
+Then why do we bother to run another web server, or reverse proxy while we can
+do pretty much everything in Go?
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+}
+
+func main() {
+    http.HandleFunc("/", handler)
+    http.ListenAndServe(":8080", nil)
+}
+
+```
+
+<br>
+It's because popular web proxies like `Nginx` provides useful features
+out-of-the box. So it's not to reinvent the wheels while we can just add
+another module to `Nginx` configuration. `Nginx` provides:
+
+- Rate limiting.
+- Access, error logs.
+- Serve static files with `try_files`.
+- Auth, compression support.
+- Serve cached contents while the application is down.
+
+For more, please visit [Nginx wiki](http://wiki.nginx.org/Main).
+
+<br>
+#### `http` session
+
+> An `HTTP` **session** is a sequence of network request-response transactions.
+> An `HTTP` client **initiates a request by establishing** a Transmission
+> Control Protocol (**TCP**) connection **to a particular port on a server**
+> (typically port 80, occasionally port 8080).
+>
+> An HTTP server listening on that port waits for a client's request message.
+> Upon receiving the request, the server sends back a status line, such as
+> "HTTP/1.1 200 OK", and a message of its own. The body of this message is
+> typically the requested resource, although an error message or other
+> information may also be returned.
+>
+> [*HTTP session*](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
+> *by Wikipedia*
+
+<br>
+#### `https`
+
+[`HTTP` Secure](https://en.wikipedia.org/wiki/HTTPS) is `HTTPS` for encrypted
+`HTTP` connections. Its goal is to authenticate web sites and protect privacy
+and integrity of exchanged data. It creates a secure channel over an insecure
+network with [`TLS`](https://en.wikipedia.org/wiki/Transport_Layer_Security):
+`TLS`, *Transport Layer Security*, is a cryptographic protocol encrypting data
+between two parties. 
+
+> Web browsers know how to trust `HTTPS` websites based on certificate
+> authorities that come pre-installed in their software. Certificate
+> authorities are in this way being trusted by web browser creators to provide
+> valid certificates.
+>
+> [`HTTPS`](https://en.wikipedia.org/wiki/HTTPS) *by Wikipedia*
+
+[!https](img/https.png)
+[!https_github](img/https_github.png)
+
+
+<br>
+#### `http2`
+
+[`HTTP/2.0`](https://http2.github.io/) is the most recent major version of
+`HTTP` protocol:
+
+> In particular, HTTP/1.0 allowed only one request to be outstanding at a time
+> on a given TCP connection. HTTP/1.1 added request pipelining, but this only
+> partially addressed request concurrency and still suffers from head-of-line
+> blocking. Therefore, **`HTTP/1.0` and `HTTP/1.1` clients that need to make
+> many requests use multiple connections to a server in order to achieve
+> concurrency and thereby reduce latency**.
+>
+> Furthermore, **`HTTP` header fields are often repetitive and verbose**,
+> causing unnecessary network traffic as well as causing the initial TCP
+> congestion window to quickly fill. This can result in excessive latency
+> when multiple requests are made on a new TCP connection.
+>
+> `HTTP/2` addresses these issues by defining an optimized mapping of HTTP's
+> semantics to an underlying connection. Specifically, it **allows interleaving
+> of request and response messages on the same connection** and uses an
+> **efficient coding for `HTTP` header fields**. It also **allows
+> prioritization of requests, letting more important requests complete more
+> quickly, further improving performance**.
+>
+> The resulting protocol is more friendly to the network because **fewer TCP
+> connections can be used in comparison to HTTP/1.x**. This means less
+> competition with other flows and longer-lived connections, which in turn
+> lead to better utilization of available network capacity.
+>
+> Finally, **`HTTP/2` also enables more efficient processing of messages
+> through use of binary message framing**.
+> 
+> ...
+>
+> **`HTTP/2` allows a server to pre-emptively send (or "push") responses**
+> (along with corresponding "promised" requests) **to a client** in association
+> with a previous client-initiated request. This can be **useful when the
+> server knows the client will need to have those responses available** in
+> order to fully process the response to the original request.
+>
+> [`RFC7540` Hypertext Transfer Protocol Version 2
+> (HTTP/2)](https://httpwg.github.io/specs/rfc7540.html)
+
+So to summarize, `HTTP/2` is better: faster page loads with binary messaging
+framing, better utilization of available network capacity with a single
+long-lived connections, instead of multiple TCP connections, less round-trips
+with server push, cheaper `HTTP` request by compressing headers, etc.
+
+[↑ top](#network-net-http)
+<br><br><br><br>
+<hr>
+
 
 
 
@@ -743,6 +954,9 @@ func get(target string) (int, error) {
 [↑ top](#network-net-http)
 <br><br><br><br>
 <hr>
+
+
+
 
 
 
