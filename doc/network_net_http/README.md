@@ -13,7 +13,7 @@
 	- [presentation layer](#presentation-layer)
 	- [application layer](#application-layer)
 - [`http`, `proxy`, `https`, `http2`](#http-proxy-https-http2)
-	- [cache](#cache)
+	- [cache server](#cache-server)
 	- [`proxy`](#proxy)
 	- [`http` session](#http-session)
 	- [`https`](#https)
@@ -243,7 +243,7 @@ to client.
 
 
 <br>
-#### cache
+#### cache server
 
 **`HTTP` allows intermediate networks**. Web cache server between client and
 server can decrease the workloads of high-traffic websites by serving cached
