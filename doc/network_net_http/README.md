@@ -13,6 +13,7 @@
 	- [presentation layer](#presentation-layer)
 	- [application layer](#application-layer)
 - [`http`, `proxy`, `https`, `http2`](#http-proxy-https-http2)
+	- [`cache`](#cache)
 	- [`proxy`](#proxy)
 	- [`http` session](#http-session)
 	- [`https`](#https)
@@ -241,6 +242,8 @@ to client.
 ![http](img/http.png)
 
 <br>
+#### cache
+
 **`HTTP` allows intermediate networks**. Web cache server between client and
 server can decrease the workloads of high-traffic websites by serving cached
 contents on behalf of upstream servers, which can decrease the response time.
