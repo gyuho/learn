@@ -16,7 +16,7 @@
 	- [`proxy`](#proxy)
 	- [`http` session](#http-session)
 	- [`https`](#https)
-	- [`proxy`](#proxy)
+	- [`http2`](#http2)
 - [communicate between networks](#communicate-between-networks)
 	- [simple echo server](#simple-echo-server)
 	- [simple rpc server](#simple-rpc-server)
@@ -366,8 +366,8 @@ between two parties.
 >
 > [`HTTPS`](https://en.wikipedia.org/wiki/HTTPS) *by Wikipedia*
 
-[!https](img/https.png)
-[!https_github](img/https_github.png)
+![https](img/https.png)
+![https_github](img/https_github.png)
 
 
 <br>
