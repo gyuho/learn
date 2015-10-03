@@ -33,6 +33,9 @@ filetype plugin indent on
 
 syntax on
 
+" to prepend in comparison with the line above
+vnoremap . :norm.<CR>
+
 " http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 let mapleader = " "
 " <Space> + w to save the file
@@ -118,4 +121,7 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
+
+set t_Co=256
+colorscheme slate
 

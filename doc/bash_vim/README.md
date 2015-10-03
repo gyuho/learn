@@ -220,6 +220,7 @@ sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle
 - <kbd>p</kbd> : `paste after`
 - <kbd>/</kbd>, <kbd>n</kbd> : `find, and next`
 - <kbd>:%s/old/new/gc</kbd> : `find, and replace`
+- <kbd>.</kbd> : `prepend in comparison with the line above`
 - <kbd>ctrl</kbd> + <kbd>n</kbd>, <kbd>i</kbd> : `expand selection, and edit`
 - <kbd>ctrl</kbd> + <kbd>z</kbd> : `go back to terminal`
 - <kbd>fg</kbd> : `come back to vim`
