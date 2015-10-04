@@ -23,7 +23,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
 
-call vundle#end('')
+call vundle#end()
 filetype plugin indent on
 " End of Vundle.vim
 
