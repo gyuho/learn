@@ -1,20 +1,17 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Start of https://github.com/VundleVim/Vundle.vim
-
-" sudo vim +PluginInstall +qall;
-" sudo vim +PluginClean;
-
+" Start of Vundle.vim
 set nocompatible
 filetype off
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/bundle')
+call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
 " Plugins
+Plugin 'airblade/vim-gitgutter'
+Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'godlygeek/tabular'
@@ -23,15 +20,17 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end('~/.vim/bundle')
 filetype plugin indent on
-"
-" End of Vundle
-""""""""""""""""""""""""""""""""""""""""""""""""""""
+" End of Vundle.vim
 
 syntax on
+
+" to prepend in comparison with the line above
+vnoremap . :norm.<CR>
 
 " http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 let mapleader = " "
@@ -71,6 +70,8 @@ let g:syntastic_mode_map = {
     \ "passive_filetypes": ["go", "asm"] }
 
 let g:syntastic_cpp_compiler_options = '-std=c++11'
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
 
 " NERDTree
 map <F2> :NERDTreeToggle<cr>
@@ -95,7 +96,6 @@ set smartcase     " ignore case if search pattern is all lowercase,
                   " case-sensitive otherwise
 set smarttab      " insert tabs on the start of a line according to
                   " shiftwidth, not tabstop
-set hlsearch      " highlight search terms
 set incsearch     " show search matches as you type
 
 set noswapfile
@@ -118,4 +118,7 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
+
+set t_Co=256
+colorscheme slate
 

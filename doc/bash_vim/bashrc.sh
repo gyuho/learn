@@ -123,6 +123,9 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 export GOPATH=/home/ubuntu/go
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:/home/ubuntu/go/bin
  
+# http://ezprompt.net/
+export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
+
 alias l='ls -lh'
 alias ls="ls --color=auto -F"
 alias la='ls -lah'
