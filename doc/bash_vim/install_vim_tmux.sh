@@ -1,8 +1,12 @@
 #!/bin/bash
-printf "installing vim, tmux\n"
+printf "Installing vim, tmux\n"
 sudo apt-get -y install vim vim-gnome tmux;
 
-printf "creating directories in .vim\n"
+printf "Copying tmux.conf\n"
+sudo cp ./tmux.conf ~/.tmux.conf;
+source ~/.tmux.conf;
+
+printf "Creating directories in .vim\n"
 sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
@@ -11,7 +15,7 @@ sudo git clone --progress \
 	https://github.com/gmarik/Vundle.vim.git \
 	~/.vim/bundle/Vundle.vim;
 
-printf "copying vimrc\n"
+printf "Copying vimrc\n"
 sudo cp ./vimrc.vim ~/.vimrc;
 source $HOME/.vimrc;
 sudo vim +PluginInstall +qall;
