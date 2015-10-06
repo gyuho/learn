@@ -105,6 +105,9 @@ set mouse=a
 map j gj
 map k gk
 
+" Move to next buffer
+map <C-Tab> :bnext<cr>
+
 " https://github.com/philips/etc
 autocmd BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn set filetype=markdown
 au FileType python setl autoindent tabstop=4 expandtab shiftwidth=4 softtabstop=4
