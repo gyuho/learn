@@ -34,13 +34,22 @@ vnoremap . :norm.<CR>
 
 " http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 let mapleader = " "
+
 " <Space> + w to save the file
 nnoremap <Leader>w :w<CR>
-nnoremap <Leader>q :wq<CR>
-nnoremap <Leader>fq :q!<CR>
+nnoremap <Leader>q :q<CR>
 nnoremap <Leader>e :SyntasticCheck gcc<CR>
 nmap <Leader><Leader> V
 
+" Move line by line even when the line is wrapped
+map j gj
+map k gk
+
+" Move between buffers
+map <Leader>a :bprev<Return>
+map <Leader>s :bnext<Return>
+
+" tabular
 nnoremap <Leader>t= :Tabularize /=<CR>
 nnoremap <Leader>t: :Tabularize /:\zs<CR>
 " :Tab/|
@@ -96,13 +105,6 @@ set smarttab      " insert tabs on the start of a line according to
 set incsearch     " show search matches as you type
 set noswapfile
 set mouse=a
-
-" Move line by line even when the line is wrapped
-map j gj
-map k gk
-
-" Move to next buffer
-map <C-Tab> :bnext<cr>
 
 " https://github.com/philips/etc
 autocmd BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn set filetype=markdown

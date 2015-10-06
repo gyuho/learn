@@ -154,7 +154,7 @@ I primarily work with Ubuntu, bash, vim.
 - <kbd>ctrl</kbd> + <kbd>p</kbd> : `in visual mode, fuzzy file search`
 - <kbd>ctrl</kbd> + <kbd>p</kbd>, <kbd>p</kbd> : `in visual mode, repeat fuzzy file search`
 - <kbd>space</kbd> + <kbd>w</kbd> : `:w`
-- <kbd>space</kbd> + <kbd>q</kbd> : `:wq`
+- <kbd>space</kbd> + <kbd>q</kbd> : `:q`
 
 [↑ top](#bash-vim)
 <br><br><br><br>
