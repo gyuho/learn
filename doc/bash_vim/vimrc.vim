@@ -48,6 +48,8 @@ map k gk
 " Move between buffers
 map <Leader>a :bprev<Return>
 map <Leader>s :bnext<Return>
+" Close the current buffer
+map <Leader>d :bd<Return>
 
 " tabular
 nnoremap <Leader>t= :Tabularize /=<CR>
