@@ -39,14 +39,12 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 nnoremap <Leader>fq :q!<CR>
 nnoremap <Leader>e :SyntasticCheck gcc<CR>
+nmap <Leader><Leader> V
 
 nnoremap <Leader>t= :Tabularize /=<CR>
 nnoremap <Leader>t: :Tabularize /:\zs<CR>
 " :Tab/|
 " for |
-
-nmap <Leader><Leader> V
-
 
 " Vim-Go
 let g:go_fmt_command = "goimports"
@@ -81,7 +79,6 @@ map <F3> <C-w><C-w>
 set nowrap        " don't wrap lines
 set tw=79
 set formatoptions+=t
-
 set tabstop=4     " a tab is four spaces
 set backspace=indent,eol,start
                   " allow backspacing over everything in insert mode
@@ -97,7 +94,6 @@ set smartcase     " ignore case if search pattern is all lowercase,
 set smarttab      " insert tabs on the start of a line according to
                   " shiftwidth, not tabstop
 set incsearch     " show search matches as you type
-
 set noswapfile
 set mouse=a
 
@@ -124,4 +120,3 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
 colorscheme slate
-
