@@ -487,8 +487,8 @@ want to install the latest versions manually.
 
 ![gcp_02](img/gcp_02.png)
 
-And make sure each machine in cluster is able to talk to each other **by
-opening the* **_port 2380_** like below:
+And make sure each machine in cluster is able to talk to each other by
+opening the **_port 2380_** like below:
 
 ![gcp_03](img/gcp_03.png)
 
