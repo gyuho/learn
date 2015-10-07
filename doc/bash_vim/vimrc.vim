@@ -87,7 +87,7 @@ map <F2> :NERDTreeToggle<cr>
 map <F3> <C-w><C-w>
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
-set nowrap        " don't wrap lines
+set wrap
 set tw=79
 set formatoptions+=t
 set tabstop=4     " a tab is four spaces
