@@ -12,7 +12,7 @@ This is a **_personal white-board_** where I *scribble* anything,
 *organize* my code, learning experiences.
 
 I appreciate any kind of *feedback* or *suggestions*.
-You can email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
+Please email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
 or [`pull request`](https://github.com/gyuho/learn/pulls).
 
 <br><hr>
