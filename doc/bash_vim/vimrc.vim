@@ -105,6 +105,8 @@ set smartcase     " ignore case if search pattern is all lowercase,
 set smarttab      " insert tabs on the start of a line according to
                   " shiftwidth, not tabstop
 set incsearch     " show search matches as you type
+set hlsearch      " highlight all search matches
+
 set noswapfile
 set mouse=a
 
@@ -123,4 +125,5 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
-colorscheme slate
+colorscheme peachpuff
+
