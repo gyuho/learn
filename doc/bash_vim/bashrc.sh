@@ -133,7 +133,6 @@ alias lsp='lsof -P -i -n'
 alias ..='cd ..'
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
-alias ff="find . | grep "
 alias hh="history | grep "
 alias pp="ps aux | grep "
  
@@ -155,7 +154,6 @@ alias learn='cd /home/ubuntu/go/src/github.com/gyuho/learn/doc;'
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
-alias g='git '
 alias gbra='git branch;'
 alias gmas='git checkout -B master;'
 alias gadd='git add -A .;'

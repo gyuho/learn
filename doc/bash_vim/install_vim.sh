@@ -1,10 +1,6 @@
 #!/bin/bash
-printf "Installing vim, tmux\n"
-sudo apt-get -y install vim vim-gnome tmux;
-
-printf "Copying tmux.conf\n"
-sudo cp ./tmux.conf ~/.tmux.conf;
-source ~/.tmux.conf;
+printf "Installing vim\n"
+sudo apt-get -y install vim vim-gnome;
 
 printf "Creating directories in .vim\n"
 sudo mkdir -p $HOME/.vim/bundle;
