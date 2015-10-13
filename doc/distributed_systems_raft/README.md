@@ -243,7 +243,7 @@ to maintain its authority. In normal operation, there is **exactly only one
 `leader`** for each term. All servers start as a `follower`, and the
 `follower` becomes a `candidate` when there is no current `leader` and starts
 an election. If a `candidate` receives the majority of votes, it becomes a
-`leader. The `leader` then accepts new log entries from clients and replicates
+`leader`. The `leader` then accepts new log entries from clients and replicates
 those log entries to its `followers`.
 
 *Raft* inter-server communication is done by remote procedure calls
