@@ -70,15 +70,16 @@
 > [*Distributed computing*](https://en.wikipedia.org/wiki/Distributed_computing)
 > *by Wikipedia*
 
-- In parallel computing, multiple processors may have access to a globally 
+- *In parallel computing*, multiple processors may have access to a globally 
   **shared memory to exchange data between processors**.
-- In distributed computing, each processor has its **own private memory**
+- *In distributed computing*, each processor has its **own private memory**
   exchanging data by **passing messages between processors**.
 
 <br>
 One of the most important properties of distributed computing is
 *linearizability*:
 
+<br>
 > In concurrent programming, an operation (or set of operations) is atomic,
 > **linearizable**, indivisible or uninterruptible if it appears to the rest
 > of the system to occur instantaneously. **Atomicity is a guarantee of
@@ -89,6 +90,7 @@ One of the most important properties of distributed computing is
 > [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
 > *by Wikipedia*
 
+<br>
 > **Linearizability** provides **the illusion that each operation applied by
 > concurrent processes takes effect instantaneously at some point between
 > its invocation and its response**, implying that the meaning of a concurrent
@@ -97,6 +99,7 @@ One of the most important properties of distributed computing is
 > [*Linearizability: A Correct Condition for Concurrent
 > Objects*](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf)
 
+<br>
 In other words, once an operation finishes, every other machine in the cluster
 must see it. While operations are concurrent in distributed system, every
 machine sees each operation in the same linear order. Think of
@@ -477,19 +480,19 @@ and **send RPCs in parallel** *for best performance*.
 <br>
 Summary of
 [§5.3 Log replication](http://ramcloud.stanford.edu/raft.pdf):
-.
-0. Once cluster has elected a leader, it starts receiving `client` requests.
-1. Each `client` request contains a `command` to be run by replicated state
+
+1. Once cluster has elected a leader, it starts receiving `client` requests.
+2. Each `client` request contains a `command` to be run by replicated state
    machines.
-2. The leader **only appends** `command` to its log, never overwriting nor
+3. The leader **only appends** `command` to its log, never overwriting nor
    deleting its log entries.
-3. The leader **replicates** the *log entry* to its `followers` with
+4. The leader **replicates** the *log entry* to its `followers` with
    `AppendEntries` RPCs. The leader keeps sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
    contains leader's `term number`, its log entry index, its `leaderId`
-4. A `log entry` is considered *safely replicated* when the leader has
+5. A `log entry` is considered *safely replicated* when the leader has
    replicated it on the **quorum of its followers**.
-5. Once `log entry` has been *safely replicated* on a majority of servers,
+6. Once `log entry` has been *safely replicated* on a majority of servers,
    it is considered **safe to be applied** to its state machine. And such `log
    entry` is *called* **committed**. Then **`leader`** **applies committed
    entry to its state machine**. `Applying committed entry to state machine`
@@ -504,8 +507,8 @@ Summary of
    complete as soon as the majority of cluster has responded to a single round
    of `AppendEntries` RPCs. In other words, the `leader` does not need to wait
    for responses from every node.
-6. Then the `leader` returns the execution result to the client.
-7. Future `AppendEntries` RPCs from the `leader` has the highest index of
+7. Then the `leader` returns the execution result to the client.
+8. Future `AppendEntries` RPCs from the `leader` has the highest index of
    `committed` log entry, so that `followers` could learn that a log entry is
    `committed`, and they can apply the entry to their local state machines as
    well. *Raft* ensures all committed entries are durable and eventually
