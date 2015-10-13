@@ -220,7 +220,7 @@ To make your program reliable, you would:
 
 This is the definition of **replicated state machine**. And a *state machine*
 can be any program or application with inputs and outputs. *Each replicated
-state machines* computes identical copy with a same state, which means when
+state machine* computes identical copy with a same state, which means when
 some servers are down, other state machines can keep running. A distributed
 system usually implements *replicated state machines* by **replicating logs
 identically across cluster**. And the goal of *Raft algorithm* is to **keep
