@@ -1,5 +1,4 @@
 #!/bin/bash
-
 sudo apt-get -y install postgresql;
 sudo apt-get -y install mysql-server;
 sudo echo mysql-server mysql-server/root_password password 1 | sudo debconf-set-selections;

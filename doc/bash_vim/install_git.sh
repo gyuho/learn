@@ -1,5 +1,4 @@
 #!/bin/bash
-
 sudo apt-get -y install git;
 
 ssh-keygen -t rsa -C "gyuhox@gmail.com" -f $HOME/.ssh/id_rsa -N "";

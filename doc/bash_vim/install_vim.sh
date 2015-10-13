@@ -1,6 +1,11 @@
 #!/bin/bash
-printf "Installing vim\n"
-sudo apt-get -y install vim vim-gnome;
+
+# printf "Installing vim\n"
+# sudo apt-get -y build-dep vim;
+# sudo apt-get -y install ncurses-dev;
+# sudo apt-get -y install vim vim-gnome;
+# cd $HOME && rm -rf vim && git clone https://github.com/vim/vim.git;
+# cd $HOME && cd vim/src && sudo make;
 
 printf "Creating directories in .vim\n"
 sudo mkdir -p $HOME/.vim/bundle;
