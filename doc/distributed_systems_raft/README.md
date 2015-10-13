@@ -85,7 +85,7 @@
 > [*Consensus*](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 > *by Wikipedia*
 
-A process can fail either from a *crash* or *loss of the process presenting
+A process can fail either from a *crash* or a *loss of the process presenting
 different symptoms to different observers*
 ([*Byzantine fault*](https://en.wikipedia.org/wiki/Byzantine_failure)).
 The consensus algorithm handles these kinds of *faulty processes* in
