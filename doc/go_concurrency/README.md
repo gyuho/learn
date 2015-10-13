@@ -193,11 +193,19 @@ while **process** **_run in separate memory_** spaces.
 > [**_About Processes and Threads by
 > Microsoft_**](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917%28v=vs.85%29.aspx)
 
+<br>
 When you say *8-core machine*, the `core` represents the actual physical
 processors. *8-core machine* has 8 independent processing units (*cores* or
 *CPU*s). Not to be confused with processor, a `process` is a computer program
 instance that is being executed. A `process` can be made up of multiple
-`threads` executing instructions concurrently.
+`threads` executing instructions concurrently. Again, `core` is an actual
+physical `processor`, and `process` and `thread` are independent units of
+program execution: `threads` under the same `process` run in a shared memory
+space, whereas `processes` run in separate memory spaces. `threads` are more
+dependent on an operating system, than a hardware or CPU. Normally one CPU can
+handle one `thread` at a time, but one CPU with
+[hyper threading](https://en.wikipedia.org/wiki/Hyper-threading)
+can handle two `threads` simultaneously.
 
 <br>
 > [Threads] are conceptually the same as processes, but share the same memory space.
