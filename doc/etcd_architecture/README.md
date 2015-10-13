@@ -58,6 +58,24 @@
   exchanging data by **passing messages between processors**.
 
 <br>
+> A fundamental problem in **distributed computing** is to achieve overall **system
+> reliability** in the presence of a number of *faulty processes*. This often
+> requires processes to agree on some data value that is needed during
+> computation. Examples of applications of **consensus** include **whether to commit
+> a transaction to a database, agreeing on the identity of a leader, state
+> machine replication, and atomic broadcasts.**
+>
+> [*Consensus*](https://en.wikipedia.org/wiki/Consensus_(computer_science))
+> *by Wikipedia*
+
+A process can fail either from a *crash* or *loss of the process presenting
+different symptoms to different observers*
+([*Byzantine fault*](https://en.wikipedia.org/wiki/Byzantine_failure)).
+The consensus algorithm handles these kinds of *faulty processes* in
+distributed computing systems, and keeps data consistent even when it loses one
+of its communications.
+
+<br>
 One of the most important properties of distributed computing is
 *linearizability*:
 
@@ -94,11 +112,6 @@ pending invocation to complete, or an object with a pending operation does
 not block the total operation, which makes it suitable for concurrent and
 real-time systems.
 
-**Each linearizable operation** applied by concurrent processes
-*takes effect instantaneously* at some point **between its invocation and its
-response**. It's an **atomic**, *or linearizable*, operation. But what if a
-system cannot satisfy this requirement?
-
 **Sequential consistency** is another consistency model, *weaker than
 linearizability*. Each operation can take effect **before its invocation**
 or **after its response** (*not necessarily between its invocation and its
@@ -115,20 +128,6 @@ response as in linearizability*). And it is still considered *consistent*.
 > *by aphyr*
 
 <br>
-[**_etcd_**](https://github.com/coreos/etcd) is a **distributed key-value**
-store,
-[*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
-distributed. The directory `/etc` in Linux contains system configuration files
-for program controls. Then `etcd` is a distributed key-value store for system
-configurations. There are many [key/value databases](http://nosql-database.org/).
-For example, [**_Redis_**](http://redis.io/) is an **key-value** cache and
-store, a data structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
-
-**_Redis_** and **_`etcd`_** have the same premise: **_key-value store_**.
-But they are different in that `etcd` is designed for distributed system and
-for storing system configurations.
-
-<br>
 The goal of `etcd` as a **distributed consistent key-value store**
 is **sequential consistency**:
 
@@ -136,38 +135,6 @@ is **sequential consistency**:
 > have the same command execution ordering.
 >
 > [*Xiang Li*](https://github.com/coreos/etcd/issues/741)
-
-<br>
-> A fundamental problem in **distributed computing** is to achieve overall **system
-> reliability** in the presence of a number of *faulty processes*. This often
-> requires processes to agree on some data value that is needed during
-> computation. Examples of applications of **consensus** include **whether to commit
-> a transaction to a database, agreeing on the identity of a leader, state
-> machine replication, and atomic broadcasts.**
->
-> [*Consensus*](https://en.wikipedia.org/wiki/Consensus_(computer_science))
-> *by Wikipedia*
-
-A process can fail either from a *crash failure* or [*Byzantine
-failure*](https://en.wikipedia.org/wiki/Byzantine_failure):
-- *crash failure* occurs when the process abruptly stops.
-- *Byzantine failure* is the loss of the process presenting different symptoms
-  to different observers (*Byzantine fault*).
-
-*Byzantine failures* are far more disruptive because they affect
-*agreement*, *consensus* services in distributed computing systems.
-A consensus algorithm must be resilient to these failures and prevent
-data inconsistency even when it loses one of its communications.
-
-<br>
-An ultimate **consensus algorithm** should achieve:
-- **_consistency_**.
-- **_availability_**.
-- **_partition tolerance_**.
-
-[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) states that
-it is impossible that a distributed computer system simultaneously satisfies
-them all. 
 
 [↑ top](#etcd-architecture)
 <br><br><br><br>

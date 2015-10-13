@@ -6,8 +6,7 @@
 <br>
 
 - [Reference](#reference)
-- [distributed systems](#distributed-systems)
-- [consensus algorithm](#consensus-algorithm)
+- [distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
@@ -55,7 +54,7 @@
 
 
 
-#### distributed systems
+#### distributed systems, consensus algorithm
 
 > In distributed computing, a problem is divided into many tasks, each of which
 > is solved by one or more computers, which communicate with each other by
@@ -74,6 +73,34 @@
   **shared memory to exchange data between processors**.
 - *In distributed computing*, each processor has its **own private memory**
   exchanging data by **passing messages between processors**.
+
+<br>
+> A fundamental problem in **distributed computing** is to achieve overall **system
+> reliability** in the presence of a number of *faulty processes*. This often
+> requires processes to agree on some data value that is needed during
+> computation. Examples of applications of **consensus** include **whether to commit
+> a transaction to a database, agreeing on the identity of a leader, state
+> machine replication, and atomic broadcasts.**
+>
+> [*Consensus*](https://en.wikipedia.org/wiki/Consensus_(computer_science))
+> *by Wikipedia*
+
+A process can fail either from a *crash* or *loss of the process presenting
+different symptoms to different observers*
+([*Byzantine fault*](https://en.wikipedia.org/wiki/Byzantine_failure)).
+The consensus algorithm handles these kinds of *faulty processes* in
+distributed computing systems, and keeps data consistent even when it loses one
+of its communications.
+
+<br>
+An ultimate **consensus algorithm** should achieve:
+- **_consistency_**.
+- **_availability_**.
+- **_partition tolerance_**.
+
+[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) states that
+it is impossible that a distributed computer system simultaneously satisfies
+them all. 
 
 <br>
 One of the most important properties of distributed computing is
@@ -173,52 +200,6 @@ is **sequential consistency**:
 Now you have this distributed key-value storage `etcd`. Then what can we do
 with it? [*Kubernetes*](http://kubernetes.io) uses `etcd` to manage a cluster
 of application containers in a distributed system.
-
-[↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
-#### consensus algorithm
-
-> A fundamental problem in **distributed computing** is to achieve overall **system
-> reliability** in the presence of a number of *faulty processes*. This often
-> requires processes to agree on some data value that is needed during
-> computation. Examples of applications of **consensus** include **whether to commit
-> a transaction to a database, agreeing on the identity of a leader, state
-> machine replication, and atomic broadcasts.**
->
-> [*Consensus*](https://en.wikipedia.org/wiki/Consensus_(computer_science))
-> *by Wikipedia*
-
-A process can fail either from a *crash failure* or [*Byzantine
-failure*](https://en.wikipedia.org/wiki/Byzantine_failure):
-- *crash failure* occurs when the process abruptly stops.
-- *Byzantine failure* is the loss of the process presenting different symptoms
-  to different observers (*Byzantine fault*).
-
-*Byzantine failures* are far more disruptive because they affect
-*agreement*, *consensus* services in distributed computing systems.
-A consensus algorithm must be resilient to these failures and prevent
-data inconsistency even when it loses one of its communications.
-
-<br>
-An ultimate **consensus algorithm** should achieve:
-- **_consistency_**.
-- **_availability_**.
-- **_partition tolerance_**.
-
-[CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) states that
-it is impossible that a distributed computer system simultaneously satisfies
-them all. 
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
