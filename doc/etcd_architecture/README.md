@@ -61,7 +61,6 @@
 One of the most important properties of distributed computing is
 *linearizability*:
 
-<br>
 > In concurrent programming, an operation (or set of operations) is atomic,
 > **linearizable**, indivisible or uninterruptible if it appears to the rest
 > of the system to occur instantaneously. **Atomicity is a guarantee of
