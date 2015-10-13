@@ -11,7 +11,7 @@
 - [package `io/ioutil`](#package-ioioutil)
 - [stdout, stdin, stderr](#stdout-stdin-stderr)
 - [`exist`: files, directories](#exist-files-directories)
-- [`create/open`: files, directories](#createopen-files-directories)
+- [`create/open/write`: files, directories](#createopenwrite-files-directories)
 - [`io/ioutil`, string](#ioioutil-string)
 - [temporary file](#temporary-file)
 - [`bufio`](#bufios)
@@ -917,7 +917,7 @@ func main() {
 
 
 
-#### `create/open`: files, directories
+#### `create/open/write`: files, directories
 
 ```go
 package main

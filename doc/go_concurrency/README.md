@@ -44,6 +44,7 @@
 
 
 #### Reference
+
 These are MUST-READ articles in Go concurrency:
 
 - [**Concurrency is Not Parallelism**](https://www.youtube.com/watch?v=cN_DpYBzKso) *by Rob Pike* ([Slide](http://talks.golang.org/2012/waza.slide#1))

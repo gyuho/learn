@@ -3,8 +3,6 @@
 
 # Distributed systems, raft
 
-<br>
-
 - [Reference](#reference)
 - [distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
@@ -178,10 +176,11 @@ response as in linearizability*). And it is still considered *consistent*.
 key-value** store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
 distributed. The directory `/etc` in Linux contains system configuration files
-for program controls. Then `etcd` is a distributed key-value store for system
-configurations. There are many [key/value databases](http://nosql-database.org/).
-For example, [**_Redis_**](http://redis.io/) is an **key-value** cache and
-store, a data structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
+for program controls. `etcd` is a distributed key-value store for these
+system configurations. There are many
+[key/value databases](http://nosql-database.org/). For example,
+[**_Redis_**](http://redis.io/) is an **key-value** cache and store, a data
+structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
 
 **_Redis_** and **_`etcd`_** have the same premise: **_key-value store_**.
 But they are different in that `etcd` is designed for distributed system and
