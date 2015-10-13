@@ -127,7 +127,7 @@ operations:
 > *by Peter Bailis*
 
 <br>
-Note that **each linearizable operation** applied by concurrent processes
+**Each linearizable operation** applied by concurrent processes
 *takes effect instantaneously* at some point **between its invocation and its
 response**. It's an **atomic**, *or linearizable*, operation. But what if a
 system cannot satisfy this requirement?
@@ -148,8 +148,8 @@ response as in linearizability*). And it is still considered *consistent*.
 > *by aphyr*
 
 <br>
-[**_etcd_**](https://github.com/coreos/etcd) is a **distributed key-value**
-store,
+[**_etcd_**](https://github.com/coreos/etcd) is a **distributed consistent
+key-value** store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
 distributed. The directory `/etc` in Linux contains system configuration files
 for program controls. Then `etcd` is a distributed key-value store for system
@@ -162,10 +162,11 @@ But they are different in that `etcd` is designed for distributed system and
 for storing system configurations.
 
 <br>
-`etcd`'s goal is **sequential consistency**:
+The goal of `etcd` as a **distributed consistent key-value store**
+is **sequential consistency**:
 
-> etcd tries to ensure sequential consistency, which means each replica have
-> the same command execution ordering.
+> `etcd` tries to ensure **sequential consistency**, which means each replica
+> have the same command execution ordering.
 >
 > [*Xiang Li*](https://github.com/coreos/etcd/issues/741)
 
