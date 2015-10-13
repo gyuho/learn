@@ -262,8 +262,8 @@ You have one machine to run your program. What if that one machine fails?
 The whole system goes down. You want to have multiple, distributed machines
 always available, so that even if one fails, others can keep running.
 
+- [**_Distributed systems, raft_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_raft)
 - [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
-- [**_etcd, raft algorithm_**](https://github.com/gyuho/learn/tree/master/doc/etcd_raft_algorithm)
 
 [↑ top](#contents)
 <br><br>

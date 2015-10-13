@@ -108,7 +108,13 @@ set incsearch     " show search matches as you type
 set hlsearch      " highlight all search matches
 
 set noswapfile
-set mouse=a
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+if has('mouse')
+  set mouse=a
+endif
+
+set nolazyredraw " don't redraw while executing macros
 
 " https://github.com/philips/etc
 autocmd BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn set filetype=markdown

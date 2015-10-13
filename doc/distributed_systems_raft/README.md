@@ -1,12 +1,12 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# etcd, raft algorithm
+# Distributed systems, raft
 
 <br>
 
 - [Reference](#reference)
-- [distributed system](#distributed-system)
+- [distributed systems](#distributed-systems)
 - [consensus algorithm](#consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
@@ -18,11 +18,8 @@
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
 - [raft algorithm: summary](#raft-algorithm-summary)
-- [`etcd` internals: RPC between machines](#etcd-internals-rpc-between-machines)
-  - [`raft`](#raft)
-  - [`etcdserver`](#etcdserver)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -47,9 +44,8 @@
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
 - [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
 - [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
-- [`gyuho/go-fuzz-etcd`](https://github.com/gyuho/go-fuzz-etcd)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -59,7 +55,7 @@
 
 
 
-#### distributed system
+#### distributed systems
 
 > In distributed computing, a problem is divided into many tasks, each of which
 > is solved by one or more computers, which communicate with each other by
@@ -68,16 +64,16 @@
 > A distributed system may have a common goal, such as solving a large
 > computational problem. Alternatively, each computer may have its own user
 > with individual needs, and the **purpose of the distributed system** is to
-> **coordinate the use of shared resources** or provide communication services
-> to the users.
+> **coordinate the use of shared resources** or **provide communication
+> services** to the users.
 > 
 > [*Distributed computing*](https://en.wikipedia.org/wiki/Distributed_computing)
 > *by Wikipedia*
 
-In parallel computing, multiple processors may have access to a globally
-shared memory to exchange data between processors. In distributed computing,
-each processor has its own private memory exchanging data by passing messages
-between processors.
+- In parallel computing, multiple processors may have access to a globally 
+  **shared memory to exchange data between processors**.
+- In distributed computing, each processor has its **own private memory**
+  exchanging data by **passing messages between processors**.
 
 <br>
 One of the most important properties of distributed computing is
@@ -85,16 +81,15 @@ One of the most important properties of distributed computing is
 
 > In concurrent programming, an operation (or set of operations) is atomic,
 > **linearizable**, indivisible or uninterruptible if it appears to the rest
-> of the system to occur instantaneously. Atomicity is a guarantee of isolation
-> from concurrent processes. Additionally, atomic operations commonly have a
-> succeed-or-fail definition — they either successfully change the state of
-> the system, or have no apparent effect.
+> of the system to occur instantaneously. **Atomicity is a guarantee of
+> isolation from concurrent processes**. Additionally, **atomic operations**
+> commonly have a **succeed-or-fail** definition—they either successfully
+> change the state of the system, or have no apparent effect.
 >
 > [*Linearizability*](https://en.wikipedia.org/wiki/Linearizability)
 > *by Wikipedia*
->
->
-> Linearizability provides **the illusion that each operation applied by
+
+> **Linearizability** provides **the illusion that each operation applied by
 > concurrent processes takes effect instantaneously at some point between
 > its invocation and its response**, implying that the meaning of a concurrent
 > object's operations can be given by pre- and post-conditions.
@@ -104,17 +99,18 @@ One of the most important properties of distributed computing is
 
 In other words, once an operation finishes, every other machine in the cluster
 must see it. While operations are concurrent in distributed system, every
-machine sees every single operation in the same linear order. Think of
+machine sees each operation in the same linear order. Think of
 *linearizability* as *atomic consistency* with an atomic operation where a set
 of operations occur atomically with respect to other parts of the system.
 
-*Linearizability* is *local* because an operation on each object is linearized,
-then all operations in the system are linearizable. Then linearizability is
-non-blocking, since a pending invocation does not need to wait for other
+*Linearizability* is *local*. Since an operation on each object is linearized,
+all operations in the system are linearizable. *Linearizability* is
+**non-blocking**, since a pending invocation does not need to wait for other
 pending invocation to complete, or an object with a pending operation does
-not block the total operation, which makes it suitable for
-concurrent and real-time systems.
+not block the total operation, which makes it suitable for concurrent and
+real-time systems.
 
+<br>
 *Serializability* is *global* because it's a property of an entire history of
 operations:
 
@@ -128,24 +124,24 @@ operations:
 > *by Peter Bailis*
 
 <br>
-Note that each linearizable operation applied by concurrent processes
-takes effect instantaneously at some point between its invocation and its
-response. It's an atomic, *or linearizable*, operation. But what if a system
-cannot satisfy this requirement?
+Note that **each linearizable operation** applied by concurrent processes
+*takes effect instantaneously* at some point **between its invocation and its
+response**. It's an **atomic**, *or linearizable*, operation. But what if a
+system cannot satisfy this requirement?
 
 **Sequential consistency** is another consistency model, *weaker than
-linearizability*, in which operations' can take effect *before invocation*
-or *after response*, but is still considered *consistent*.
+linearizability*. Each operation can take effect **before its invocation**
+or **after its response** (*not necessarily between its invocation and its
+response as in linearizability*). And it is still considered *consistent*.
 
 > Many caches also behave like sequentially consistent systems. If I write a
-> tweet on Twitter, or post to Facebook, it takes time to percolate through
-> layers of caching systems. Different users will see my message at different
-> times–but each user will see my operations in order. Once seen, a post
-> shouldn’t disappear. If I write multiple comments, they’ll become visible
-> sequentially, not out of order.
+> tweet on Twitter, or post to Facebook, it **takes time to percolate through
+> layers of caching systems**. **Different users will see my message at
+> different times–but each user will see my operations in order**. Once seen,
+> a post shouldn’t disappear. **If I write multiple comments, they’ll become
+> visible sequentially, not out of order**.
 >
-> [*Sequential
-> consistency*](https://aphyr.com/posts/313-strong-consistency-models)
+> [*Sequential consistency*](https://aphyr.com/posts/313-strong-consistency-models)
 > *by aphyr*
 
 <br>
@@ -172,10 +168,10 @@ for storing system configurations.
 
 <br>
 Now you have this distributed key-value storage `etcd`. Then what can we do
-with it? [*Kubernetes*](http://kubernetes.io/) uses `etcd` to manage a cluster
+with it? [*Kubernetes*](http://kubernetes.io) uses `etcd` to manage a cluster
 of application containers in a distributed system.
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -221,6 +217,10 @@ An ultimate **consensus algorithm** should achieve:
 it is impossible that a distributed computer system simultaneously satisfies
 them all. 
 
+[↑ top](#distributed-systems-raft)
+<br><br><br><br>
+<hr>
+
 
 
 
@@ -234,13 +234,13 @@ To make your program reliable, you would:
 - execute program in a collection of machines (distributed system).
 - ensure that they all run exactly the same way (consistency).
 
-This is the definition of **replicated state machine**.
-And a *state machine* can be any program or application with inputs and
-outputs. *Each replicated state machines* computes identical copy with a
-same state, which means when some servers are down, other state machines 
-can keep running. A distributed system usually implements *replicated state
-machines* by **replicating logs identically across cluster**. And the goal
-of *Raft* algorithm is to **keep those replicated logs consistent**.
+This is the definition of **replicated state machine**. And a *state machine*
+can be any program or application with inputs and outputs. *Each replicated
+state machines* computes identical copy with a same state, which means when
+some servers are down, other state machines can keep running. A distributed
+system usually implements *replicated state machines* by **replicating logs
+identically across cluster**. And the goal of *Raft algorithm* is to **keep
+those replicated logs consistent**.
 
 > **Raft is a consensus algorithm for managing a replicated
 > log.** It produces a result equivalent to (multi-)Paxos, and
@@ -249,11 +249,57 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
 > Paxos and also provides a better foundation for building
 > practical systems.
 >
-> [*In Search of an Understandable Consensus
-> Algorithm*](http://ramcloud.stanford.edu/raft.pdf)
+> [*In Search of an Understandable Consensus Algorithm*](http://ramcloud.stanford.edu/raft.pdf)
 > *by Diego Ongaro and John Ousterhout*
 
-[↑ top](#etcd-raft-algorithm)
+<br>
+Raft nodes(servers) must be one of three states: `follower`, `candidate`, or
+`leader`. A `leader` sends periodic heartbeat messages to its `followers`
+to maintain its authority. In normal operation, there is **exactly only one
+`leader`** for each term. All servers start as a `follower`, and the
+`follower` becomes a `candidate` when there is no current `leader` and starts
+an election. If a `candidate` receives the majority of votes, it becomes a
+`leader. The `leader` then accepts new log entries from clients and replicates
+those log entries to its `followers`.
+
+*Raft* inter-server communication is done by remote procedure calls
+(RPCs). The basic Raft algorithm requires only two types of RPCs
+(later `InstallSnapshot` RPC added):
+
+- `RequestVote` RPCs, issued by `candidates` during elections.
+- `AppendEntries` RPCs, issued by `leaders`:
+  - **to replicate log entries**.
+  - **to send out heartbeat messages**.
+
+**Servers retry RPCs** *when they do not receive a response in time*,
+and **send RPCs in parallel** *for best performance*.
+
+A `log entry` is considered *safely replicated* when the leader has replicated
+it on the **quorum of its followers**. Once `log entry` has been *safely
+replicated* on a majority of servers, it is considered **safe to be applied**
+to its state machine. And such `log entry` is *called* **committed**. Then
+**`leader`** **applies committed entry to its state machine**. `Applying
+committed entry to state machine` means *executing the command in the log
+entry*. Again, `leader` attempts to **replicate a log entry on the quorum
+of its followers**. Once they are replicated on the majority of its followers,
+it is **safely replicated**. Therefore it is **safe to be applied**. Then the
+`leader` **commits that log entry**. *Raft* guarantees that such entries are
+committed in a durable storage, and that they will eventually be
+applied *(executed)* by other available state machines. Since a `log entry` is
+committed and is safe to be applied when it is stored on a quorum of cluster,
+each `command` can complete as soon as the majority of cluster has responded
+to a single round of `AppendEntries` RPCs. In other words, the `leader` does
+not need to wait for responses from every node.
+
+Most critical case for performance is when a leader replicates log entries.
+*Raft* algorithm minimizes the number of messages by requiring a single
+round-trip request only to half of the cluster. *Raft* also has mechanism
+to discard obsolete information accumulated in the log. Since the system
+cannot handle infinitely growing logs, *Raft* uses `snapshot` to save the
+state of the entire system on a stable storage, so that logs stored
+up to the `snapshot` point can be discarded.
+
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -275,9 +321,9 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
   Even when some of the servers are down, other state machines can keep
   running. Typically **replicated state machines are implemented by
   replicating log entries identically on the collection of servers**.
-- **`log`**: A log contains a list of commands, so that *state machines*
+- **`log`**: A `log` is a list of commands, so that *state machines*
   can apply those commands *when it is safe to do so*. A log entry is the
-  primary work unit of *Raft algorithm*. A `command` completes when only a
+  primary work unit of *Raft algorithm*. A `command` can complete when only a
   majority of cluster has responded to a single round of remote procedure
   calls, so that the minority of slow servers do not affect the overall
   performance.
@@ -286,17 +332,21 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
   is safe to be applied to state machines. `commit` also includes preceding
   entries, such as the ones from previous leaders. This is done by the leader
   keeping track of the highest index to commit.
+- **`quorum`** or **`majority of nodes(servers, members)`**: A `quorum` is the
+  majority of servers in the *Raft* cluster. When the size of cluster is `n`,
+  then the `quorum` is `(n/2) + 1`. When the cluster has 5 machines, the
+  `quorum` is 3.
 - **`leader`**: *Raft algorithm* first elects a `leader` that handles
-  client requests and replicates log entries to followers.
-  Once logs are replicated, `leader` tells followers when to apply log
-  entries to their state machines. When a leader fails, *Raft* elects a
-  new leader. In normal operation, there is **exactly only one leader**
-  for each term. A leader sends periodic heartbeat messages to its followers
-  to maintain its authority.
+  client requests. A `leader` accept new log entries from clients and
+  replicates those log entries to its followers. Once logs are replicated,
+  `leader` tells its followers when to apply those log entries to their
+  state machines. When a leader fails, *Raft* elects a new leader. In normal
+  operation, there is **exactly only one leader** for each term. A leader must
+  send periodic heartbeat messages to its followers to maintain its authority.
 - **`client`**: A `client` requests a `leader` to append its new log entry.
   Then `leader` writes and replicates them to its followers. A client does
-  **not need to know which machine is the leader**, sending write requests to
-  any machine in the cluster. If a client sends a request to a follower, it
+  **not need to know which machine is the leader**: it can send write requests
+  to any node in the cluster. If a client sends a request to a follower, it
   redirects to the current leader (Raft paper §5.1). A leader sends out
   `AppendEntries` RPCs with its `leaderId` to other servers, so that a
   follower knows where to redirect client requests.
@@ -317,7 +367,7 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
   as or *revert back to* `follower` state. And requests from such servers are
   rejected.
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -332,7 +382,8 @@ of *Raft* algorithm is to **keep those replicated logs consistent**.
 #### raft algorithm: leader election
 
 *Raft* inter-server communication is done by remote procedure calls
-(RPCs). The basic Raft algorithm requires only two types of RPCs:
+(RPCs). The basic Raft algorithm requires only two types of RPCs
+(later `InstallSnapshot` RPC added):
 
 - `RequestVote` RPCs, issued by `candidates` during elections.
 - `AppendEntries` RPCs, issued by `leaders`:
@@ -400,7 +451,7 @@ Here's how election works:
 ![raft_leader_election_05](img/raft_leader_election_05.png)
 ![raft_leader_election_06](img/raft_leader_election_06.png)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -412,7 +463,8 @@ Here's how election works:
 #### raft algorithm: log replication
 
 *Raft* inter-server communication is done by remote procedure calls
-(RPCs). The basic Raft algorithm requires only two types of RPCs:
+(RPCs). The basic Raft algorithm requires only two types of RPCs
+(later `InstallSnapshot` RPC added):
 
 - `RequestVote` RPCs, issued by `candidates` during elections.
 - `AppendEntries` RPCs, issued by `leaders`:
@@ -425,26 +477,35 @@ and **send RPCs in parallel** *for best performance*.
 <br>
 Summary of
 [§5.3 Log replication](http://ramcloud.stanford.edu/raft.pdf):
-
+.
 0. Once cluster has elected a leader, it starts receiving `client` requests.
-1. A `client` request contains `command` for replicated state machines.
+1. Each `client` request contains a `command` to be run by replicated state
+   machines.
 2. The leader **only appends** `command` to its log, never overwriting nor
    deleting its log entries.
 3. The leader **replicates** the *log entry* to its `followers` with
    `AppendEntries` RPCs. The leader keeps sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
    contains leader's `term number`, its log entry index, its `leaderId`
-4. Again `command` can complete as soon as a majority of cluster has
-   responded to a single round of `AppendEntries` RPCs. The leader does
-   not need to wait for all servers' responses..
-5. When `log entry` has been *safely replicated* on a majority of servers,
-   the **`leader`** applies the entry to its state machine. What its means by
-   `apply the entry to state machine` is *execute the command in the log
-   entry*.
+4. A `log entry` is considered *safely replicated* when the leader has
+   replicated it on the **quorum of its followers**.
+5. Once `log entry` has been *safely replicated* on a majority of servers,
+   it is considered **safe to be applied** to its state machine. And such `log
+   entry` is *called* **committed**. Then **`leader`** **applies committed
+   entry to its state machine**. `Applying committed entry to state machine`
+   means *executing the command in the log entry*. Again, `leader` attempts to
+   **replicate a log entry on the quorum of its followers**. Once they are
+   replicated on the majority of its followers, it is **safely replicated**.
+   Therefore it is **safe to be applied**. Then the `leader` **commits that
+   log entry**. *Raft* guarantees that such entries are committed in a durable
+   storage, and that they will eventually be applied *(executed)* by other
+   available state machines. Since a `log entry` is committed and is safe to be
+   applied when it is stored on a quorum of cluster, each `command` can
+   complete as soon as the majority of cluster has responded to a single round
+   of `AppendEntries` RPCs. In other words, the `leader` does not need to wait
+   for responses from every node.
 6. Then the `leader` returns the execution result to the client.
-7. The log entry that has been *safely replicated* and *applied to `leader`'s
-   state machine* is *called* **_committed_**.
-8. Future `AppendEntries` RPCs from the `leader` has the highest index of
+7. Future `AppendEntries` RPCs from the `leader` has the highest index of
    `committed` log entry, so that `followers` could learn that a log entry is
    `committed`, and they can apply the entry to their local state machines as
    well. *Raft* ensures all committed entries are durable and eventually
@@ -460,7 +521,7 @@ Here's how log replication works:
 ![raft_log_replication_04](img/raft_log_replication_04.png)
 ![raft_log_replication_05](img/raft_log_replication_05.png)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -510,7 +571,7 @@ A `follower` may be missing some entries. In this case, `leader` keeps sending
 ![raft_log_matching_01](img/raft_log_matching_01.png)
 ![raft_log_matching_02](img/raft_log_matching_02.png)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -547,7 +608,7 @@ first *finds the latest `follower` log entry* that matches with
 leader's entry. And *deletes any extraneous entries after that
 index*, in `follower`'s log. This is done by `AppendEntries` RPC.
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -574,7 +635,7 @@ Summary of
 >
 > [*§5.5 Follower and candidate crashes*](http://ramcloud.stanford.edu/raft.pdf)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -646,7 +707,7 @@ Then how do we redirect clients to `leader`, which send requests to
 <br>
 `TODO: find related code in etcd`
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -665,19 +726,20 @@ Summary of
 [§7 Log compaction](http://ramcloud.stanford.edu/raft.pdf):
 
 Most critical case for performance is when a leader replicates log entries.
-*Raft* algorithm minimizes the number of messages by sending a single
-round-trip request to half of the cluster. For stored logs, *Raft* has
-mechanism to discard obsolete information accumulated in the log.
+*Raft* algorithm minimizes the number of messages by requiring a single
+round-trip request only to half of the cluster. *Raft* also has mechanism
+to discard obsolete information accumulated in the log.
 
 <br>
-*Raft* uses `snapshot` to save the state of the entire system on a stable
-storage, so that the log up to that `snapshot` point can be discarded.
-Here's how `snapshot` works in *Raft* log:
+Since the system cannot handle infinitely growing logs, *Raft* uses `snapshot`
+to save the state of the entire system on a stable storage, so that logs stored
+up to the `snapshot` point can be discarded. Here's how `snapshot` works in
+*Raft* log:
 
 ![raft_log_compaction_00](img/raft_log_compaction_00.png)
 ![raft_log_compaction_01](img/raft_log_compaction_01.png)
 
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
@@ -692,7 +754,7 @@ Here's how `snapshot` works in *Raft* log:
 
 #### **raft algorithm: summary**
 
-Here's pseudo-code that summarizes *Raft* algorithm:
+Here's pseudo-code that summarizes *Raft* algorithm (*Raft Paper Figure 2*):
 
 ```go
 // ServerState contains persistent, volatile states of
@@ -926,487 +988,7 @@ func becameLeader(server *ServerState) {
 ```
 
 
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-#### `etcd` internals: RPC between machines
-
-*Raft* inter-server communication is done by remote procedure calls
-(RPCs). The basic Raft algorithm requires only two types of RPCs:
-
-- `RequestVote` RPCs, issued by candidates during elections.
-- `AppendEntries` RPCs, issued by leaders:
-  - **to replicate log entries**.
-  - **to send out heartbeat messages**.
-
-<br>
-`etcd` uses [`Protocol Buffers`](https://developers.google.com/protocol-buffers/docs/overview?hl=en)
-for inter-machine communication of structured data. Below are some of
-core packages:
-
-- [**`raft`**](http://godoc.org/github.com/coreos/etcd/raft):
-  implements the raft consensus algorithm.
-- [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb):
-  [auto-generated](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.pb.go#L1-L3)
-  by protocol buffer compiler. It defines `MessageType`, `Entry`,
-  `Message`, `State`, and other structured data required for *Raft* algorithm.
-- [`rafthttp`](http://godoc.org/github.com/coreos/etcd/rafthttp):
-  implements `http` operations in *Raft*.
-- [**`etcdserver`**](http://godoc.org/github.com/coreos/etcd/etcdserver):
-  connects servers in the cluster, using `HTTP`. It defines `Cluster`
-  interface with methods: `ID` to return the cluster ID, `ClientURLs` to
-  return the list of all clients URLs, `Members` to return the slice of
-  members, etc. It also defines `Server` interface: `Start` to start a `etcd`
-  server(*cluster*), `Stop` to stop the server, `ID` to return the ID of the
-  server, `Leader` to return the server ID of leader, `Do` to handle the
-  server requests, `Process` to take the raft message and apply it to the
-  server's state machine (execute the command in log entry), `AddMember` to add
-  a member into the cluster, `RemoveMember` to remove a member from the
-  cluster, `UpdateMember` to update an existing member in the cluster.
-- [`etcdserver/etcdhttp`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdhttp):
-  implements `etcdserver` endpoints with muxed handlers.
-- [`etcdserver/etcdserverpb`](http://godoc.org/github.com/coreos/etcd/etcdserver/etcdserverpb):
-  auto-generated by protocol buffer compiler. It defines `Request` types used
-  in `etcdserver` package.
-- [`discovery`](http://godoc.org/github.com/coreos/etcd/discovery):
-  implements cluster discovery.
-- [**`client`**](http://godoc.org/github.com/coreos/etcd/client): is the official
-  *Go* `etcd` client.
-
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-##### **`raft`**
-
-Package `raft` implements the raft consensus algorithm.
-And package `etcdserver` imports `raft` and `raftpb` package
-to create and run `etcd` clusters:
-
-- https://github.com/coreos/etcd/blob/master/etcdserver/server.go
-- https://github.com/coreos/etcd/blob/master/etcdserver/raft.go
-- https://github.com/coreos/etcd/blob/master/etcdserver/storage.go
-
-
-<br>
-Here's how `raft` and `raftpb` are **used** in `etcdserver`:
-
-- [`Server`](https://godoc.org/github.com/coreos/etcd/etcdserver#Server)
-  interface requires `Process` method to take `raftpb.Message` and
-  to apply(execute) the message to its state machine. `Server` interface in
-  `etcdserver` package is satisfied by type
-  [`EtcdServer`](https://godoc.org/github.com/coreos/etcd/etcdserver#EtcdServer).
-- `raftNode` struct embeds `raft.Node` interface that represents a node in a
-  cluster. `raftNode` also embeds `raft.MemoryStorage` to store data
-  in-memory.
-- `raftNode` has `applyc chan apply` as a channel to do `apply` (execute
-  commands in log entry). And `apply` is defined as a struct that contains
-  a slice of `raftpb.Entry` which contains `Type`, `Term`, `Index`, `Data`.
-  `apply` struct also contains `snapshot raftpb.SnapShot`, which represents
-  current state of the system, with member `conf_state`, `index`, `term`.
-
-<br>
-First, it's helpful to look at
-[`raft/raftpb/raft.proto`](https://github.com/coreos/etcd/blob/master/raft/raftpb/raft.proto)
-because it defines structured data format used in *Raft* RPCs.
-
-<br>
-Here's how `raft` gets implemented. First, to define the server state:
-
-```go
-// Possible values for StateType.
-const (
-	StateFollower StateType = iota
-	StateCandidate
-	StateLeader
-)
-
-// StateType represents the role of a node in a cluster.
-type StateType uint64
-
-```
-
-<br>
-`Config` struct contains the configuration of a *Raft* node.
-
-```go
-type Config struct {
-	ID             uint64     // non-zero ID of a raft node.
-	peers          []uint64   // slice of all node IDs, including the node itself.
-
-    ElectionTick   int        // election timeout, must be greater than
-	                          // HeartbeatTick
-
-	HearbeatTick   int        // heartbeat interval
-
-	Storage Storage  // storage for a raft node.
-
-	Applied         uint64   // the index of last applied entry.
-	MaxSizePerMsg   uint64   // maximum size of each appending message.
-	MaxInflightMsgs int      // maximum number of in-flight append-waiting
-	                         // messages. TCP/UDP has its own buffer but useful
-	                         // for avoid overflowing.
-
-    Logger Logger
-}
-
-```
-
-Please look at https://godoc.org/github.com/coreos/etcd/raft#Config for full
-comments. And here's the definition of `Storage` in the `Config`:
-
-```go
-// Storage is an interface that may be implemented by the application
-// to retrieve log entries from storage.
-//
-// If any Storage method returns an error, the raft instance will
-// become inoperable and refuse to participate in elections; the
-// application is responsible for cleanup and recovery in this case.
-type Storage interface {
-	// InitialState returns the saved HardState and ConfState information.
-	InitialState() (pb.HardState, pb.ConfState, error)
-	
-	// Entries returns a slice of log entries in the range [lo,hi).
-	// MaxSize limits the total size of the log entries returned, but
-	// Entries returns at least one entry if any.
-	Entries(lo, hi, maxSize uint64) ([]pb.Entry, error)
-	
-	// Term returns the term of entry i, which must be in the range
-	// [FirstIndex()-1, LastIndex()]. The term of the entry before
-	// FirstIndex is retained for matching purposes even though the
-	// rest of that entry may not be available.
-	Term(i uint64) (uint64, error)
-	
-	// LastIndex returns the index of the last entry in the log.
-	LastIndex() (uint64, error)
-	
-	// FirstIndex returns the index of the first log entry that is
-	// possibly available via Entries (older entries have been incorporated
-	// into the latest Snapshot; if storage only contains the dummy entry the
-	// first log entry is not available).
-	FirstIndex() (uint64, error)
-
-	// Snapshot returns the most recent snapshot.
-	Snapshot() (pb.Snapshot, error)
-}
-
-```
-
-So
-[`raft/storage.go`](https://github.com/coreos/etcd/blob/master/raft/storage.go)
-defines `Storage` interface, and package `raft` defines `MemoryStorage` type
-that satisfies `Storage` interface by implementing methods in `Storage`
-method.
-
-<br>
-[`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go)
-defines [`Node`](https://godoc.org/github.com/coreos/etcd/raft#Node)
-interface, as below:
-
-```go
-type Node interface {
-    // Tick increments the internal logical clock for the Node by a single tick. Election
-    // timeouts and heartbeat timeouts are in units of ticks.
-    Tick()
-
-    // Campaign causes the Node to transition to candidate state and start campaigning to become leader.
-    Campaign(ctx context.Context) error
-
-    // Propose proposes that data be appended to the log.
-    Propose(ctx context.Context, data []byte) error
-
-    // ProposeConfChange proposes config change.
-    // At most one ConfChange can be in the process of going through consensus.
-    // Application needs to call ApplyConfChange when applying EntryConfChange type entry.
-    ProposeConfChange(ctx context.Context, cc pb.ConfChange) error
-
-    // Step advances the state machine using the given message. ctx.Err() will be returned, if any.
-    Step(ctx context.Context, msg pb.Message) error
-
-    // Ready returns a channel that returns the current point-in-time state
-    // Users of the Node must call Advance after applying the state returned by Ready
-    Ready() <-chan Ready
-
-    // Advance notifies the Node that the application has applied and saved progress up to the last Ready.
-    // It prepares the node to return the next available Ready.
-    Advance()
-
-    // ApplyConfChange applies config change to the local node.
-    // Returns an opaque ConfState protobuf which must be recorded
-    // in snapshots. Will never return nil; it returns a pointer only
-    // to match MemoryStorage.Compact.
-    ApplyConfChange(cc pb.ConfChange) *pb.ConfState
-
-    // Status returns the current status of the raft state machine.
-    Status() Status
-
-    // Report reports the given node is not reachable for the last send.
-    ReportUnreachable(id uint64)
-
-    // ReportSnapshot reports the stutus of the sent snapshot.
-    ReportSnapshot(id uint64, status SnapshotStatus)
-
-    // Stop performs any necessary termination of the Node
-    Stop()
-}
-
-```
-
-Then what types satisfy this `Node` interface?
-[`raft/node.go`](https://github.com/coreos/etcd/blob/master/raft/node.go)
-has internal type `node` that satisfies `Node` interface.
-
-```go
-// node is the canonical implementation of the Node interface
-type node struct {
-	propc      chan pb.Message
-	recvc      chan pb.Message
-	confc      chan pb.ConfChange
-	confstatec chan pb.ConfState
-	readyc     chan Ready
-	advancec   chan struct{}
-	tickc      chan struct{}
-	done       chan struct{}
-	stop       chan struct{}
-	status     chan chan Status
-}
-
-func newNode() node {
-	return node{
-		propc:      make(chan pb.Message),
-		recvc:      make(chan pb.Message),
-		confc:      make(chan pb.ConfChange),
-		confstatec: make(chan pb.ConfState),
-		readyc:     make(chan Ready),
-		advancec:   make(chan struct{}),
-		tickc:      make(chan struct{}),
-		done:       make(chan struct{}),
-		stop:       make(chan struct{}),
-		status:     make(chan chan Status),
-	}
-}
-
-```
-
-By doing this, the type `node` is implicitly exported
-as an interface type `Node`. And other packages use `Node`
-with methods implemented in `node` type. For example:
-
-```go
-func StartNode(c *Config, peers []Peer) Node {
-	...
-	n := newNode()
-	go n.run(r)
-	return &n
-}
-
-```
-
-Please check out
-[this](https://github.com/gyuho/learn/tree/master/doc/go_interface#implicitly-exporting-interface)
-for more detailed explanation of Go `interface` behavior.
-
-Most operations in *Raft* is based on `raft.Node`, and states and data are
-stored through `raft.MemoryStorage`. For the full source code and
-documentation, please go to
-[godoc.org/github.com/coreos/etcd/raft](http://godoc.org/github.com/coreos/etcd/raft).
-
-[↑ top](#etcd-raft-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-##### **`etcdserver`**
-
-Package `etcdserver` defines interfaces for `etcd` cluster and servers.
-Let's look at the actual code.
-
-<br>
-[`etcdserver/raft.go`](https://github.com/coreos/etcd/blob/master/etcdserver/raft.go)
-imports package
-[`raft`](http://godoc.org/github.com/coreos/etcd/raft)
-and [`raft/raftpb`](http://godoc.org/github.com/coreos/etcd/raft/raftpb).
-
-<br>
-[`etcdserver/member.go`](https://github.com/coreos/etcd/blob/master/etcdserver/member.go)
-implements `Member` as a member in a cluster. `Member` contains attributes of
-peers and clients.
-
-```go
-// RaftAttributes represents the raft related attributes of an etcd member.
-type RaftAttributes struct {
-	PeerURLs []string `json:"peerURLs"`
-}
-
-// Attributes represents all the non-raft related attributes of an etcd member.
-type Attributes struct {
-	Name       string   `json:"name,omitempty"`
-	ClientURLs []string `json:"clientURLs,omitempty"`
-}
-
-type Member struct {
-	ID types.ID `json:"id"`
-	RaftAttributes
-	Attributes
-}
-
-```
-
-
-<br>
-[`etcdserver/cluster.go`](https://github.com/coreos/etcd/blob/master/etcdserver/cluster.go)
-defines `Cluster` interface:
-
-```go
-type Cluster interface {
-	// ID returns the cluster ID
-	ID() types.ID
-
-	// ClientURLs returns an aggregate set of all URLs on which this
-	// cluster is listening for client requests
-	ClientURLs() []string
-
-	// Members returns a slice of members sorted by their ID
-	Members() []*Member
-
-	// Member retrieves a particular member based on ID, or nil if the
-	// member does not exist in the cluster
-	Member(id types.ID) *Member
-
-	// IsIDRemoved checks whether the given ID has been removed from this
-	// cluster at some point in the past
-	IsIDRemoved(id types.ID) bool
-
-	// ClusterVersion is the cluster-wide minimum major.minor version.
-	Version() *semver.Version
-}
-
-```
-
-And it has internal type `cluster` to satisfy this interface:
-
-```go
-type cluster struct {
-	id    types.ID
-	token string
-	store store.Store
-
-	sync.Mutex // guards the fields below
-	version    *semver.Version
-	members    map[types.ID]*Member
-	// removed contains the ids of removed members in the cluster.
-	// removed id cannot be reused.
-	removed map[types.ID]bool
-}
-
-```
-
-You can add, remove, update members in a cluster.
-
-
-<br>
-[`etcdserver/server.go`](https://github.com/coreos/etcd/blob/master/etcdserver/server.go)
-defines `Server` interface:
-
-```go
-type Server interface {
-	// Start performs any initialization of the Server necessary for it to
-	// begin serving requests. It must be called before Do or Process.
-	// Start must be non-blocking; any long-running server functionality
-	// should be implemented in goroutines.
-	Start()
-
-	// Stop terminates the Server and performs any necessary finalization.
-	// Do and Process cannot be called after Stop has been invoked.
-	Stop()
-
-	// ID returns the ID of the Server.
-	ID() types.ID
-
-	// Leader returns the ID of the leader Server.
-	Leader() types.ID
-
-	// Do takes a request and attempts to fulfill it, returning a Response.
-	Do(ctx context.Context, r pb.Request) (Response, error)
-
-	// Process takes a raft message and applies it to the server's raft state
-	// machine, respecting any timeout of the given context.
-	Process(ctx context.Context, m raftpb.Message) error
-
-	// AddMember attempts to add a member into the cluster. It will return
-	// ErrIDRemoved if member ID is removed from the cluster, or return
-	// ErrIDExists if member ID exists in the cluster.
-	AddMember(ctx context.Context, memb Member) error
-
-	// RemoveMember attempts to remove a member from the cluster. It will
-	// return ErrIDRemoved if member ID is removed from the cluster, or return
-	// ErrIDNotFound if member ID is not in the cluster.
-	RemoveMember(ctx context.Context, id uint64) error
-
-	// UpdateMember attempts to update a existing member in the cluster. It will
-	// return ErrIDNotFound if the member ID does not exist.
-	UpdateMember(ctx context.Context, updateMemb Member) error
-
-	ClusterVersion() *semver.Version
-}
-
-```
-
-And `EtcdServer` type satisfies the `Server` interface:
-
-```go
-// EtcdServer is the production implementation of the Server interface
-type EtcdServer struct {
-	// r must be the first element to keep 64-bit alignment for atomic
-	// access to fields
-	r raftNode
-
-	cfg       *ServerConfig
-	snapCount uint64
-
-	w          wait.Wait
-	stop       chan struct{}
-	done       chan struct{}
-	errorc     chan error
-	id         types.ID
-	attributes Attributes
-
-	cluster *cluster
-
-	store store.Store
-	kv    dstorage.KV
-
-	stats  *stats.ServerStats
-	lstats *stats.LeaderStats
-
-	SyncTicker <-chan time.Time
-
-	reqIDGen *idutil.Generator
-
-	// forceVersionC is used to force the version monitor loop
-	// to detect the cluster version immediately.
-	forceVersionC chan struct{}
-}
-
-```
-
-And please check out [`gyuho/go-fuzz-etcd`](https://github.com/gyuho/go-fuzz-etcd)
-for more fuzz testing on `etcd`.
-
-[↑ top](#etcd-raft-algorithm)
+[↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
 
