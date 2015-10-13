@@ -204,16 +204,17 @@ of its followers**. Once they are replicated on the majority of its followers,
 it is **safely replicated**. Therefore it is **safe to be applied**. Then the
 `leader` **commits that log entry**. *Raft* guarantees that such entries are
 committed in a durable storage, and that they will eventually be
-applied *(executed)* by other available state machines. Since a `log entry` is
-committed and is safe to be applied when it is stored on a quorum of cluster,
-each `command` can complete as soon as the majority of cluster has responded
-to a single round of `AppendEntries` RPCs. In other words, the `leader` does
-not need to wait for responses from every node.
+applied *(executed)* by other available state machines. When a `log entry` is
+committed, it is safe to be applied. And for a `log entry` to be committed,
+it only needs to be stored on the quorum of cluster. This means each `command`
+can complete as soon as the majority of cluster has responded to a single
+round of `AppendEntries` RPCs. In other words, the `leader` does not need to
+wait for responses from every node.
 
 Most critical case for performance is when a leader replicates log entries.
 *Raft* algorithm minimizes the number of messages by requiring a single
 round-trip request only to half of the cluster. *Raft* also has mechanism
-to discard obsolete information accumulated in the log. Since the system
+to discard obsolete information accumulated in the log. Since system
 cannot handle infinitely growing logs, *Raft* uses `snapshot` to save the
 state of the entire system on a stable storage, so that logs stored
 up to the `snapshot` point can be discarded.
