@@ -193,8 +193,13 @@ while **process** **_run in separate memory_** spaces.
 > [**_About Processes and Threads by
 > Microsoft_**](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917%28v=vs.85%29.aspx)
 
-<br>
+When you say *8-core machine*, the `core` represents the actual physical
+processors. *8-core machine* has 8 independent processing units (*cores* or
+*CPU*s). Not to be confused with processor, a `process` is a computer program
+instance that is being executed. A `process` can be made up of multiple
+`threads` executing instructions concurrently.
 
+<br>
 > [Threads] are conceptually the same as processes, but share the same memory space.
 >
 > As threads share address space, they are lighter than processes so are faster
