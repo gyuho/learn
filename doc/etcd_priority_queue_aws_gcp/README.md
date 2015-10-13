@@ -339,8 +339,8 @@ structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
 [**_etcd_**](https://github.com/coreos/etcd) is a **distributed key-value**
 store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
-distributed. The directory `/etc` in Linux contains system configuration files for
-program controls. Then `etcd` is a distributed key-value store for system
+distributed. The directory `/etc` in Linux contains system configuration files
+for program controls. `etcd` is a distributed key-value store for these system
 configurations.
 
 **_Redis_** and **_`etcd`_** have the same premise: **_key-value store_**.
