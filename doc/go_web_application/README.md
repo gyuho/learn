@@ -100,8 +100,14 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	// io.WriteString(w, "Hello World!")
 }
 
+func no(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	fmt.Fprint(w, "Sorry! Not found!")
+}
+
 func main() {
 	http.HandleFunc("/", hello)
+	http.HandleFunc("/no", no)
 	http.ListenAndServe(":8080", nil)
 }
 
