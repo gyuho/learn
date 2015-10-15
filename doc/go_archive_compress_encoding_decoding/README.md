@@ -907,6 +907,7 @@ func main() {
 	func() {
 		rs := make(map[string]interface{})
 		rs["Go"] = "Google"
+		// Marshal is to serialize Go objects into YAML.
 		d, err := yaml.Marshal(rs)
 		if err != nil {
 			panic(err)
@@ -918,6 +919,7 @@ func main() {
 
 	func() {
 		rs := make(map[interface{}]interface{})
+		// Unmarshal is to deserialize YAML into Go objects.
 		if err := yaml.Unmarshal([]byte(sourceData), &rs); err != nil {
 			panic(err)
 		}
