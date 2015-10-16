@@ -82,8 +82,8 @@ C is a small language. And it helps you better understand
 how system works in low-level. It's still being used everywhere.
 I only wish I had more time to learn more about C.
 
-- [*C: introduction*](https://github.com/gyuho/learn/tree/master/doc/c_introduction)
-- [*C: type, variable*](https://github.com/gyuho/learn/tree/master/doc/c_type_variable)
+- [*C: introduction, printf, scanf*](https://github.com/gyuho/learn/tree/master/doc/c_introduction_printf_scanf)
+- [*C: type, variable, operator*](https://github.com/gyuho/learn/tree/master/doc/c_type_variable_operator)
 - [*C: logic, loop*](https://github.com/gyuho/learn/tree/master/doc/c_logic_loop)
 
 [↑ top](#contents)

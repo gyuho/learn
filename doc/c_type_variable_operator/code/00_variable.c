@@ -1,8 +1,3 @@
-/*
-gcc 00_variable.c -o 00_variable;
-./00_variable;
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 
