@@ -1,12 +1,13 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# C: type, variable
+# C: type, variable, operator
 
 - [type](#type)
 - [variable](#variable)
+- [operator](#operator)
 
-[↑ top](#c-type-variable)
+[↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
 
@@ -21,7 +22,7 @@
 
 - [Basic Types and Operators](http://cslibrary.stanford.edu/101/EssentialC.pdf)
 
-[↑ top](#c-type-variable)
+[↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
 
@@ -36,11 +37,6 @@
 #### variable
 
 ```c
-/*
-gcc 00_variable.c -o 00_variable;
-./00_variable;
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -137,12 +133,65 @@ In more detail:
 > the pointer is passed to `free` which deallocates the memory so that it can be
 > used for other purposes.
 >
-> [*C dynamic memory
-> allocation*](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation) *by
-> Wikipedia*
+> [*C dynamic memory allocation*](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation)
+> *by Wikipedia*
 
-More to be covered later.
+[↑ top](#c-type-variable-operator)
+<br><br><br><br>
+<hr>
 
-[↑ top](#c-type-variable)
+
+
+
+
+
+
+
+
+#### operator
+
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int num0;
+	int num1;
+	num0=7;
+	num1=2;
+	printf("%d ÷ %d: %f\n", num0, num1, (double)num0/num1);
+	// 7 ÷ 2: 3.500000 
+	printf("%d ÷ %d's quotient:  %d\n", num0, num1, num0/num1);
+	// 7 ÷ 2's quotient:  3 
+	printf("%d ÷ %d's remainder: %d\n\n", num0, num1, num0%num1);
+	// 7 ÷ 2's remainder: 1
+
+	printf("num0: %d\n", num0);
+	printf("++num0: %d\n", ++num0);
+	printf("num0: %d\n\n", num0);
+
+	printf("num1: %d\n", num1);
+	printf("num1++: %d\n", num1++);
+	printf("num1: %d\n\n", num1);
+
+	printf("AND: %d\n", (1<2) && (3<4)); // AND: 1
+	printf("OR:  %d\n", (1>2) || (3>4)); // OR:  0
+
+	return 0;
+}
+
+/*
+num0: 7
+++num0: 8
+num0: 8
+
+num1: 2
+num1++: 2
+num1: 3
+*/
+
+```
+
+[↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
