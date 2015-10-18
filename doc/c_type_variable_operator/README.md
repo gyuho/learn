@@ -173,25 +173,51 @@ int main(void)
 	printf("num1: %d\n", num1);
 	printf("num1++: %d\n", num1++);
 	printf("num1: %d\n\n", num1);
+	/*
+		num0: 7
+		++num0: 8
+		num0: 8
+
+		num1: 2
+		num1++: 2
+		num1: 3
+	*/
 
 	printf("AND: %d\n", (1<2) && (3<4)); // AND: 1
 	printf("OR:  %d\n", (1>2) || (3>4)); // OR:  0
 
+	char array[7] = "Hello";
+	int i;
+	for (i=0; i<7; i++)
+		printf("%d: %c\n", i, array[i]);
+	printf("\n");
+	for (i=0; i<7; ++i)
+		printf("%d: %c\n", i, array[i]);
+	printf("\n");
+	/*
+		0: H
+		1: e
+		2: l
+		3: l
+		4: o
+		5: 
+		6: 
+
+		0: H
+		1: e
+		2: l
+		3: l
+		4: o
+		5: 
+		6: 
+	*/
+
 	return 0;
 }
-
-/*
-num0: 7
-++num0: 8
-num0: 8
-
-num1: 2
-num1++: 2
-num1: 3
-*/
 
 ```
 
 [↑ top](#c-type-variable-operator)
 <br><br><br><br>
 <hr>
+

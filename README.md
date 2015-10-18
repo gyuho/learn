@@ -85,6 +85,7 @@ I only wish I had more time to learn more about C.
 - [*C: introduction, printf, scanf*](https://github.com/gyuho/learn/tree/master/doc/c_introduction_printf_scanf)
 - [*C: type, variable, operator*](https://github.com/gyuho/learn/tree/master/doc/c_type_variable_operator)
 - [*C: logic, loop*](https://github.com/gyuho/learn/tree/master/doc/c_logic_loop)
+- [*C: array, pointer*](https://github.com/gyuho/learn/tree/master/doc/c_array_pointer)
 
 [↑ top](#contents)
 <br><br>
