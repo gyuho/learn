@@ -1653,6 +1653,7 @@ More detailed discussion can be found
 > Symonds*](https://groups.google.com/d/msg/golang-nuts/xzdPCjKORNA/7qd0BEklVqAJ)
 
 <br>
+<br>
 And when you have `map` of `map`, make sure to assign to **non-nil** map. If
 you try to set a *key* from a nil map, it will panic as
 [follows](http://play.golang.org/p/vIb5wBj30e):
