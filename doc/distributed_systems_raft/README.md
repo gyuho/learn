@@ -35,6 +35,7 @@
 - [*Raft paper by Diego Ongaro and John Ousterhout*](http://ramcloud.stanford.edu/raft.pdf)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
+- [Deconstructing the CAP theorem' for CM and DevOps](http://markburgess.org/blog_cap.html)
 - [Raft (computer science)](https://en.wikipedia.org/wiki/Raft_(computer_science))
 - [Raft lecture (Raft user study)](https://www.youtube.com/watch?v=YbZ3zDzDnrw)
 - [`coreos/etcd`](https://github.com/coreos/etcd)
