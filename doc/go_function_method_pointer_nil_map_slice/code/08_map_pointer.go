@@ -30,4 +30,13 @@ func main() {
 	// (O) change
 	(*mapType)(&mmap).changeMap2pt()
 	fmt.Println(mmap) // map[100:E 1:A]
+
+	mmap := make(map[string]map[string]struct{})
+	mmap["A"] = make(map[string]struct{})
+	mmap["A"]["B"] = struct{}{}
+	mmap["A"]["C"] = struct{}{}
+	tm := mmap["A"]
+	tm["D"] = struct{}{}
+	delete(tm, "B")
+	fmt.Println(mmap) // map[A:map[C:{} D:{}]]
 }
