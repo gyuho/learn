@@ -1653,9 +1653,9 @@ More detailed discussion can be found
 > of that slice that might be looking at the original array. **A map is
 > inherently non-contiguous, and you never need to reallocate the map
 > itself, only stuff that’s buried inside it, and that means that a
-> change to a map is reflected in every copy of that map.
+> change to a map is reflected in every copy of that map**.
 >
-> That is# why you must pass a slice as a pointer if you want the
+> That is **why you must pass a slice as a pointer if you want the
 > function to modify your copy of it, but you don't have to do that for
 > a map.**
 >
