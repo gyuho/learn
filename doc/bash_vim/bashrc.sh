@@ -135,7 +135,7 @@ alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
 alias hh="history | grep "
 alias pp="ps aux | grep "
-alias rm="rm -i"
+alias rm="rm -i "
  
 alias version='lsb_release -a;'
 alias cpu='cat /proc/cpuinfo | grep "model name" | head -1; sensors;'
@@ -156,8 +156,8 @@ alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
 alias gbra='git branch;'
+alias gtus='git status;'
+alias glog='git log;'
 alias gmas='git checkout -B master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
-alias gaut='git add -A .; git commit -m "updates"; git push origin master;'
-
