@@ -220,7 +220,7 @@ ALTER TABLE myschema.example_table DROP COLUMN column_to_drop;
  
 # if failed, ...
 DROP TABLE myschema.example_table;
-CREATE TABLE myschema.example_table LIKE myschema.example_table_backup;
+CREATE TABLE myschema.example_table (LIKE myschema.example_table_backup);
 INSERT INTO myschema.example_table SELECT * FROM myschema.example_table_backup;
  
 # rename a table
