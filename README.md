@@ -145,7 +145,7 @@ This will help my transition to other languages or frameworks if needed.
 - [**_Go: os, io_**](https://github.com/gyuho/learn/tree/master/doc/go_os_io)
 - [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
-- [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
+- [*Go: time, testing, benchmark*](https://github.com/gyuho/learn/tree/master/doc/go_time_testing_benchmark)
 
 [↑ top](#contents)
 <br><br>
