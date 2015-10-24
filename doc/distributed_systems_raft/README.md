@@ -484,12 +484,12 @@ Summary of
    Therefore it is **safe to be applied**. Then the `leader` **commits that
    log entry**. *Raft* guarantees that such entries are committed in a durable
    storage, and that they will eventually be applied *(executed)* by other
-   available state machines. When a `log entry` is committed, it is safe to be
-   applied. And for a `log entry` to be committed, it only needs to be stored
-   on the quorum of cluster. This means each `command` can complete as soon as
-   the majority of cluster has responded to a single round of `AppendEntries`
-   RPCs. In other words, the `leader` does not need to wait for responses from
-   every node.
+   available state machines. **When a `log entry` is committed, it is safe to
+   be applied. And for a `log entry` to be committed, it only needs to be
+   stored on the quorum of cluster**. This means each `command` can complete
+   as soon as the majority of cluster has responded to a single round of
+   `AppendEntries` RPCs. In other words, `leader` does not need to wait for
+   responses from every node in a cluster.
 7. Then the `leader` returns the execution result to the client.
 8. Future `AppendEntries` RPCs from the `leader` has the highest index of
    `committed` log entry, so that `followers` could learn that a log entry is
