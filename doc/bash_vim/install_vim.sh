@@ -22,9 +22,13 @@ source $HOME/.vimrc;
 sudo vim +PluginInstall +qall;
 sudo vim +PluginClean +qall;
 
+sudo apt-get -y install ctags;
+cd $HOME/go && ctags -R ./*;
+cd $HOME;
+
 # https://github.com/Valloric/YouCompleteMe
-sudo apt-get install cmake;
-sudo apt-get install python-dev;
+sudo apt-get -y install cmake;
+sudo apt-get -y install python-dev;
 
 # cd $HOME/.vim/bundle/YouCompleteMe;
 # sudo ./install.sh --clang-completer --system-libclang;
