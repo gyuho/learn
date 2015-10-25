@@ -130,6 +130,9 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
+" tagbar
+nmap <F8> :TagbarToggle<CR>
+
 set t_Co=256
 colorscheme default
 
