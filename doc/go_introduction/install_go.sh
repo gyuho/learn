@@ -31,10 +31,16 @@ go get -v -u github.com/golang/lint/golint;
 go get -v -u github.com/nsf/gocode;
 go get -v -u github.com/motain/gocheck;
 go get -v -u github.com/vaughan0/go-ini;
+go get -v -u github.com/rogpeppe/godef;
+go get -v -u golang.org/x/tools/cmd/oracle;
+go get -v -u golang.org/x/tools/cmd/gorename;
+go get -v -u github.com/kisielk/errcheck;
+go get -v -u github.com/jstemmer/gotags;
+
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh;
+
 cd $HOME;
 go get -v -u github.com/bradrydzewski/go.auth;
-# go get -v -u github.com/coreos/etcd/...;
 go get -v -u github.com/go-sql-driver/mysql;
 go get -v -u github.com/gyuho/awsapi/redshift;
 go get -v -u github.com/gyuho/cloudflare;
