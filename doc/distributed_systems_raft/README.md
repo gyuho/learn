@@ -242,7 +242,7 @@ Raft nodes(servers) must be one of three states: `follower`, `candidate`, or
 to maintain its authority. In normal operation, there is **exactly only one
 `leader`** for each term. All servers start as a `follower`, and the
 `follower` becomes a `candidate` when there is no current `leader` and starts
-an election. If a `candidate` receives the majority of votes, it becomes a
+an election. If a `candidate` receives a majority of the votes, it becomes a
 `leader`. The `leader` then accepts new log entries from clients and replicates
 those log entries to its `followers`.
 
@@ -260,19 +260,19 @@ and **send RPCs in parallel** *for best performance*.
 
 A `log entry` is considered *safely replicated* when the leader has replicated
 it on the **quorum of its followers**. Once `log entry` has been *safely
-replicated* on a majority of servers, it is considered **safe to be applied**
-to its state machine. And such `log entry` is *called* **committed**. Then
-**`leader`** **applies committed entry to its state machine**. `Applying
+replicated* on a majority of the servers, it is considered **safe to be
+applied** to its state machine. And such `log entry` is *called* **committed**.
+Then **`leader`** **applies committed entry to its state machine**. `Applying
 committed entry to state machine` means *executing the command in the log
 entry*. Again, `leader` attempts to **replicate a log entry on the quorum
-of its followers**. Once they are replicated on the majority of its followers,
+of its followers**. Once they are replicated on a majority of its followers,
 it is **safely replicated**. Therefore it is **safe to be applied**. Then the
 `leader` **commits that log entry**. *Raft* guarantees that such entries are
 committed in a durable storage, and that they will eventually be
 applied *(executed)* by other available state machines. When a `log entry` is
 committed, it is safe to be applied. And for a `log entry` to be committed,
 it only needs to be stored on the quorum of cluster. This means each `command`
-can complete as soon as the majority of cluster has responded to a single
+can complete as soon as a majority of the followers has responded to a single
 round of `AppendEntries` RPCs. In other words, the `leader` does not need to
 wait for responses from every node.
 
@@ -313,12 +313,12 @@ up to the `snapshot` point can be discarded.
   calls, so that the minority of slow servers do not affect the overall
   performance.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
-  replicated the entry on majority of servers in a cluster. Then such entry
-  is safe to be applied to state machines. `commit` also includes preceding
-  entries, such as the ones from previous leaders. This is done by the leader
-  keeping track of the highest index to commit.
-- **`quorum`** or **`majority of nodes(servers, members)`**: A `quorum` is the
-  majority of servers in the *Raft* cluster. When the size of cluster is `n`,
+  replicated the entry on a majority of the servers in a cluster. Then such
+  entry is safe to be applied to state machines. `commit` also includes
+  preceding entries, such as the ones from previous leaders. This is done
+  by the leader keeping track of the highest index to commit.
+- **`quorum`** or **`majority of nodes(servers, members)`**: A `quorum` is a 
+  majority of the servers in *Raft* cluster. When the size of cluster is `n`,
   then the `quorum` is `(n/2) + 1`. When the cluster has 5 machines, the
   `quorum` is 3.
 - **`leader`**: *Raft algorithm* first elects a `leader` that handles
@@ -341,8 +341,8 @@ up to the `snapshot` point can be discarded.
   valid `leader`, it becomes a `candidate` and then starts an election.
 - **`candidate`**: A server becomes a `candidate` from a `follower` when there
   is no current `leader`, so electing a new `leader`: it's a state between
-  `follower` and `leader`. If a candidate receives votes from the majority
-  of cluster, it becomes the new `leader`.
+  `follower` and `leader`. If a candidate receives votes from a majority
+  of the cluster, it promotes itself as a new `leader`.
 - **`term`**: *Raft* divides time into `terms` of arbitrary duration, indexed
   with consecutive integers. Each term begins with an *election*. And if the
   election ends with no leader *(split vote)*, it creates a new `term`. *Raft*
@@ -403,16 +403,16 @@ Summary of
 10. `follower` denies voting if its log is more complete
    log than `candidate`.
 11. Then **`candiate`** either:
-	- **_becomes the leader_** by *winning the election* when it gets **majority
-	  of votes**. Then it must send out heartbeats to others
+	- **_becomes the leader_** by *winning the election* when it gets a
+	  **majority of the votes**. Then it must send out heartbeats to others
 	  to establish itself as a leader.
 	- **_reverts back to a follower_** when it receives a RPC from a **valid
 	  leader**. A valid `leader` must have `term number` that is
 	  equal to or greater than `candidate`'s. RPCs with lower `term`
 	  numbers are rejected. A leader **only appends to log**. Therefore,
-	  future-leader will have **most complete** log among electing
-	  majority: a leader's log is the truth and `leader` will eventually
-	  make followers' logs identical to the leader's.
+	  future-leader will have **most complete** log: a leader's log is the
+	  truth and `leader` will eventually make followers' logs identical to
+	  the leader's.
 	- **_starts a new election and increments its current `term` number_**
 	  **when votes are split with no winner** That is, its **`election
 	  times out` receiving no heartbeat message from a valid leader, so
@@ -474,20 +474,20 @@ Summary of
    contains leader's `term number`, its log entry index, its `leaderId`
 5. A `log entry` is considered *safely replicated* when the leader has
    replicated it on the **quorum of its followers**.
-6. Once `log entry` has been *safely replicated* on a majority of servers,
+6. Once `log entry` has been *safely replicated* on a majority of the servers,
    it is considered **safe to be applied** to its state machine. And such `log
    entry` is *called* **committed**. Then **`leader`** **applies committed
    entry to its state machine**. `Applying committed entry to state machine`
    means *executing the command in the log entry*. Again, `leader` attempts to
    **replicate a log entry on the quorum of its followers**. Once they are
-   replicated on the majority of its followers, it is **safely replicated**.
+   replicated on a majority of its followers, it is **safely replicated**.
    Therefore it is **safe to be applied**. Then the `leader` **commits that
    log entry**. *Raft* guarantees that such entries are committed in a durable
    storage, and that they will eventually be applied *(executed)* by other
    available state machines. **When a `log entry` is committed, it is safe to
    be applied. And for a `log entry` to be committed, it only needs to be
    stored on the quorum of cluster**. This means each `command` can complete
-   as soon as the majority of cluster has responded to a single round of
+   as soon as a majority of its followers has responded to a single round of
    `AppendEntries` RPCs. In other words, `leader` does not need to wait for
    responses from every node in a cluster.
 7. Then the `leader` returns the execution result to the client.
