@@ -241,8 +241,8 @@ Raft nodes(servers) must be one of three states: `follower`, `candidate`, or
 `leader`. A `leader` sends periodic heartbeat messages to its `followers`
 to maintain its authority. In normal operation, there is **exactly only one
 `leader`** for each term. All servers start as a `follower`, and the
-`follower` becomes a `candidate` when there is no current `leader` and starts
-an election. If a `candidate` receives a majority of the votes, it becomes a
+`follower` becomes `candidate` when there is no current `leader` and starts
+an election. If a `candidate` receives a majority of the votes, it becomes 
 `leader`. The `leader` then accepts new log entries from clients and replicates
 those log entries to its `followers`.
 
@@ -338,8 +338,8 @@ up to the `snapshot` point can be discarded.
 - **`follower`**: A `follower` is completely passive, issuing no RPCs and only
   responding to incoming RPCs from candidates or leaders. All servers start as
   followers. If a follower receives no communication or no heartbeat from a
-  valid `leader`, it becomes a `candidate` and then starts an election.
-- **`candidate`**: A server becomes a `candidate` from a `follower` when there
+  valid `leader`, it becomes `candidate` and then starts an election.
+- **`candidate`**: A server becomes `candidate` from a `follower` when there
   is no current `leader`, so electing a new `leader`: it's a state between
   `follower` and `leader`. If a candidate receives votes from a majority
   of the cluster, it promotes itself as a new `leader`.
@@ -393,7 +393,7 @@ Summary of
    times out. If the follower has not received such heartbeats within timeout,
    it assumes that there is no current `leader` in cluster.
 5. Then the `follower` starts a new `election` and becomes `candidate`.
-6. When a `follower` becomes a `candidate`, it:
+6. When a `follower` becomes `candidate`, it:
 	- increments its `term number`.
 	- resets its `election timeout`.
 7. `candidate` first votes for itself.
