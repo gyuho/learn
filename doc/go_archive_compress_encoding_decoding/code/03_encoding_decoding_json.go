@@ -5,124 +5,82 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
 )
 
-var (
-	sourceURL  = "http://httpbin.org/headers"
-	sourceData = `
-{
-  "headers": {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", 
-    "Accept-Encoding": "gzip, deflate, sdch", 
-    "Accept-Language": "en-US,en;q=0.8,ko;q=0.6", 
-    "Cookie": "_ga=GA1.2.630704613.1440642077", 
-    "Dnt": "1", 
-    "Host": "httpbin.org", 
-    "Referer": "http://httpbin.org/", 
-    "Upgrade-Insecure-Requests": "1", 
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
-  }
+type pair struct {
+	ProxyID  string `json:"proxyID"`
+	Endpoint string `json:"endpoint"`
 }
-`
-)
 
-type data struct {
-	Headers struct {
-		Accept    string `json:"Accept"`
-		Host      string `json:"Host"`
-		UserAgent string `json:"User-Agent"`
-	} `json:"headers"`
+func makePair(proxyID, endpoint string) pair {
+	return pair{ProxyID: proxyID, Endpoint: endpoint}
+}
+
+func encodePair(proxyID, endpoint string) (string, error) {
+	p := pair{ProxyID: proxyID, Endpoint: endpoint}
+	buf := new(bytes.Buffer)
+	if err := json.NewEncoder(buf).Encode(p); err != nil {
+		return "", err
+	}
+	return buf.String(), nil
+}
+
+func decodePair(rd io.Reader) (pair, error) {
+	p := pair{}
+	dec := json.NewDecoder(rd)
+	for {
+		if err := dec.Decode(&p); err == io.EOF {
+			break
+		} else if err != nil {
+			return pair{}, err
+		}
+	}
+	return p, nil
+}
+
+func equalPair(s0, s1 string) bool {
+	p0, err0 := decodePair(strings.NewReader(s0))
+	if err0 != nil {
+		return false
+	}
+	p1, err1 := decodePair(strings.NewReader(s1))
+	if err1 != nil {
+		return false
+	}
+	return p0.ProxyID == p1.ProxyID && p0.Endpoint == p1.Endpoint
 }
 
 func main() {
-	func() {
-		rs := make(map[string]interface{})
-		rs["Go"] = "Google"
-		buf := new(bytes.Buffer)
-		if err := json.NewEncoder(buf).Encode(rs); err != nil {
-			panic(err)
-		}
-		fmt.Println()
-		fmt.Printf("json.NewEncoder with map: %+v\n", buf.String())
-		// json.NewEncoder with map: {"Go":"Google"}
-	}()
+	p0 := makePair("test_id", "http://localhost:8080")
+	fmt.Printf("makePair: %+v\n", p0)
+	// makePair: {ProxyID:test_id Endpoint:http://localhost:8080}
 
-	func() {
-		// func Get(url string) (resp *Response, err error)
-		// type Response struct {
-		// 		Body io.ReadCloser
-		resp, err := http.Get(sourceURL)
-		if resp == nil {
-			return
-		}
-		defer resp.Body.Close()
-		if err != nil {
-			panic(err)
-		}
-		rs := make(map[string]interface{})
+	s0, err := encodePair("test_id", "http://localhost:8080")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("encodePair: %s\n", s0)
+	// encodePair: {"proxyID":"test_id","endpoint":"http://localhost:8080"}
 
-		// resp implements Write
-		// resp.Body implements Read
+	p1, err := decodePair(strings.NewReader(`{
+	"proxyID": "test_id",
+	"endpoint": "http://localhost:8080"
+}
+`))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("decodePair: %+v\n", p1)
+	// decodePair: {ProxyID:test_id Endpoint:http://localhost:8080}
 
-		// http://jmoiron.net/blog/crossing-streams-a-love-letter-to-ioreader/
-		// func ReadAll(r io.Reader) ([]byte, error)
-		// body, err := ioutil.ReadAll(resp.Body)
-
-		// func NewDecoder(r io.Reader) *Decoder
-		dec := json.NewDecoder(resp.Body)
-		for {
-			// func (d *Decoder) Decode(v interface{}) error
-			if err := dec.Decode(&rs); err == io.EOF {
-				break
-			} else if err != nil {
-				panic(err)
-			}
-		}
-		fmt.Println()
-		fmt.Printf("json.NewDecoder with map: %+v\n", rs)
-		// json.NewDecoder with map: map[headers:map[Accept-Encoding:gzip Host:httpbin.org User-Agent:Go-http-client/1.1]]
-	}()
-
-	func() {
-		rs := data{}
-		rs.Headers = struct {
-			Accept    string `json:"Accept"`
-			Host      string `json:"Host"`
-			UserAgent string `json:"User-Agent"`
-		}{
-			"",
-			"",
-			"",
-		}
-		rs.Headers.Host = "google.com"
-		buf := new(bytes.Buffer)
-		if err := json.NewEncoder(buf).Encode(rs); err != nil {
-			panic(err)
-		}
-		fmt.Println()
-		fmt.Printf("json.NewEncoder with struct: %+v\n", buf.String())
-		// json.NewEncoder with struct: {"headers":{"Accept":"","Host":"google.com","User-Agent":""}}
-	}()
-
-	func() {
-		rs := data{}
-
-		// func NewDecoder(r io.Reader) *Decoder
-		// func NewReader(s string) *Reader
-		dec := json.NewDecoder(strings.NewReader(sourceData))
-		for {
-			// func (d *Decoder) Decode(v interface{}) error
-			if err := dec.Decode(&rs); err == io.EOF {
-				break
-			} else if err != nil {
-				panic(err)
-			}
-		}
-		fmt.Println()
-		fmt.Printf("json.NewDecoder with struct: %+v\n", rs)
-		// json.NewDecoder with struct: {Headers:{Accept:text/html,application/
-		// ...
-	}()
+	fmt.Println(equalPair(`{
+	"proxyID": "test_id",
+	"endpoint": "http://localhost:8080"
+}
+`, `{
+	"endpoint": "http://localhost:8080",
+	"proxyID": "test_id"
+}
+`)) // true
 }
