@@ -14,7 +14,6 @@
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
-- [raft algorithm: summary](#raft-algorithm-summary)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
@@ -241,8 +240,8 @@ Raft nodes(servers) must be one of three states: `follower`, `candidate`, or
 `leader`. A `leader` sends periodic heartbeat messages to its `followers`
 to maintain its authority. In normal operation, there is **exactly only one
 `leader`** for each term. All servers start as a `follower`, and the
-`follower` becomes `candidate` when there is no current `leader` and starts
-an election. If a `candidate` receives a majority of the votes, it becomes 
+`follower` becomes a `candidate` when there is no current `leader` and starts
+an election. If a `candidate` receives a majority of the votes, it becomes a
 `leader`. The `leader` then accepts new log entries from clients and replicates
 those log entries to its `followers`.
 
@@ -338,8 +337,8 @@ up to the `snapshot` point can be discarded.
 - **`follower`**: A `follower` is completely passive, issuing no RPCs and only
   responding to incoming RPCs from candidates or leaders. All servers start as
   followers. If a follower receives no communication or no heartbeat from a
-  valid `leader`, it becomes `candidate` and then starts an election.
-- **`candidate`**: A server becomes `candidate` from a `follower` when there
+  valid `leader`, it becomes a `candidate` and then starts an election.
+- **`candidate`**: A server becomes a `candidate` from a `follower` when there
   is no current `leader`, so electing a new `leader`: it's a state between
   `follower` and `leader`. If a candidate receives votes from a majority
   of the cluster, it promotes itself as a new `leader`.
@@ -393,7 +392,7 @@ Summary of
    times out. If the follower has not received such heartbeats within timeout,
    it assumes that there is no current `leader` in cluster.
 5. Then the `follower` starts a new `election` and becomes `candidate`.
-6. When a `follower` becomes `candidate`, it:
+6. When a `follower` becomes a `candidate`, it:
 	- increments its `term number`.
 	- resets its `election timeout`.
 7. `candidate` first votes for itself.
@@ -435,6 +434,9 @@ Here's how election works:
 ![raft_leader_election_04](img/raft_leader_election_04.png)
 ![raft_leader_election_05](img/raft_leader_election_05.png)
 ![raft_leader_election_06](img/raft_leader_election_06.png)
+
+<br>
+Actual algorithm is more sophisticated... Working in progress...
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
@@ -728,253 +730,3 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
-
-#### **raft algorithm: summary**
-
-Here's pseudo-code that summarizes *Raft* algorithm (*Raft Paper Figure 2*):
-
-```go
-// ServerState contains persistent, volatile states of
-// all servers(follower, candidate, leader).
-type ServerState struct {
-
-	// Persistent state on all servers.
-	// This should be updated on stable storage
-	// before responding to RPCs.
-	//
-	// currentTerm is the latest term that server
-	// has been in. A server begins with currentTerm 0,
-	// and it increases monotonically
-	currentTerm int
-	//
-	// votedFor is the candidateId that received vote
-	// in current term, from this server.
-	votedFor string
-	//
-	// logs is a list of log entries, of which contains
-	// command for state machine, and the term when the
-	// entry was received by a leader.
-	logs []string
-
-	// Volatile state on all servers.
-	//
-	// commitIndex is the index of the latest(or highest)
-	// committed log entry. It starts with 0 and increases
-	// monotonically.
-	commitIndex int
-	//
-	// lastApplied is the index of the highest log entry
-	// applied to state machine. It is the index of last
-	// executed command. It starts with 0 and increases
-	// monotonically.
-	lastApplied int
-
-	// Volatile state on leaders.
-	// This must be reinitialized after election.
-	//
-	// serverToNextIndex maps serverID to the index of
-	// next log entry to send to that server.
-	// NextIndex gets initialized with the last leader
-	// log index + 1.
-	serverToNextIndex map[string]int
-	//
-	// serverToMatchIndex maps serverID to the index of
-	// highest log entry that has been replicated on that server.
-	// The MatchIndex begins with 0, increases monotonically.
-	serverToMatchIndex map[string]int
-}
-
-
-// AppendEntries is invoked by a leader to:
-//	- replicate log entries.
-//	- send heartbeat messages.
-//
-//
-// leaderTerm is the term number of the leader.
-//
-// leaderID is the serverID of the leader so that
-// followers can redirect clients to the leader.
-//
-// prevLogIndex is the index of immediate preceding
-// log entry (log entry before the new ones).
-//
-// prevLogTerm is the term number of prevLogIndex entry.
-//
-// entries contains log entries to store. It's empty for
-// heartbeats. And it is a list so that a leader can be
-// more efficient replicating log entries.
-//
-// leaderCommit is the leader's commitIndex.
-//
-// It returns the currentTerm and its success.
-// Current terms are exchanged whenever servers
-// communicate. It always updates its current term
-// with a larger value, so that if a candidate or
-// leader discovers that its term is out of date,
-// it immediately reverts to follower state (§5.1).
-//
-// It returns true if the follower has the matching
-// entry with the prevLogIndex and prevLogTerm.
-//
-func AppendEntries(
-	targetServer      string,
-
-	leaderTerm        int,
-	leaderID          string,
-	prevLogIndex      int,
-	prevLogTerm       int,
-	entries           []string,
-	leaderCommitIndex int,
-) (int, bool) {
-	
-	currentTerm := getCurrentTerm(targetServer)
-	if leaderTerm < currentTerm {
-		// so that the leader can update itself.
-		// This means the leader is out of date.
-		// The leader will revert back to a follower state.
-		return currentTerm, false
-	}
-
-	logs := getLogs(targetServer)
-	if v, exist := logs[prevLogIndex]; exist {
-		if v['term'] != prevLogTerm {
-			// An existing entry conflicts with a new entry.
-			// The entry at prevLogIndex has a different term.
-			// We need to delete the existing entry and
-			// all the following entries.
-			delete(logs, prevLogTerm)
-			delete(logs, prevLogTerm + 1 ...)
-		}
-	} else {
-		// the log entry with prevLogIndex
-		// and prevLogTerm does not exist
-		return currentTerm, false
-	}
-
-	// append any new entries that are not already in the log.
-	for _, entry := range entries {
-		if !findEntry(logs, entry) {
-			logs = append(logs, entry)
-		}
-	}
-
-	commitIndex := getCommitIndex(targetServer)
-	if leaderCommitIndex > commitIndex {
-		setCommitIndex(targetServer, min(leaderCommit, indexOfLastNewEntry))
-	}
-
-	return currentTerm, true
-}
-
-// RequestVote is invoked by candidates to gather votes.
-//
-// lastLogIndex is the index of candiate's last log entry.
-// lastLogTerm is the term number of lastLogIndex.
-//
-// It returns currentTerm, and boolean value if the candidate
-// has received vote or not.
-//
-func RequestVote(
-	targetServer  string,
-
-	candidateTerm int,
-	candidateID   string,
-	lastLogIndex  int,
-	lastLogTerm   int,
-) (int, bool) {
-
-	currentTerm := getCurrentTerm(targetServer)
-	if candidateTerm < currentTerm {
-		return currentTerm, false
-	}
-
-	// votedFor is the candidateID that received vote
-	// in the current term.
-	votedFor := targetServer.vote()
-	if votedFor == nil || votedFor == candidateID {
-		// candidate's log is at least up-to-date
-		// as receiver's log, so grant vote.
-		return currentTerm, true
-	}
-
-	return currentTerm, false
-}
-
-func doServer(server *ServerState) {
-	// All servers.
-	if server.commitIndex > server.lastApplied {
-		server.lastApplied++
-		execute(server.logs[server.lastApplied])
-	}
-}
-
-func candidate(server *ServerState) {
-	// All servers.
-	if server.commitIndex > server.lastApplied {
-		server.lastApplied++
-		execute(server.logs[server.lastApplied])
-	}
-
-	// on conversion to candidate
-	server.currentTerm++
-	
-	// vote for itself
-	vote(server)
-
-	// reset election timer
-	server.electionTimer.init()
-
-	if SendRequestVote(allServers) > majority {
-		becameLeader(server)
-	}
-
-	if electionTimeOut() {
-		startNewElection()
-	}
-}
-
-func becameLeader(server *ServerState) {
-	// this needs to be sent periodically
-	// while idle.
-	SendHeartBeats(allServers)
-
-	select {
-	case entry := <-command:
-		server.logs = append(server.logs, entry)
-		execute(entry) // apply to state machine
-		respond(entry.client)
-	}
-
-	for follower, nextIndex := range server.serverToNextIndex {
-		if server.lastLogIndex >= nextIndex {
-			AppendEntries(server.logs[nextIndex:])
-		}
-	}
-
-	for index := range server.logs {
-		if index > server.commitIndex {
-			if server.logs[index].term == server.currentTerm {
-				if majority of matchIndex[followers] >= index {
-					server.commitIndex = index
-				}					
-			}
-		}
-	}
-}
-
-```
-
-
-[↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
