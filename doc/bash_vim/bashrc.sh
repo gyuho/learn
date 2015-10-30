@@ -156,8 +156,8 @@ alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
 alias gbra='git branch;'
-alias gtus='git status;'
-alias glog='git log;'
 alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
+
+
