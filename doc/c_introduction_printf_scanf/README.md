@@ -21,6 +21,7 @@
 
 #### Reference
 
+- [Learn C and Build Your Own Lisp](http://www.buildyourownlisp.com/)
 - [C Programming Language by Brian W. Kernighan and Dennis M. Ritchie](http://www.amazon.com/C-Programming-Language-2nd-Edition/dp/0131103628/ref=sr_1_1?ie=UTF8&qid=1394272687&sr=8-1&keywords=programming+c)
 - [Programming in C by Stephen G. Kochan](http://www.amazon.com/Programming-C-4th-Developers-Library/dp/0321776410/ref=sr_1_3?s=books&ie=UTF8&qid=1394274646&sr=1-3&keywords=Programming+in+C)
 - [C documentation](http://devdocs.io/c)
