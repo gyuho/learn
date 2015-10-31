@@ -8,6 +8,8 @@
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
+	- [restrictions on `leader election`](#restrictions-on-leader-election)
+	- [restrictions on `log commit`](#restrictions-on-log-commit)
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: safety](#raft-algorithm-safety)
@@ -30,11 +32,11 @@
 #### Reference
 
 - [*Raft by Diego Ongaro and John Ousterhout*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
-- [The Raft Consensus Algorithm](https://raft.github.io/)
+- [raft.github.io](https://raft.github.io/)
 - [`coreos/etcd`](https://github.com/coreos/etcd)
 - [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
-- [Deconstructing the CAP theorem' for CM and DevOps](http://markburgess.org/blog_cap.html)
+- [Deconstructing the CAP theorem for CM and DevOps](http://markburgess.org/blog_cap.html)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
 
 [↑ top](#distributed-systems-raft)
@@ -468,9 +470,9 @@ First, there is safety requirement for consensus:
 - Only leader log entries can be committed.
 - Logs must be committed before applying to state machines.
 
-To guarantee this safety requirement, **Raft safety property** ensures:
+To guarantee these safety requirements, **Raft has this safety property**:
 
-> If a leader has decided that a **log entry is committed**, that **entry**
+> If a leader has decided that a **log entry is committed**, **that entry**
 > will be **present in the logs of all future leaders**.
 >
 > [*Raft user study*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
@@ -478,8 +480,12 @@ To guarantee this safety requirement, **Raft safety property** ensures:
 In order to guarantee this property, we need more restrictions on `leader
 election` and `log commit`.
 
-<br>
-So we need to elect the **best leader**. Best leader is the one that **holds
+
+<br><br>
+
+##### restrictions on `leader election`
+
+So we want to elect the **best leader**. Best leader is the one that **holds
 all of the committed log entries**.
 
 <br>
@@ -505,14 +511,36 @@ all committed entries. And this is how it's done during election with
   - **OR**
   - `(lastTerm of V == lastTerm of C) && (lastIndex of V > lastIndex C)`
 
-Whoever wins the election, it is guaranteed that `leader` will have most
+Whoever wins the election, it is now guaranteed that `leader` will have most
 complete log among electing majority.
 
-<br>
-Now let's take a look at `log commit` in more detail.
+For example,
+
+![raft_leader_election_commit_00](img/raft_leader_election_commit_00.png)
+![raft_leader_election_commit_01](img/raft_leader_election_commit_01.png)
+![raft_leader_election_commit_02](img/raft_leader_election_commit_02.png)
+![raft_leader_election_commit_03](img/raft_leader_election_commit_03.png)
+
+[↑ top](#distributed-systems-raft)
+<br><br><br>
+
+
+##### restrictions on `log commit`
+
+Below `leader` tries to decide if an entry is committed in its *current* or
+*earlier* term:
+
+![raft_commit_from_current_earlier_term](img/raft_commit_from_current_earlier_term.png)
 
 <br>
-...
+So we need more restrictions on `log commit`:
+
+A `leader` decides a log entry is committed only if:
+- that log entry is replicated on a majority of servers.
+- at least one new log entry from leader's current term is also stored
+  on a majority of servers.
+
+![raft_commit](img/raft_commit.png)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
