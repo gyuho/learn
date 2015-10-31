@@ -29,18 +29,13 @@
 
 #### Reference
 
-- [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
+- [*Raft by Diego Ongaro and John Ousterhout*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
 - [The Raft Consensus Algorithm](https://raft.github.io/)
-- [*Raft paper by Diego Ongaro and John Ousterhout*](http://ramcloud.stanford.edu/raft.pdf)
-- [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
-- [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)
-- [Deconstructing the CAP theorem' for CM and DevOps](http://markburgess.org/blog_cap.html)
-- [Raft (computer science)](https://en.wikipedia.org/wiki/Raft_(computer_science))
-- [Raft lecture (Raft user study)](https://www.youtube.com/watch?v=YbZ3zDzDnrw)
 - [`coreos/etcd`](https://github.com/coreos/etcd)
+- [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
+- [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
+- [Deconstructing the CAP theorem' for CM and DevOps](http://markburgess.org/blog_cap.html)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
-- [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
-- [Protocol Buffers](https://en.wikipedia.org/wiki/Protocol_Buffers)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
@@ -143,14 +138,27 @@ operations:
 
 > Serializability is a guarantee about transactions, or groups of one or more
 > operations over one or more objects. It guarantees that the execution of a
-> set of transactions (usually containing read and write operations) over
-> multiple items is equivalent to some serial execution (total ordering) of the
-> transactions.
+> **set of transactions (usually containing read and write operations) over
+> multiple items is equivalent to some serial execution (total ordering) of
+> the transactions**.
 > 
 > [*Serializability*](http://www.bailis.org/blog/linearizability-versus-serializability/)
 > *by Peter Bailis*
+>
+> 
+> a transaction schedule is **serializable if its outcome (e.g., the resulting
+> database state) is equal to the outcome of its transactions executed
+> serially, i.e., sequentially without overlapping in time**. *Transactions are
+> normally executed concurrently (they overlap)*, since this is the most
+> efficient way. **Serializability is the major correctness criterion for
+> concurrent transactions' executions**. It is considered the highest level of
+> isolation between transactions, and plays an essential role in concurrency
+> control. As such it is supported in all general purpose database systems.
+>
+> [*Serializability*](https://en.wikipedia.org/wiki/Serializability) *by
+> Wikipedia*
 
-<br>
+<br><br>
 **Each linearizable operation** applied by concurrent processes
 *takes effect instantaneously* at some point **between its invocation and its
 response**. It's an **atomic**, *or linearizable*, operation. But what if a
@@ -159,7 +167,7 @@ system cannot satisfy this requirement?
 **Sequential consistency** is another consistency model, *weaker than
 linearizability*. Each operation can take effect **before its invocation**
 or **after its response** (*not necessarily between its invocation and its
-response as in linearizability*). And it is still considered *consistent*.
+response as in linearizability*). And it is still considered *consistent*:
 
 > Many caches also behave like sequentially consistent systems. If I write a
 > tweet on Twitter, or post to Facebook, it **takes time to percolate through
@@ -188,7 +196,7 @@ for storing system configurations.
 
 <br>
 The goal of `etcd` as a **distributed consistent key-value store**
-is **sequential consistency**:
+is **Sequential Consistency**:
 
 > `etcd` tries to ensure **sequential consistency**, which means each replica
 > have the same command execution ordering.
@@ -219,11 +227,11 @@ To make your program reliable, you would:
 
 This is the definition of **replicated state machine**. And a *state machine*
 can be any program or application with inputs and outputs. *Each replicated
-state machine* computes identical copy with a same state, which means when
+state machine* contains the identical copies of commands, which means when
 some servers are down, other state machines can keep running. A distributed
 system usually implements *replicated state machines* by **replicating logs
 identically across cluster**. And the goal of *Raft algorithm* is to **keep
-those replicated logs consistent**.
+those replicated logs consistent**:
 
 > **Raft is a consensus algorithm for managing a replicated
 > log.** It produces a result equivalent to (multi-)Paxos, and
@@ -239,14 +247,21 @@ those replicated logs consistent**.
 Raft nodes(servers) must be one of three states: `follower`, `candidate`, or
 `leader`. A `leader` sends periodic heartbeat messages to its `followers`
 to maintain its authority. In normal operation, there is **exactly only one
-`leader`** for each term. All servers start as a `follower`, and the
-`follower` becomes `candidate` when there is no current `leader` and starts
-an election. If a `candidate` receives a majority of the votes, it becomes
-`leader`. The `leader` then accepts new log entries from clients and replicates
-those log entries to its `followers`.
+`leader`** for each term. All nodes start as a `follower`, and `follower`
+becomes `candidate` when there is no current `leader`. Then `candidate` starts
+an election to elect a new `leader`. If a `candidate` receives a majority of
+votes, it becomes `leader`, then accepting new log entries from clients. Then
+`leader` starts replicating those log entries to its `followers`.
 
-*Raft* inter-server communication is done by remote procedure calls
-(RPCs). The basic Raft algorithm requires only two types of RPCs
+*Raft* inter-node communication is done by remote procedure calls
+(RPCs). Thus, the performance greatly depends on network latencies.
+[*Consul*](https://www.consul.io/docs/internals/consensus.html) provides
+multiple data centers to partition data into a disjoint peer set. And
+[*etcd*](https://github.com/coreos/etcd/blob/master/raft/multinode.go)
+implements `multinode`.
+
+<br>
+Basic Raft algorithm requires only two types of RPCs
 (later `InstallSnapshot` RPC added):
 
 - `RequestVote` RPCs, issued by `candidates` during elections.
@@ -260,20 +275,20 @@ and **send RPCs in parallel** *for best performance*.
 A `log entry` is considered *safely replicated* when the leader has replicated
 it on the **quorum of its followers**. Once `log entry` has been *safely
 replicated* on a majority of the servers, it is considered **safe to be
-applied** to its state machine. And such `log entry` is *called* **committed**.
+applied** to its state machine. And such `log entry` is **committed**.
 Then **`leader`** **applies committed entry to its state machine**. `Applying
 committed entry to state machine` means *executing the command in the log
 entry*. Again, `leader` attempts to **replicate a log entry on the quorum
 of its followers**. Once they are replicated on a majority of its followers,
 it is **safely replicated**. Therefore it is **safe to be applied**. Then the
-`leader` **commits that log entry**. *Raft* guarantees that such entries are
-committed in a durable storage, and that they will eventually be
-applied *(executed)* by other available state machines. When a `log entry` is
-committed, it is safe to be applied. And for a `log entry` to be committed,
-it only needs to be stored on the quorum of cluster. This means each `command`
-can complete as soon as a majority of the followers has responded to a single
-round of `AppendEntries` RPCs. In other words, the `leader` does not need to
-wait for responses from every node.
+`leader` **commits that log entry** and *apply the command*. *Raft* guarantees
+that such entries are committed in a durable storage, and that they will
+eventually be applied *(executed)* by other available state machines. When a
+`log entry` is committed, it is safe to be applied. And for a `log entry` to
+be committed, it only needs to be stored on the quorum of cluster. This means
+each `command` can complete as soon as a majority of the followers has
+responded to a single round of `AppendEntries` RPCs. In other words, `leader`
+does not need to wait for responses from every node.
 
 Most critical case for performance is when a leader replicates log entries.
 *Raft* algorithm minimizes the number of messages by requiring a single
@@ -312,16 +327,20 @@ up to the `snapshot` point can be discarded.
   calls, so that the minority of slow servers do not affect the overall
   performance.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
-  replicated the entry on a majority of the servers in a cluster. Then such
-  entry is safe to be applied to state machines. `commit` also includes
-  preceding entries, such as the ones from previous leaders. This is done
-  by the leader keeping track of the highest index to commit.
+  replicated the entry on a majority of the servers in a cluster. In other
+  words, a leader sends `AppendEntries` RPCs to its followers, and once the
+  leader receives confirmation from the majority of its followers, the request
+  is committed into stable storage. And then such entry is safe to be applied
+  to state machines. `commit` also includes preceding entries, such as the
+  ones from previous leaders. This is done by the leader keeping track of
+  the highest index to commit. If a `leader` has decided that a log entry is
+  **committed**, that entry must be **present in all future leaders**.
 - **`quorum`** or **`majority of nodes(servers, members)`**: A `quorum` is a 
   majority of the servers in *Raft* cluster. When the size of cluster is `n`,
   then the `quorum` is `(n/2) + 1`. When the cluster has 5 machines, the
   `quorum` is 3.
 - **`leader`**: *Raft algorithm* first elects a `leader` that handles
-  client requests. A `leader` accept new log entries from clients and
+  client requests. A `leader` accepts new log entries from clients and
   replicates those log entries to its followers. Once logs are replicated,
   `leader` tells its followers when to apply those log entries to their
   state machines. When a leader fails, *Raft* elects a new leader. In normal
@@ -365,7 +384,7 @@ up to the `snapshot` point can be discarded.
 
 #### raft algorithm: leader election
 
-*Raft* inter-server communication is done by remote procedure calls
+*Raft* inter-node communication is done by remote procedure calls
 (RPCs). The basic Raft algorithm requires only two types of RPCs
 (later `InstallSnapshot` RPC added):
 
@@ -374,7 +393,7 @@ up to the `snapshot` point can be discarded.
   - **to replicate log entries**.
   - **to send out heartbeat messages**.
 
-**Servers retry RPCs** *when they do not receive a response in time*,
+**Servers retry RPCs** *when they do not receive responses in time*,
 and **send RPCs in parallel** *for best performance*.
 
 <br>
@@ -399,15 +418,15 @@ Summary of
 8. `candidate` then **sends `RequestVote` RPCs** to other servers.
 9. `RequestVote` RPC includes the information of `candidate`'s log
    (`index`, `term number`, etc).
-10. `follower` denies voting if its log is more complete
-   log than `candidate`.
+10. **`follower` denies voting if its log is more complete log than
+    `candidate`**.
 11. Then **`candiate`** either:
 	- **_becomes the leader_** by *winning the election* when it gets a
 	  **majority of the votes**. Then it must send out heartbeats to others
 	  to establish itself as a leader.
 	- **_reverts back to a follower_** when it receives a RPC from a **valid
-	  leader**. A valid `leader` must have `term number` that is
-	  equal to or greater than `candidate`'s. RPCs with lower `term`
+	  leader**. **A valid `leader` must have `term number` that is
+	  equal to or greater than `candidate`'s**. RPCs with lower `term`
 	  numbers are rejected. A leader **only appends to log**. Therefore,
 	  future-leader will have **most complete** log: a leader's log is the
 	  truth and `leader` will eventually make followers' logs identical to
@@ -435,8 +454,65 @@ Here's how election works:
 ![raft_leader_election_05](img/raft_leader_election_05.png)
 ![raft_leader_election_06](img/raft_leader_election_06.png)
 
+Actual algorithm is more sophisticated. We want to elect the **best leader**.
+
 <br>
-Actual algorithm is more sophisticated... Working in progress...
+First, there is safety requirement for consensus:
+
+> Once a log entry has been applied to a state machine, no other state machine
+> must apply a different value for that log entry.
+>
+> [*Raft user study*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
+
+- Leader never overwrites logs.
+- Only leader log entries can be committed.
+- Logs must be committed before applying to state machines.
+
+To guarantee this safety requirement, **Raft safety property** ensures:
+
+> If a leader has decided that a **log entry is committed**, that **entry**
+> will be **present in the logs of all future leaders**.
+>
+> [*Raft user study*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
+
+In order to guarantee this property, we need more restrictions on `leader
+election` and `log commit`.
+
+<br>
+So we need to elect the **best leader**. Best leader is the one that **holds
+all of the committed log entries**.
+
+<br>
+Let's take a look at this situation:
+
+![raft_entry_commit_problem](img/raft_entry_commit_problem.png)
+
+That is, by only looking at the logs, we cannot tell which log entries are
+actually committed, because for an entry to be committed, it needs to be
+replicated in a majority of cluster, but one of nodes in cluster is not
+reachable, we cannot check the replication status.
+
+<br>
+So during election, *Raft* chooses `candidate` that is most likely to contain
+all committed entries. And this is how it's done during election with
+`RequestVote` RPCs:
+
+- Each candidate(`C`) includes its log information in its `RequestVote` RPCs:
+  - `index` and `term` of the last log entry (this uniquely identifies an
+  	entire log)
+- Voter(`V`) denies its vote if its log is **more complete** than `candidate`:
+  - `lastTerm of V > lastTerm of C`
+  - **OR**
+  - `(lastTerm of V == lastTerm of C) && (lastIndex of V > lastIndex C)`
+
+Whoever wins the election, it is guaranteed that `leader` will have most
+complete log among electing majority.
+
+<br>
+Now let's take a look at `log commit` in more detail.
+
+<br>
+...
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
