@@ -577,7 +577,7 @@ Summary of
 4. The leader **replicates** the *log entry* to its `followers` with
    `AppendEntries` RPCs. The leader keeps sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
-   contains leader's `term number`, its log entry index, its `leaderId`
+   contains leader's `term number`, its `log entry index`, its `leaderId`
 5. A `log entry` is considered *safely replicated* when the leader has
    replicated it on the **quorum of its followers**.
 6. Once `log entry` has been *safely replicated* on a majority of the servers,
@@ -590,14 +590,17 @@ Summary of
    Therefore it is **safe to be applied**. Then the `leader` **commits that
    log entry**. *Raft* guarantees that such entries are committed in a durable
    storage, and that they will eventually be applied *(executed)* by other
-   available state machines. **When a `log entry` is committed, it is safe to
-   be applied. And for a `log entry` to be committed, it only needs to be
-   stored on the quorum of cluster**. This means each `command` can complete
-   as soon as a majority of its followers has responded to a single round of
-   `AppendEntries` RPCs. In other words, `leader` does not need to wait for
-   responses from every node in a cluster.
-7. Then the `leader` returns the execution result to the client.
-8. Future `AppendEntries` RPCs from the `leader` has the highest index of
+   available state machines.
+7. We have one more restriction on `log commit`: at least one new log entry
+   from leader's current term must be replicated on a majority of servers.
+8. **When a `log entry` is committed, it is safe to be applied. And for a
+   `log entry` to be committed, it only needs to be stored on the quorum of
+   cluster**. This means each `command` can complete as soon as a majority
+   of its followers has responded to a single round of `AppendEntries` RPCs.
+   In other words, `leader` does not need to wait for responses from every
+   node in a cluster.
+9. Then the `leader` returns the execution result to the client.
+10. Future `AppendEntries` RPCs from the `leader` has the highest index of
    `committed` log entry, so that `followers` could learn that a log entry is
    `committed`, and they can apply the entry to their local state machines as
    well. *Raft* ensures all committed entries are durable and eventually
