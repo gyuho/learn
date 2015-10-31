@@ -384,12 +384,12 @@ up to the `snapshot` point can be discarded.
 
 #### raft algorithm: log matching property
 
-- If two entries in different logs have the same `index` and `term`, then they
-  **store the same `command`**.
+- If **two entries in different logs have the same `index` and `term`**,
+  then they **store the same `command`**.
 	- This is because a leader creates at most one entry per given `index` and
 	  `term`.
-- If two entries in different logs have the same `index` and `term`, then all
-  **preceding entries are also identical**.
+- If **two entries in different logs have the same `index` and `term`**,
+  then all **preceding entries are also identical**.
 	- `AppendEntries` RPC contains leader's immediately preceding log's `index`
 	  and `term`, and if the follower(receiver) does not contain the matching
 	  entry to that leader's immediately preceding entry, it refuses the new
