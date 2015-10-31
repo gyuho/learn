@@ -7,6 +7,7 @@
 - [distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
+- [raft algorithm: log matching property](#raft-algorithm-log-matching-property)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
 	- [restrictions on `leader election`](#restrictions-on-leader-election)
 	- [restrictions on `log commit`](#restrictions-on-log-commit)
@@ -381,6 +382,26 @@ up to the `snapshot` point can be discarded.
 
 
 
+#### raft algorithm: log matching property
+
+- If two entries in different logs have the same `index` and `term`, then they
+  **store the same `command`**.
+	- This is because a leader creates at most one entry per given `index` and
+	  `term`.
+- If two entries in different logs have the same `index` and `term`, then all
+  **preceding entries are also identical**.
+	- `AppendEntries` RPC contains leader's immediately preceding log's `index`
+	  and `term`, and if the follower(receiver) does not contain the matching
+	  entry to that leader's immediately preceding entry, it refuses the new
+	  entries from the RPC.
+
+[↑ top](#distributed-systems-raft)
+<br><br><br><br>
+<hr>
+
+
+
+
 
 
 
@@ -577,7 +598,8 @@ Summary of
 4. The leader **replicates** the *log entry* to its `followers` with
    `AppendEntries` RPCs. The leader keeps sending those RPCs until
    all followers eventually store all log entries. Each `AppendEntries` RPC
-   contains leader's `term number`, its `log entry index`, its `leaderId`
+   contains `leaderId`, current leader's `term`, `prevLogIndex`, `prevLogTerm`,
+   array of entries to store, `leaderCommitIndex`.
 5. A `log entry` is considered *safely replicated* when the leader has
    replicated it on the **quorum of its followers**.
 6. Once `log entry` has been *safely replicated* on a majority of the servers,
@@ -615,6 +637,27 @@ Here's how log replication works:
 ![raft_log_replication_03](img/raft_log_replication_03.png)
 ![raft_log_replication_04](img/raft_log_replication_04.png)
 ![raft_log_replication_05](img/raft_log_replication_05.png)
+
+<br>
+Again, `AppendEntries` RPC contains:
+1. `leaderTerm`
+2. `leaderId`
+3. `prevLogIndex`, index of log entry immediately preceding new ones
+4. `prevLogTerm`, term of log entry immediately preceding new ones 
+5. `leaderCommit`, index of highest committed log entry in leader
+
+Then:
+1. A receiver(`follower`) of `AppendEntries` RPC returns **false** if its
+   `currentTerm` is greater than `leader`'s term.
+2. A receiver(`follower`) of `AppendEntries` RPC returns **false** if it does
+   not contain the log entry that matches `prevLogIndex` and `prevLogTerm`.
+3. If `leader`'s term is greater and the receiver has a conflicting entry (same
+   index), delete the existing entry in receiver and also all the following
+   ones.
+4. Append any new entries that are not in receiver's log.
+5. If `leaderCommit` is greater than receiver's `commitIndex`, *the highest
+   index of committed entries*, set `commitIndex` = `min (leaderCommit, index
+   of last new entry)`.
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
