@@ -648,6 +648,7 @@ Again, `AppendEntries` RPC contains:
 5. `leaderCommit`, index of highest committed log entry in leader
 
 Then:
+
 1. A receiver(`follower`) of `AppendEntries` RPC returns **false** if its
    `currentTerm` is greater than `leader`'s term.
 2. A receiver(`follower`) of `AppendEntries` RPC returns **false** if it does
