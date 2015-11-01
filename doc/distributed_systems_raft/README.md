@@ -694,27 +694,35 @@ Then:
 
 <br>
 Then what if `AppendEntries` RPC fails? It fails when **`follower` does not
-have the entry at immediate-preceding `index` and `term`**. And the `leader`
-keeps sending `AppendEntries` RPCs until all `followers` eventually contain all
-log entries in order to maintain the log consistency.
+have the entry at `leader`'s immediate-preceding `index` and `term`**. And the
+`leader` keeps sending `AppendEntries` RPCs until all `followers` eventually
+contain all log entries in order to maintain the log consistency.
 
 <br>
 Then how does `leader` achieve this by keep sending `AppendEntries` RPCs?
+How does `leader` make all of its `followers` log match `leader`'s log?
+`Leader` keeps `nextIndex` for each `follower`, which is the index of next log
+entry to send to that `follower`. `nextIndex` is initialized to `leader`'s
+`lastLogIndex` + 1. Then if `AppendEntries` fails, like when `follower` does
+not have the entry at `leader`'s immediately-preceding `index` and `term`, it
+will decrement `nextIndex` and try again with the new `nextIndex`.
+
 <br>
 
-A `follower` may have extraneous entries. The `leader` checks the log with its
-latest log entry that two logs agree. And it deletes logs after that point.
 A `follower` may be missing some entries. In this case, `leader` keeps sending
 `AppendEntries` RPCs until it finds the matching entry.
 
 ![raft_log_matching_00](img/raft_log_matching_00.png)
 ![raft_log_matching_01](img/raft_log_matching_01.png)
+
+A `follower` may have extraneous entries. The `leader` checks the log with its
+latest log entry that two logs agree. And it deletes logs after that point.
+
 ![raft_log_matching_02](img/raft_log_matching_02.png)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
-
 
  
 
