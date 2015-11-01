@@ -640,6 +640,7 @@ Here's how log replication works:
 
 <br>
 Again, `AppendEntries` RPC contains:
+
 1. `leaderTerm`
 2. `leaderId`
 3. `prevLogIndex`, index of log entry immediately preceding new ones
