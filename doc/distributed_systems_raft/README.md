@@ -712,13 +712,18 @@ will decrement `nextIndex` and try again with the new `nextIndex`.
 A `follower` may be missing some entries. In this case, `leader` keeps sending
 `AppendEntries` RPCs until it finds the matching entry.
 
-![raft_log_matching_00](img/raft_log_matching_00.png)
-![raft_log_matching_01](img/raft_log_matching_01.png)
+![raft_log_matching_missing_entries_00](img/raft_log_matching_missing_entries_00.png)
+![raft_log_matching_missing_entries_01](img/raft_log_matching_missing_entries_01.png)
+![raft_log_matching_missing_entries_02](img/raft_log_matching_missing_entries_02.png)
+![raft_log_matching_missing_entries_03](img/raft_log_matching_missing_entries_03.png)
 
 A `follower` may have extraneous entries. The `leader` checks the log with its
 latest log entry that two logs agree. And it deletes logs after that point.
+That is, whenever `follower` overwrites inconsistent log entries from `leader`,
+it deletes all the subsequent entries.
 
-![raft_log_matching_02](img/raft_log_matching_02.png)
+![raft_log_matching_extraneous_entries_00](img/raft_log_matching_extraneous_entries_00_png)
+![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01_png)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
