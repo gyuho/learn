@@ -516,13 +516,13 @@ Let's take a look at this situation:
 
 That is, by only looking at the logs, we cannot tell which log entries are
 actually committed, because for an entry to be committed, it needs to be
-replicated in a majority of cluster, but one of nodes in cluster is not
-reachable, we cannot check the replication status.
+replicated in a majority of cluster, but if one node is not reachable,
+we cannot check the replication status in cluster.
 
 <br>
-So during election, *Raft* chooses `candidate` that is most likely to contain
-all committed entries. And this is how it's done during election with
-`RequestVote` RPCs:
+So during election, *Raft* needs to choose `candidate` that is most likely
+to contain all committed entries. And this is how it's done during election
+with `RequestVote` RPCs:
 
 - Each candidate(`C`) includes its log information in its `RequestVote` RPCs:
   - `index` and `term` of the last log entry (this uniquely identifies an
