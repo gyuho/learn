@@ -722,8 +722,8 @@ latest log entry that two logs agree. And it deletes logs after that point.
 That is, whenever `follower` overwrites inconsistent log entries from `leader`,
 it deletes all the subsequent entries.
 
-![raft_log_matching_extraneous_entries_00](img/raft_log_matching_extraneous_entries_00_png)
-![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01_png)
+![raft_log_matching_extraneous_entries_00](img/raft_log_matching_extraneous_entries_00.png)
+![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01.png)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
