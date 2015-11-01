@@ -551,7 +551,8 @@ For example,
 Below `leader` tries to decide if an entry is committed in its *current* or
 *earlier* term:
 
-![raft_commit_from_current_earlier_term](img/raft_commit_from_current_earlier_term.png)
+![raft_commit_from_current_earlier_term_00](img/raft_commit_from_current_earlier_term_00.png)
+![raft_commit_from_current_earlier_term_01](img/raft_commit_from_current_earlier_term_01.png)
 
 <br>
 So we need more restrictions on `log commit`:
