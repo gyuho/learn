@@ -65,9 +65,9 @@
 > [*Distributed computing*](https://en.wikipedia.org/wiki/Distributed_computing)
 > *by Wikipedia*
 
-- *In parallel computing*, multiple processors may have access to a globally 
+- **In parallel computing**, multiple processors may have access to a globally
   **shared memory to exchange data between processors**.
-- *In distributed computing*, each processor has its **own private memory**
+- **In distributed computing**, each processor has its **own private memory**
   exchanging data by **passing messages between processors**.
 
 <br>
@@ -279,13 +279,13 @@ A `log entry` is considered *safely replicated* when the leader has replicated
 it on the **quorum of its followers**. Once `log entry` has been *safely
 replicated* on a majority of the servers, it is considered **safe to be
 applied** to its state machine. And such `log entry` is **committed**.
-Then **`leader`** **applies committed entry to its state machine**. `Applying
+Then **`leader` applies committed entry to its state machine**. `Applying
 committed entry to state machine` means *executing the command in the log
 entry*. Again, `leader` attempts to **replicate a log entry on the quorum
 of its followers**. Once they are replicated on a majority of its followers,
 it is **safely replicated**. Therefore it is **safe to be applied**. Then the
-`leader` **commits that log entry** and *apply the command*. *Raft* guarantees
-that such entries are committed in a durable storage, and that they will
+`leader` **commits that log entry** and *applies the command*. *Raft* guarantees
+that such committed logs are stored in a durable storage, and that they will
 eventually be applied *(executed)* by other available state machines. When a
 `log entry` is committed, it is safe to be applied. And for a `log entry` to
 be committed, it only needs to be stored on the quorum of cluster. This means
@@ -332,7 +332,7 @@ up to the `snapshot` point can be discarded.
 - **`log commit`**: A leader `commits` a log entry only after the leader has
   replicated the entry on a majority of the servers in a cluster. In other
   words, a leader sends `AppendEntries` RPCs to its followers, and once the
-  leader receives confirmation from the majority of its followers, the request
+  leader receives confirmation from a majority of its followers, those entries
   is committed into stable storage. And then such entry is safe to be applied
   to state machines. `commit` also includes preceding entries, such as the
   ones from previous leaders. This is done by the leader keeping track of
