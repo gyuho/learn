@@ -13,15 +13,16 @@
 	- [restrictions on `log commit`](#restrictions-on-log-commit)
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
+- [raft algorithm: old leader](#raft-algorithm-old-leader)
 - [raft algorithm: safety](#raft-algorithm-safety)
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
+- [raft algorithm: configuration changes](#raft-algorithm-configuration-changes)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
-
 
 
 
@@ -736,6 +737,34 @@ it deletes all the subsequent entries.
 
 
 
+#### raft algorithm: old leader
+
+Old leader might not be dead when there is temporary network partition and they
+elect their own leader. When the old leader get reconnected, it will retry to
+commit log entries of its own. `term` is used to detect these stale leaders:
+
+- Every RPC contains the `term` of its sender.
+- The receiver denies the RPC if the sender's `term` is older. And if the RPC
+  is rejected for such reason, the sender reverts to `follower`, and updates
+  its `term`.
+- If the receiver receives a RPC from a sender with newer `term`, then the
+  receiver reverts to `follower`, and updates its `term`, and then processes
+  RPC normally.
+
+Election sends out `RequestVote` RPCs and during election, majority of servers
+updates their `term` through RPCs. Therefore, deposed server cannot commit new
+log entries.
+
+[↑ top](#distributed-systems-raft)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
 #### raft algorithm: safety
 
 Summary of
@@ -896,3 +925,35 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
 <hr>
+
+
+
+
+
+
+#### raft algorithm: configuration changes
+
+Configuration changes need to happen when:
+
+- there is a failed machine in cluster that needs to be replaced.
+- one needs to change the degree of replication (scale up and down).
+
+But we cannot switch directly to new configurations, because the quorum value
+for each server can be conflicting when adding or removing servers. Which means
+we need 2-phase distributed decision:
+
+- Raft first switches to intermediate phase for **joint consensus**, where you
+  need majority of both old and new configurations for leader election and log
+  commit. That is, leader election and log commit require separate agreement
+  from both configurations.
+- Configuration change is communicated just as a log entry, and it is
+  immediately applied upon the receipt whether it is committed or not.
+- Once join consensus is committed, it begins replicating the log entry for
+  final configuration.
+
+...
+
+[↑ top](#distributed-systems-raft)
+<br><br><br><br>
+<hr>
+
