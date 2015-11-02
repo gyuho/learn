@@ -87,10 +87,23 @@ different symptoms to different observers*
 ([*Byzantine fault*](https://en.wikipedia.org/wiki/Byzantine_failure)).
 The consensus algorithm handles these kinds of *faulty processes* in
 distributed computing systems, and keeps data consistent even when it loses one
-of its communications.
+of its communications. Distributed systems with consensus algorithms (Raft
+paper §2):
+
+- ensure *safety*, which means it will never return incorrect results, under
+  all non-Byzantine conditions, such as network delays, partitions, packet
+  loss, etc. 
+- *fully available (functional)* as long as any majority of servers are
+  operational and communicate with each other and clients. Stopped servers are
+  considered failing, but they could recover from the states stored in stable
+  storage and rejoin the cluster.
+- a command can complete as soon as the quorum has responded to a single round
+  of remote procedure calls, so that the minority does not affect the overall
+  performance.
 
 <br>
 An ultimate **consensus algorithm** should achieve:
+
 - **_consistency_**.
 - **_availability_**.
 - **_partition tolerance_**.
@@ -99,7 +112,7 @@ An ultimate **consensus algorithm** should achieve:
 it is impossible that a distributed computer system simultaneously satisfies
 them all. 
 
-<br>
+<br><br>
 One of the most important properties of distributed computing is
 *linearizability*:
 
