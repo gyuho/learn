@@ -18,7 +18,7 @@
 - [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
 - [raft algorithm: client interaction](#raft-algorithm-client-interaction)
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
-- [raft algorithm: configuration changes](#raft-algorithm-configuration-changes)
+- [raft algorithm: configuration(membership) changes](#raft-algorithm-configurationmembership-changes)
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
@@ -931,7 +931,7 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 
 
 
-#### raft algorithm: configuration changes
+#### raft algorithm: configuration(membership) changes
 
 Configuration changes need to happen when:
 
