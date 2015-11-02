@@ -34,8 +34,9 @@
 #### Reference
 
 - [*Raft by Diego Ongaro and John Ousterhout*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
-- [raft.github.io](https://raft.github.io/)
+- [`ongardie/dissertation`](https://github.com/ongardie/dissertation)
 - [`coreos/etcd`](https://github.com/coreos/etcd)
+- [raft.github.io](https://raft.github.io/)
 - [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [Deconstructing the CAP theorem for CM and DevOps](http://markburgess.org/blog_cap.html)
