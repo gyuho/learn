@@ -3,11 +3,14 @@
 
 # Distributed systems, raft
 
+Much of contents are referenced from the original Raft paper. This is a
+personal learning log, and it's repetitive and unorganized.
+
 - [Reference](#reference)
 - [distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
 - [raft algorithm: introduction](#raft-algorithm-introduction)
 - [raft algorithm: terminology](#raft-algorithm-terminology)
-- [raft algorithm: log matching property](#raft-algorithm-log-matching-property)
+- [raft algorithm: properties](#raft-algorithm-properties)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
 	- [restrictions on `leader election`](#restrictions-on-leader-election)
 	- [restrictions on `log commit`](#restrictions-on-log-commit)
@@ -397,18 +400,29 @@ up to the `snapshot` point can be discarded.
 
 
 
-#### raft algorithm: log matching property
+#### raft algorithm: properties
 
-- If **two entries in different logs have the same `index` and `term`**,
-  then they **store the same `command`**.
-	- This is because a leader creates at most one entry per given `index` and
-	  `term`.
-- If **two entries in different logs have the same `index` and `term`**,
-  then all **preceding entries are also identical**.
-	- `AppendEntries` RPC contains leader's immediately preceding log's `index`
-	  and `term`, and if the follower(receiver) does not contain the matching
-	  entry to that leader's immediately preceding entry, it refuses the new
-	  entries from the RPC.
+- Election Safety (§5.2)
+	- At most one leader can be elected for the given term.
+- Leader Append-Only (§5.3)
+	- A leader only appends entries in its log (no overwrite, no delete).
+- Log Matching (§5.3)
+	- If **two entries in different logs have the same `index` and `term`**,
+      then they **store the same `command`**.
+		- This is because a leader creates at most one entry per given `index`
+		  and `term`.
+	- If **two entries in different logs have the same `index` and `term`**,
+  	  then all **preceding entries are also identical**.
+		- `AppendEntries` RPC contains leader's immediately preceding log's
+		  `index` and `term`, and if the follower(receiver) does not contain
+		  the matching entry to that leader's immediately preceding entry, it
+		  refuses the new entries from the RPC.
+- Leader Completeness (§5.4)
+	- If a log entries is committed for the given term, the entry must be
+	  present in all future leaders with higher terms.
+- State Machine Safety (§5.4.3)
+	- If a server has applied(executed) a log entry for the given index, no
+	  other server will ever apply different log entries for the same index.
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
@@ -717,14 +731,17 @@ contain all log entries in order to maintain the log consistency.
 <br>
 Then how does `leader` achieve this by keep sending `AppendEntries` RPCs?
 How does `leader` make all of its `followers` log match `leader`'s log?
-`Leader` keeps `nextIndex` for each `follower`, which is the index of next log
-entry to send to that `follower`. `nextIndex` is initialized to `leader`'s
-`lastLogIndex` + 1. Then if `AppendEntries` fails, like when `follower` does
-not have the entry at `leader`'s immediately-preceding `index` and `term`, it
-will decrement `nextIndex` and try again with the new `nextIndex`.
+What if `follower`'s current term is greater than `leader`'s and keeps
+rejecting `AppendEntries` RPCs from `leader`?
+
+**`Leader` keeps `nextIndex` for each `follower`, which is the index of next
+log entry to send to that `follower`**. `nextIndex` is initialized to
+`leader`'s `lastLogIndex` + 1. Then if `AppendEntries` fails, like when
+`follower` does not have the entry at `leader`'s immediately-preceding `index`
+and `term`, it will decrement `nextIndex` and try again with the new
+`nextIndex`, and continue until it finds the matching entry.
 
 <br>
-
 A `follower` may be missing some entries. In this case, `leader` keeps sending
 `AppendEntries` RPCs until it finds the matching entry.
 
@@ -733,10 +750,11 @@ A `follower` may be missing some entries. In this case, `leader` keeps sending
 ![raft_log_matching_missing_entries_02](img/raft_log_matching_missing_entries_02.png)
 ![raft_log_matching_missing_entries_03](img/raft_log_matching_missing_entries_03.png)
 
-A `follower` may have extraneous entries. The `leader` checks the log with its
-latest log entry that two logs agree. And it deletes logs after that point.
-That is, whenever `follower` overwrites inconsistent log entries from `leader`,
-it deletes all the subsequent entries.
+<br>
+A `follower` may have **extraneous** entries. The `leader` checks the log with
+its latest log entry that two logs agree. And it **deletes logs after that
+point**. That is, **whenever `follower` overwrites inconsistent log entries
+from `leader`, it deletes all the subsequent entries**.
 
 ![raft_log_matching_extraneous_entries_00](img/raft_log_matching_extraneous_entries_00.png)
 ![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01.png)
@@ -758,9 +776,9 @@ elect their own leader. When the old leader get reconnected, it will retry to
 commit log entries of its own. `term` is used to detect these stale leaders:
 
 - Every RPC contains the `term` of its sender.
-- The receiver denies the RPC if the sender's `term` is older. And if the RPC
-  is rejected for such reason, the sender reverts to `follower`, and updates
-  its `term`.
+- **The receiver denies the RPC if the sender's `term` is older**. And if the
+  RPC is rejected for such reason, the sender reverts to `follower`, and
+  updates its `term`.
 - If the receiver receives a RPC from a sender with newer `term`, then the
   receiver reverts to `follower`, and updates its `term`, and then processes
   RPC normally.
@@ -787,7 +805,7 @@ Summary of
 <br>
 *Raft* algorithm's **_safety_** is ensured when:
 
-1. each state machine executes exactly the same commands in the same order.
+1. each state machine executes exactly the same command in the same order.
 2. a leader for any given term contains all of log entries committed
    in previous terms.
 
@@ -952,20 +970,72 @@ Configuration changes need to happen when:
 - there is a failed machine in cluster that needs to be replaced.
 - one needs to change the degree of replication (scale up and down).
 
-But we cannot switch directly to new configurations, because the quorum value
-for each server can be conflicting when adding or removing servers. Which means
-we need 2-phase distributed decision:
+But we must ensure safety during configuration changes: there must be no period
+when it is possible that two leaders can be elected for the same term, *one for
+old configuration, and the other for the new*. If one single configuration
+change is adding or removing multiple servers in cluster, it can be unsafe,
+because the cluster could split into two independent majorities (disjoint
+majorities), as below:
 
-- Raft first switches to intermediate phase for **joint consensus**, where you
-  need majority of both old and new configurations for leader election and log
-  commit. That is, leader election and log commit require separate agreement
-  from both configurations.
-- Configuration change is communicated just as a log entry, and it is
-  immediately applied upon the receipt whether it is committed or not.
+![raft_disjoint_majorities](img/raft_disjoint_majorities.png)
+
+Raft solves this either by allowing only one server change at a time
+(single-server approach), or with *joint consensus*. **Single-server change
+approach ensures when adding or removing a single-server, an overlap between
+any majority of old cluster and any majority of new cluster is preserved**,
+**which prevents the disjoint majorities**.
+
+> Cluster configurations are stored and communicated using special entries in
+> the replicated log. This leverages the existing mechanisms in Raft to
+> replicate and persist configuration information. It also allows the cluster
+> to continue to service client requests while configuration changes are in
+> progress, by imposing ordering between configuration changes and client
+> requests (while allowing both to be replicated concurrently in a pipeline
+> and/or in batches).
+>
+> When the leader receives a request to **add or remove a server** from its
+> current configuration (C_old), it appends the new configuration (C_new) as an
+> entry in its log and replicates that entry using the normal Raft mechanism.
+> The new configuration takes effect on each server as soon as it is added to
+> that server's log: the C_new entry is replicated to the C_new servers, and a
+> majority of the new configuration is used to determine the C_new entry's
+> commitment. This means that **servers do not wait for configuration entries
+> to be committed, each server always uses the latest configuration found in
+> its log**.
+>
+> The configuration change is complete once the C_new entry is committed. At
+> this point, the leader knows that a majority of the C_new servers have
+> adopted C_new. It also knows that any servers that have not moved to C_new
+> can no longer form a majority of the cluster, and servers without C_new
+> cannot be elected leader.
+>
+> [§4.1
+> Safety](https://github.com/ongardie/dissertation/blob/master/stanford.pdf?raw=true)
+> *by Diego Ongaro*
+
+![raft_single_server_configuration_change_add](img/raft_single_server_configuration_change_add.png)
+
+<br>
+Note that
+[`etcd`](https://github.com/coreos/etcd/blob/master/raft/doc.go#L127-L150)
+takes a slightly different approach in that the membership change takes effect
+only after the new configuration gets committed (applied), but it does not
+affect the safety because old and new configurations are still guaranteed to
+overlap.
+
+<br>
+Raft paper recommends single-server approach when adding or removing servers.
+But what if one wants to replace five-server cluster at once? Raft uses
+2-phased distributed decisions for this case (arbitrary configuration change):
+
+- Raft first switches to transitional phase called **joint consensus**, where
+  you need majority of both old and new configurations for leader election and
+  log commit. That is, leader election and log commit require separate
+  agreement from both configurations.
+- **Configuration change is replicated as a special log entry**, and it is
+  immediately applied upon receipt whether it is committed or not.
 - Once join consensus is committed, it begins replicating the log entry for
   final configuration.
-
-...
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
