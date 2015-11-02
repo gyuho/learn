@@ -264,7 +264,6 @@ The whole system goes down. You want to have multiple, distributed machines
 always available, so that even if one fails, others can keep running.
 
 - [**_Distributed systems, raft_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_raft)
-- [**_etcd architecture_**](https://github.com/gyuho/learn/tree/master/doc/etcd_architecture)
 - [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
 
 [↑ top](#contents)
