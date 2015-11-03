@@ -741,6 +741,17 @@ log entry to send to that `follower`**. `nextIndex` is initialized to
 and `term`, it will decrement `nextIndex` and try again with the new
 `nextIndex`, and continue until it finds the matching entry.
 
+> To bring a follower's log into consistency with its own, the leader must find
+> the latest log entry where the two logs agree, delete any entries in the
+> follower's log after that point, and send the follower all of the leader's 
+> entries after that point. All of these actions happen in response to the
+> consistency check performed by `AppendEntries` RPCs. The leader maintains a
+> `nextIndex` for each follower, which is the index of the next log entry the
+> leader will send to that follower.
+>
+> [3.5 Log
+> replication](https://github.com/ongardie/dissertation/blob/master/stanford.pdf?raw=true) *by Diego Ongaro*
+
 <br>
 A `follower` may be missing some entries. In this case, `leader` keeps sending
 `AppendEntries` RPCs until it finds the matching entry.
