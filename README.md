@@ -65,8 +65,7 @@ Unix is essential in software development.
 > high-level programming languages, which are generally portable across
 > multiple architectures, but require interpreting or compiling.
 >
-> [*Assembly language*](https://en.wikipedia.org/wiki/Assembly_language) *by
-Wikipedia*
+> [*Assembly language*](https://en.wikipedia.org/wiki/Assembly_language) *by Wikipedia*
 
 - [*Assembly: introduction*](https://github.com/gyuho/learn/tree/master/doc/assembly_introduction)
 - [*Assembly: arithmetics, if*](https://github.com/gyuho/learn/tree/master/doc/assembly_arithmetics_if)
@@ -201,6 +200,7 @@ is not working or not performing well. I will take as much time as
 I need―nothing like cramming 1,200 page computer systems book in 12 weeks.
 
 - [*Overview of computer architecture*](https://github.com/gyuho/learn/tree/master/doc/overview_of_computer_architecture)
+- [*Virtual memory*](https://github.com/gyuho/learn/tree/master/doc/virtual_memory)
 - [*Endianness*](https://github.com/gyuho/learn/tree/master/doc/endianness)
 - [*Bitwise operation*](https://github.com/gyuho/learn/tree/master/doc/bitwise_operation)
 - [*Segmentation fault, debug*](https://github.com/gyuho/learn/tree/master/doc/segmentation_fault_debug)

@@ -158,6 +158,19 @@ while **process** **_run in separate memory_** spaces.
 > Microsoft_**](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917%28v=vs.85%29.aspx)
 
 <br>
+When you say *8-core machine*, the `core` represents the actual physical
+processors. *8-core machine* has 8 independent processing units (*cores* or
+*CPU*s). Not to be confused with processor, a `process` is a computer program
+instance that is being executed. A `process` can be made up of multiple
+`threads` executing instructions concurrently. Again, `core` is an actual
+physical `processor`, and `process` and `thread` are independent units of
+program execution: `threads` under the same `process` run in a shared memory
+space, whereas `processes` run in separate memory spaces. `threads` are more
+dependent on an operating system, than a hardware or CPU. Normally one CPU can
+handle one `thread` at a time, but one CPU with
+[hyper threading](https://en.wikipedia.org/wiki/Hyper-threading)
+can handle two `threads` simultaneously.
+<br>
 
 > [Threads] are conceptually the same as processes, but share the same memory space.
 >
@@ -192,6 +205,46 @@ while **process** **_run in separate memory_** spaces.
 
 
 #### virtual memory
+
+For a program to run, code and its data must be accessible in main memory, but
+it might not be large enough to handle the entire process. We could have a very
+large memory to fit it in, but memory is very costly. This is where `virtual
+memory` comes in. It separates *logical memory required by process* from
+*physical memory of processor*. And it provides each program with its own
+complete and independent memory.
+
+
+> Virtual memory is a component of most operating systems, such as MAC OS,
+> Windows and Linux. Virtual memory has a very important role in the operating
+> system. It allows us to run more applications on the system than we have
+> enough physical memory to support. Virtual memory is simulated memory that is
+> written to a file on the hard drive. That file is often called page file or
+> swap file. It's used by operating systems to simulate physical RAM by using
+> hard disk space. To understand how virtual memory works we have to go back in
+> time, before virtual memory even exited. In the days of Windows version 1 or
+> 2, we actually couldn't run many applications if we didn't have enough
+> physical RAM installed. As we know, the system itself is using a portion of
+> RAM. If we run more applications, each application will also get its own
+> portion of RAM. If we run too many applications, at one point we will run out
+> of RAM. At that point we won't be able to open any additional application.
+> Back in those days we had to live with that. If we don't have enough memory,
+> we can't run applications.
+>
+> Everything changed with the release of Windows 3.0 and the 8386 processor.
+> With these two together we could use virtual memory. With virtual memory we
+> still use our physically installed RAM, but we can also map RAM addresses to
+> the hard drive. To do that, a portion of the hard drive is reserved by the
+> system. That portion can be either a file or a separate partition. In the
+> case of Windows it is a file called pagefile.sys. Under Linux a separate
+> partition is used for memory. When the system needs more memory it maps some
+> of it's memory addresses out to the hard disk drive. That means that we can
+> run more applications than we have RAM installed. As far as the CPU is
+> concerned there is enough memory to accommodate all applications. That extra
+> memory doesn't actually exist in RAM. It's the storage space on the hard
+> drive. 
+>
+> [*What is Virtual
+> Memory*](http://www.utilizewindows.com/pc-fundamentals/optimization/345-what-is-virtual-memory-and-why-do-we-need-it)
 
 `Virtual memory` is an abstraction layer of `main memory` for a `process`.
 Each process has an uniform way of looking at the memory, which is known
