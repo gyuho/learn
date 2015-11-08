@@ -76,8 +76,8 @@ Here's an example computer architecture in very high level:
 #### Why virtual memory?
 
 For a program to run, code and its data must be accessible in main memory, but
-it might not be large enough to handle the entire process. We could have a very
-large memory to fit it in, but memory is very costly. This is where `virtual
+the memory might not be large enough to handle the entire process. Having a
+very large memory to fit them all is very costly. This is where `virtual
 memory` comes in. It separates *logical memory required by process* from
 *physical memory of processor*. And it provides each program with its own
 complete and independent memory.
@@ -114,15 +114,16 @@ complete and independent memory.
 > [*What is Virtual
 > Memory*](http://www.utilizewindows.com/pc-fundamentals/optimization/345-what-is-virtual-memory-and-why-do-we-need-it)
 
-`Virtual memory` is an abstraction layer of `main memory` for a `process`.
-Each process has an uniform way of looking at the memory, which is known
-as `virtual address space`. In other words, each process has its own 
-`virtual address space` for memory management, and its memory addresses.
-`Virtual memory` with `virtual address space` is useful for multiple programs
-running at the same time with shared resources, because each data object can
-get multiple **independent** addresses. `Virtual memory` keeps memory isolated
-from other processes and prevents data corruption. And size of `virtual memory`
-is limited by the size of pointers on a given operating system.
+`Virtual memory` is an abstraction layer of `main memory` for `process`.
+Each process can have an uniform way of looking at the memory, which is
+known as `virtual address space`. Each process can have its own `virtual
+address space` for memory management, and its memory addresses. `Virtual
+memory` with `virtual address space` is useful for multiple programs running
+at the same time with shared resources, because each data object can get
+multiple **independent** addresses. `Virtual memory` keeps memory isolated
+from other processes and prevents data corruption from each other. And size
+of `virtual memory` is limited by the size of pointers on a given operating
+system.
 
 ![virtual_address_space](img/virtual_address_space.png)
 
@@ -256,8 +257,8 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > cached data has both a file and a block representation—as most data does—the
 > buffer cache will simply point into the page cache; thus only one instance of
 > the data is cached in memory. The page cache is what you picture when you
-> think of a disk cache: It caches file data from a disk to make subsequent I/O
-> faster.
+> think of a **disk cache**: It **caches file data from a disk to make
+> subsequent I/O faster**.
 > 
 > [*Page
 > cache*](https://www.quora.com/What-is-the-major-difference-between-the-buffer-cache-and-the-page-cache) *by Robert Love*
