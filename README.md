@@ -145,6 +145,8 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
 - [*Go: time, testing, benchmark*](https://github.com/gyuho/learn/tree/master/doc/go_time_testing_benchmark)
+- [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
+- [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
 
 [↑ top](#contents)
 <br><br>
@@ -216,8 +218,6 @@ I need―nothing like cramming 1,200 page computer systems book in 12 weeks.
 *security achieves confidentiality, integrity, availability―policy*. And the goal is
 to make sure there is no way for adversary within threat model to violate this policy.
 
-- [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
-- [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
 - [*the matasano crypto challenges: set 1*](https://github.com/gyuho/learn/tree/master/doc/the_matasano_crypto_challenge_set_1)
 
 [↑ top](#contents)
