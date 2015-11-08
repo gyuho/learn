@@ -242,8 +242,13 @@ func main() {
 // It assumes that the identifier of a Vertex is string and unique.
 // And weight values is float64.
 type Graph interface {
-	// GetVertices returns a map of all vertices.
-	GetVertices() map[string]bool
+	// Init initializes a Graph.
+	Init()
+
+	// GetVertices returns a map from vertex ID to
+	// empty struct value. Graph does not allow duplicate
+	// vertex ID.
+	GetVertices() map[string]struct{}
 
 	// FindVertex returns true if the vertex already
 	// exists in the graph.
@@ -271,20 +276,24 @@ type Graph interface {
 	GetWeight(vtx1, vtx2 string) (float64, error)
 
 	// GetParents returns the map of parent vertices.
-	// (Vertices that comes to the argument vertex.)
-	GetParents(vtx string) (map[string]bool, error)
+	// (Vertices that come towards the argument vertex.)
+	GetParents(vtx string) (map[string]struct{}, error)
 
 	// GetChildren returns the map of child vertices.
-	// (Vertices that goes out of the argument vertex.)
-	GetChildren(vtx string) (map[string]bool, error)
+	// (Vertices that go out of the argument vertex.)
+	GetChildren(vtx string) (map[string]struct{}, error)
+
+	// String describes the Graph.
+	String() string
 }
 
-// DefaultGraph type implements all methods in Graph interface.
-type DefaultGraph struct {
-	sync.Mutex
+// defaultGraph is an internal default graph type that
+// implements all methods in Graph interface.
+type defaultGraph struct {
+	mu sync.Mutex // guards the following
 
 	// Vertices stores all vertices.
-	Vertices map[string]bool
+	Vertices map[string]struct{}
 
 	// VertexToChildren maps a Vertex identifer to children with edge weights.
 	VertexToChildren map[string]map[string]float64
@@ -293,10 +302,10 @@ type DefaultGraph struct {
 	VertexToParents map[string]map[string]float64
 }
 
-// NewDefaultGraph returns a new DefaultGraph.
-func NewDefaultGraph() *DefaultGraph {
-	return &DefaultGraph{
-		Vertices:         make(map[string]bool),
+// newDefaultGraph returns a new defaultGraph.
+func newDefaultGraph() *defaultGraph {
+	return &defaultGraph{
+		Vertices:         make(map[string]struct{}),
 		VertexToChildren: make(map[string]map[string]float64),
 		VertexToParents:  make(map[string]map[string]float64),
 		//
@@ -305,195 +314,13 @@ func NewDefaultGraph() *DefaultGraph {
 	}
 }
 
-func (g *DefaultGraph) Init() {
-	// (X) g = NewDefaultGraph()
-	// this only updates the pointer
-	//
-	*g = *NewDefaultGraph()
+// NewDefaultGraph returns a new defaultGraph.
+func NewDefaultGraph() Graph {
+	return newDefaultGraph()
 }
 
-func (g DefaultGraph) GetVertices() map[string]bool {
-	g.Lock()
-	defer g.Unlock()
-	return g.Vertices
-}
-
-func (g DefaultGraph) FindVertex(vtx string) bool {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx]; !ok {
-		return false
-	}
-	return true
-}
-
-func (g *DefaultGraph) AddVertex(vtx string) bool {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx]; !ok {
-		g.Vertices[vtx] = true
-		return true
-	}
-	return false
-}
-
-func (g *DefaultGraph) DeleteVertex(vtx string) bool {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx]; !ok {
-		return false
-	} else {
-		delete(g.Vertices, vtx)
-	}
-	if _, ok := g.VertexToChildren[vtx]; ok {
-		delete(g.VertexToChildren, vtx)
-	}
-	for _, smap := range g.VertexToChildren {
-		if _, ok := smap[vtx]; ok {
-			delete(smap, vtx)
-		}
-	}
-	if _, ok := g.VertexToParents[vtx]; ok {
-		delete(g.VertexToParents, vtx)
-	}
-	for _, smap := range g.VertexToParents {
-		if _, ok := smap[vtx]; ok {
-			delete(smap, vtx)
-		}
-	}
-	return true
-}
-
-func (g *DefaultGraph) AddEdge(vtx1, vtx2 string, weight float64) error {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx1]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx1)
-	}
-	if _, ok := g.Vertices[vtx2]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx2)
-	}
-	if _, ok := g.VertexToChildren[vtx1]; ok {
-		if v, ok2 := g.VertexToChildren[vtx1][vtx2]; ok2 {
-			g.VertexToChildren[vtx1][vtx2] = v + weight
-		} else {
-			g.VertexToChildren[vtx1][vtx2] = weight
-		}
-	} else {
-		tmap := make(map[string]float64)
-		tmap[vtx2] = weight
-		g.VertexToChildren[vtx1] = tmap
-	}
-	if _, ok := g.VertexToParents[vtx2]; ok {
-		if v, ok2 := g.VertexToParents[vtx2][vtx1]; ok2 {
-			g.VertexToParents[vtx2][vtx1] = v + weight
-		} else {
-			g.VertexToParents[vtx2][vtx1] = weight
-		}
-	} else {
-		tmap := make(map[string]float64)
-		tmap[vtx1] = weight
-		g.VertexToParents[vtx2] = tmap
-	}
-	return nil
-}
-
-func (g *DefaultGraph) ReplaceEdge(vtx1, vtx2 string, weight float64) error {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx1]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx1)
-	}
-	if _, ok := g.Vertices[vtx2]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx2)
-	}
-	if _, ok := g.VertexToChildren[vtx1]; ok {
-		g.VertexToChildren[vtx1][vtx2] = weight
-	} else {
-		tmap := make(map[string]float64)
-		tmap[vtx2] = weight
-		g.VertexToChildren[vtx1] = tmap
-	}
-	if _, ok := g.VertexToParents[vtx2]; ok {
-		g.VertexToParents[vtx2][vtx1] = weight
-	} else {
-		tmap := make(map[string]float64)
-		tmap[vtx1] = weight
-		g.VertexToParents[vtx2] = tmap
-	}
-	return nil
-}
-
-func (g *DefaultGraph) DeleteEdge(vtx1, vtx2 string) error {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx1]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx1)
-	}
-	if _, ok := g.Vertices[vtx2]; !ok {
-		return fmt.Errorf("%s does not exist in the graph.", vtx2)
-	}
-	if _, ok := g.VertexToChildren[vtx1]; ok {
-		if _, ok := g.VertexToChildren[vtx1][vtx2]; ok {
-			delete(g.VertexToChildren[vtx1], vtx2)
-		}
-	}
-	if _, ok := g.VertexToParents[vtx2]; ok {
-		if _, ok := g.VertexToParents[vtx2][vtx1]; ok {
-			delete(g.VertexToParents[vtx2], vtx1)
-		}
-	}
-	return nil
-}
-
-func (g *DefaultGraph) GetWeight(vtx1, vtx2 string) (float64, error) {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx1]; !ok {
-		return 0.0, fmt.Errorf("%s does not exist in the graph.", vtx1)
-	}
-	if _, ok := g.Vertices[vtx2]; !ok {
-		return 0.0, fmt.Errorf("%s does not exist in the graph.", vtx2)
-	}
-	if _, ok := g.VertexToChildren[vtx1]; ok {
-		if v, ok := g.VertexToChildren[vtx1][vtx2]; ok {
-			return v, nil
-		}
-	}
-	return 0.0, fmt.Errorf("there is not edge from %s to %s", vtx1, vtx2)
-}
-
-func (g *DefaultGraph) GetParents(vtx string) (map[string]bool, error) {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx]; !ok {
-		return nil, fmt.Errorf("%s does not exist in the graph.", vtx)
-	}
-	rs := make(map[string]bool)
-	if _, ok := g.VertexToParents[vtx]; ok {
-		for k := range g.VertexToParents[vtx] {
-			rs[k] = true
-		}
-	}
-	return rs, nil
-}
-
-func (g *DefaultGraph) GetChildren(vtx string) (map[string]bool, error) {
-	g.Lock()
-	defer g.Unlock()
-	if _, ok := g.Vertices[vtx]; !ok {
-		return nil, fmt.Errorf("%s does not exist in the graph.", vtx)
-	}
-	rs := make(map[string]bool)
-	if _, ok := g.VertexToChildren[vtx]; ok {
-		for k := range g.VertexToChildren[vtx] {
-			rs[k] = true
-		}
-	}
-	return rs, nil
-}
-
-// FromJSON creates a graph Data from JSON. Here's the sample JSON data:
+// newDefaultGraphFromJSON creates a graph Data from JSON.
+// Here's the sample JSON data:
 //
 //	{
 //	    "graph_00": {
@@ -546,7 +373,7 @@ func (g *DefaultGraph) GetChildren(vtx string) (map[string]bool, error) {
 //	    },
 //	}
 //
-func NewDefaultGraphFromJSON(rd io.Reader, graphID string) (*DefaultGraph, error) {
+func newDefaultGraphFromJSON(rd io.Reader, graphID string) (*defaultGraph, error) {
 	js := make(map[string]map[string]map[string]float64)
 	dec := json.NewDecoder(rd)
 	for {
@@ -560,7 +387,7 @@ func NewDefaultGraphFromJSON(rd io.Reader, graphID string) (*DefaultGraph, error
 		return nil, fmt.Errorf("%s does not exist", graphID)
 	}
 	gmap := js[graphID]
-	g := NewDefaultGraph()
+	g := newDefaultGraph()
 	for vtx1, mm := range gmap {
 		if !g.FindVertex(vtx1) {
 			g.AddVertex(vtx1)
@@ -575,7 +402,200 @@ func NewDefaultGraphFromJSON(rd io.Reader, graphID string) (*DefaultGraph, error
 	return g, nil
 }
 
-func (g DefaultGraph) String() string {
+// NewDefaultGraphFromJSON returns a new defaultGraph from a JSON file.
+func NewDefaultGraphFromJSON(rd io.Reader, graphID string) (Graph, error) {
+	return newDefaultGraphFromJSON(rd, graphID)
+}
+
+func (g *defaultGraph) Init() {
+	// (X) g = newDefaultGraph()
+	// this only updates the pointer
+	//
+	*g = *newDefaultGraph()
+}
+
+func (g *defaultGraph) GetVertices() map[string]struct{} {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	return g.Vertices
+}
+
+func (g *defaultGraph) FindVertex(vtx string) bool {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx]; !ok {
+		return false
+	}
+	return true
+}
+
+func (g *defaultGraph) AddVertex(vtx string) bool {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx]; !ok {
+		g.Vertices[vtx] = struct{}{}
+		return true
+	}
+	return false
+}
+
+func (g *defaultGraph) DeleteVertex(vtx string) bool {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx]; !ok {
+		return false
+	} else {
+		delete(g.Vertices, vtx)
+	}
+	if _, ok := g.VertexToChildren[vtx]; ok {
+		delete(g.VertexToChildren, vtx)
+	}
+	for _, smap := range g.VertexToChildren {
+		if _, ok := smap[vtx]; ok {
+			delete(smap, vtx)
+		}
+	}
+	if _, ok := g.VertexToParents[vtx]; ok {
+		delete(g.VertexToParents, vtx)
+	}
+	for _, smap := range g.VertexToParents {
+		if _, ok := smap[vtx]; ok {
+			delete(smap, vtx)
+		}
+	}
+	return true
+}
+
+func (g *defaultGraph) AddEdge(vtx1, vtx2 string, weight float64) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx1]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx1)
+	}
+	if _, ok := g.Vertices[vtx2]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx2)
+	}
+	if _, ok := g.VertexToChildren[vtx1]; ok {
+		if v, ok2 := g.VertexToChildren[vtx1][vtx2]; ok2 {
+			g.VertexToChildren[vtx1][vtx2] = v + weight
+		} else {
+			g.VertexToChildren[vtx1][vtx2] = weight
+		}
+	} else {
+		tmap := make(map[string]float64)
+		tmap[vtx2] = weight
+		g.VertexToChildren[vtx1] = tmap
+	}
+	if _, ok := g.VertexToParents[vtx2]; ok {
+		if v, ok2 := g.VertexToParents[vtx2][vtx1]; ok2 {
+			g.VertexToParents[vtx2][vtx1] = v + weight
+		} else {
+			g.VertexToParents[vtx2][vtx1] = weight
+		}
+	} else {
+		tmap := make(map[string]float64)
+		tmap[vtx1] = weight
+		g.VertexToParents[vtx2] = tmap
+	}
+	return nil
+}
+
+func (g *defaultGraph) ReplaceEdge(vtx1, vtx2 string, weight float64) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx1]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx1)
+	}
+	if _, ok := g.Vertices[vtx2]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx2)
+	}
+	if _, ok := g.VertexToChildren[vtx1]; ok {
+		g.VertexToChildren[vtx1][vtx2] = weight
+	} else {
+		tmap := make(map[string]float64)
+		tmap[vtx2] = weight
+		g.VertexToChildren[vtx1] = tmap
+	}
+	if _, ok := g.VertexToParents[vtx2]; ok {
+		g.VertexToParents[vtx2][vtx1] = weight
+	} else {
+		tmap := make(map[string]float64)
+		tmap[vtx1] = weight
+		g.VertexToParents[vtx2] = tmap
+	}
+	return nil
+}
+
+func (g *defaultGraph) DeleteEdge(vtx1, vtx2 string) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx1]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx1)
+	}
+	if _, ok := g.Vertices[vtx2]; !ok {
+		return fmt.Errorf("%s does not exist in the graph.", vtx2)
+	}
+	if _, ok := g.VertexToChildren[vtx1]; ok {
+		if _, ok := g.VertexToChildren[vtx1][vtx2]; ok {
+			delete(g.VertexToChildren[vtx1], vtx2)
+		}
+	}
+	if _, ok := g.VertexToParents[vtx2]; ok {
+		if _, ok := g.VertexToParents[vtx2][vtx1]; ok {
+			delete(g.VertexToParents[vtx2], vtx1)
+		}
+	}
+	return nil
+}
+
+func (g *defaultGraph) GetWeight(vtx1, vtx2 string) (float64, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx1]; !ok {
+		return 0.0, fmt.Errorf("%s does not exist in the graph.", vtx1)
+	}
+	if _, ok := g.Vertices[vtx2]; !ok {
+		return 0.0, fmt.Errorf("%s does not exist in the graph.", vtx2)
+	}
+	if _, ok := g.VertexToChildren[vtx1]; ok {
+		if v, ok := g.VertexToChildren[vtx1][vtx2]; ok {
+			return v, nil
+		}
+	}
+	return 0.0, fmt.Errorf("there is not edge from %s to %s", vtx1, vtx2)
+}
+
+func (g *defaultGraph) GetParents(vtx string) (map[string]struct{}, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx]; !ok {
+		return nil, fmt.Errorf("%s does not exist in the graph.", vtx)
+	}
+	rs := make(map[string]struct{})
+	if _, ok := g.VertexToParents[vtx]; ok {
+		for k := range g.VertexToParents[vtx] {
+			rs[k] = struct{}{}
+		}
+	}
+	return rs, nil
+}
+
+func (g *defaultGraph) GetChildren(vtx string) (map[string]struct{}, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+	if _, ok := g.Vertices[vtx]; !ok {
+		return nil, fmt.Errorf("%s does not exist in the graph.", vtx)
+	}
+	rs := make(map[string]struct{})
+	if _, ok := g.VertexToChildren[vtx]; ok {
+		for k := range g.VertexToChildren[vtx] {
+			rs[k] = struct{}{}
+		}
+	}
+	return rs, nil
+}
+
+func (g *defaultGraph) String() string {
 	buf := new(bytes.Buffer)
 	for vtx1 := range g.Vertices {
 		cmap, _ := g.GetChildren(vtx1)
