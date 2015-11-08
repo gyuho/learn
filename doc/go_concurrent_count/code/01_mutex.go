@@ -18,19 +18,19 @@ type Counter interface {
 
 // MutexCounter implements Counter with sync.Mutex.
 type MutexCounter struct {
-	sync.Mutex
+	mu    sync.Mutex // guards the following
 	value float64
 }
 
 func (c *MutexCounter) Get() float64 {
-	c.Lock()
-	defer c.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	return c.value
 }
 
 func (c *MutexCounter) Add(delta float64) {
-	c.Lock()
-	defer c.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	c.value += delta
 }
 
