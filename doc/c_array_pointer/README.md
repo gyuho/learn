@@ -7,6 +7,8 @@
 - [array](#array)
 - [`char`](#char)
 - [pointer](#pointer)
+- [array, pointer](#array-pointer)
+- [pointer arithmetic](#pointer-arithmetic)
 
 [↑ top](#c-array-pointer)
 <br><br><br><br>
@@ -221,6 +223,116 @@ Pointer is a variable to store the address value of data(variable).
 `&num` returns the address of `num`. `int * num` defines a pointer type
 variable `num`. `*` is also used to dereference *or access* the memory
 that the pointer points to.
+
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int num = 1;
+	int * pnum;   // declare pointer-type pnum
+	pnum = &num;  // store the address of num to pnum
+	printf("%p\n", pnum); // 0x7ffdfbe9a224
+
+	double f = 1.5;
+	double * fp = &f;
+	*fp = 100.10;
+	printf("%f\n", f); // 100.100000
+
+	int * pt = NULL;    // assign NULL pointer if not sure what to store
+	printf("%p\n", pt); // (nil)
+
+    return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+
+#### array, pointer 
+
+First take a look at this code:
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	int arr[3] = {0, 1, 2};
+
+	printf("arr: %p\n", arr);         // 0x7ffcb4d51010
+	printf("&arr[0]: %p\n", &arr[0]); // 0x7ffcb4d51010
+	printf("&arr[1]: %p\n", &arr[1]); // 0x7ffcb4d51014
+	printf("&arr[2]: %p\n", &arr[2]); // 0x7ffcb4d51018
+
+	// (X)
+	// arr = &arr[1];
+
+	return 0;
+}
+
+```
+
+![array_pointer](img/array_pointer.png)
+
+- The name of an array represents the address of an beginning element (first
+  element in the array). That is, **array name** is a pointer to the array.
+- Each `int` takes 4 bytes of memory, so `int` array element differs 4 bytes
+  in its memory addresses.
+- The memory address of an array cannot be changed, unlike other pointer
+  variables.
+
+<br>
+Again, **array name is also a pointer**:
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	int arr[3] = {0, 1, 2};
+
+	printf("*arr: %d\n", *arr);  // 0
+	*arr += 100;
+	printf("*arr: %d\n", *arr);  // 100
+	arr[0] -= 50;
+	printf("*arr: %d\n", *arr);  // 50
+
+	int * ptr = &arr[0];
+	// int * ptr = arr;
+	
+	printf("%d %d\n", *ptr, *arr);     // 50 50
+	printf("%d %d\n", ptr[0], arr[0]); // 50 50
+	printf("%d %d\n", ptr[1], arr[1]); // 1 1
+	printf("%d %d\n", ptr[2], arr[2]); // 2 2
+
+	return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+#### pointer arithmetic
 
 [↑ top](#c-array-pointer)
 <br><br><br><br>
