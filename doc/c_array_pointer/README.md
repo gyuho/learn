@@ -9,6 +9,8 @@
 - [pointer](#pointer)
 - [array, pointer](#array-pointer)
 - [pointer arithmetic](#pointer-arithmetic)
+- [`char` array](#char-array)
+- [pointer array](#pointer-array)
 
 [↑ top](#c-array-pointer)
 <br><br><br><br>
@@ -333,6 +335,106 @@ int main()
 
 
 #### pointer arithmetic
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	int * pt0 = 0x0010;  // increase by 4
+	printf("%p %p\n", pt0+1, pt0+2); // 0x14 0x18
+
+	double * pt1 = 0x0010;  // increase by 8
+	printf("%p %p\n", pt1+1, pt1+2); // 0x18 0x20
+
+	int arr[3] = {0, 1, 2};
+	int * ptr = arr;
+	printf("%d %d %d\n", *ptr, *(ptr+1), *(ptr+2));
+	// 0 1 2
+	
+	printf("%d\n", arr[2] == *(arr+2)); // 1
+
+	return 0;
+}
+
+```
+
+![pointer_arithmetic](img/pointer_arithmetic.png)
+
+[↑ top](#c-array-pointer)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+
+#### `char` array
+
+In C, there are two way to represent strings:
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	char s0[] = "abc";
+	// *s0 = "Hello";   // (X)
+	printf("%s\n", s0); // abc
+	s0[0] = 'X';
+	printf("%s\n", s0); // Xbc
+
+	char * s1 = "abc";
+	s1 = "Hello";
+	printf("%s\n", s1); // Hello
+	s1[0] = 'X';        // (X)
+	printf("%s\n", s1); // (X)
+
+	return 0;
+}
+
+```
+
+![c_string](img/c_string.png)
+
+[↑ top](#c-array-pointer)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+
+#### pointer array
+
+```c
+#include <stdio.h>
+
+int main()
+{
+	int n0=0, n1=1, n2=2;
+	int * arr[3] = {&n0, &n1, &n2};
+	printf("%d\n", *arr[0]); // 0
+	printf("%d\n", *arr[1]); // 1
+	printf("%d\n", *arr[2]); // 2
+
+	char * sArr[3] = {"AA", "BB", "CC"};
+	printf("%s\n", sArr[0]); // AA
+	printf("%s\n", sArr[1]); // BB
+	printf("%s\n", sArr[2]); // CC
+
+	return 0;
+}
+
+```
 
 [↑ top](#c-array-pointer)
 <br><br><br><br>
