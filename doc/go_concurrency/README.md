@@ -51,7 +51,6 @@
 - [*Asynchronous I/O*](https://en.wikipedia.org/wiki/Asynchronous_I/O)
 - [*Context switch*](https://en.wikipedia.org/wiki/Context_switch)
 - [*Green threads*](https://en.wikipedia.org/wiki/Green_threads)
--
 - [**Concurrency is Not Parallelism**](https://www.youtube.com/watch?v=cN_DpYBzKso) *by Rob Pike* ([Slide](http://talks.golang.org/2012/waza.slide#1))
 - [**Go Concurrency Patterns**](https://www.youtube.com/watch?v=f6kdp27TYZs) *by Rob Pike* ([Slide](https://talks.golang.org/2012/concurrency.slide#1))
 - [**Effective Go — Concurrency**](https://golang.org/doc/effective_go.html#concurrency)
