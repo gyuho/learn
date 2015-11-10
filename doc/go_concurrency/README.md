@@ -46,8 +46,12 @@
 
 #### Reference
 
-These are MUST-READ articles in Go concurrency:
-
+- [*Thread*](https://en.wikipedia.org/wiki/Thread_(computing))
+- [*Process*](https://en.wikipedia.org/wiki/Process_(computing))
+- [*Asynchronous I/O*](https://en.wikipedia.org/wiki/Asynchronous_I/O)
+- [*Context switch*](https://en.wikipedia.org/wiki/Context_switch)
+- [*Green threads*](https://en.wikipedia.org/wiki/Green_threads)
+-
 - [**Concurrency is Not Parallelism**](https://www.youtube.com/watch?v=cN_DpYBzKso) *by Rob Pike* ([Slide](http://talks.golang.org/2012/waza.slide#1))
 - [**Go Concurrency Patterns**](https://www.youtube.com/watch?v=f6kdp27TYZs) *by Rob Pike* ([Slide](https://talks.golang.org/2012/concurrency.slide#1))
 - [**Effective Go — Concurrency**](https://golang.org/doc/effective_go.html#concurrency)
@@ -58,8 +62,6 @@ These are MUST-READ articles in Go concurrency:
 - [**Why is a goroutine’s stack infinite**](http://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite) *by Dave Cheney*
 - [**High performance servers without the event loop**](http://go-talks.appspot.com/github.com/davecheney/presentations/performance-without-the-event-loop.slide#1) *by Dave Cheney*
 - [**Goroutines vs OS Threads**](https://groups.google.com/d/msg/golang-nuts/j51G7ieoKh4/wxNaKkFEfvcJ)
-- [**Go Scheduler**](http://morsmachine.dk/go-scheduler) *by Daniel Morsing*
-- [**Analysis of the Go runtime scheduler**](http://www1.cs.columbia.edu/~aho/cs6998/reports/12-12-11_DeshpandeSponslerWeiss_GO.pdf)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
