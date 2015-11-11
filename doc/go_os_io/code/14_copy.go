@@ -104,7 +104,6 @@ func copyDir(src, dst string) error {
 }
 
 func main() {
-
 	func() {
 		fpath := "test.txt"
 		defer os.Remove(fpath)

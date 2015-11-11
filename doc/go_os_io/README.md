@@ -12,7 +12,7 @@
 - [stdout, stdin, stderr](#stdout-stdin-stderr)
 - [`exist`: files, directories](#exist-files-directories)
 - [`create/open/write`: files, directories](#createopenwrite-files-directories)
-- [`io/ioutil`, string](#ioioutil-string)
+- [`io/ioutil`, file](#ioioutil-file)
 - [temporary file](#temporary-file)
 - [`bufio`](#bufios)
 - [`copy`: files, directories](#copy-files-directories)
@@ -1071,7 +1071,7 @@ func main() {
 
 
 
-#### `io/ioutil`, string
+#### `io/ioutil`, file
 
 Package [ioutil](http://golang.org/pkg/io/ioutil/) implements some I/O utility functions.
 
@@ -1080,6 +1080,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -1088,7 +1089,22 @@ func main() {
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile(txt, fpath); err != nil {
+		if err := toFile1(txt, fpath); err != nil {
+			panic(err)
+		}
+		if s, err := fromFile(fpath); err != nil {
+			panic(err)
+		} else {
+			fmt.Println(fpath, ":", s)
+		}
+		os.Remove(fpath)
+	}()
+	// temp.txt : Hello World!
+
+	func() {
+		fpath := "temp.txt"
+		txt := "Hello World!"
+		if err := toFile2(txt, fpath); err != nil {
 			panic(err)
 		}
 		if s, err := fromFile(fpath); err != nil {
@@ -1101,7 +1117,7 @@ func main() {
 	// temp.txt : Hello World!
 }
 
-func toFile(txt, fpath string) error {
+func toFile1(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
@@ -1111,6 +1127,21 @@ func toFile(txt, fpath string) error {
 	}
 	defer f.Close()
 	if _, err := f.WriteString(txt); err != nil {
+		return err
+	}
+	return nil
+}
+
+func toFile2(txt, fpath string) error {
+	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
+	if err != nil {
+		f, err = os.Create(fpath)
+		if err != nil {
+			return err
+		}
+	}
+	defer f.Close()
+	if _, err := io.WriteString(f, txt); err != nil {
 		return err
 	}
 	return nil
@@ -1131,6 +1162,7 @@ func fromFile(fpath string) (string, error) {
 	}
 	return string(tbytes), nil
 }
+
 ```
 
 [↑ top](#go-os-io)
@@ -1501,7 +1533,6 @@ func copyDir(src, dst string) error {
 }
 
 func main() {
-
 	func() {
 		fpath := "test.txt"
 		defer os.Remove(fpath)
