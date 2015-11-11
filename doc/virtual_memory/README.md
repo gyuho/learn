@@ -20,6 +20,7 @@
 - [Computer systems: a programmer's perspective](http://csapp.cs.cmu.edu/)
 - [MIT lecture: Computer System Architecture](http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-823-computer-system-architecture-fall-2005/)
 - [**Memory : Stack vs Heap**](http://gribblelab.org/CBootcamp/7_Memory_Stack_vs_Heap.html)
+- [Varnish Architect Notes](https://www.varnish-cache.org/trac/wiki/ArchitectNotes)
 
 [↑ top](#virtual-memory)
 <br><br><br><br>
@@ -192,6 +193,14 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 
 #### Page cache
 
+> Varnish stores data in **virtual memory** and leaves the task of deciding
+> what is stored in memory and what gets **paged out** to disk to the
+> operating system. This helps avoid the situation where the operating system
+> starts caching data while it is moved to disk by the application.
+> 
+> [*Varnish*](https://en.wikipedia.org/wiki/Varnish_(software)) *by Wikipedia*
+
+<br>
 > A *CPU cache* is a **cache** used by the central processing unit (CPU) of a
 > computer to **reduce the average time to access data from the main memory**.
 > The cache is a smaller, faster memory which stores copies of the data from
