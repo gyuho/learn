@@ -76,8 +76,20 @@ func main() {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		isSupported := isDirectIOSupported()
+		f, err := os.OpenFile(fpath, syscall.O_DIRECT, 0)
+		defer f.Close()
+		fmt.Println(err)
+	}()
+
+	func() {
+		isSupported := isDirectIOSupported(fpath)
 		fmt.Println("isDirectIOSupported:", isSupported)
+		fpath := "temp.txt"
+		txt := "Hello World!"
+		if err := toFile1(txt, fpath); err != nil {
+			panic(err)
+		}
+		defer os.Remove(fpath)
 		if isSupported {
 			if s, err := fromFile3(fpath); err != nil {
 				panic(err)
@@ -170,12 +182,11 @@ func fromFile2(fpath string) (string, error) {
 func fromFile3(fpath string) (string, error) {
 	f, err := os.OpenFile(fpath, os.O_RDONLY|syscall.O_DIRECT, 0777)
 	if err != nil {
-		// NOT retur nil, err
-		// []byte can be null but not string
 		return "", err
 	}
 	defer f.Close()
-	// func ReadAll(r io.Reader) ([]byte, error)
+	// tbytes := directio.AlignedBlock(directio.BlockSize)
+	// if _, err := io.ReadFull(f, tbytes); err != nil {
 	tbytes, err := ioutil.ReadAll(f)
 	if err != nil {
 		return "", err
@@ -183,10 +194,8 @@ func fromFile3(fpath string) (string, error) {
 	return string(tbytes), nil
 }
 
-func isDirectIOSupported() bool {
-	path := os.TempDir()
-	defer os.RemoveAll(path)
-	f, err := os.OpenFile(path, syscall.O_DIRECT, 0)
+func isDirectIOSupported(fpath string) bool {
+	f, err := os.OpenFile(fpath, syscall.O_DIRECT, 0)
 	defer f.Close()
 	return err == nil
 }
