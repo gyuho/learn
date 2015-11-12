@@ -5,103 +5,110 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 	"syscall"
+
+	"github.com/ncw/directio"
 )
 
 func main() {
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile1(txt, fpath); err != nil {
+		if err := toFileWriteString(txt, fpath); err != nil {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		if s, err := fromFile1(fpath); err != nil {
+		if s, err := fromFileOpenReadAll(fpath); err != nil {
 			panic(err)
 		} else {
-			fmt.Println(fpath, ":", s)
+			fmt.Println("fromFileOpenReadAll:", s)
 		}
 	}()
-	// temp.txt : Hello World!
+	// fromFileOpenReadAll: Hello World!
 
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile2(txt, fpath); err != nil {
+		if err := toFileIO(txt, fpath); err != nil {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		if s, err := fromFile1(fpath); err != nil {
+		if s, err := fromFileOpenReadAll(fpath); err != nil {
 			panic(err)
 		} else {
-			fmt.Println(fpath, ":", s)
+			fmt.Println("fromFileOpenReadAll:", s)
 		}
 	}()
-	// temp.txt : Hello World!
+	// fromFileOpenReadAll: Hello World!
 
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile3(txt, fpath); err != nil {
+		if err := toFileWrite(txt, fpath); err != nil {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		if s, err := fromFile1(fpath); err != nil {
+		if s, err := fromFileOpenReadAll(fpath); err != nil {
 			panic(err)
 		} else {
-			fmt.Println(fpath, ":", s)
+			fmt.Println("fromFileOpenReadAll:", s)
 		}
 	}()
-	// temp.txt : Hello World!
+	// fromFileOpenReadAll: Hello World!
 
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile1(txt, fpath); err != nil {
+		if err := toFileWriteString(txt, fpath); err != nil {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		if s, err := fromFile2(fpath); err != nil {
+		if s, err := fromFileOpenFileReadAll(fpath); err != nil {
 			panic(err)
 		} else {
-			fmt.Println(fpath, ":", s)
+			fmt.Println("fromFileOpenFileReadAll:", s)
 		}
 	}()
-	// temp.txt : Hello World!
+	// fromFileOpenFileReadAll: Hello World!
 
 	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
-		if err := toFile1(txt, fpath); err != nil {
+		if err := toFileWriteString(txt, fpath); err != nil {
 			panic(err)
 		}
 		defer os.Remove(fpath)
-		f, err := os.OpenFile(fpath, syscall.O_DIRECT, 0)
-		defer f.Close()
-		fmt.Println(err)
+		if s, err := fromFileOpenFileReadFull(fpath, len(txt)); err != nil {
+			panic(err)
+		} else {
+			fmt.Println("fromFileOpenFileReadFull:", s)
+		}
 	}()
+	// fromFileOpenFileReadFull: Hello World!
 
 	func() {
+		fpath := "temp.txt"
+		txt := strings.Repeat("Hello World!", 10000)
+		if err := toFileWriteString(txt, fpath); err != nil {
+			panic(err)
+		}
+		defer os.Remove(fpath)
 		isSupported := isDirectIOSupported(fpath)
 		fmt.Println("isDirectIOSupported:", isSupported)
-		fpath := "temp.txt"
-		txt := "Hello World!"
-		if err := toFile1(txt, fpath); err != nil {
-			panic(err)
-		}
-		defer os.Remove(fpath)
 		if isSupported {
-			if s, err := fromFile3(fpath); err != nil {
+			if s, err := fromFileDirectIO(fpath); err != nil {
 				panic(err)
 			} else {
-				fmt.Println(fpath, ":", s)
+				fmt.Println("fromFileDirectIO:", s[:10], "...")
 			}
 		}
 	}()
-	// temp.txt : Hello World!
+	// isDirectIOSupported: true
+	// fromFileDirectIO: Hello Worl ...
 }
 
-func toFile1(txt, fpath string) error {
+func toFileWriteString(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
@@ -116,7 +123,7 @@ func toFile1(txt, fpath string) error {
 	return nil
 }
 
-func toFile2(txt, fpath string) error {
+func toFileIO(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
@@ -131,7 +138,7 @@ func toFile2(txt, fpath string) error {
 	return nil
 }
 
-func toFile3(txt, fpath string) error {
+func toFileWrite(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
@@ -146,7 +153,7 @@ func toFile3(txt, fpath string) error {
 	return nil
 }
 
-func fromFile1(fpath string) (string, error) {
+func fromFileOpenReadAll(fpath string) (string, error) {
 	f, err := os.Open(fpath)
 	if err != nil {
 		// NOT retur nil, err
@@ -162,7 +169,7 @@ func fromFile1(fpath string) (string, error) {
 	return string(tbytes), nil
 }
 
-func fromFile2(fpath string) (string, error) {
+func fromFileOpenFileReadAll(fpath string) (string, error) {
 	f, err := os.OpenFile(fpath, os.O_RDONLY, 0777)
 	if err != nil {
 		// NOT retur nil, err
@@ -178,20 +185,32 @@ func fromFile2(fpath string) (string, error) {
 	return string(tbytes), nil
 }
 
-// panic: read temp.txt: invalid argument
-func fromFile3(fpath string) (string, error) {
+func fromFileOpenFileReadFull(fpath string, length int) (string, error) {
+	f, err := os.OpenFile(fpath, os.O_RDONLY, 0777)
+	if err != nil {
+		// NOT retur nil, err
+		// []byte can be null but not string
+		return "", err
+	}
+	defer f.Close()
+	buf := make([]byte, length)
+	if _, err := io.ReadFull(f, buf); err != nil {
+		return "", err
+	}
+	return string(buf), nil
+}
+
+func fromFileDirectIO(fpath string) (string, error) {
 	f, err := os.OpenFile(fpath, os.O_RDONLY|syscall.O_DIRECT, 0777)
 	if err != nil {
 		return "", err
 	}
 	defer f.Close()
-	// tbytes := directio.AlignedBlock(directio.BlockSize)
-	// if _, err := io.ReadFull(f, tbytes); err != nil {
-	tbytes, err := ioutil.ReadAll(f)
-	if err != nil {
+	block := directio.AlignedBlock(directio.BlockSize)
+	if _, err := io.ReadFull(f, block); err != nil {
 		return "", err
 	}
-	return string(tbytes), nil
+	return string(block), nil
 }
 
 func isDirectIOSupported(fpath string) bool {
