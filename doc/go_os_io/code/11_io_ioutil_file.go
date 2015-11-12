@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"syscall"
-
-	"github.com/ncw/directio"
+	"unsafe"
 )
 
 func main() {
@@ -206,7 +206,7 @@ func fromFileDirectIO(fpath string) (string, error) {
 		return "", err
 	}
 	defer f.Close()
-	block := directio.AlignedBlock(directio.BlockSize)
+	block := AlignedBlock(BlockSize)
 	if _, err := io.ReadFull(f, block); err != nil {
 		return "", err
 	}
@@ -218,3 +218,53 @@ func isDirectIOSupported(fpath string) bool {
 	defer f.Close()
 	return err == nil
 }
+
+/*****************************************************/
+
+// Copied from https://github.com/ncw/directio
+
+// alignment returns alignment of the block in memory
+// with reference to AlignSize
+//
+// Can't check alignment of a zero sized block as &block[0] is invalid
+func alignment(block []byte, AlignSize int) int {
+	return int(uintptr(unsafe.Pointer(&block[0])) & uintptr(AlignSize-1))
+}
+
+// AlignedBlock returns []byte of size BlockSize aligned to a multiple
+// of AlignSize in memory (must be power of two)
+func AlignedBlock(BlockSize int) []byte {
+	block := make([]byte, BlockSize+AlignSize)
+	if AlignSize == 0 {
+		return block
+	}
+	a := alignment(block, AlignSize)
+	offset := 0
+	if a != 0 {
+		offset = AlignSize - a
+	}
+	block = block[offset : offset+BlockSize]
+	// Can't check alignment of a zero sized block
+	if BlockSize != 0 {
+		a = alignment(block, AlignSize)
+		if a != 0 {
+			log.Fatal("Failed to align block")
+		}
+	}
+	return block
+}
+
+const (
+	// Size to align the buffer to
+	AlignSize = 4096
+
+	// Minimum block size
+	BlockSize = 4096
+)
+
+// OpenFile is a modified version of os.OpenFile which sets O_DIRECT
+func OpenFile(name string, flag int, perm os.FileMode) (file *os.File, err error) {
+	return os.OpenFile(name, syscall.O_DIRECT|flag, perm)
+}
+
+/*****************************************************/
