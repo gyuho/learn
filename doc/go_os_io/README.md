@@ -1278,6 +1278,12 @@ func fromFileOpenFileReadFull(fpath string, length int) (string, error) {
 	return string(buf), nil
 }
 
+func isDirectIOSupported(fpath string) bool {
+	f, err := os.OpenFile(fpath, syscall.O_DIRECT, 0)
+	defer f.Close()
+	return err == nil
+}
+
 func fromFileDirectIO(fpath string) (string, error) {
 	f, err := os.OpenFile(fpath, os.O_RDONLY|syscall.O_DIRECT, 0777)
 	if err != nil {
@@ -1289,12 +1295,6 @@ func fromFileDirectIO(fpath string) (string, error) {
 		return "", err
 	}
 	return string(block), nil
-}
-
-func isDirectIOSupported(fpath string) bool {
-	f, err := os.OpenFile(fpath, syscall.O_DIRECT, 0)
-	defer f.Close()
-	return err == nil
 }
 
 /*****************************************************/
