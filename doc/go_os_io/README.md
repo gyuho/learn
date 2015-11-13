@@ -944,6 +944,7 @@ func openToRead(fpath string) (*os.File, error) {
 func openToOverwrite(fpath string) (*os.File, error) {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return f, err
@@ -959,6 +960,7 @@ func openToOverwrite(fpath string) (*os.File, error) {
 func openToAppend(fpath string) (*os.File, error) {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_APPEND, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return f, err
@@ -1058,6 +1060,7 @@ func main() {
 	   Hello World! 1
 	*/
 }
+
 ```
 
 [↑ top](#go-os-io)
@@ -1136,6 +1139,21 @@ func main() {
 	// fromFileOpenReadAll: Hello World!
 
 	func() {
+		fpath := "toFileWriteSyscall.txt"
+		txt := "Hello World!"
+		if err := toFileWriteSyscall(txt, fpath); err != nil {
+			panic(err)
+		}
+		defer os.Remove(fpath)
+		if s, err := fromFileOpenReadAll(fpath); err != nil {
+			panic(err)
+		} else {
+			fmt.Println("toFileWriteSyscall and fromFileOpenReadAll:", s)
+		}
+	}()
+	// toFileWriteSyscall and fromFileOpenReadAll: Hello World!
+
+	func() {
 		fpath := "temp.txt"
 		txt := "Hello World!"
 		if err := toFileWriteString(txt, fpath); err != nil {
@@ -1189,6 +1207,7 @@ func main() {
 func toFileWriteString(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return err
@@ -1204,6 +1223,7 @@ func toFileWriteString(txt, fpath string) error {
 func toFileIO(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return err
@@ -1219,6 +1239,23 @@ func toFileIO(txt, fpath string) error {
 func toFileWrite(txt, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
+		f, err = os.Create(fpath)
+		if err != nil {
+			return err
+		}
+	}
+	defer f.Close()
+	if _, err := f.Write([]byte(txt)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func toFileWriteSyscall(txt, fpath string) error {
+	f, err := os.OpenFile(fpath, os.O_RDWR|syscall.MAP_POPULATE, 0777)
+	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return err

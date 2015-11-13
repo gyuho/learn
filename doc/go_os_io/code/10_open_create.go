@@ -21,6 +21,7 @@ func openToRead(fpath string) (*os.File, error) {
 func openToOverwrite(fpath string) (*os.File, error) {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return f, err
@@ -36,6 +37,7 @@ func openToOverwrite(fpath string) (*os.File, error) {
 func openToAppend(fpath string) (*os.File, error) {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_APPEND, 0777)
 	if err != nil {
+		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 		f, err = os.Create(fpath)
 		if err != nil {
 			return f, err
