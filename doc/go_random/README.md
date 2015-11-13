@@ -64,6 +64,7 @@ func main() {
 	fmt.Println(random.Int63())    // 838216768439018635
 	fmt.Println(random.Int63n(10)) // 7
 }
+
 ```
 
 [↑ top](#go-random)
@@ -103,6 +104,7 @@ func main() {
 	fmt.Println(random.ExpFloat64())  // 1.4478015992783408
 	fmt.Println(random.NormFloat64()) // -1.7676830716730048
 }
+
 ```
 
 [↑ top](#go-random)
@@ -150,6 +152,7 @@ func duration(min, max time.Duration) time.Duration {
 	adt := time.Duration(random.Int63n(int64(max - min)))
 	return min + adt
 }
+
 ```
 
 [↑ top](#go-random)
@@ -165,23 +168,29 @@ func duration(min, max time.Duration) time.Duration {
 
 #### random `bytes`
 
-[Code](http://play.golang.org/p/lS72n_EfiN):
+[Code](http://play.golang.org/p/pWtwTrtttH):
 
 ```go
 package main
 
 import (
+	crand "crypto/rand"
 	"fmt"
 	"math/rand"
 	"time"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
+func main() {
+	b := make([]byte, 10)
+	if _, err := crand.Read(b); err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b)) // ��.���ms#
+	fmt.Println(string(randBytes(10)))
 }
 
-func main() {
-	fmt.Println(string(randBytes(10)))
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }
 
 const (
@@ -209,6 +218,7 @@ func randBytes(n int) []byte {
 	}
 	return b
 }
+
 ```
 
 [↑ top](#go-random)

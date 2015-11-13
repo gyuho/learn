@@ -1,17 +1,23 @@
 package main
 
 import (
+	crand "crypto/rand"
 	"fmt"
 	"math/rand"
 	"time"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
+func main() {
+	b := make([]byte, 10)
+	if _, err := crand.Read(b); err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b)) // ��.���ms#
+	fmt.Println(string(randBytes(10)))
 }
 
-func main() {
-	fmt.Println(string(randBytes(10)))
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }
 
 const (
