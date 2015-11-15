@@ -13,9 +13,6 @@
 <hr>
 
 
-
-
-
 #### Reference
 
 - [`nasm` documentation](http://www.nasm.us/xdoc/2.11.08/html/nasmdoc0.html)
@@ -28,9 +25,6 @@
 [↑ top](#assembly-introduction)
 <br><br><br><br>
 <hr>
-
-
-
 
 
 #### Install
@@ -85,9 +79,6 @@ sudo apt-get install nasm;
 [↑ top](#assembly-introduction)
 <br><br><br><br>
 <hr>
-
-
-
 
 
 #### Hello World!
@@ -150,9 +141,6 @@ This prints `Hello World!`.
 [↑ top](#assembly-introduction)
 <br><br><br><br>
 <hr>
-
-
-
 
 
 #### `nasm` syntax
@@ -267,8 +255,6 @@ ssize_t write(int fd, const void *buf, size_t nbytes);
 - `*buf`: pointer to a character array that stores data from the file pointed
   by `fd`.
 - `nbytes`: number of bytes to write onto the file, from the character array.
-
-
 
 
 <br>
