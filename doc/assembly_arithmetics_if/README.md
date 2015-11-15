@@ -12,9 +12,6 @@
 <hr>
 
 
-
-
-
 #### Reference
 
 - [`nasm` documentation](http://www.nasm.us/xdoc/2.11.08/html/nasmdoc0.html)
@@ -27,7 +24,6 @@
 [↑ top](#assembly-arithmetics-if)
 <br><br><br><br>
 <hr>
-
 
 
 #### arithmetics, if
@@ -119,7 +115,7 @@ ld -o 00_arithmetics_if 00_arithmetics_if.o
 
 This will prints out the message `Correct`.
 
-
 [↑ top](#assembly-arithmetics-if)
 <br><br><br><br>
 <hr>
+
