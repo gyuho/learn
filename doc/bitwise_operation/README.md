@@ -15,11 +15,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Reference
 
 - [Bit masks](https://www.arduino.cc/en/Tutorial/BitMask)
@@ -33,15 +28,6 @@
 [↑ top](#bitwise-operation)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
 
 
 #### bit, byte
@@ -152,10 +138,6 @@ int main()
 [↑ top](#bitwise-operation)
 <br><br><br><br>
 <hr>
-
-
-
-
 
 
 #### `bitwise operation`
@@ -547,13 +529,6 @@ Right Shift:  x >> 1
 <hr>
 
 
-
-
-
-
-
-
-
 #### `bit mask`
 
 A `mask` is used for [`bitwise operation`](https://en.wikipedia.org/wiki/Bitwise_operation).
@@ -768,17 +743,6 @@ Bitmasking:  x & y
 <hr>
 
 
-
-
-
-
-
-
-
-
-
-
-
 #### `bitset`
 
 ```cpp
@@ -831,11 +795,6 @@ mybits.reset(1): 0000
 [↑ top](#bitwise-operation)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### hamming distance
@@ -995,3 +954,4 @@ int main()
 [↑ top](#bitwise-operation)
 <br><br><br><br>
 <hr>
+
