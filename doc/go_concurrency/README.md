@@ -32,10 +32,11 @@
 - [**receive `nil` from channel**](#receive-nil-from-channel)
 - [`sync.Mutex`, race condition](#syncmutex-race-condition)
 - [**Share memory by communicating**](#share-memory-by-communicating)
-- [memory leak #1](#memory-leak-1)
+- [memory leak](#memory-leak)
 - [`sync/atomic`](#syncatomic)
 - [web server](#example-web-server)
 - [`sync.Mutex` is just a value](#syncmutex-is-just-a-value)
+- [`goroutine`, closure](#goroutine-closure)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
@@ -2980,7 +2981,7 @@ too much memory and slows down the program.*)
 
 
 
-#### memory leak #1
+#### memory leak
 
 When there is a `defer` statement that never gets run
 because the function that contains `defer` is long-running
@@ -3285,6 +3286,97 @@ func main() {
 	/*
 	   map[2015-11-05 20:42:36.516629792 -0800 PST:2015-11-05 20:42:36.516678634 -0800 PST 2015-11-05 20:42:36.516685141 -0800 PST:2015-11-05 20:42:36.516686379 -0800 PST]
 	*/
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+
+
+
+#### `goroutine`, closure
+
+
+Try [this](http://play.golang.org/p/8iiDFmcov1):
+
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	for _, d := range []int{1, 2} {
+		x := d
+		func() {
+			fmt.Printf("%d(x: %d)\n", d, x)
+		}()
+	}
+	time.Sleep(time.Second)
+	fmt.Println()
+	/*
+		1(x: 1)
+		2(x: 2)
+	*/
+
+	// (X) DON'T DO THIS
+	for _, d := range []int{10, 20} {
+		x := d
+		go func() {
+			fmt.Printf("%d(x: %d)\n", d, x)
+		}()
+	}
+	time.Sleep(time.Second)
+	fmt.Println()
+	/*
+	   20(x: 10)
+	   20(x: 20)
+	*/
+
+	for _, d := range []int{100, 200} {
+		go func(d int) {
+			fmt.Printf("%d\n", d)
+		}(d)
+	}
+	time.Sleep(time.Second)
+	fmt.Println()
+	/*
+	   200
+	   100
+	*/
+
+	// https://github.com/coreos/etcd/pull/3880#issuecomment-157442671
+	// 'forever' is first evaluated without creating a new goroutine.
+	// And then 'wrap(forever())' is evaluated with a new goroutine.
+	go func() { wrap(forever()) }()
+	// calling forever...
+	// this is running in the background(goroutine)
+
+	// 'forever' is first evaluated without creating a new goroutine.
+	// There is no goroutine created to run this in the background.
+	// So this is blocking forever!!!
+	go wrap(forever())
+	// calling forever...
+}
+
+func forever() error {
+	fmt.Println("calling forever...")
+	time.Sleep(time.Hour)
+	return nil
+}
+
+func wrap(err error) {
+	_ = err
 }
 
 ```
