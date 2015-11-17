@@ -12,10 +12,6 @@
 
 
 
-
-
-
-
 #### Reference
 
 - [golang.org](http://golang.org/)
@@ -24,11 +20,6 @@
 [↑ top](#go-introduction)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 
@@ -55,3 +46,4 @@ You can either:
 [↑ top](#go-introduction)
 <br><br><br><br>
 <hr>
+
