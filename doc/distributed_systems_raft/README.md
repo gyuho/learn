@@ -931,7 +931,33 @@ Then how do we redirect clients to `leader`, which send requests to
 > Phillips*](https://groups.google.com/d/msg/coreos-user/et7-Lm0gQxo/jkeZPKo0uaEJ)
 
 <br>
-`TODO: find related code in etcd`
+```go
+// https://github.com/coreos/etcd/blob/master/raft/raft.go
+// send persists state to stable storage and then sends to its mailbox.
+func (r *raft) send(m pb.Message) {
+	m.From = r.id
+	// do not attach term to MsgProp
+	// proposals are a way to forward to the leader and
+	// should be treated as local message.
+	if m.Type != pb.MsgProp {
+		m.Term = r.Term
+	}
+	r.msgs = append(r.msgs, m)
+}
+
+// https://github.com/coreos/etcd/blob/master/raft/raft.go#L650-L658
+func stepFollower(r *raft, m pb.Message) {
+	switch m.Type {
+	case pb.MsgProp:
+		if r.lead == None {
+			r.logger.Infof("%x no leader at term %d; dropping proposal", r.id, r.Term)
+			return
+		}
+		m.To = r.lead
+		r.send(m)
+		...
+
+```
 
 [↑ top](#distributed-systems-raft)
 <br><br><br><br>
