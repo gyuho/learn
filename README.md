@@ -1,3 +1,10 @@
+<br>
+#### Hot links
+
+- [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
+- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
+<br>
+
 I am an endless, active learner. I embrace challenges beyond my current abilities
 to broaden my knowledge the most. I want to know a little about a lot,
 and a lot about little: my favorites are C++ and Go.
@@ -14,12 +21,6 @@ This is a **_personal white-board_** where I *scribble* anything,
 I appreciate any kind of *feedback* or *suggestions*.
 Please email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
 or [`pull request`](https://github.com/gyuho/learn/pulls).
-
-<br>
-#### Hot links
-
-- [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
-- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
 
 <br><hr>
 ### Contents
