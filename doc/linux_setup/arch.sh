@@ -50,6 +50,10 @@ pacman --noconfirm -S curl;
 pacman --noconfirm -S wget;
 pacman --noconfirm -S git;
 pacman --noconfirm -S cmake;
+pacman --noconfirm -S xterm;
+
+
+
 
 # ============================================================
 # Get the URL from https://aur.archlinux.org/packages/libgcrypt15/
