@@ -1,9 +1,9 @@
-<br>
-#### Hot links
+##### Hot links
 
 - [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
 - [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
-<br>
+
+<br><br>
 
 I am an endless, active learner. I embrace challenges beyond my current abilities
 to broaden my knowledge the most. I want to know a little about a lot,
