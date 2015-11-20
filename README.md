@@ -18,7 +18,8 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 <br>
 #### Hot links
 
-- [*my linux setup*](https://github.com/gyuho/learn/tree/master/doc/my_linux_setup)
+- [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
+- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
 
 <br><hr>
 ### Contents
@@ -53,8 +54,7 @@ Unix is essential in software development.
 >
 > *Doug McIlroy*
 
-- [*my linux setup*](https://github.com/gyuho/learn/tree/master/doc/my_linux_setup)
-- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
+- [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
 
 [↑ top](#contents)
 <br><br>
