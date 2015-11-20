@@ -120,8 +120,8 @@ extract () {
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
  
-export GOPATH=/home/ubuntu/go
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:/home/ubuntu/go/bin
+export GOPATH=$HOME/go
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin
  
 # http://ezprompt.net/
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
@@ -136,11 +136,12 @@ alias mkdir="mkdir -p"
 alias hh="history | grep "
 alias pp="ps aux | grep "
 alias rm="rm -i "
- 
-alias version='lsb_release -a;'
+
 alias cpu='cat /proc/cpuinfo | grep "model name" | head -1; sensors;'
 alias disk='df -h;'
 alias memory='free -h;'
+
+alias clean_page='echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh;'
  
 alias reboot='sudo reboot;'
 alias shutdown='sudo telinit 0;'
@@ -148,9 +149,9 @@ alias shutdown='sudo telinit 0;'
 alias v='vim'
 alias t='tmux'
 
-alias cs='cd /home/ubuntu/go/src;'
-alias gh='cd /home/ubuntu/go/src/github.com;'
-alias learn='cd /home/ubuntu/go/src/github.com/gyuho/learn/doc;'
+alias cs='cd $HOME/go/src;'
+alias gh='cd $HOME/go/src/github.com;'
+alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
@@ -159,5 +160,4 @@ alias gbra='git branch;'
 alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
-
 

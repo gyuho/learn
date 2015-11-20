@@ -4,7 +4,6 @@
 # Python: introduction
 
 - [Reference](#reference)
-- [Install](#install)
 - [Hello World!](#hello-world)
 
 [↑ top](#python-introduction)
@@ -33,40 +32,6 @@
 
 
 
-
-
-
-#### Install
-
-Please visit [here](https://www.python.org/downloads/).
-
-```bash
-#!/bin/bash
-
-cd $HOME;
-sudo apt-get -y install python-pip python-dev python-all \
-python-psycopg2 python-numpy python-pandas python-mysqldb;
-
-sudo pip install --upgrade pip;
-sudo pip install --upgrade psycopg2;
-sudo pip install --upgrade pyyaml;
-sudo pip install --upgrade gevent;
-sudo pip install --upgrade sqlalchemy;
-sudo pip install --upgrade boto;
-
-```
-
-[↑ top](#python-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
 #### Hello World!
 
 ```python
@@ -76,7 +41,7 @@ print "Hello World!"
 
 You can either:
 
-- `python code/hello.py`
+- `./code/hello.py` or `python code/hello.py`
 - `cd code/` and `sudo chmod +x hello.py` and `./hello.py`
 - `python` and `print "Hello World!"` in the intepreter
 

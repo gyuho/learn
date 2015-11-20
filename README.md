@@ -15,6 +15,11 @@ I appreciate any kind of *feedback* or *suggestions*.
 Please email <a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
 or [`pull request`](https://github.com/gyuho/learn/pulls).
 
+<br>
+#### Hot links
+
+- [*my linux setup*](https://github.com/gyuho/learn/tree/master/doc/my_linux_setup)
+
 <br><hr>
 ### Contents
 
@@ -48,7 +53,8 @@ Unix is essential in software development.
 >
 > *Doug McIlroy*
 
-- [*bash, vim*](https://github.com/gyuho/learn/tree/master/doc/bash_vim)
+- [*my linux setup*](https://github.com/gyuho/learn/tree/master/doc/my_linux_setup)
+- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
 
 [↑ top](#contents)
 <br><br>
