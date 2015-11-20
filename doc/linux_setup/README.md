@@ -1,17 +1,18 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# bash, vim
+# linux setup
 
 I primarily work with Ubuntu, bash, vim.
 
 - [Reference](#reference)
+- [arch](#arch)
 - [ubuntu](#ubuntu)
 - [terminal](#terminal)
 - [tmux](#tmux)
 - [`vim`](#vim)
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
 
@@ -24,10 +25,23 @@ I primarily work with Ubuntu, bash, vim.
 - [*Learn Enough Command Line to Be Dangerous by Michael Hartl*](http://www.learnenough.com/command-line)
 - [*The art of command line*](https://github.com/jlevy/the-art-of-command-line)
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
 
+
+
+
+
+
+
+#### arch
+
+...
+
+[↑ top](#linux-setup)
+<br><br><br><br>
+<hr>
 
 
 
@@ -47,7 +61,7 @@ I primarily work with Ubuntu, bash, vim.
 - <kbd>alt</kbd> + <kbd>q</kbd> : `close window`
 - <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>v</kbd> : `maximize window vertically`
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
 
@@ -67,7 +81,7 @@ I primarily work with Ubuntu, bash, vim.
 - <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>+</kbd> : `zoom in`
 - <kbd>ctrl</kbd> + <kbd>-</kbd> : `zoom out`
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
 
@@ -87,7 +101,7 @@ I primarily work with Ubuntu, bash, vim.
 - <kbd>ctrl</kbd> + <kbd>b</kbd>, `:resize-pane -R 10` : `resize`
 - <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>x</kbd> : `kill pane`
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
 
@@ -156,6 +170,6 @@ I primarily work with Ubuntu, bash, vim.
 - <kbd>space</kbd> + <kbd>w</kbd> : `:w`
 - <kbd>space</kbd> + <kbd>q</kbd> : `:q`
 
-[↑ top](#bash-vim)
+[↑ top](#linux-setup)
 <br><br><br><br>
 <hr>
