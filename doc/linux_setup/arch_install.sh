@@ -63,21 +63,9 @@ pacman --noconfirm -Syyu;
 genfstab -U /mnt > /mnt/etc/fstab;
 arch-chroot /mnt /bin/bash;
 
-# set language
-nano /etc/locale.gen; # remove # from en_US.UTF-8
-locale-gen;
-echo LANG=en_US.UTF-8 > /etc/locale.conf;
-export LANG=en_US.UTF-8;
-
-# set timezone
-ln -s /usr/share/zoneinfo/America/Los_Angeles /etc/localtime;
-
-# set hardware clock to UTC
-hwclock --systohc --utc;
-
 # set username
 echo gyuho > /etc/hostname;
-# nano /etc/hosts;
+# vim /etc/hosts;
 
 # set password
 passwd
@@ -90,6 +78,15 @@ grub-mkconfig -o /boot/grub/grub.cfg;
 exit;
 reboot;
 
-root;
 
-# type your password
+# set language
+vim /etc/locale.gen; # remove # from en_US.UTF-8
+locale-gen;
+echo LANG=en_US.UTF-8 > /etc/locale.conf;
+export LANG=en_US.UTF-8;
+
+# set timezone
+ln -s /usr/share/zoneinfo/America/Los_Angeles /etc/localtime;
+
+# set hardware clock to UTC
+hwclock --systohc --utc;
