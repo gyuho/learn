@@ -1,33 +1,13 @@
 #!/bin/bash
 
-# sudo fdisk -l
-# /dev/sdb1
-# sudo apt-get install pv
-# dd if=archlinux-2015.11.01-dual.iso | pv | sudo dd of=/dev/sdb1
+# wifi-menu
+pacman --noconfirm -Syyu;
+timedatectl set-ntp true;
 
-# reboot from USB
-
-# https://wiki.archlinux.org/index.php/Installation_guide
-# pacstrap /mnt base;
-# genfstab -p /mnt >> /mnt/etc/fstab;
-# arch-chroot /mnt;
-# echo gyuho > /etc/hostname;
-# ln -s /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
-
-# edit /etc/locale.gen
-# local-gen
-
-# localectl list-locales | grep en_;
-# echo LANG=en_US.utf8 > /etc/locale.conf;
-
-# mkinitcpio -p linux
-
-# passwd
-
-
-
-# Force pacman to refresh the package lists
-pacman -Syyu;
+# ip link
+pacman --noconfirm -S iw wpa_supplicant;
+pacman --noconfirm -S dialog wpa_actiond;
+# systemctl enable dhcpcd@INTERFACENAME.service;
 
 # su
 # nano /etc/sudoers
