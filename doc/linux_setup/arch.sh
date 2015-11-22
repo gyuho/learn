@@ -84,9 +84,7 @@ sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
-sudo git clone --progress \
-	https://github.com/gmarik/Vundle.vim.git \
-	~/.vim/bundle/Vundle.vim;
+sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
 
 sudo cp ./vimrc.vim ~/.vimrc && \
 source $HOME/.vimrc && \
@@ -108,9 +106,9 @@ ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 sudo pacman --noconfirm -S cmake && \
 sudo pacman --noconfirm -S python;
 
-sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
-cd $HOME/.vim/bundle/YouCompleteMe && \
-sudo ./install.sh --clang-completer --system-libclang;
+# sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
+# cd $HOME/.vim/bundle/YouCompleteMe && \
+# sudo ./install.sh --clang-completer --system-libclang;
 
 cd $HOME && \
 mkdir ycm_build && \
