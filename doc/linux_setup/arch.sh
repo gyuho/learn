@@ -31,10 +31,13 @@ sudo mkdir -p $HOME/go/src/github.com/coreos;
 
 # install default terminal
 sudo pacman --noconfirm -S rxvt-unicode;
+
+sudo pacman --noconfirm -S dbus;
 sudo pacman --noconfirm -S pcmanfm;
+sudo pacman --noconfirm -S ttf-dejavu;
 
 # install GUI
-sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
+sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
 
 sudo mkdir -p $HOME/.i3;
