@@ -39,7 +39,6 @@ sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 d
 sudo mkdir -p $HOME/.i3;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
-sudo cp ./arch_i3.conf $HOME/.i3/config;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 
 sudo mkdir -p $HOME/Pictures && \
