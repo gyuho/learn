@@ -36,10 +36,6 @@ sudo pacman --noconfirm -S xfce4-terminal;
 sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 dmenu && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
 
-sudo mkdir -p $HOME/Pictures && \
-sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
-
 sudo mkdir -p $HOME/.i3;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
