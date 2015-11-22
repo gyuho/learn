@@ -24,7 +24,7 @@ sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
 # gyuho ALL=(ALL) NOPASSWD: ALL
 sudo pacman --noconfirm -S sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-sudo pacman --noconfirm -S curl wget vim git;
+sudo pacman --noconfirm -S curl wget vim git feh;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
 sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
@@ -41,15 +41,15 @@ sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_
 exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 
 sudo mkdir -p $HOME/.i3;
-sudo cp ./arch_pacman.conf /etc/pacman.conf && source /etc/pacman.conf;
-sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && source $HOME/.xinitrc;
-sudo cp ./arch_i3.conf $HOME/.i3/config && source $HOME/.i3/config;
-sudo cp ./arch_i3status.conf $HOME/.i3/i3status.conf && source $HOME/.i3/i3status.conf;
-sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo cp ./arch_pacman.conf /etc/pacman.conf;
+sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
+sudo cp ./arch_i3.conf $HOME/.i3/config;
+sudo cp ./arch_i3status.conf $HOME/.i3/i3status.conf;
+sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 
 sudo mkdir -p $HOME/Pictures && \
 sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
+feh --bg-scale $HOME/Pictures/bg.jpg;
 
 # login
 # startx;
@@ -61,6 +61,6 @@ exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 # modkey + shift + e   to kill i3 session.
 
 # install chrome
-yaourt --noconfirm -S -U google-chrome;
+yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
