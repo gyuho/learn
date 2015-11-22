@@ -1,3 +1,5 @@
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman
+-Qtdq);
 timedatectl set-ntp true;
 
 # wired
@@ -170,3 +172,8 @@ go get -v -u github.com/jstemmer/gotags && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
 
+
+#############################################################
+printf "\n\n\n\n\nDONE\n\n\n\n\n"
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman
+-Qtdq);
