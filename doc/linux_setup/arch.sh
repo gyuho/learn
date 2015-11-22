@@ -60,3 +60,59 @@ feh --bg-scale $HOME/Pictures/bg.jpg;
 yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
+
+echo "[user]
+  email = gyuhox@gmail.com
+  name = Gyu-Ho Lee
+
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = auto" > $HOME/.gitconfig;
+  
+git config --global user.name "Gyu-Ho Lee";
+git config --global user.email "gyuhox@gmail.com";
+
+
+printf "installing vim...\n\n" && sleep 5s;
+
+sudo mkdir -p $HOME/.vim/bundle;
+sudo mkdir -p $HOME/.vim/ftdetect;
+sudo mkdir -p $HOME/.vim/syntax;
+sudo chmod -R +x $HOME/.vim;
+sudo git clone --progress \
+	https://github.com/gmarik/Vundle.vim.git \
+	~/.vim/bundle/Vundle.vim;
+
+sudo cp ./vimrc.vim ~/.vimrc && \
+source $HOME/.vimrc && \
+sudo vim +PluginInstall +qall && \
+sudo vim +PluginClean +qall;
+
+sudo pacman --noconfirm -S ctags && \
+cd $HOME/go && ctags -R ./* && \
+cd $HOME;
+
+sudo mkdir -p $HOME/.vim/ctags && \
+cd $HOME/.vim/ctags && \
+pacman -Ql glibc | awk '/\/usr\/include/{print $2}' > c_headers && \
+ctags -L c_headers --c-kinds=+p --fields=+iaS --extra=+q -f c && \
+pacman -Ql gcc | awk '/\/usr\/include/{print $2}' > c++_headers && \
+ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
+
+# https://github.com/Valloric/YouCompleteMe
+sudo pacman --noconfirm -S cmake && \
+sudo pacman --noconfirm -S python && \
+sudo pacman --noconfirm -S python-devel;
+
+cd $HOME/.vim/bundle/YouCompleteMe && \
+sudo ./install.sh --clang-completer --system-libclang;
+
+cd $HOME && \
+mkdir ycm_build && \
+cd ycm_build;
+
+sudo cmake -G "Unix Makefiles" . \
+	~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp && \
+sudo make ycm_support_libs;
