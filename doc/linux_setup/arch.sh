@@ -38,7 +38,7 @@ sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 d
 
 sudo mkdir -p $HOME/Pictures && \
 sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-sudo exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
+exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 
 sudo mkdir -p $HOME/.i3;
 sudo cp ./arch_pacman.conf /etc/pacman.conf && source /etc/pacman.conf;
@@ -49,7 +49,7 @@ sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 
 sudo mkdir -p $HOME/Pictures && \
 sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-sudo exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
+exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 
 # login
 # startx;
