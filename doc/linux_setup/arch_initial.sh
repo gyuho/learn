@@ -2,7 +2,7 @@
 fdisk -l;
 # /dev/sdbxY
 
-sudo dd bs=4M if=$HOME/archlinux-2015.11.01-dual.iso of=/dev/sdb && sync;
+sudo dd bs=4M if=$HOME/archlinux-2015.11.01-dual.iso of=/dev/sdx && sync;
 
 # Reboot from USB
 # Boot Arch Linux x86_64
@@ -58,19 +58,18 @@ mount /dev/sdxY /mnt;
 # https://wiki.archlinux.org/index.php/Beginners'_guide
 # https://wiki.archlinux.org/index.php/Installation_guide
 
+# create partition from the current OS
+# OR
 # find out what partitions you have
 fdisk -l;
 lsblk;
 parted /dev/sdx print;
 parted /dev/sdx;
-# (parted) mklabel gpt;
-# (parted) mkpart primary ext4 513MiB 20.5GiB
-# (parted) mkpart primary ext4 20.5GiB 100%
-# set 1 boot on
-# set 2 boot on
-
-# erase all
-sgdisk --xap-all /dev/sdxY;
+# parted> mkpart primary ext2 1 2
+# parted> set 1 bios_grub on
+# parted> mkpart primary linux-swap 2 10%
+# parted> mkpart primary ext4 10% 100%
+# parted> quit
 
 # format partitions
 mkfs.ext4 /dev/sdxY;
