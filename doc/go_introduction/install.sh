@@ -7,11 +7,8 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
-cd /usr/local && sudo rm -rf ./go;
-
-sudo curl \
--s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz \
-| sudo tar -v -C /usr/local/ -xz;
+cd /usr/local && sudo rm -rf ./go && \
+sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
