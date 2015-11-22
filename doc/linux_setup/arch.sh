@@ -22,21 +22,24 @@ sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
 # su
 # nano /etc/sudoers
 # gyuho ALL=(ALL) NOPASSWD: ALL
+
+#############################################################
+printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 5s;
+
 sudo pacman --noconfirm -S sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 sudo pacman --noconfirm -S curl wget vim git feh;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
 sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
-
-# install default terminal
 sudo pacman --noconfirm -S rxvt-unicode;
-
 sudo pacman --noconfirm -S dbus;
 sudo pacman --noconfirm -S pcmanfm;
 sudo pacman --noconfirm -S ttf-dejavu;
 
-# install GUI
+#############################################################
+printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
+
 sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
 
@@ -52,10 +55,15 @@ feh --bg-scale $HOME/Pictures/bg.jpg;
 # login
 # startx;
 
+#############################################################
+printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 5s;
+
 # install chrome
 # yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
+#############################################################
+printf "\n\n\n\n\ninstalling git...\n\n" && sleep 5s;
 
 echo "[user]
   email = gyuhox@gmail.com
@@ -70,7 +78,7 @@ echo "[user]
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
 
-
+#############################################################
 printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S clang;
@@ -113,3 +121,56 @@ cd ycm_build;
 sudo cmake -G "Unix Makefiles" . \
 	~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp && \
 sudo make ycm_support_libs;
+
+#############################################################
+printf "\n\n\n\n\ninstalling go...\n\n" && sleep 5s;
+
+x=$(lsb_release -a | grep "Distributor ID:")
+if [ ${x:16:6} = "Ubuntu" ] || [ ${x:16:6} = "Debian" ]; then
+    echo "Ubuntu ou Debian"
+    sudo apt-get -y install git
+elif [ ${x:16:4} = "arch" ]; then
+    echo "Arch linux"
+    sudo pacman --noconfirm -S git
+else
+    echo "Distro unknown!"
+fi
+
+cd $HOME && \
+mkdir -p $HOME/go/src && \
+mkdir -p $HOME/go/src/github.com && \
+mkdir -p $HOME/go/src/github.com/coreos && \
+mkdir -p $HOME/go/src/github.com/gyuho && \
+mkdir -p $HOME/go/src/golang.org;
+
+cd /usr/local && sudo rm -rf ./go;
+
+sudo curl \
+-s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz \
+| sudo tar -v -C /usr/local/ -xz;
+
+echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
+PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
+echo "export PATH=$(echo $PATH_VAR)" >> $HOME/.bashrc && \
+source $HOME/.bashrc;
+
+cd $HOME && \
+printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Successfully installed Go.\")\n}" > $HOME/temp.go;
+cd $HOME && \
+go run temp.go && \
+rm -f temp.go && \
+go version;
+
+cd $HOME && \
+go get -v -u github.com/tools/godep && \
+go get -v -u golang.org/x/tools/cmd/... && \
+go get -v -u github.com/golang/lint/golint && \
+go get -v -u github.com/nsf/gocode && \
+go get -v -u github.com/motain/gocheck && \
+go get -v -u github.com/vaughan0/go-ini && \
+go get -v -u github.com/rogpeppe/godef && \
+go get -v -u github.com/kisielk/errcheck && \
+go get -v -u github.com/jstemmer/gotags && \
+cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
+cd $HOME;
+
