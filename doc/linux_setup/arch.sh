@@ -60,6 +60,6 @@ exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 # modkey + shift + e   to kill i3 session.
 
 # install chrome
-yaourt -S -U google-chrome;
+yaourt --noconfirm -S -U google-chrome;
 # run with google-chrome-stable
 
