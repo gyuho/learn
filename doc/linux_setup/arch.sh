@@ -79,7 +79,7 @@ sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 5s;
 
 # install chrome
-# yaourt --noconfirm -S google-chrome;
+yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
 #############################################################
@@ -168,7 +168,6 @@ cd $HOME && go run temp.go && rm -f temp.go && go version;
 cd $HOME && \
 go get -v -u github.com/tools/godep && \
 go get -v -u golang.org/x/tools/cmd/... && \
-go get -v -u golang.org/x/tools/cmd/godoc && \
 go get -v -u github.com/golang/lint/golint && \
 go get -v -u github.com/nsf/gocode && \
 go get -v -u github.com/motain/gocheck && \
