@@ -32,6 +32,8 @@ sudo mkdir -p $HOME/go/src/github.com/coreos;
 # install default terminal
 sudo pacman --noconfirm -S xfce4-terminal;
 
+sudo pacman --noconfirm -S pcmanfm;
+
 # install GUI
 sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 dmenu && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
