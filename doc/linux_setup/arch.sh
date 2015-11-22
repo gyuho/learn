@@ -1,5 +1,4 @@
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman
--Qtdq);
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 timedatectl set-ntp true;
 
 # wired
@@ -30,13 +29,18 @@ printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-sudo pacman --noconfirm -S curl wget gvim vim git feh;
+sudo pacman --noconfirm -S curl wget gvim vim git;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
+
 sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
-sudo pacman --noconfirm -S terminator;
+
+sudo pacman --noconfirm -S alsa-utils;
 sudo pacman --noconfirm -S dbus;
+
+sudo pacman --noconfirm -S terminator xterm;
 sudo pacman --noconfirm -S pcmanfm;
+
 sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
 sudo pacman --noconfirm -S ttf-dejavu;
 sudo pacman --noconfirm -S ttf-droid;
@@ -54,12 +58,17 @@ sudo pacman --noconfirm -S ttf-baekmuk;
 #############################################################
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
 
-sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
+sudo pacman --noconfirm -S xorg xorg-xinit xorg-server \
+	xorg-utils xorg-twm xorg-xclock \
+	xfce4 xfce4-goodies;
+
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
+
 # sudo reboot;
 
 sudo mkdir -p $HOME/fontconfig;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
-sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
+sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 
@@ -154,14 +163,12 @@ source $HOME/.bashrc;
 
 cd $HOME && \
 printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Successfully installed Go.\")\n}" > $HOME/temp.go;
-cd $HOME && \
-go run temp.go && \
-rm -f temp.go && \
-go version;
+cd $HOME && go run temp.go && rm -f temp.go && go version;
 
 cd $HOME && \
 go get -v -u github.com/tools/godep && \
 go get -v -u golang.org/x/tools/cmd/... && \
+go get -v -u golang.org/x/tools/cmd/godoc && \
 go get -v -u github.com/golang/lint/golint && \
 go get -v -u github.com/nsf/gocode && \
 go get -v -u github.com/motain/gocheck && \
@@ -172,8 +179,7 @@ go get -v -u github.com/jstemmer/gotags && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
 
-
 #############################################################
 printf "\n\n\n\n\nDONE\n\n\n\n\n"
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman
--Qtdq);
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
+
