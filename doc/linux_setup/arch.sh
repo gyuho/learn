@@ -32,7 +32,7 @@ sudo pacman --noconfirm -S curl wget vim git feh;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
 sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
-sudo pacman --noconfirm -S rxvt-unicode;
+sudo pacman --noconfirm -S terminator;
 sudo pacman --noconfirm -S dbus;
 sudo pacman --noconfirm -S pcmanfm;
 sudo pacman --noconfirm -S ttf-dejavu;
