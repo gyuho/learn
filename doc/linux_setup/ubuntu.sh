@@ -21,7 +21,7 @@ sudo ntpdate ntp.ubuntu.com;
 sudo apt-get -y install git;
 sudo apt-get -y install tmux;
 
-sudo cp ./bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo cp ./ubuntu_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 
 sudo cp ./tmux.conf $HOME/.tmux.conf;
 source $HOME/.tmux.conf;
