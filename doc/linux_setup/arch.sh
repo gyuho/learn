@@ -77,6 +77,7 @@ git config --global user.email "gyuhox@gmail.com";
 
 printf "installing vim...\n\n" && sleep 5s;
 
+sudo pacman --noconfirm -S clang;
 sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
