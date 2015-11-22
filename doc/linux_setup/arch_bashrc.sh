@@ -70,6 +70,8 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ga
  
 # http://ezprompt.net/
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
 alias l='ls -lh'
 alias ls="ls --color=auto -F"

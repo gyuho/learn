@@ -48,10 +48,6 @@ sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 
-sudo mkdir -p $HOME/Pictures && \
-sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-feh --bg-scale $HOME/Pictures/bg.jpg;
-
 # login
 # startx;
 
@@ -77,6 +73,7 @@ echo "[user]
   
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
+git config --global core.editor "vim";
 
 #############################################################
 printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 5s;
