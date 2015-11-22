@@ -65,6 +65,7 @@ fdisk -l;
 lsblk;
 parted /dev/sdx print;
 parted /dev/sdx;
+# parted> mktable gpt
 # parted> mkpart primary ext2 1 2
 # parted> set 1 bios_grub on
 # parted> mkpart primary linux-swap 2 10%
@@ -93,7 +94,7 @@ echo gyuho > /etc/hostname;
 passwd
 
 # install bootloader
-pacman --noconfirm -S grub os-prober;
+pacman --noconfirm -S grub grub-bios os-prober;
 grub-install --recheck /dev/sdxY;
 grub-mkconfig -o /boot/grub/grub.cfg;
 
