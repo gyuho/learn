@@ -90,8 +90,8 @@ sudo git clone --progress \
 
 sudo cp ./vimrc.vim ~/.vimrc && \
 source $HOME/.vimrc && \
-sudo vim +PluginInstall +qall && \
-sudo vim +PluginClean +qall;
+vim +PluginInstall +qall && \
+vim +PluginClean +qall;
 
 sudo pacman --noconfirm -S ctags && \
 cd $HOME/go && ctags -R ./* && \
