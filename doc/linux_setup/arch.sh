@@ -125,17 +125,6 @@ sudo make ycm_support_libs;
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 5s;
 
-x=$(lsb_release -a | grep "Distributor ID:")
-if [ ${x:16:6} = "Ubuntu" ] || [ ${x:16:6} = "Debian" ]; then
-    echo "Ubuntu ou Debian"
-    sudo apt-get -y install git
-elif [ ${x:16:4} = "arch" ]; then
-    echo "Arch linux"
-    sudo pacman --noconfirm -S git
-else
-    echo "Distro unknown!"
-fi
-
 cd $HOME && \
 mkdir -p $HOME/go/src && \
 mkdir -p $HOME/go/src/github.com && \
