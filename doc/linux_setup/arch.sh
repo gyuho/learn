@@ -30,12 +30,11 @@ sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
 
 # install default terminal
-sudo pacman --noconfirm -S xfce4-terminal;
-
+sudo pacman --noconfirm -S rxvt-unicode;
 sudo pacman --noconfirm -S pcmanfm;
 
 # install GUI
-sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 dmenu && echo "exec i3" > $HOME/.xinitrc;
+sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
 
 sudo mkdir -p $HOME/.i3;
@@ -49,12 +48,6 @@ feh --bg-scale $HOME/Pictures/bg.jpg;
 
 # login
 # startx;
-
-# modkey + return      to start a terminal.
-# modkey + shift + q   to close current window.
-# modkey + f           switches the active window to fullscreen view.
-# modkey + d           for dmenu.
-# modkey + shift + e   to kill i3 session.
 
 # install chrome
 # yaourt --noconfirm -S google-chrome;
