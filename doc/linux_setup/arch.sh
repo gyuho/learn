@@ -37,6 +37,15 @@ sudo pacman --noconfirm -S dbus;
 sudo pacman --noconfirm -S pcmanfm;
 sudo pacman --noconfirm -S ttf-dejavu;
 
+# terminator
+# Ctrl-Shift-E: will split the view vertically.
+# Ctrl-Shift-O: will split the view horizontally.
+# Ctrl-Shift-P: will focus be active on the previous view.
+# Ctrl-Shift-N: will focus be active on the next view.
+# Ctrl-Shift-W: will close the view where the focus is on.
+# Ctrl-Shift-Q: will exit terminator.
+# Ctrl-Shift-X: will focus active window and  enlarge it
+
 #############################################################
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
 
