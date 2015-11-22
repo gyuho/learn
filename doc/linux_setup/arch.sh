@@ -75,7 +75,7 @@ git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
 
 
-printf "installing vim...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S clang;
 
