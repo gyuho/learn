@@ -37,9 +37,10 @@ sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-twm xorg-xclock i3 d
 # sudo reboot;
 
 sudo mkdir -p $HOME/Pictures && \
-wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
+sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
+sudo exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 
+sudo mkdir -p $HOME/.i3;
 sudo cp ./arch_pacman.conf /etc/pacman.conf && source /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && source $HOME/.xinitrc;
 sudo cp ./arch_i3.conf $HOME/.i3/config && source $HOME/.i3/config;
@@ -47,8 +48,8 @@ sudo cp ./arch_i3status.conf $HOME/.i3/i3status.conf && source $HOME/.i3/i3statu
 sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 
 sudo mkdir -p $HOME/Pictures && \
-wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
-exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
+sudo wget https://wallpaperscraft.com/image/san_-_francisco_city_night_top_view_28432_1920x1200.jpg -q -O $HOME/Pictures/bg.jpg && \
+sudo exec --no-startup-id feh --bg-fill $HOME/Pictures/bg.jpg;
 
 # login
 # startx;
