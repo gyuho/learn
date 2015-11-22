@@ -103,9 +103,9 @@ ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 
 # https://github.com/Valloric/YouCompleteMe
 sudo pacman --noconfirm -S cmake && \
-sudo pacman --noconfirm -S python && \
-sudo pacman --noconfirm -S python-devel;
+sudo pacman --noconfirm -S python;
 
+sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
 cd $HOME/.vim/bundle/YouCompleteMe && \
 sudo ./install.sh --clang-completer --system-libclang;
 
