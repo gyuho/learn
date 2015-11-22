@@ -57,7 +57,7 @@ feh --bg-scale $HOME/Pictures/bg.jpg;
 # modkey + shift + e   to kill i3 session.
 
 # install chrome
-yaourt --noconfirm -S google-chrome;
+# yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
 
@@ -78,6 +78,8 @@ git config --global user.email "gyuhox@gmail.com";
 printf "installing vim...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S clang;
+
+sudo chown -R gyuho:gyuho $HOME/.vim;
 sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
