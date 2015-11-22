@@ -28,14 +28,17 @@ printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-sudo pacman --noconfirm -S curl wget vim git feh;
+sudo pacman --noconfirm -S curl wget gvim vim git feh;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
 sudo mkdir -p $HOME/go/src/github.com/gyuho;
 sudo mkdir -p $HOME/go/src/github.com/coreos;
 sudo pacman --noconfirm -S terminator;
 sudo pacman --noconfirm -S dbus;
 sudo pacman --noconfirm -S pcmanfm;
+sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
 sudo pacman --noconfirm -S ttf-dejavu;
+sudo pacman --noconfirm -S ttf-droid;
+sudo pacman --noconfirm -S ttf-baekmuk;
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
@@ -52,10 +55,11 @@ printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
 sudo pacman --noconfirm -S xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock gnome gnome-extra && echo "exec i3" > $HOME/.xinitrc;
 # sudo reboot;
 
-sudo mkdir -p $HOME/.i3;
+sudo mkdir -p $HOME/fontconfig;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
+sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 
 # login
 # startx;
