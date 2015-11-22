@@ -1,16 +1,32 @@
 # https://wiki.archlinux.org/index.php/USB_flash_installation_media
-sudo fdisk -l;
-# /dev/sdb1
+fdisk -l;
+# /dev/sdbxY
 
 sudo dd bs=4M if=$HOME/archlinux-2015.11.01-dual.iso of=/dev/sdb && sync;
 
 # Reboot from USB
 # Boot Arch Linux x86_64
 
-# ping -c 3 www.google.com;
+# wired
+# ls /sys/class/net;
+# ip link;
+# systemctl enable dhcpcd@INTERFACENAME.service;
+# INTERFACENAME is usually e*
+# dhcpcd INTERFACENAME;
+# 
+# wireless
+# ls /sys/class/net;
+# sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
+# ip link;
+# systemctl enable dhcpcd@INTERFACENAME.service;
+# INTERFACENAME is usually w*
+# wifi-menu wlp3s0*;
+# dhcpcd INTERFACENAME;
+
+ping -c 3 www.google.com;
 
 # check if it's efi
-# ls /sys/firmware/efi/efivars;
+ls /sys/firmware/efi/efivars;
 # if exists, it's efi
 
 
@@ -34,10 +50,7 @@ mkfs.ext4 /dev/sdxY;
 
 # mount the partition
 mount /dev/sdxY /mnt;
-
-
-
-
+##################################
 
 ##################################
 # INSTALL Arch Linux (DUAL-BOOT) #
@@ -46,15 +59,25 @@ mount /dev/sdxY /mnt;
 # https://wiki.archlinux.org/index.php/Installation_guide
 
 # find out what partitions you have
-sudo fdisk -l;
+fdisk -l;
+lsblk;
 parted /dev/sdx print;
+parted /dev/sdx;
+# (parted) mklabel gpt;
+# (parted) mkpart primary ext4 513MiB 20.5GiB
+# (parted) mkpart primary ext4 20.5GiB 100%
+# set 1 boot on
+# set 2 boot on
 
+# erase all
+sgdisk --xap-all /dev/sdxY;
 
+# format partitions
+mkfs.ext4 /dev/sdxY;
 
-
-
-
-
+# mount the partition
+mount /dev/sdxY /mnt;
+##################################
 
 # install basic libraries
 pacstrap /mnt base base-devel;
