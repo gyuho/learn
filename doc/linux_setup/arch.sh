@@ -32,8 +32,8 @@ sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq
 sudo pacman --noconfirm -S curl wget gvim vim git;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
 
-sudo mkdir -p $HOME/go/src/github.com/gyuho;
-sudo mkdir -p $HOME/go/src/github.com/coreos;
+mkdir -p $HOME/go/src/github.com/gyuho;
+mkdir -p $HOME/go/src/github.com/coreos;
 
 sudo pacman --noconfirm -S dbus;
 
