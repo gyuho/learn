@@ -35,7 +35,7 @@ sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Su yaourt;
 mkdir -p $HOME/go/src/github.com/gyuho;
 mkdir -p $HOME/go/src/github.com/coreos;
 
-sudo pacman --noconfirm -Su dbus;
+sudo pacman --noconfirm -Su dbus tree htop;
 sudo pacman --noconfirm -Su openssh;
 
 sudo pacman --noconfirm -Su terminator xterm;
