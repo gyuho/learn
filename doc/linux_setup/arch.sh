@@ -186,3 +186,11 @@ cd $HOME;
 printf "\n\n\n\n\nDONE\n\n\n\n\n"
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
+# free pagecache, dentries, inodes / 1 for pagecache
+# and the system starts caching immediately again
+sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches;
+
+# sudo apt-get -y install postgresql;
+# sudo apt-get -y install mysql-server;
+# sudo echo mysql-server mysql-server/root_password password 1 | sudo debconf-set-selections;
+# sudo echo mysql-server mysql-server/root_password_again password 1 | sudo debconf-set-selections;
