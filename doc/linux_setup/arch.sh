@@ -175,6 +175,7 @@ go get -v -u github.com/vaughan0/go-ini && \
 go get -v -u github.com/rogpeppe/godef && \
 go get -v -u github.com/kisielk/errcheck && \
 go get -v -u github.com/jstemmer/gotags && \
+go get -v -u github.com/alecthomas/gometalinter && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
 
