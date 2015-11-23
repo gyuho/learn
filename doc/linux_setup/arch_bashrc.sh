@@ -70,6 +70,7 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/ga
  
 # http://ezprompt.net/
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
+
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
@@ -78,6 +79,8 @@ alias ls="ls --color=auto -F"
 alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
+alias ...='cd ../..'
+
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
 alias hh="history | grep "
@@ -94,10 +97,6 @@ alias shutdown='sudo telinit 0;'
  
 alias v='vim'
 
-alias cs='cd $HOME/go/src;'
-alias gh='cd $HOME/go/src/github.com;'
-alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
-
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
@@ -108,3 +107,7 @@ alias gbra='git branch;'
 alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
+
+alias ccc='cd /home/ubuntu/go/src/github.com/coreos;'
+alias ggg='cd /home/ubuntu/go/src/github.com/gyuho;'
+
