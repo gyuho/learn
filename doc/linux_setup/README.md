@@ -6,10 +6,6 @@
 I primarily work with Ubuntu, bash, vim.
 
 - [Reference](#reference)
-- [arch](#arch)
-- [ubuntu](#ubuntu)
-- [terminal](#terminal)
-- [tmux](#tmux)
 - [`vim`](#vim)
 
 [↑ top](#linux-setup)
@@ -24,82 +20,6 @@ I primarily work with Ubuntu, bash, vim.
 
 - [*Learn Enough Command Line to Be Dangerous by Michael Hartl*](http://www.learnenough.com/command-line)
 - [*The art of command line*](https://github.com/jlevy/the-art-of-command-line)
-
-[↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-#### arch
-
-...
-
-[↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-#### ubuntu
-
-- <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>t</kbd> : `launch terminal`
-- <kbd>print</kbd> : `Take a screenshot of an area`
-- <kbd>alt</kbd> + <kbd>space</kbd> : `switch to previous (input) source`
-- <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>m</kbd> : `maximize window`
-- <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>r</kbd> : `restore window`
-- <kbd>alt</kbd> + <kbd>q</kbd> : `close window`
-- <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>v</kbd> : `maximize window vertically`
-
-[↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-#### terminal
-
-- <kbd>ctrl</kbd> + <kbd>t</kbd> : `new tab`
-- <kbd>ctrl</kbd> + <kbd>w</kbd> : `close tab`
-- <kbd>alt</kbd> + <kbd>q</kbd> : `close window`
-- <kbd>ctrl</kbd> + <kbd>c</kbd> : `copy`
-- <kbd>ctrl</kbd> + <kbd>v</kbd> : `paste`
-- <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>+</kbd> : `zoom in`
-- <kbd>ctrl</kbd> + <kbd>-</kbd> : `zoom out`
-
-[↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-#### tmux
-
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>t</kbd> : `show time`
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>%</kbd> : `split vertically`
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>"</kbd> : `split horizontally`
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>arrow</kbd> : `switch`
-- <kbd>ctrl</kbd> + <kbd>b</kbd> + <kbd>arrow</kbd> : `resize`
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, `:resize-pane -R 10` : `resize`
-- <kbd>ctrl</kbd> + <kbd>b</kbd>, <kbd>x</kbd> : `kill pane`
 
 [↑ top](#linux-setup)
 <br><br><br><br>
