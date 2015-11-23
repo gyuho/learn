@@ -108,6 +108,6 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 
-alias ccc='cd /home/ubuntu/go/src/github.com/coreos;'
-alias ggg='cd /home/ubuntu/go/src/github.com/gyuho;'
+alias ccc='cd $HOME/go/src/github.com/coreos;'
+alias ggg='cd $HOME/go/src/github.com/gyuho;'
 

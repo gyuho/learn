@@ -9,7 +9,7 @@ timedatectl set-ntp true;
 # 
 # wireless
 # ls /sys/class/net;
-sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
+sudo pacman --noconfirm -Su iw wpa_supplicant dialog wpa_actiond;
 # ip link;
 # systemctl enable dhcpcd@INTERFACENAME.service;
 # INTERFACENAME is usually w*
@@ -27,25 +27,26 @@ sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
 #############################################################
 printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 5s;
 
-sudo pacman --noconfirm -S sudo;
+sudo pacman --noconfirm -Su sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-sudo pacman --noconfirm -S curl wget gvim vim git;
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -S yaourt;
+sudo pacman --noconfirm -Su curl wget gvim vim git;
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Su yaourt;
 
 mkdir -p $HOME/go/src/github.com/gyuho;
 mkdir -p $HOME/go/src/github.com/coreos;
 
-sudo pacman --noconfirm -S dbus;
+sudo pacman --noconfirm -Su dbus;
+sudo pacman --noconfirm -Su openssh;
 
-sudo pacman --noconfirm -S terminator xterm;
-sudo pacman --noconfirm -S networkmanager;
-sudo pacman --noconfirm -S net-tools;
-sudo pacman --noconfirm -S pcmanfm;
-sudo pacman --noconfirm -S transmission-daemon;
-sudo pacman --noconfirm -S transmission-qt;
+sudo pacman --noconfirm -Su terminator xterm;
+sudo pacman --noconfirm -Su networkmanager;
+sudo pacman --noconfirm -Su net-tools;
+sudo pacman --noconfirm -Su pcmanfm;
+sudo pacman --noconfirm -Su transmission-daemon;
+sudo pacman --noconfirm -Su transmission-qt;
 
-# sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
-# sudo pacman --noconfirm -S libhangul ttf-baekmuk ttf-dejavu ttf-droid;
+# sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
+# sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
@@ -59,7 +60,7 @@ sudo pacman --noconfirm -S transmission-qt;
 #############################################################
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
 
-sudo pacman --noconfirm -S xorg xorg-xinit xorg-server \
+sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server \
 	xorg-utils xorg-twm xorg-xclock \
 	xfce4 xfce4-mixer xfce4-goodies \
 	alsa-utils;
@@ -82,7 +83,7 @@ sudo cp ./arch_asoundrc.conf$HOME/.asoundrc;
 printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 5s;
 
 # install chrome
-# yaourt --noconfirm -S google-chrome;
+# yaourt --noconfirm -Su google-chrome;
 # run with google-chrome-stable
 
 #############################################################
@@ -105,7 +106,7 @@ git config --global core.editor "vim";
 #############################################################
 printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 5s;
 
-sudo pacman --noconfirm -S clang;
+sudo pacman --noconfirm -Su clang;
 
 sudo chown -R gyuho:gyuho $HOME/.vim;
 sudo mkdir -p $HOME/.vim/bundle;
@@ -119,7 +120,7 @@ source $HOME/.vimrc && \
 vim +PluginInstall +qall && \
 vim +PluginClean +qall;
 
-sudo pacman --noconfirm -S ctags && \
+sudo pacman --noconfirm -Su ctags && \
 cd $HOME/go && ctags -R ./* && \
 cd $HOME;
 
@@ -131,8 +132,8 @@ pacman -Ql gcc | awk '/\/usr\/include/{print $2}' > c++_headers && \
 ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 
 # https://github.com/Valloric/YouCompleteMe
-sudo pacman --noconfirm -S cmake && \
-sudo pacman --noconfirm -S python;
+sudo pacman --noconfirm -Su cmake && \
+sudo pacman --noconfirm -Su python;
 
 # sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
 # cd $HOME/.vim/bundle/YouCompleteMe && \
@@ -156,8 +157,8 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
-cd /usr/local && sudo rm -rf ./go && \
-sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+# cd /usr/local && sudo rm -rf ./go && \
+# sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
