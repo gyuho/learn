@@ -25,7 +25,7 @@ sudo pacman --noconfirm -Su iw wpa_supplicant dialog wpa_actiond;
 # gyuho ALL=(ALL) NOPASSWD: ALL
 
 #############################################################
-printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 1s;
 
 sudo pacman --noconfirm -Su sudo;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
@@ -58,14 +58,11 @@ sudo pacman --noconfirm -Su transmission-qt;
 # Ctrl-Shift-X: will focus active window and  enlarge it
 
 #############################################################
-printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
 
-sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server \
-	xorg-utils xorg-twm xorg-xclock \
-	xfce4 xfce4-mixer xfce4-goodies \
-	alsa-utils;
-
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
+# sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
+# sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies alsa-utils;
+# sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
 # sudo reboot;
 
@@ -74,20 +71,20 @@ sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
-sudo cp ./arch_asoundrc.conf$HOME/.asoundrc;
+sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
 
 # login
 # startx;
 
 #############################################################
-printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 1s;
 
 # install chrome
 # yaourt --noconfirm -Su google-chrome;
 # run with google-chrome-stable
 
 #############################################################
-printf "\n\n\n\n\ninstalling git...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
 
 echo "[user]
   email = gyuhox@gmail.com
@@ -104,7 +101,7 @@ git config --global user.email "gyuhox@gmail.com";
 git config --global core.editor "vim";
 
 #############################################################
-printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 1s;
 
 sudo pacman --noconfirm -Su clang;
 
@@ -132,8 +129,7 @@ pacman -Ql gcc | awk '/\/usr\/include/{print $2}' > c++_headers && \
 ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 
 # https://github.com/Valloric/YouCompleteMe
-sudo pacman --noconfirm -Su cmake && \
-sudo pacman --noconfirm -Su python;
+sudo pacman --noconfirm -Su cmake python;
 
 # sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
 # cd $HOME/.vim/bundle/YouCompleteMe && \
@@ -148,7 +144,7 @@ sudo cmake -G "Unix Makefiles" . \
 sudo make ycm_support_libs;
 
 #############################################################
-printf "\n\n\n\n\ninstalling go...\n\n" && sleep 5s;
+printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
 
 cd $HOME && \
 mkdir -p $HOME/go/src && \
@@ -184,6 +180,7 @@ cd $HOME;
 
 #############################################################
 printf "\n\n\n\n\nDONE\n\n\n\n\n"
+
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
 # free pagecache, dentries, inodes / 1 for pagecache
