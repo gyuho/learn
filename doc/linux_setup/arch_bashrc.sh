@@ -79,7 +79,6 @@ alias ls="ls --color=auto -F"
 alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
-alias ...='cd ../..'
 
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
