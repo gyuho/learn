@@ -42,6 +42,7 @@ sudo pacman --noconfirm -Su terminator xterm;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 sudo pacman --noconfirm -Su pcmanfm;
+sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
 
