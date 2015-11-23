@@ -1,7 +1,6 @@
 ##### Hot links
 
 - [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
-- [*Go install script*](https://github.com/gyuho/learn/blob/master/doc/go_introduction/install.sh)
 
 <br>
 
