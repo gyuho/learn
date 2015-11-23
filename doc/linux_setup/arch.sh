@@ -39,15 +39,14 @@ sudo pacman --noconfirm -S dbus;
 
 sudo pacman --noconfirm -S terminator xterm;
 sudo pacman --noconfirm -S networkmanager;
+sudo pacman --noconfirm -S net-tools;
 sudo pacman --noconfirm -S pcmanfm;
 sudo pacman --noconfirm -S transmission-daemon;
 sudo pacman --noconfirm -S transmission-qt;
 
 sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
-sudo pacman --noconfirm -S libhangul;
-sudo pacman --noconfirm -S ttf-dejavu;
-sudo pacman --noconfirm -S ttf-droid;
-sudo pacman --noconfirm -S ttf-baekmuk;
+sudo pacman --noconfirm -S libhangul ttf-baekmuk;
+sudo pacman --noconfirm -S ttf-dejavu ttf-droid;
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
@@ -63,7 +62,8 @@ printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 5s;
 
 sudo pacman --noconfirm -S xorg xorg-xinit xorg-server \
 	xorg-utils xorg-twm xorg-xclock \
-	xfce4 xfce4-mixer xfce4-goodies alsa-utils;
+	xfce4 xfce4-mixer xfce4-goodies \
+	alsa-utils;
 
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
