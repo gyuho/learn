@@ -44,9 +44,8 @@ sudo pacman --noconfirm -S pcmanfm;
 sudo pacman --noconfirm -S transmission-daemon;
 sudo pacman --noconfirm -S transmission-qt;
 
-sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
-sudo pacman --noconfirm -S libhangul ttf-baekmuk;
-sudo pacman --noconfirm -S ttf-dejavu ttf-droid;
+# sudo pacman --noconfirm -S noto-fonts noto-fonts-cjk noto-fonts-emoji;
+# sudo pacman --noconfirm -S libhangul ttf-baekmuk ttf-dejavu ttf-droid;
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
@@ -83,7 +82,7 @@ sudo cp ./arch_asoundrc.conf$HOME/.asoundrc;
 printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 5s;
 
 # install chrome
-yaourt --noconfirm -S google-chrome;
+# yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
 #############################################################
