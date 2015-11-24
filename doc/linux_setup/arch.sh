@@ -1,3 +1,8 @@
+
+sudo rmmod pcspkr;
+# su
+# echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf;
+
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 timedatectl set-ntp true;
 
