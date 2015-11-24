@@ -115,4 +115,6 @@ alias cee='cd $HOME/go/src/github.com/coreos;'
 alias cgg='cd $HOME/go/src/github.com/gyuho;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
+alias python='python2'
+
 
