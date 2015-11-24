@@ -18,7 +18,6 @@ Plugin 'godlygeek/tabular'
 Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
-Plugin 'majutsushi/tagbar'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'Valloric/YouCompleteMe'
@@ -50,12 +49,6 @@ map <Leader>a :bprev<Return>
 map <Leader>s :bnext<Return>
 " Close the current buffer
 map <Leader>d :bd<Return>
-
-" tabular
-nnoremap <Leader>t= :Tabularize /=<CR>
-nnoremap <Leader>t: :Tabularize /:\zs<CR>
-" :Tab/|
-" for |
 
 " Vim-Go
 let g:go_fmt_command = "goimports"
