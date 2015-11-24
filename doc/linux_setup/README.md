@@ -3,7 +3,7 @@
 
 # linux setup
 
-I primarily work with Ubuntu, bash, vim.
+Some of my favorite tools: arch linux, vim.
 
 - [Reference](#reference)
 - [`vim`](#vim)
