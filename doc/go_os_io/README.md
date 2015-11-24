@@ -3,6 +3,7 @@
 
 # Go: os, io
 
+- [Reference](#reference)
 - [package `os`](#package-os)
 - [package `os/exec`](#package-osexec)
 - [package `flag`](#package-flag)
@@ -29,6 +30,17 @@
 <hr>
 
 
+
+
+
+
+#### Reference
+
+- [CORE TECHNOLOGY: SIGNALS(Linux)](http://www.linuxvoice.com/core-technology-signals/)
+
+[↑ top](#go-os-io)
+<br><br><br><br>
+<hr>
 
 
 
