@@ -78,6 +78,7 @@ sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
+sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
 
 # login
 # startx;
