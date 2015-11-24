@@ -89,7 +89,7 @@ Some of my favorite tools: arch linux, vim.
 - <kbd>ctrl</kbd> + <kbd>p</kbd>, <kbd>p</kbd> : `in visual mode, repeat fuzzy file search`
 - <kbd>space</kbd> + <kbd>w</kbd> : `:w`
 - <kbd>space</kbd> + <kbd>q</kbd> : `:q`
-- <kbd>NUMBER</kbd> + <kbd>></kbd> + <kbd>></kbd>: `indent the visual select lines`
+- <kbd>NUMBER</kbd> + <kbd>></kbd>: `indent the visual select lines`
 
 [↑ top](#linux-setup)
 <br><br><br><br>
