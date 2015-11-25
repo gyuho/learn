@@ -25,15 +25,12 @@ call vundle#end()
 filetype plugin indent on
 " End of Vundle.vim
 
-syntax on
 
 " to prepend in comparison with the line above
 vnoremap . :norm.<CR>
 
-" http://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
-let mapleader = " "
-
 " <Space> + w to save the file
+let mapleader = " "
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>e :SyntasticCheck gcc<CR>
@@ -52,9 +49,6 @@ map <Leader>d :bd<Return>
 " Vim-Go
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
 let g:go_doc_keywordprg_enabled = 0
 let g:go_def_mapping_enabled = 0
 
@@ -73,6 +67,7 @@ let g:syntastic_mode_map = {
 let g:syntastic_cpp_compiler_options = '-std=c++11'
 let g:airline#extensions#tabline#enabled = 1
 set laststatus=2
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 
 " NERDTree
 map <F2> :NERDTreeToggle<cr>
@@ -126,4 +121,13 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 nmap <F8> :TagbarToggle<CR>
 
 set t_Co=256
-colorscheme default
+colorscheme blue
+" colorscheme evening
+" colorscheme default
+
+" If syntax highlighting is needed
+" syntax on
+" let g:go_highlight_functions = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_structs = 1
+
