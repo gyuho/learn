@@ -25,37 +25,33 @@ call vundle#end()
 filetype plugin indent on
 " End of Vundle.vim
 
-
-" to prepend in comparison with the line above
+" prepend in comparison with the line above
 vnoremap . :norm.<CR>
 
-" <Space> + w to save the file
+" <space> + w to save the file
 let mapleader = " "
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>e :SyntasticCheck gcc<CR>
 nmap <Leader><Leader> V
 
-" Move line by line even when the line is wrapped
+" better line moves
 map j gj
 map k gk
 
-" Move between buffers
-map <Leader>a :bprev<Return>
+map <Leader>a :bprev<Return>  " move buffer
 map <Leader>s :bnext<Return>
-" Close the current buffer
-map <Leader>d :bd<Return>
+map <Leader>d :bd<Return>     " close current buffer
 
-" Vim-Go
+" vim-Go
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
-let g:go_doc_keywordprg_enabled = 0
-let g:go_def_mapping_enabled = 0
 
 " https://github.com/scrooloose/syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+set laststatus=2
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -66,7 +62,6 @@ let g:syntastic_mode_map = {
 
 let g:syntastic_cpp_compiler_options = '-std=c++11'
 let g:airline#extensions#tabline#enabled = 1
-set laststatus=2
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 
 " NERDTree
@@ -125,9 +120,5 @@ colorscheme evening
 " colorscheme blue
 " colorscheme default
 
-" If syntax highlighting is needed
-" syntax on
-" let g:go_highlight_functions = 1
-" let g:go_highlight_methods = 1
-" let g:go_highlight_structs = 1
+syntax off
 

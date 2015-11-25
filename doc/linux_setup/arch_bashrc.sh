@@ -111,9 +111,8 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 
-alias gh='cd $HOME/go/src/github.com;'
-alias cee='cd $HOME/go/src/github.com/coreos;'
-alias cgg='cd $HOME/go/src/github.com/gyuho;'
+alias gh='cd $HOME/go/src/github.com/gyuho;'
+alias cs='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 
