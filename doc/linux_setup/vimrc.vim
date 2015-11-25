@@ -121,8 +121,8 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 nmap <F8> :TagbarToggle<CR>
 
 set t_Co=256
-colorscheme blue
-" colorscheme evening
+colorscheme evening
+" colorscheme blue
 " colorscheme default
 
 " If syntax highlighting is needed

@@ -98,6 +98,7 @@ alias reboot='sudo reboot;'
 alias shutdown='sudo telinit 0;'
  
 alias v='vim'
+alias vi='vim'
 
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
