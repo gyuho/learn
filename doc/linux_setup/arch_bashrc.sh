@@ -105,6 +105,7 @@ alias c11='g++ -std=c++11'
 
 alias chrome='google-chrome-stable;'
 alias update='sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);'
+alias clean='echo -e \\033c;'
 
 alias gbra='git branch;'
 alias gmas='git checkout master;'
