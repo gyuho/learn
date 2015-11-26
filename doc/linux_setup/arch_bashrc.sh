@@ -116,4 +116,4 @@ alias gh='cd $HOME/go/src/github.com/gyuho;'
 alias cs='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
-
+alias display='xfce4-display-settings;'
