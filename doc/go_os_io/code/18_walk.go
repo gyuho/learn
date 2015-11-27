@@ -118,8 +118,7 @@ func walkDir(targetDir string) (map[os.FileInfo]string, error) {
 		}
 		return nil
 	}
-	err := filepath.Walk(targetDir, visit)
-	if err != nil {
+	if err := filepath.Walk(targetDir, visit); err != nil {
 		return nil, err
 	}
 	return rmap, nil
