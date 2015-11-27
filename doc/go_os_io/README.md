@@ -2713,6 +2713,7 @@ func main() {
 // https://github.com/golang/go/blob/master/src/go/build/syslist.go#L7
 const goosList = "android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows "
 const goarchList = "386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 "
+const appengineList = "appengine appenginevm"
 
 func importDeps(dir string) (map[string]struct{}, error) {
 	tm, err := walkExt(dir, ".go")
@@ -2747,7 +2748,7 @@ func importDeps(dir string) (map[string]struct{}, error) {
 					}
 					if strings.HasPrefix(v.Text, "// +build") {
 						p := strings.Replace(v.Text, "// +build ", "", -1)
-						if !strings.Contains(goosList, p) && !strings.Contains(goarchList, p) {
+						if !strings.Contains(goosList, p) && !strings.Contains(goarchList, p) && !strings.Contains(appengineList, p) {
 							ignore = true
 							break
 						}
