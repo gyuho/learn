@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go/build"
 	"go/parser"
 	"go/token"
 	"os"
@@ -46,17 +47,104 @@ func main() {
 		fpaths = append(fpaths, filepath.Base(v))
 	}
 
-	rmap, err := importDeps(pwd, projectPath, fpaths...)
-	if err != nil {
-		panic(err)
-	}
+	func() {
+		rmap, err := importDeps(pwd)
+		if err != nil {
+			panic(err)
+		}
+		for k := range rmap {
+			fmt.Println("importDeps:", k)
+		}
+	}()
 
-	for k := range rmap {
-		fmt.Println(k)
+	func() {
+		rmap, err := importDepsWithProjectPath(pwd, projectPath, fpaths...)
+		if err != nil {
+			panic(err)
+		}
+		for k := range rmap {
+			fmt.Println("importDepsWithProjectPath:", k)
+		}
+	}()
+}
+
+// https://github.com/golang/go/blob/master/src/go/build/syslist.go#L7
+const goosList = "android darwin dragonfly freebsd linux nacl netbsd openbsd plan9 solaris windows "
+const goarchList = "386 amd64 amd64p32 arm armbe arm64 arm64be ppc64 ppc64le mips mipsle mips64 mips64le mips64p32 mips64p32le ppc s390 s390x sparc sparc64 "
+
+func importDeps(dir string) (map[string]struct{}, error) {
+	tm, err := walkExt(dir, ".go")
+	if err != nil {
+		return nil, err
+	}
+	wm := make(map[string]struct{})
+	for _, v := range tm {
+		wm[v] = struct{}{}
+	}
+	fSize := len(wm)
+	if fSize == 0 {
+		return nil, nil
+	}
+	var mu sync.Mutex // guards the map
+	fmap := make(map[string]struct{})
+	done, errCh := make(chan struct{}), make(chan error)
+	for fpath := range wm {
+		go func(fpath string) {
+			fset := token.NewFileSet()
+			f, err := parser.ParseFile(fset, fpath, nil, parser.ImportsOnly|parser.ParseComments)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			ignore := false
+			for _, cc := range f.Comments {
+				for _, v := range cc.List {
+					if strings.HasPrefix(v.Text, "// +build ignore") {
+						ignore = true
+						break
+					}
+					if strings.HasPrefix(v.Text, "// +build") {
+						p := strings.Replace(v.Text, "// +build ", "", -1)
+						if !strings.Contains(goosList, p) && !strings.Contains(goarchList, p) {
+							ignore = true
+							break
+						}
+					}
+				}
+				if ignore {
+					break
+				}
+			}
+			if !ignore {
+				for _, elem := range f.Imports {
+					pv := strings.TrimSpace(strings.Replace(elem.Path.Value, `"`, "", -1))
+					if pv == "C" || build.IsLocalImport(pv) || strings.HasPrefix(pv, ".") {
+						continue
+					}
+					mu.Lock()
+					fmap[pv] = struct{}{}
+					mu.Unlock()
+				}
+			}
+			done <- struct{}{}
+		}(fpath)
+	}
+	i := 0
+	for {
+		select {
+		case e := <-errCh:
+			return nil, e
+		case <-done:
+			i++
+			if i == fSize {
+				close(done)
+				return fmap, nil
+			}
+		}
 	}
 }
 
-func importDeps(dir string, importPath string, fpaths ...string) (map[string]struct{}, error) {
+func importDepsWithProjectPath(dir string, importPath string, fpaths ...string) (map[string]struct{}, error) {
 	fSize := len(fpaths)
 	if fSize == 0 {
 		return nil, nil
@@ -140,28 +228,55 @@ func walkExt(targetDir, ext string) (map[os.FileInfo]string, error) {
 /*
 GOROOT: /usr/local/go
 GOPATH: /home/gyuho/go
-io
-net/http
-bufio
-path
-io/ioutil
-path/filepath
-syscall
-go/parser
-runtime
-sync
-strings
-log
-os/exec
-encoding/csv
-time
-flag
-unsafe
-encoding/json
-os/user
-fmt
-os
-compress/gzip
-os/signal
-go/token
+importDeps: log
+importDeps: net/http
+importDeps: time
+importDeps: runtime
+importDeps: sync
+importDeps: io
+importDeps: os/exec
+importDeps: os/user
+importDeps: go/token
+importDeps: os/signal
+importDeps: flag
+importDeps: go/parser
+importDeps: fmt
+importDeps: path/filepath
+importDeps: encoding/csv
+importDeps: encoding/json
+importDeps: bufio
+importDeps: syscall
+importDeps: path
+importDeps: os
+importDeps: io/ioutil
+importDeps: strings
+importDeps: compress/gzip
+importDeps: unsafe
+importDeps: go/build
+importDepsWithProjectPath: flag
+importDepsWithProjectPath: os/exec
+importDepsWithProjectPath: go/build
+importDepsWithProjectPath: io/ioutil
+importDepsWithProjectPath: syscall
+importDepsWithProjectPath: io
+importDepsWithProjectPath: path/filepath
+importDepsWithProjectPath: go/parser
+importDepsWithProjectPath: path
+importDepsWithProjectPath: runtime
+importDepsWithProjectPath: encoding/json
+importDepsWithProjectPath: fmt
+importDepsWithProjectPath: os
+importDepsWithProjectPath: os/signal
+importDepsWithProjectPath: unsafe
+importDepsWithProjectPath: sync
+importDepsWithProjectPath: os/user
+importDepsWithProjectPath: net/http
+importDepsWithProjectPath: strings
+importDepsWithProjectPath: time
+importDepsWithProjectPath: compress/gzip
+importDepsWithProjectPath: bufio
+importDepsWithProjectPath: log
+importDepsWithProjectPath: encoding/csv
+importDepsWithProjectPath: go/token
+
 */
