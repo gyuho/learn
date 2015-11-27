@@ -1,4 +1,3 @@
-
 # su
 # echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf;
 
@@ -10,10 +9,11 @@ timedatectl set-ntp true;
 # systemctl enable dhcpcd@INTERFACENAME.service;
 # INTERFACENAME is usually e*
 # dhcpcd INTERFACENAME;
-# 
+ 
 # wireless
 # ls /sys/class/net;
 sudo pacman --noconfirm -Su iw wpa_supplicant dialog wpa_actiond;
+
 # ip link;
 # systemctl enable dhcpcd@INTERFACENAME.service;
 # INTERFACENAME is usually w*
@@ -49,8 +49,8 @@ sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
 
-# sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
-# sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
+sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
+sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
@@ -64,9 +64,9 @@ sudo pacman --noconfirm -Su transmission-qt;
 #############################################################
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
 
-# sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
-# sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies alsa-utils;
-# sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
+sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
+sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies alsa-utils;
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
 # sudo reboot;
 
@@ -85,7 +85,7 @@ sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
 printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 1s;
 
 # install chrome
-# yaourt --noconfirm -Su google-chrome;
+yaourt --noconfirm -Su google-chrome;
 # run with google-chrome-stable
 
 #############################################################
@@ -136,9 +136,9 @@ ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 # https://github.com/Valloric/YouCompleteMe
 sudo pacman --noconfirm -Su cmake python;
 
-# sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
-# cd $HOME/.vim/bundle/YouCompleteMe && \
-# sudo ./install.sh --clang-completer --system-libclang;
+sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
+cd $HOME/.vim/bundle/YouCompleteMe && \
+sudo ./install.sh --clang-completer --system-libclang;
 
 cd $HOME && \
 mkdir ycm_build && \
@@ -158,8 +158,8 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
-# cd /usr/local && sudo rm -rf ./go && \
-# sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+cd /usr/local && sudo rm -rf ./go && \
+sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
