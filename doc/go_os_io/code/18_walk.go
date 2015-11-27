@@ -9,13 +9,13 @@ import (
 
 func main() {
 	func() {
-		// the present working directory
+		// recursively walk
 		rmap, err := walk(".")
 		if err != nil {
 			panic(err)
 		}
 		for _, v := range rmap {
-			fmt.Println(v)
+			fmt.Println("walk:", v)
 		}
 	}()
 
@@ -23,13 +23,13 @@ func main() {
 	fmt.Println()
 
 	func() {
-		// the present working directory
-		rmap, err := walkExt(".", ".go")
+		// recursively walk
+		rmap, err := walkExt(".", ".txt")
 		if err != nil {
 			panic(err)
 		}
 		for _, v := range rmap {
-			fmt.Println(v)
+			fmt.Println("walkExt:", v)
 		}
 	}()
 
@@ -37,12 +37,27 @@ func main() {
 	fmt.Println()
 
 	func() {
+		// only the present working directory
+		rmap, err := walkExtCurrentDir(".", ".txt")
+		if err != nil {
+			panic(err)
+		}
+		for _, v := range rmap {
+			fmt.Println("walkExtCurrentDir:", v)
+		}
+	}()
+
+	fmt.Println()
+	fmt.Println()
+
+	func() {
+		// walk only directories
 		rmap, err := walkDir(".")
 		if err != nil {
 			panic(err)
 		}
 		for _, v := range rmap {
-			fmt.Println(v)
+			fmt.Println("walkDir:", v)
 		}
 	}()
 }
@@ -103,6 +118,37 @@ func walkExt(targetDir, ext string) (map[os.FileInfo]string, error) {
 	return rmap, nil
 }
 
+// walkExtCurrentDir only walks the current directory, not sub-directories.
+func walkExtCurrentDir(targetDir, ext string) (map[os.FileInfo]string, error) {
+	rmap := make(map[os.FileInfo]string)
+	visit := func(path string, f os.FileInfo, err error) error {
+		if f != nil {
+			if !f.IsDir() {
+				if filepath.Ext(path) == ext {
+					if !filepath.HasPrefix(path, ".") && !strings.Contains(path, "/.") {
+						if _, ok := rmap[f]; !ok {
+							wd, err := os.Getwd()
+							if err != nil {
+								return err
+							}
+							thepath := filepath.Join(wd, strings.Replace(path, wd, "", -1))
+							if wd == filepath.Dir(thepath) {
+								rmap[f] = thepath
+							}
+						}
+					}
+				}
+			}
+		}
+		return nil
+	}
+	err := filepath.Walk(targetDir, visit)
+	if err != nil {
+		return nil, err
+	}
+	return rmap, nil
+}
+
 // walkDir returns all directories.
 func walkDir(targetDir string) (map[os.FileInfo]string, error) {
 	rmap := make(map[os.FileInfo]string)
@@ -125,59 +171,57 @@ func walkDir(targetDir string) (map[os.FileInfo]string, error) {
 }
 
 /*
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/01_os_exec.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/06_stdout_stdin_stderr.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/07_stdout_stdin_stderr_os.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.txt
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.csv
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdout.txt
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.json
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/12_copy.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/stderr.txt
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/00_os.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/08_exist.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/11_bufio.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.txt
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/02_io.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/09_open_create.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/15_gzip.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.csv
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.json
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample_copy.csv
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/05_stdin.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/13_csv.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/16_walk.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample_copy.csv
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/03_io_pipe.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/17_flush.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdin.txt
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/04_io_ioutil.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/10_ioutil_string.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/14_tsv.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/02_flag.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/07_stdout_stdin_stderr.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/18_walk.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.csv
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample_copy.csv
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/09_exist.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/22_importdeps.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample_copy.csv
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.txt
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.csv
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/03_io.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/13_bufio.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/15_csv.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/21_temp_file.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stderr.txt
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdin.txt
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/17_gzip.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/01_os_exec.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/05_io_ioutil.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/06_stdin.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/11_io_ioutil_file.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/14_copy.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/12_temp_file.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/16_tsv.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.txt
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.json
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/00_os.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/04_io_pipe.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/08_stdout_stdin_stderr_os.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/10_open_create.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/19_flush.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/20_signal.go
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdout.txt
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata
+walk: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.json
 
 
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/12_copy.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/13_csv.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/11_bufio.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/01_os_exec.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/06_stdout_stdin_stderr.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/15_gzip.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/00_os.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/04_io_ioutil.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/05_stdin.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/07_stdout_stdin_stderr_os.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/08_exist.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/09_open_create.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/14_tsv.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/16_walk.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/03_io_pipe.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/17_flush.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/10_ioutil_string.go
-/home/ubuntu/go/src/github.com/gyuho/learn/doc/go_os_io/code/02_io.go
+walkExt: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stderr.txt
+walkExt: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdin.txt
+walkExt: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdout.txt
+walkExt: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sample.txt
+walkExt: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/testdata/sub/sample.txt
 
 
-testdata
-testdata/sub
+walkExtCurrentDir: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stderr.txt
+walkExtCurrentDir: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdin.txt
+walkExtCurrentDir: /home/gyuho/go/src/github.com/gyuho/learn/doc/go_os_io/code/stdout.txt
+
+
+walkDir: testdata
+walkDir: testdata/sub
+
 */
