@@ -45,13 +45,18 @@ sudo pacman --noconfirm -Su openssh;
 sudo pacman --noconfirm -Su terminator xterm;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
-sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
+
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
 sudo pacman --noconfirm -Su vlc;
 
 sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
-sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
+sudo pacman --noconfirm -Su ttf-dejavu ttf-droid;
+sudo pacman --noconfirm -Su libhangul ttf-baekmuk;
+yaourt --noconfirm -Sb ttf-nanum;
+sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
+
+
 
 # terminator
 # Ctrl-Shift-E: will split the view vertically.
