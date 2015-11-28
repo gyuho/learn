@@ -335,6 +335,10 @@
         <command>terminator</command>
       </action>
     </keybind>
+	<!-- Close window with Alt+q-->
+    <keybind key="A-q">
+      <action name="Close"/>
+    </keybind>
   </keyboard>
   <mouse>
     <dragThreshold>8</dragThreshold>
