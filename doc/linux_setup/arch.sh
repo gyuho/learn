@@ -66,8 +66,7 @@ sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
 
 sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
-# sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies
-sudo pacman --noconfirm -Su lxde;
+sudo pacman --noconfirm -Su lxde lxdm;
 sudo pacman --noconfirm -Su alsa-utils;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
@@ -80,6 +79,7 @@ sudo cp ./arch_bashrc.sh $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
 sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
+sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
 
 # login
 # startx;
