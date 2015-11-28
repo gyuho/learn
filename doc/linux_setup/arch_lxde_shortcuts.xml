@@ -329,21 +329,12 @@
         <command>lxrandr</command>
       </action>
     </keybind>
-    
 	<!-- Launch terminator with Ctrl+Alt+t-->
     <keybind key="C-A-t">
       <action name="Execute">
         <command>terminator</command>
       </action>
     </keybind>
- 
-	<!-- Launch chrome with Ctrl+Alt+]-->
-    <keybind key="C-A-]">
-      <action name="Execute">
-        <command>google-chrome-stable</command>
-      </action>
-    </keybind>
-
   </keyboard>
   <mouse>
     <dragThreshold>8</dragThreshold>
