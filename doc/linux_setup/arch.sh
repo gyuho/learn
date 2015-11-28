@@ -66,7 +66,9 @@ sudo pacman --noconfirm -Su libhangul ttf-baekmuk ttf-dejavu ttf-droid;
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
 
 sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
-sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies alsa-utils;
+# sudo pacman --noconfirm -Su xfce4 xfce4-mixer xfce4-goodies
+sudo pacman --noconfirm -Su lxde;
+sudo pacman --noconfirm -Su alsa-utils;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
 # sudo reboot;

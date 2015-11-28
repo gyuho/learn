@@ -1,10 +1,12 @@
-# https://wiki.archlinux.org/index.php/USB_flash_installation_media
-fdisk -l;
-# /dev/sdbxY
 
+# install arch linux into USB disk
+# https://wiki.archlinux.org/index.php/USB_flash_installation_media
+# fdisk -l;
+# /dev/sdbxY
 sudo dd bs=4M if=$HOME/archlinux-2015.11.01-dual.iso of=/dev/sdx && sync;
 
-# Reboot from USB
+# reboot from USB
+
 # Boot Arch Linux x86_64
 
 # wired
@@ -13,7 +15,7 @@ sudo dd bs=4M if=$HOME/archlinux-2015.11.01-dual.iso of=/dev/sdx && sync;
 # systemctl enable dhcpcd@INTERFACENAME.service;
 # INTERFACENAME is usually e*
 # dhcpcd INTERFACENAME;
-# 
+ 
 # wireless
 # ls /sys/class/net;
 # sudo pacman --noconfirm -S iw wpa_supplicant dialog wpa_actiond;
@@ -40,16 +42,30 @@ ls /sys/firmware/efi/efivars;
 # find out what partitions you have
 fdisk -l;
 lsblk /dev/sdx;
-parted /dev/sdx print;
 
 # erase all
 sgdisk --xap-all /dev/sdxY;
 
-# format partitions
+cfdisk;
+# New -> Primary -> set Size (in MB) for Arch Linux
+# Beginning, set Bootable
+# New -> Primary -> set Size (in MB) for Linux Swap
+# Write
+# Quit
+
+# format the first partition for Arch Linux
 mkfs.ext4 /dev/sdxY;
 
-# mount the partition
+# set the second partition for Linux Swap
+mkswap /dev/sdxZ;
+swapon /dev/sdxZ;
+
+# check if the swap is on
+lsblk /dev/sdx;
+
+# mount the first partition
 mount /dev/sdxY /mnt;
+
 ##################################
 
 ##################################
@@ -58,33 +74,26 @@ mount /dev/sdxY /mnt;
 # https://wiki.archlinux.org/index.php/Beginners'_guide
 # https://wiki.archlinux.org/index.php/Installation_guide
 
-# create partition from the current OS
-# OR
-# find out what partitions you have
-fdisk -l;
-lsblk;
-parted /dev/sdx print;
-parted /dev/sdx;
-# parted> mktable gpt
-# parted> mkpart primary ext2 1 2
-# parted> set 1 bios_grub on
-# parted> mkpart primary linux-swap 2 10%
-# parted> mkpart primary ext4 10% 100%
-# parted> quit
+# TO DO ...
 
-# format partitions
-mkfs.ext4 /dev/sdxY;
-
-# mount the partition
-mount /dev/sdxY /mnt;
 ##################################
 
 # install basic libraries
 pacstrap /mnt base base-devel;
 pacman --noconfirm -Syyu;
 
+# generate fstab to define how disk partitions
+# should be mounted into the filesystem
 genfstab -U /mnt > /mnt/etc/fstab;
+vi /mnt/etc/fstab;
+
+# chroot to /mnt, /bin/bash just for CLI
 arch-chroot /mnt /bin/bash;
+
+# install bootloader
+pacman --noconfirm -Su grub grub-bios os-prober;
+grub-install --recheck /dev/sdx;
+grub-mkconfig -o /boot/grub/grub.cfg;
 
 # set username
 echo gyuho > /etc/hostname;
@@ -93,14 +102,9 @@ echo gyuho > /etc/hostname;
 # set password
 passwd
 
-# install bootloader
-pacman --noconfirm -S grub grub-bios os-prober;
-grub-install --recheck /dev/sdxY;
-grub-mkconfig -o /boot/grub/grub.cfg;
-
+unmount /mnt;
 exit;
 reboot;
-
 
 # set language
 vim /etc/locale.gen; # remove # from en_US.UTF-8
