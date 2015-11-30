@@ -1,14 +1,13 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# Go: time, testing, benchmark
+# Go: time
 
 - [Now with timezone](#now-with-timezone)
 - [Parse](#parse)
 - [Calendar](#calendar)
-- [benchmark](#benchmark)
 
-[↑ top](#go-time-testing-benchmark)
+[↑ top](#go-time)
 <br><br><br><br>
 <hr>
 
@@ -157,7 +156,7 @@ func timeTag(t time.Time) string {
 }
 ```
 
-[↑ top](#go-time-testing-benchmark)
+[↑ top](#go-time)
 <br><br><br><br>
 <hr>
 
@@ -293,7 +292,7 @@ func parseTS(stamp string) time.Time {
 }
 ```
 
-[↑ top](#go-time-testing-benchmark)
+[↑ top](#go-time)
 <br><br><br><br>
 <hr>
 
@@ -545,62 +544,7 @@ func isMotherFather(t time.Time) (string, bool) {
 }
 ```
 
-[↑ top](#go-time-testing-benchmark)
+[↑ top](#go-time)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-#### benchmark
-
-You can do benchmarks with:
-
-```sh
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/slice_1.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/slice_2.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/slice_3.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/slice_4.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/slice_5.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/map_1.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/map_2.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/map_3.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/map_4.txt;
-go test -bench BenchmarkWatchableStoreUnsyncedCancel\b -benchmem -cpu 1,2,4,8 > ~/map_5.txt;
-
-go get -v -u golang.org/x/tools/cmd/benchcmp;
-
-echo "[1]:" > ~/benchmark_results.txt;
-benchcmp ~/slice_1.txt ~/map_1.txt >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-
-echo "[2]:" >> ~/benchmark_results.txt;
-benchcmp ~/slice_2.txt ~/map_2.txt >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-
-echo "[3]:" >> ~/benchmark_results.txt;
-benchcmp ~/slice_3.txt ~/map_3.txt >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-
-echo "[4]:" >> ~/benchmark_results.txt;
-benchcmp ~/slice_4.txt ~/map_4.txt >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-
-echo "[5]:" >> ~/benchmark_results.txt;
-benchcmp ~/slice_5.txt ~/map_5.txt >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-echo "" >> ~/benchmark_results.txt;
-
-```
-
-[↑ top](#go-time-testing-benchmark)
-<br><br><br><br>
-<hr>
-
 

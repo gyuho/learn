@@ -150,7 +150,7 @@ This will help my transition to other languages or frameworks if needed.
 - [**_Go: os, io_**](https://github.com/gyuho/learn/tree/master/doc/go_os_io)
 - [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
-- [*Go: time, testing, benchmark*](https://github.com/gyuho/learn/tree/master/doc/go_time_testing_benchmark)
+- [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
 - [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
 - [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
 

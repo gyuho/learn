@@ -2,88 +2,82 @@ package slice_vs_map
 
 import "sync"
 
-type message struct {
-	body string
-}
-
-func newMessage(body string) *message {
-	m := new(message)
-	m.body = body
-	return m
-}
-
 type Interface interface {
-	Add(msg *message)
-	Exist(msg *message) bool
-	Delete(msg *message)
+	set(v string)
+	exist(v string) bool
+	delete(v string)
 }
 
 type Slice struct {
-	sync.Mutex
-	data []*message
+	mu   sync.Mutex
+	data []string
+}
+
+type Map struct {
+	mu   sync.Mutex
+	data map[string]struct{}
 }
 
 func newSlice() *Slice {
-	d := new(Slice)
-	d.data = make([]*message, 0)
+	d := &Slice{}
+	d.data = make([]string, 0)
 	return d
 }
 
-func (s *Slice) Add(msg *message) {
-	s.Lock()
-	defer s.Unlock()
-	s.data = append(s.data, msg)
+func (d *Slice) set(v string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.data = append(d.data, v)
 }
 
-func (s *Slice) Exist(msg *message) bool {
-	s.Lock()
-	defer s.Unlock()
-	for _, v := range s.data {
-		if v == msg {
+func (d *Slice) exist(v string) bool {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	for _, vv := range d.data {
+		if vv == v {
 			return true
 		}
 	}
 	return false
 }
 
-func (s *Slice) Delete(msg *message) {
-	s.Lock()
-	defer s.Unlock()
+func (d *Slice) delete(v string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
 	del := -1
-	for i, v := range s.data {
-		if v == msg {
+	for i, vv := range d.data {
+		if vv == v {
 			del = i
 		}
 	}
-	s.data = append(s.data[:del], s.data[del+1:]...)
-}
-
-type Map struct {
-	sync.Mutex
-	data map[*message]struct{}
+	if del != -1 {
+		d.data = append(d.data[:del], d.data[del+1:]...)
+	}
 }
 
 func newMap() *Map {
-	d := new(Map)
-	d.data = make(map[*message]struct{})
+	d := &Map{}
+	d.data = make(map[string]struct{})
 	return d
 }
 
-func (m *Map) Add(msg *message) {
-	m.Lock()
-	defer m.Unlock()
-	m.data[msg] = struct{}{}
+func (d *Map) set(v string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.data[v] = struct{}{}
 }
 
-func (m *Map) Exist(msg *message) bool {
-	m.Lock()
-	defer m.Unlock()
-	_, ok := m.data[msg]
+func (d *Map) exist(v string) bool {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	_, ok := d.data[v]
 	return ok
 }
 
-func (m *Map) Delete(msg *message) {
-	m.Lock()
-	defer m.Unlock()
-	delete(m.data, msg)
+func (d *Map) delete(v string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if _, ok := d.data[v]; ok {
+		delete(d.data, v)
+	}
 }
