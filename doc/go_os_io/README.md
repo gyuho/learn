@@ -15,15 +15,14 @@
 - [`create/open/write`: files, directories](#createopenwrite-files-directories)
 - [`io/ioutil`, file](#ioioutil-file)
 - [`bufio`, file](#bufio-file)
-- [temporary file](#temporary-file)
 - [`copy`: files, directories](#copy-files-directories)
 - [`csv`](#csv)
 - [`tsv`](#tsv)
 - [`compress/gzip`](#compressgzip)
+- [temporary file](#temporary-file)
 - [walk](#walk)
 - [`http.Flusher`](#httpflusher)
 - [`os.Signal`](#ossignal)
-- [temporary file](#temporary-file)
 - [`importDeps`](#importdeps)
 
 [↑ top](#go-os-io)
@@ -1599,57 +1598,6 @@ func toBytes(fpath string) ([]byte, error) {
 
 
 
-
-
-#### temporary file
-
-```go
-package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-)
-
-func main() {
-	// to create in the current directory.
-	// f, err := ioutil.TempFile(".", "temp_prefix_")
-
-	// creates in  TempFile uses the default directory
-	// for temporary files (see os.TempDir)
-	f, err := ioutil.TempFile("", "temp_prefix_")
-	if err != nil {
-		panic(err)
-	}
-	defer os.Remove(f.Name())
-	defer f.Close()
-	if err := f.Sync(); err != nil {
-		panic(err)
-	}
-	if _, err := f.Seek(0, 0); err != nil {
-		panic(err)
-	}
-
-	fmt.Println(os.TempDir())            // /tmp
-	fmt.Println(f.Name())                // /tmp/temp_prefix_289175735
-	fmt.Println(filepath.Base(f.Name())) // temp_prefix_289175735
-	fmt.Println(filepath.Dir(f.Name()))  // /tmp
-}
-
-```
-
-[↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
 #### `copy`: files, directories
 
 ```go
@@ -2123,11 +2071,115 @@ func toBytes(fpath string) ([]byte, error) {
 <hr>
 
 
+#### temporary file
 
+```go
+package main
 
+import (
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+)
 
+func main() {
+	func() {
+		wd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		cf, err := ioutil.TempFile(wd, "hello")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(cf.Name())
+		os.Remove(cf.Name())
+	}()
 
+	func() {
+		wd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		cf, err := ioutil.TempFile(wd, "hello")
+		if err != nil {
+			panic(err)
+		}
+		op := cf.Name()
+		os.Rename(op, "new_name")
+		fmt.Println(op, "to new_name")
+		os.Remove("new_name")
+	}()
 
+	func() {
+		tmp := os.TempDir()
+		f, err := ioutil.TempFile(tmp, "hello")
+		if err != nil {
+			panic(err)
+		}
+		fpath, err := filepath.Abs(f.Name())
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(fpath)
+
+		wd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		npath := filepath.Join(wd, "hello")
+		if err := copy(fpath, npath); err != nil {
+			panic(err)
+		}
+
+		os.Remove(fpath)
+		os.Remove(npath)
+	}()
+}
+
+/*
+0777	full access for everyone
+0700	only private access
+0755	private read/write access, others only read access
+0750	private read/write access, group read access, others no access
+*/
+func copy(src, dst string) error {
+	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
+		return fmt.Errorf("copy: mkdirall: %v", err)
+	}
+
+	r, err := os.Open(src)
+	if err != nil {
+		return fmt.Errorf("copy: open(%q): %v", src, err)
+	}
+	defer r.Close()
+
+	w, err := os.Create(dst)
+	if err != nil {
+		return fmt.Errorf("copy: create(%q): %v", dst, err)
+	}
+	defer w.Close()
+
+	// func Copy(dst Writer, src Reader) (written int64, err error)
+	if _, err = io.Copy(w, r); err != nil {
+		return err
+	}
+	if err := w.Sync(); err != nil {
+		return err
+	}
+	if _, err := w.Seek(0, 0); err != nil {
+		return err
+	}
+	return nil
+}
+
+```
+
+[↑ top](#go-os-io)
+<br><br><br><br>
+<hr>
 
 
 
@@ -2373,14 +2425,6 @@ walkDir: testdata/sub
 
 
 
-
-
-
-
-
-
-
-
 #### `http.Flusher`
 
 ```go
@@ -2508,121 +2552,6 @@ func handleInterrupts() {
 [↑ top](#go-os-io)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-#### temporary file
-
-```go
-package main
-
-import (
-	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-)
-
-func main() {
-	func() {
-		wd, err := os.Getwd()
-		if err != nil {
-			panic(err)
-		}
-		cf, err := ioutil.TempFile(wd, "hello")
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(cf.Name())
-		os.Remove(cf.Name())
-	}()
-
-	func() {
-		wd, err := os.Getwd()
-		if err != nil {
-			panic(err)
-		}
-		cf, err := ioutil.TempFile(wd, "hello")
-		if err != nil {
-			panic(err)
-		}
-		op := cf.Name()
-		os.Rename(op, "new_name")
-		fmt.Println(op, "to new_name")
-		os.Remove("new_name")
-	}()
-
-	func() {
-		tmp := os.TempDir()
-		f, err := ioutil.TempFile(tmp, "hello")
-		if err != nil {
-			panic(err)
-		}
-		fpath, err := filepath.Abs(f.Name())
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(fpath)
-
-		wd, err := os.Getwd()
-		if err != nil {
-			panic(err)
-		}
-		npath := filepath.Join(wd, "hello")
-		if err := copy(fpath, npath); err != nil {
-			panic(err)
-		}
-
-		os.Remove(fpath)
-		os.Remove(npath)
-	}()
-}
-
-/*
-0777	full access for everyone
-0700	only private access
-0755	private read/write access, others only read access
-0750	private read/write access, group read access, others no access
-*/
-func copy(src, dst string) error {
-	if err := os.MkdirAll(filepath.Dir(dst), 0755); err != nil {
-		return fmt.Errorf("copy: mkdirall: %v", err)
-	}
-
-	r, err := os.Open(src)
-	if err != nil {
-		return fmt.Errorf("copy: open(%q): %v", src, err)
-	}
-	defer r.Close()
-
-	w, err := os.Create(dst)
-	if err != nil {
-		return fmt.Errorf("copy: create(%q): %v", dst, err)
-	}
-	defer w.Close()
-
-	// func Copy(dst Writer, src Reader) (written int64, err error)
-	if _, err = io.Copy(w, r); err != nil {
-		return err
-	}
-	if err := w.Sync(); err != nil {
-		return err
-	}
-	if _, err := w.Seek(0, 0); err != nil {
-		return err
-	}
-	return nil
-}
-
-```
-
-[↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
 
 
 
