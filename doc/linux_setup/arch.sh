@@ -80,7 +80,7 @@ sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq
 sudo mkdir -p $HOME/fontconfig;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
-sudo cp ./arch_bashrc.sh $HOME/.bashrc;
+sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
 sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
@@ -169,10 +169,15 @@ mkdir -p $HOME/go/src/golang.org;
 cd /usr/local && sudo rm -rf ./go && \
 sudo curl -s https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
-echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
-PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
-echo "export PATH=$(echo $PATH_VAR)" >> $HOME/.bashrc && \
-source $HOME/.bashrc;
+if grep -q GOPATH "$(echo $HOME)/.bashrc"; then 
+	echo "bashrc already has GOPATH...";
+else
+	echo "adding GOPATH to bashrc...";
+	echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc && \
+	PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin" && \
+	echo "export PATH=$(echo $PATH_VAR)" >> $HOME/.bashrc && \
+	source $HOME/.bashrc;
+fi
 
 cd $HOME && \
 printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Successfully installed Go.\")\n}" > $HOME/temp.go;
