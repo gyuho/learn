@@ -14,8 +14,8 @@
 - [`exist`: files, directories](#exist-files-directories)
 - [`create/open/write`: files, directories](#createopenwrite-files-directories)
 - [`io/ioutil`, file](#ioioutil-file)
+- [`bufio`, file](#bufio-file)
 - [temporary file](#temporary-file)
-- [`bufio`](#bufios)
 - [`copy`: files, directories](#copy-files-directories)
 - [`csv`](#csv)
 - [`tsv`](#tsv)
@@ -1086,8 +1086,6 @@ func main() {
 
 
 
-
-
 #### `io/ioutil`, file
 
 Package [ioutil](http://golang.org/pkg/io/ioutil/) implements some I/O utility functions.
@@ -1408,61 +1406,7 @@ func OpenFile(name string, flag int, perm os.FileMode) (file *os.File, err error
 
 
 
-
-
-
-
-#### temporary file
-
-```go
-package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-)
-
-func main() {
-	// to create in the current directory.
-	// f, err := ioutil.TempFile(".", "temp_prefix_")
-
-	// creates in  TempFile uses the default directory
-	// for temporary files (see os.TempDir)
-	f, err := ioutil.TempFile("", "temp_prefix_")
-	if err != nil {
-		panic(err)
-	}
-	defer os.Remove(f.Name())
-	defer f.Close()
-	if err := f.Sync(); err != nil {
-		panic(err)
-	}
-	if _, err := f.Seek(0, 0); err != nil {
-		panic(err)
-	}
-
-	fmt.Println(os.TempDir())            // /tmp
-	fmt.Println(f.Name())                // /tmp/temp_prefix_289175735
-	fmt.Println(filepath.Base(f.Name())) // temp_prefix_289175735
-	fmt.Println(filepath.Dir(f.Name()))  // /tmp
-}
-
-```
-
-[↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-#### `bufio`
+#### `bufio`, file
 
 Package [`bufio`](http://golang.org/pkg/bufio/) implements buffered I/O.
 It wraps an `io.Reader` or `io.Writer` object, creating another object:
@@ -1652,6 +1596,53 @@ func toBytes(fpath string) ([]byte, error) {
 <br><br><br><br>
 <hr>
 
+
+
+
+
+
+#### temporary file
+
+```go
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+)
+
+func main() {
+	// to create in the current directory.
+	// f, err := ioutil.TempFile(".", "temp_prefix_")
+
+	// creates in  TempFile uses the default directory
+	// for temporary files (see os.TempDir)
+	f, err := ioutil.TempFile("", "temp_prefix_")
+	if err != nil {
+		panic(err)
+	}
+	defer os.Remove(f.Name())
+	defer f.Close()
+	if err := f.Sync(); err != nil {
+		panic(err)
+	}
+	if _, err := f.Seek(0, 0); err != nil {
+		panic(err)
+	}
+
+	fmt.Println(os.TempDir())            // /tmp
+	fmt.Println(f.Name())                // /tmp/temp_prefix_289175735
+	fmt.Println(filepath.Base(f.Name())) // temp_prefix_289175735
+	fmt.Println(filepath.Dir(f.Name()))  // /tmp
+}
+
+```
+
+[↑ top](#go-os-io)
+<br><br><br><br>
+<hr>
 
 
 
