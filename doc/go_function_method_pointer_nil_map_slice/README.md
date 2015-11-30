@@ -2315,58 +2315,8 @@ func main() {
 
 #### slice vs. map
 
-Here's the [benchmark](./slice_vs_map) results. Go
-[benchmark](https://golang.org/pkg/testing/#BenchmarkResult) contains:
-
-```go
-type BenchmarkResult struct {
-        N         int           // The number of iterations.
-        T         time.Duration // The total time taken.
-        Bytes     int64         // Bytes processed in one iteration.
-        MemAllocs uint64        // The total number of memory allocations.
-        MemBytes  uint64        // The total number of bytes allocated.
-}
-
-```
-
-<br>
-In my results, old is `slice`, and new is `map`. And you can clearly
-tell `map` is faster for `Delete` and takes less bytes for `Add`:
-
-```
-benchmark              old ns/op     new ns/op     delta
-BenchmarkAdd           1618754       1559698       -3.65%
-BenchmarkAdd-2         1627498       1560684       -4.11%
-BenchmarkAdd-4         1657596       1562932       -5.71%
-BenchmarkAdd-8         1642772       1565968       -4.68%
-BenchmarkDelete        41958671      1604537       -96.18%
-BenchmarkDelete-2      41950813      1611548       -96.16%
-BenchmarkDelete-4      42214644      1620672       -96.16%
-BenchmarkDelete-8      41993457      1601052       -96.19%
-
-benchmark              old allocs     new allocs     delta
-BenchmarkAdd           0              0              +0.00%
-BenchmarkAdd-2         0              0              +0.00%
-BenchmarkAdd-4         0              0              +0.00%
-BenchmarkAdd-8         0              0              +0.00%
-BenchmarkDelete        0              0              +0.00%
-BenchmarkDelete-2      0              0              +0.00%
-BenchmarkDelete-4      0              0              +0.00%
-BenchmarkDelete-8      0              0              +0.00%
-
-benchmark              old bytes     new bytes     delta
-BenchmarkAdd           423502        370           -99.91%
-BenchmarkAdd-2         423502        373           -99.91%
-BenchmarkAdd-4         423502        373           -99.91%
-BenchmarkAdd-8         423502        373           -99.91%
-BenchmarkAdd-16        423502        371           -99.91%
-BenchmarkDelete        1             0             -100.00%
-BenchmarkDelete-2      1             0             -100.00%
-BenchmarkDelete-4      1             0             -100.00%
-BenchmarkDelete-8      1             0             -100.00%
-BenchmarkDelete-16     1             0             -100.00%
-
-```
+- [**slice_vs_map**](./slice_vs_map)
+- [**map_to_slice_vs_map**](./map_to_slice_vs_map)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
 <br><br><br><br>
