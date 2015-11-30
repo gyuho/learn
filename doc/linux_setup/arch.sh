@@ -93,7 +93,7 @@ sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
 printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 1s;
 
 # install chrome
-yaourt --noconfirm -Su google-chrome;
+yaourt --noconfirm -S google-chrome;
 # run with google-chrome-stable
 
 #############################################################
