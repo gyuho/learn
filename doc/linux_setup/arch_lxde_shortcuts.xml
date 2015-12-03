@@ -329,10 +329,10 @@
         <command>lxrandr</command>
       </action>
     </keybind>
-	<!-- Launch terminator with Ctrl+Alt+t-->
+	<!-- Launch xterm with Ctrl+Alt+t-->
     <keybind key="C-A-t">
       <action name="Execute">
-        <command>terminator</command>
+        <command>xterm</command>
       </action>
     </keybind>
 	<!-- Close window with Alt+q-->

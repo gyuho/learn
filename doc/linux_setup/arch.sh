@@ -42,7 +42,7 @@ mkdir -p $HOME/go/src/github.com/coreos;
 sudo pacman --noconfirm -Su dbus tree htop;
 sudo pacman --noconfirm -Su openssh;
 
-sudo pacman --noconfirm -Su terminator xterm;
+sudo pacman --noconfirm -Su xterm tmux;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 
@@ -55,17 +55,6 @@ sudo pacman --noconfirm -Su ttf-dejavu ttf-droid;
 sudo pacman --noconfirm -Su libhangul ttf-baekmuk;
 yaourt --noconfirm -Sb ttf-nanum;
 sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
-
-
-
-# terminator
-# Ctrl-Shift-E: will split the view vertically.
-# Ctrl-Shift-O: will split the view horizontally.
-# Ctrl-Shift-P: will focus be active on the previous view.
-# Ctrl-Shift-N: will focus be active on the next view.
-# Ctrl-Shift-W: will close the view where the focus is on.
-# Ctrl-Shift-Q: will exit terminator.
-# Ctrl-Shift-X: will focus active window and  enlarge it
 
 #############################################################
 printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
@@ -83,7 +72,7 @@ sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
-sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
+sudo cp ./arch_xdefaults.conf $HOME/.Xdefaults;
 sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
 
 # login
