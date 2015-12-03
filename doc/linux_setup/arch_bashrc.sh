@@ -99,7 +99,7 @@ alias shutdown='sudo telinit 0;'
  
 alias vi='vim'
 # alias xterm="xterm -fa 'Monospace' -fs 15"
-alias xterm="xterm -fa 'Monospace' "
+# alias xterm="xterm -fa 'Monospace' "
 
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
