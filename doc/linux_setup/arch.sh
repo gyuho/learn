@@ -46,6 +46,7 @@ sudo pacman --noconfirm -Su terminator;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 
+sudo pacman --noconfirm -Su unzip;
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
 sudo pacman --noconfirm -Su vlc;
