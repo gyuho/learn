@@ -332,7 +332,7 @@
 	<!-- Launch terminator with Ctrl+Alt+t-->
     <keybind key="C-A-t">
       <action name="Execute">
-        <command>terminator' </command>
+        <command>terminator</command>
       </action>
     </keybind>
 	<!-- Close window with Alt+q-->
