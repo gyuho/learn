@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -34,9 +35,29 @@ func existDir(fpath string) bool {
 	return st.IsDir()
 }
 
+// readDir lists files in a directory.
+func readDir(fpath string) ([]string, error) {
+	dir, err := os.Open(fpath)
+	if err != nil {
+		return nil, err
+	}
+	defer dir.Close()
+	names, err := dir.Readdirnames(-1)
+	if err != nil {
+		return nil, err
+	}
+	sort.Strings(names)
+	return names, nil
+}
+
 func main() {
 	fmt.Println(exist("00_os.go"))    // true
 	fmt.Println(exist("aaaaa.go"))    // false
 	fmt.Println(exist("testdata"))    // true
 	fmt.Println(existDir("testdata")) // true
+	ns, err := readDir("./testdata")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(ns) // [sample.csv sample.json sample.txt sample_copy.csv sub]
 }
