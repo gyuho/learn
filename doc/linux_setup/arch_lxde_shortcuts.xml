@@ -332,7 +332,7 @@
 	<!-- Launch xterm with Ctrl+Alt+t-->
     <keybind key="C-A-t">
       <action name="Execute">
-        <command>xterm -fa 'Monospace' -fs 15</command>
+        <command>xterm -fa 'Monospace' </command>
       </action>
     </keybind>
 	<!-- Close window with Alt+q-->

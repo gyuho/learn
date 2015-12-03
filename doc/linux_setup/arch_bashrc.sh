@@ -97,11 +97,9 @@ alias clean_page='echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh;'
 alias reboot='sudo reboot;'
 alias shutdown='sudo telinit 0;'
  
-alias v='vim'
 alias vi='vim'
-alias t='tmux'
-# alias xterm="xterm -bg black -fg white -fa 'Monospace' -fs 15"
-alias xterm="xterm -fa 'Monospace' -fs 15"
+# alias xterm="xterm -fa 'Monospace' -fs 15"
+alias xterm="xterm -fa 'Monospace' "
 
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
