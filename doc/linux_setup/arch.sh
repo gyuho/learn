@@ -42,7 +42,7 @@ mkdir -p $HOME/go/src/github.com/coreos;
 sudo pacman --noconfirm -Su dbus tree htop;
 sudo pacman --noconfirm -Su openssh;
 
-sudo pacman --noconfirm -Su xterm tmux;
+sudo pacman --noconfirm -Su terminator;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 
@@ -72,7 +72,7 @@ sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
-sudo cp ./arch_xdefaults.conf $HOME/.Xdefaults;
+sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
 sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
 
 # login
