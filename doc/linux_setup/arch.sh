@@ -49,9 +49,6 @@ sudo pacman --noconfirm -Su systemd-arch-units;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 sudo pacman --noconfirm -Su ntp;
-sudo pacman --noconfirm -Su zathura;
-sudo pacman --noconfirm -Su zathura-pdf-poppler;
-sudo pacman --noconfirm -Su zathura-djvu;
 
 timedatectl set-ntp true;
 sudo systemctl enable ntpd;
@@ -60,23 +57,40 @@ sudo /etc/rc.d/ntpd start;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Su yaourt;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
+#############################################################
+printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
+
+sudo pacman --noconfirm -Su pcmanfm;
+sudo pacman --noconfirm -Su zathura;
+sudo pacman --noconfirm -Su zathura-pdf-poppler;
+sudo pacman --noconfirm -Su zathura-djvu;
+
 sudo pacman --noconfirm -Su terminator;
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
 sudo pacman --noconfirm -Su gnome-screenshot;
 sudo pacman --noconfirm -Su vlc;
 
-sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
-sudo pacman --noconfirm -Su ttf-dejavu ttf-droid;
-sudo pacman --noconfirm -Su libhangul ttf-baekmuk;
 yaourt --noconfirm -Sb ttf-nanum;
-sudo pacman --noconfirm -Su libreoffice-fresh hunspell hunspell-en;
+sudo pacman --noconfirm -Su noto-fonts;
+sudo pacman --noconfirm -Su noto-fonts-cjk;
+sudo pacman --noconfirm -Su noto-fonts-emoji;
+sudo pacman --noconfirm -Su ttf-dejavu;
+sudo pacman --noconfirm -Su ttf-droid;
+sudo pacman --noconfirm -Su libhangul;
+sudo pacman --noconfirm -Su ttf-baekmuk;
+sudo pacman --noconfirm -Su libreoffice-fresh;
+sudo pacman --noconfirm -Su hunspell-en;
+sudo pacman --noconfirm -Su hunspell;
 
-#############################################################
-printf "\n\n\n\n\ninstalling gui...\n\n" && sleep 1s;
-
-sudo pacman --noconfirm -Su xorg xorg-xinit xorg-server xorg-utils xorg-twm xorg-xclock;
-sudo pacman --noconfirm -Su lxde lxdm;
+sudo pacman --noconfirm -Su xorg;
+sudo pacman --noconfirm -Su xorg-xinit;
+sudo pacman --noconfirm -Su xorg-server;
+sudo pacman --noconfirm -Su xorg-utils;
+sudo pacman --noconfirm -Su xorg-twm;
+sudo pacman --noconfirm -Su xorg-xclock;
+sudo pacman --noconfirm -Su lxde;
+sudo pacman --noconfirm -Su lxdm;
 sudo pacman --noconfirm -Su alsa-utils;
 sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
 
