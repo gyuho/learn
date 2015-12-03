@@ -1,8 +1,8 @@
 # su
 # echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf;
 
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-timedatectl set-ntp true;
+mkdir -p $HOME/go/src/github.com/gyuho;
+mkdir -p $HOME/go/src/github.com/coreos;
 
 # wired
 # ip link;
@@ -12,7 +12,6 @@ timedatectl set-ntp true;
  
 # wireless
 # ls /sys/class/net;
-sudo pacman --noconfirm -Su iw wpa_supplicant dialog wpa_actiond;
 
 # ip link;
 # systemctl enable dhcpcd@INTERFACENAME.service;
@@ -32,23 +31,39 @@ sudo pacman --noconfirm -Su iw wpa_supplicant dialog wpa_actiond;
 printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 1s;
 
 sudo pacman --noconfirm -Su sudo;
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
-sudo pacman --noconfirm -Su curl wget gvim vim git;
-sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Su yaourt;
-
-mkdir -p $HOME/go/src/github.com/gyuho;
-mkdir -p $HOME/go/src/github.com/coreos;
-
-sudo pacman --noconfirm -Su dbus tree htop;
+sudo pacman --noconfirm -Su bash-completion;
+sudo pacman --noconfirm -Su git;
+sudo pacman --noconfirm -Su curl wget;
+sudo pacman --noconfirm -Su gvim vim;
+sudo pacman --noconfirm -Su unzip gzip tar;
+sudo pacman --noconfirm -Su dbus;
+sudo pacman --noconfirm -Su tree htop;
 sudo pacman --noconfirm -Su openssh;
-
-sudo pacman --noconfirm -Su terminator;
+sudo pacman --noconfirm -Su netctl;
+sudo pacman --noconfirm -Su iw;
+sudo pacman --noconfirm -Su dialog;
+sudo pacman --noconfirm -Su wpa_actiond;
+sudo pacman --noconfirm -Su wpa_supplicant;
+sudo pacman --noconfirm -Su systemd;
+sudo pacman --noconfirm -Su systemd-arch-units;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
+sudo pacman --noconfirm -Su ntp;
+sudo pacman --noconfirm -Su zathura;
+sudo pacman --noconfirm -Su zathura-pdf-poppler;
+sudo pacman --noconfirm -Su zathura-djvu;
 
-sudo pacman --noconfirm -Su unzip;
+timedatectl set-ntp true;
+sudo systemctl enable ntpd;
+sudo /etc/rc.d/ntpd start;
+
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Su yaourt;
+sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq);
+
+sudo pacman --noconfirm -Su terminator;
 sudo pacman --noconfirm -Su transmission-daemon;
 sudo pacman --noconfirm -Su transmission-qt;
+sudo pacman --noconfirm -Su gnome-screenshot;
 sudo pacman --noconfirm -Su vlc;
 
 sudo pacman --noconfirm -Su noto-fonts noto-fonts-cjk noto-fonts-emoji;
@@ -72,6 +87,7 @@ sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
+sudo cp ./arch_etc_rc.conf /etc/rc.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;
 sudo cp ./arch_terminator.conf $HOME/.config/terminator/config;
 sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
@@ -84,7 +100,9 @@ printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 1s;
 
 # install chrome
 yaourt --noconfirm -S google-chrome;
-# run with google-chrome-stable
+
+# run with
+# google-chrome-stable
 
 #############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
