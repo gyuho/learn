@@ -19,22 +19,18 @@
 	- [`https`](#https)
 	- [`http2`](#http2)
 - [communicate between networks](#communicate-between-networks)
+	- [Go: hello world](#go-hello-world)
+	- [Go: kill process, netstat](#go-kill-process-netstat)
+	- [Go: loopback, localhost](#go-loopback-localhost)
 	- [simple echo server](#simple-echo-server)
 	- [simple rpc server](#simple-rpc-server)
-	- [loopback, localhost](#loopback-localhost)
 	- [simple web server](#simple-web-server)
 - [http request, roundtrip](#http-request-roundtrip)
 - [error: too many open files](#error-too-many-open-files)
-- [`netstat`, kill process](#netstat-kill-process)
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Reference
@@ -48,11 +44,6 @@
 <hr>
 
 
-
-
-
-
-
 #### Overview of network layers
 
 <br>
@@ -61,6 +52,7 @@
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
+
 
 ##### physical layer
 
@@ -83,6 +75,7 @@ comes in.
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
+
 
 ##### data link layer
 
@@ -110,6 +103,7 @@ comes in.
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
+
 
 ##### network layer
 
@@ -154,6 +148,7 @@ and renew IP addresses.
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
 
+
 ##### transport layer
 
 [Transport layer](https://en.wikipedia.org/wiki/Transport_layer) provides
@@ -194,6 +189,7 @@ via `TCP` if the data are stored statically. Online live streaming would use
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
 
+
 ##### session layer
 
 [Session layer](https://en.wikipedia.org/wiki/Session_layer) stores
@@ -201,6 +197,7 @@ states between two connections.
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
+
 
 ##### presentation layer
 
@@ -211,6 +208,7 @@ or decryption.
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br>
 
+
 ##### application layer
 
 [Application layer](https://en.wikipedia.org/wiki/Application_layer) refers
@@ -220,13 +218,6 @@ SMTP (which will be covered separately).
 [↑ top](#go-network-ssh-net-http-web)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### `http`, `proxy`, `https`, `http2`
@@ -242,7 +233,6 @@ to the server, then the server returns **response** message (*or resource*)
 to client.
 
 ![http](img/http.png)
-
 
 <br>
 #### cache server
@@ -430,16 +420,292 @@ with server push, cheaper `HTTP` request by compressing headers, etc.
 <hr>
 
 
-
-
-
-
-
-
-
 #### communicate between networks
 
 <br><br>
+##### Go: hello world
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+const port = ":8080"
+
+func main() {
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+
+	log.Println("Serving http://localhost" + port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
+}
+
+/*
+curl http://localhost:8080
+Hello World!
+*/
+
+func handler(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "GET":
+		fmt.Fprintln(w, "Hello World!")
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	}
+}
+
+```
+
+[↑ top](#go-network-ssh-net-http-web)
+<br><br>
+
+
+##### Go: kill process, netstat
+
+```go
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"os/exec"
+	"strconv"
+	"strings"
+	"syscall"
+)
+
+func helloWorld(lw io.Writer, port string) {
+	handler := func(w http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case "GET":
+			fmt.Fprintln(w, "Hello World!")
+		default:
+			http.Error(w, "Method Not Allowed", 405)
+		}
+	}
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+	fmt.Fprintln(lw, "Serving http://localhost"+port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
+}
+
+func main() {
+	var (
+		w       = os.Stdout
+		socket  = "tcp6"
+		program = ""
+		port    = ":8080"
+	)
+
+	// go helloWorld(w, port)
+	// time.Sleep(5 * time.Second)
+
+	ps, err := netStat(w, socket, program, port)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(-1)
+	}
+
+	Kill(w, ps...)
+	/*
+	   [netStat] socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
+	   [Kill] syscall.Kill -> socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
+	   [Kill] Done!
+	*/
+}
+
+// Process describes OS processes.
+type Process struct {
+	Socket  string
+	Program string
+	Host    string
+	Port    string
+	PID     int
+}
+
+func (p Process) String() string {
+	return fmt.Sprintf("socket: '%s' / program: '%s' / host: '%s' / port: '%s' / pid: '%d'",
+		p.Socket,
+		p.Program,
+		p.Host,
+		p.Port,
+		p.PID,
+	)
+}
+
+// Kill kills all processes in arguments.
+func Kill(w io.Writer, ps ...Process) {
+	for _, v := range ps {
+		fmt.Fprintf(w, "[Kill] syscall.Kill -> %s\n", v)
+		if err := syscall.Kill(v.PID, syscall.SIGINT); err != nil {
+			fmt.Fprintln(w, "[Kill - error]", err)
+		}
+	}
+	fmt.Fprintln(w, "[Kill] Done!")
+}
+
+/*
+netStat parses the output of netstat command in linux.
+Pass '' or '*' to match all. For example, call Kill("tcp", "bin/etcd", "*")
+to kill all processes that are running "bin/etcd":
+
+	netstat -tlpn
+
+	(Not all processes could be identified, non-owned process info
+	 will not be shown, you would have to be root to see it all.)
+	Active Internet connections (only servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      21524/bin/etcd
+	tcp        0      0 127.0.0.1:22379         0.0.0.0:*               LISTEN      21526/bin/etcd
+	tcp        0      0 127.0.0.1:22380         0.0.0.0:*               LISTEN      21526/bin/etcd
+	tcp        0      0 127.0.0.1:32379         0.0.0.0:*               LISTEN      21528/bin/etcd
+	tcp        0      0 127.0.0.1:12379         0.0.0.0:*               LISTEN      21529/bin/etcd
+	tcp        0      0 127.0.0.1:32380         0.0.0.0:*               LISTEN      21528/bin/etcd
+	tcp        0      0 127.0.0.1:12380         0.0.0.0:*               LISTEN      21529/bin/etcd
+	tcp        0      0 127.0.0.1:53697         0.0.0.0:*               LISTEN      2608/python2
+	tcp6       0      0 :::8555                 :::*                    LISTEN      21516/goreman
+
+Otherwise, you would have to run something like the following:
+
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:12379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:22379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:32379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:2379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
+
+*/
+func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
+	socket = strings.TrimSpace(socket)
+	program = strings.TrimSpace(program)
+	if program == "" {
+		program = "*"
+	}
+	port = strings.TrimSpace(port)
+	if port == "" {
+		port = "*"
+	}
+	if port != "*" {
+		if !strings.HasPrefix(port, ":") {
+			port = ":" + port
+		}
+	}
+	if program == "*" && port == "*" {
+		fmt.Fprintln(w, "[netStat - warning] grepping all programs.")
+	}
+
+	var flag string
+	flagFormat := "-%slpn"
+	switch socket {
+	case "tcp":
+		flag = fmt.Sprintf(flagFormat, "t")
+	case "tcp6":
+		flag = fmt.Sprintf(flagFormat, "t")
+	case "udp":
+		flag = fmt.Sprintf(flagFormat, "u")
+	default:
+		return nil, fmt.Errorf("socket '%s' is unknown", socket)
+	}
+
+	cmd := exec.Command("netstat", flag)
+	buf := new(bytes.Buffer)
+	cmd.Stdout = buf
+	cmd.Stderr = buf
+	if err := cmd.Run(); err != nil {
+		return nil, err
+	}
+
+	rd := bufio.NewReader(buf)
+	lines := [][]string{}
+	for {
+		l, _, err := rd.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		s := string(l)
+		if !strings.HasPrefix(s, socket) {
+			continue
+		}
+		sl := strings.Fields(s)
+		lines = append(lines, sl)
+	}
+
+	socketIdx := 0
+	portIdx := 3
+	programIdx := 6
+
+	ps := []Process{}
+
+	for _, sl := range lines {
+
+		theSocket := sl[socketIdx]
+		if theSocket != socket {
+			continue
+		}
+
+		asl := strings.Split(sl[portIdx], ":")
+		if len(asl) < 2 {
+			continue
+		}
+		thePort := ":" + asl[len(asl)-1]
+		if port != "*" {
+			if thePort != port {
+				continue
+			}
+		}
+
+		theHost := strings.TrimSpace(strings.Replace(sl[portIdx], thePort, "", -1))
+
+		psl := strings.SplitN(sl[programIdx], "/", 2)
+		if len(psl) != 2 {
+			continue
+		}
+		theProgram := strings.TrimSpace(psl[1])
+		if program != "*" {
+			if theProgram != program {
+				continue
+			}
+		}
+
+		thePID := 0
+		if d, err := strconv.Atoi(psl[0]); err != nil {
+			continue
+		} else {
+			thePID = d
+		}
+
+		p := Process{}
+		p.Socket = theSocket
+		p.Program = theProgram
+		p.Host = theHost
+		p.Port = thePort
+		p.PID = thePID
+		ps = append(ps, p)
+	}
+
+	for _, v := range ps {
+		fmt.Fprintf(w, "[netStat] %s\n", v)
+	}
+	return ps, nil
+}
+
+```
+
+[↑ top](#go-network-ssh-net-http-web)
+<br><br>
+
+
 ##### simple echo server
 
 ```go
@@ -578,7 +844,7 @@ func main() {
 <br><br>
 
 
-##### loopback, localhost
+##### Go: loopback, localhost
 
 ```go
 package main
@@ -590,85 +856,12 @@ import (
 	"net/http"
 )
 
-// RemoteAddr is for the remote client's IP and port
-// (original requester or last proxy address).
-// Whenever a client sends a request, its OS open an ephemeral port
-// (https://en.wikipedia.org/wiki/Ephemeral_port) to send that request,
-// and then the IP and port used for this request is shown in RemoteAddr.
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "r.RemoteAddr: %s\n", r.RemoteAddr)
-	/*
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57065
-
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57066
-
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57067
-	*/
-}
-
-const port = ":5000"
-
-func handlerResolve(w http.ResponseWriter, r *http.Request) {
-	lp, err := Localhost()
-	if err != nil {
-		panic(err)
-	}
-	ips := lp.String()
-	fmt.Println("ip:", ips) // 127.0.0.1
-
-	netaddr, err := net.ResolveIPAddr("ip4", ips)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("netaddr:", netaddr.String()) // 127.0.0.1
-
-	conn, err := net.ListenIP("ip4:icmp", netaddr)
-	if err != nil {
-		panic(err)
-	}
-
-	buf := make([]byte, 1024)
-	num, _, _ := conn.ReadFrom(buf)
-	// build and ping localhost with sudo
-	fmt.Printf("ReadPacket: %X\n", buf[:num])
-	// ReadPacket: 0800FD6729...
-}
-
-func runServer() {
-	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", handler)
-	mainRouter.HandleFunc("/resolve", handlerResolve)
-	fmt.Println("Serving http://localhost" + port)
-	if err := http.ListenAndServe(port, mainRouter); err != nil {
-		panic(err)
-	}
-}
-
-func main() {
-	runServer()
-}
-
 // Below, copied from
 // https://github.com/camlistore/camlistore/blob/master/pkg/netutil/netutil.go
 
-// Localhost returns the first address found when
-// doing a lookup of "localhost". If not successful,
-// it looks for an ip on the loopback interfaces.
-func Localhost() (net.IP, error) {
-	if ip := localhostLookup(); ip != nil {
-		return ip, nil
-	}
-	if ip := loopbackIP(); ip != nil {
-		return ip, nil
-	}
-	return nil, errors.New("No loopback ip found.")
-}
-
 // localhostLookup looks for a loopback IP by resolving localhost.
 func localhostLookup() net.IP {
+	// IPv6, it returns 0:0:0:0:0:0:0:1 or ::1
 	if ips, err := net.LookupIP("localhost"); err == nil && len(ips) > 0 {
 		return ips[0]
 	}
@@ -697,11 +890,65 @@ func loopbackIP() net.IP {
 	return nil
 }
 
+// localhost returns the first address found when
+// doing a lookup of "localhost". If not successful,
+// it looks for an ip on the loopback interfaces.
+func localhost() (net.IP, error) {
+	if ip := localhostLookup(); ip != nil {
+		return ip, nil
+	}
+	if ip := loopbackIP(); ip != nil {
+		return ip, nil
+	}
+	return nil, errors.New("No loopback ip found.")
+}
+
+func main() {
+	lp, err := localhost()
+	if err != nil {
+		panic(err)
+	}
+	if lp.To4() != nil {
+		fmt.Println(lp.String(), "is IPv4!")
+	} else if lp.To16() != nil {
+		fmt.Println(lp.String(), "is IPv6!")
+	}
+	// ::1 is IPv6!
+
+	fmt.Println("loopbackIP:", loopbackIP().String())
+	// loopbackIP: 127.0.0.1
+
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+
+	const port = ":8080"
+	fmt.Println("Serving http://localhost" + port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
+}
+
+/*
+$ curl http://localhost:8080
+r.RemoteAddr: [::1]:52310
+
+$ curl -L http://localhost:8080
+r.RemoteAddr: [::1]:52316
+*/
+
+// RemoteAddr is for the remote client's IP and port
+// (original requester or last proxy address).
+// Whenever a client sends a request, its OS open an ephemeral port
+// (https://en.wikipedia.org/wiki/Ephemeral_port) to send that request,
+// and then the IP and port used for this request is shown in RemoteAddr.
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "r.RemoteAddr: %s\n", r.RemoteAddr)
+}
+
 ```
 
 [↑ top](#go-network-ssh-net-http-web)
 <br><br>
-
 
 
 ##### simple web server
@@ -1376,148 +1623,3 @@ Get [ 5525] : Hello, client
 <br><br><br><br>
 <hr>
 
-
-
-
-
-
-#### `netstat`, kill process
-
-How to find and kill processes using Go? How to use `netstat` with Go?
-
-```go
-package main
-
-import (
-	"bufio"
-	"bytes"
-	"fmt"
-	"io"
-	"os/exec"
-	"strconv"
-	"strings"
-	"syscall"
-)
-
-type Process struct {
-	Program string
-	Socket  string
-
-	Host string
-	Port string
-	PID  int
-}
-
-func main() {
-	rs, err := Getpid("bin/etcd", "tcp")
-	if err != nil {
-		panic(err)
-	}
-	for _, v := range rs {
-		fmt.Printf("Terminating %+v\n", v)
-		syscall.Kill(v.PID, syscall.SIGINT)
-	}
-}
-
-/*
-Getpid parses the output of netstat command in linux:
-
-	netstat -tlpn
-	(Not all processes could be identified, non-owned process info
-	 will not be shown, you would have to be root to see it all.)
-	Active Internet connections (only servers)
-	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-	tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      21524/bin/etcd
-	tcp        0      0 127.0.0.1:22379         0.0.0.0:*               LISTEN      21526/bin/etcd
-	tcp        0      0 127.0.0.1:22380         0.0.0.0:*               LISTEN      21526/bin/etcd
-	tcp        0      0 127.0.0.1:32379         0.0.0.0:*               LISTEN      21528/bin/etcd
-	tcp        0      0 127.0.0.1:12379         0.0.0.0:*               LISTEN      21529/bin/etcd
-	tcp        0      0 127.0.0.1:32380         0.0.0.0:*               LISTEN      21528/bin/etcd
-	tcp        0      0 127.0.0.1:12380         0.0.0.0:*               LISTEN      21529/bin/etcd
-	tcp        0      0 127.0.0.1:53697         0.0.0.0:*               LISTEN      2608/python2
-	tcp6       0      0 :::8555                 :::*                    LISTEN      21516/goreman
-
-*/
-func Getpid(program, socket string) ([]Process, error) {
-	var flag string
-	flagFormat := "-%slpn"
-	switch socket {
-	case "tcp":
-		flag = fmt.Sprintf(flagFormat, "t")
-	case "tcp6":
-		flag = fmt.Sprintf(flagFormat, "t")
-	case "udp":
-		flag = fmt.Sprintf(flagFormat, "u")
-	default:
-		return nil, fmt.Errorf("%s is not supported", socket)
-	}
-	cmd := exec.Command("netstat", flag)
-	buf := new(bytes.Buffer)
-	cmd.Stdout = buf
-	cmd.Stderr = buf
-	err := cmd.Run()
-	if err != nil {
-		return nil, err
-	}
-	rd := bufio.NewReader(buf)
-	lines := [][]string{}
-	for {
-		l, _, err := rd.ReadLine()
-		if err == io.EOF {
-			break
-		}
-		s := string(l)
-		if !strings.HasPrefix(s, socket) {
-			continue
-		}
-		ss := strings.Fields(s)
-		lines = append(lines, ss)
-	}
-	addrIdx, pidIdx := 3, 6
-	rs := []Process{}
-	for _, v := range lines {
-		addr := strings.Split(v[addrIdx], ":")
-		if len(addr) < 2 {
-			continue
-		}
-		port := ":" + addr[len(addr)-1]
-		host := strings.Replace(v[addrIdx], port, "", -1)
-		pidProgram := v[pidIdx]
-		pp := strings.SplitN(pidProgram, "/", 2)
-		if len(pp) != 2 {
-			continue
-		}
-		processID, err := strconv.Atoi(pp[0])
-		if err != nil {
-			continue
-		}
-		programName := pp[1]
-		if programName != program {
-			continue
-		}
-		p := Process{}
-		p.Program = programName
-		p.Socket = socket
-		p.Host = host
-		p.Port = port
-		p.PID = processID
-		rs = append(rs, p)
-	}
-	return rs, nil
-}
-
-/*
-Otherwise you have to something like:
-
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:12379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:22379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:32379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:2379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
-*/
-
-```
-
-[↑ top](#go-network-ssh-net-http-web)
-<br><br><br><br>
-<hr>
