@@ -243,7 +243,6 @@ analysis applications.
 - [*Go: leveldb*](https://github.com/gyuho/learn/tree/master/doc/go_leveldb)
 - [*Python: sql*](https://github.com/gyuho/learn/tree/master/doc/python_sql)
 - [*Python: redis*](https://github.com/gyuho/learn/tree/master/doc/python_redis)
-- [*Go: protobuf*](https://github.com/gyuho/learn/tree/master/doc/go_protobuf)
 
 [↑ top](#contents)
 <br><br>
