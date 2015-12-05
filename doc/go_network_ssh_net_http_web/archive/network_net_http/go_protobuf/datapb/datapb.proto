@@ -1,0 +1,13 @@
+// datapb.proto
+package datapb;
+	
+enum FOO { X = 17; };
+	
+message SampleData {
+	required string label = 1;
+	optional int32 type = 2 [default=77];
+	repeated int64 reps = 3;
+	optional group OptionalGroup = 4 {
+		required string RequiredField = 5;
+	}
+}

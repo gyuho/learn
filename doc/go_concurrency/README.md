@@ -37,6 +37,22 @@
 - [web server](#example-web-server)
 - [`sync.Mutex` is just a value](#syncmutex-is-just-a-value)
 - [`goroutine`, closure](#goroutine-closure)
+- [Counting problem](#counting-problem)
+- [Count: simulate web requests](#count-simulate-web-requests)
+- [Count: `NaiveCounter`](#count-naivecounter)
+- [Count: `MutexCounter`](#count-mutexcounter) - [Count: `RWMutexCounter`](#count-rwmutexcounter) - [Count: `AtomicIntCounter`](#count-atomicintcounter) - [Count: `AtomicCounter`](#count-atomiccounter)
+- [Count: `ChannelCounter` (No Buffer)](#count-channelcounter-no-buffer)
+- [Count: `ChannelCounter` (Buffer)](#count-channelcounter-buffer)
+- [Count: benchmark results](#benchmark-results)
+- [Dequeue problem](#dequeue-problem)
+	- [Solution #1: In-Memory](#solution-1-in-memory)
+	- [Solution #2: Disk Key/Value Storage + Concurrency](#solution-2-disk-keyvalue-storage--concurrency)
+	- [Result](#result)
+	- [But, don't do this!](#but-dont-do-this)
+	- [Deque Summary](#deque-summary)
+- [Find duplicates with concurrency](#find-duplicates-with-concurrency)
+- [Concurrency: Merge Sort](#concurrency-merge-sort)
+- [Concurrency: Prime Sieve](#concurrency-prime-sieve)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
@@ -62,6 +78,8 @@
 - [**Why is a goroutine’s stack infinite**](http://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite) *by Dave Cheney*
 - [**High performance servers without the event loop**](http://go-talks.appspot.com/github.com/davecheney/presentations/performance-without-the-event-loop.slide#1) *by Dave Cheney*
 - [**Goroutines vs OS Threads**](https://groups.google.com/d/msg/golang-nuts/j51G7ieoKh4/wxNaKkFEfvcJ)
+- [Bjorn Rabenstein - Prometheus: Designing and Implementing a Modern Monitoring Solution in Go](https://www.youtube.com/watch?v=1V7eJ0jN8-E)
+- [beorn7/concurrentcount](https://github.com/beorn7/concurrentcount)
 
 [↑ top](#go-concurrency)
 <br><br><br><br>
@@ -2659,7 +2677,8 @@ conditions.
 
 <br>
 Now you can refactor this code above, using **channel** instead of
-`sync.Mutex`:
+`sync.Mutex` (full code can be found here
+https://github.com/gyuho/learn/tree/master/doc/go_concurrency/code/surbl):
 
 ```go
 /*
@@ -3408,3 +3427,1814 @@ func wrap(err error) {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
+
+
+
+#### Counting problem
+
+Suppose millions of **concurrent** web requests coming to your web application. 
+And you want to *count* visits, or any other metrics per request. Counting should
+not hurt the performance of your application. **Counting** is an **inherently 
+sequential** problem. There's one resource to be updated while **concurrent**, 
+multiple requests can cause contentions. Then what would be the best way to **count**
+with concurrency?
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: simulate web requests
+
+Here's how I would simulate the web requests:
+
+```go
+func RunCountHandler(b *testing.B, isDebug bool, counter Counter, delta float64) {
+	countHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			original := counter.Get()
+			counter.Add(delta)
+			fmt.Fprintf(w, "Original: %v / Added: %v / Current: %v", original, delta, counter.Get())
+		default:
+			http.Error(w, "Method Not Allowed", 405)
+		}
+	}
+
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", httpLog(isDebug, countHandler))
+
+	numberOfRequests := 100
+	// don't do this at Travis
+
+	for i := 0; i < b.N; i++ {
+
+		b.StopTimer()
+		ts := httptest.NewServer(mainRouter)
+
+		var wg sync.WaitGroup
+		wg.Add(numberOfRequests)
+
+		for i := 0; i < numberOfRequests; i++ {
+			go func() {
+				defer wg.Done()
+				if resp, err := http.Get(ts.URL); err != nil {
+					panic(err)
+				} else {
+					// bstr, err := ioutil.ReadAll(resp.Body)
+					resp.Body.Close()
+					// if err != nil {
+					// 	panic(err)
+					// }
+					// fmt.Println(string(bstr))
+
+					// without Close
+					// 2015/08/02 16:49:00 http: Accept error: accept tcp6 [::1]:38096: accept4: too many open files; retrying in 1s
+					// 2015/08/02 16:49:01 http: Accept error: accept tcp6 [::1]:38096: accept4: too many open files; retrying in 1s
+				}
+
+			}()
+		}
+
+		b.StartTimer()
+		wg.Wait()
+		ts.Close()
+	}
+}
+```
+
+<br>
+Counting operation takes only about nanoseconds while `http` request
+takes much milliseconds. Benchmarking by mocking web server won't be able to isolate
+the performance of `counting` as below, except that `channel` method is slower because
+it allocates more memory:
+
+```
+BenchmarkServer_NaiveCounter              	     100	  13641425 ns/op	 1724319 B/op	   10551 allocs/op
+BenchmarkServer_NaiveCounter-2            	     200	   5577538 ns/op	 1761024 B/op	   10465 allocs/op
+BenchmarkServer_NaiveCounter-4            	     300	   3970441 ns/op	 1736143 B/op	   10392 allocs/op
+BenchmarkServer_NaiveCounter-8            	     500	   3054495 ns/op	 1636052 B/op	    9846 allocs/op
+BenchmarkServer_NaiveCounter-16           	     500	   2754022 ns/op	 1446608 B/op	    8784 allocs/op
+
+BenchmarkServer_MutexCounter              	     100	  10334728 ns/op	 1739715 B/op	   10570 allocs/op
+BenchmarkServer_MutexCounter-2            	     200	   6533533 ns/op	 1737853 B/op	   10466 allocs/op
+BenchmarkServer_MutexCounter-4            	     300	   4217715 ns/op	 1703817 B/op	   10349 allocs/op
+BenchmarkServer_MutexCounter-8            	     500	   3072379 ns/op	 1599124 B/op	    9745 allocs/op
+BenchmarkServer_MutexCounter-16           	     500	   2721123 ns/op	 1417956 B/op	    8579 allocs/op
+
+BenchmarkServer_RWMutexCounter            	     100	  11248896 ns/op	 1736902 B/op	   10579 allocs/op
+BenchmarkServer_RWMutexCounter-2          	     200	   7160659 ns/op	 1759653 B/op	   10481 allocs/op
+BenchmarkServer_RWMutexCounter-4          	     300	   4439413 ns/op	 1718228 B/op	   10390 allocs/op
+BenchmarkServer_RWMutexCounter-8          	     500	   3340555 ns/op	 1679569 B/op	   10077 allocs/op
+BenchmarkServer_RWMutexCounter-16         	     500	   3053389 ns/op	 1438662 B/op	    8698 allocs/op
+
+BenchmarkServer_AtomicIntCounter          	     100	  12053604 ns/op	 1743955 B/op	   10590 allocs/op
+BenchmarkServer_AtomicIntCounter-2        	     200	   8204060 ns/op	 1750468 B/op	   10477 allocs/op
+BenchmarkServer_AtomicIntCounter-4        	     300	   4443112 ns/op	 1710413 B/op	   10370 allocs/op
+BenchmarkServer_AtomicIntCounter-8        	     500	   3961467 ns/op	 1630977 B/op	    9897 allocs/op
+BenchmarkServer_AtomicIntCounter-16       	     500	   2926347 ns/op	 1441098 B/op	    8780 allocs/op
+
+BenchmarkServer_AtomicCounter             	     100	  11159504 ns/op	 1736091 B/op	   10570 allocs/op
+BenchmarkServer_AtomicCounter-2           	     200	   7661146 ns/op	 1741652 B/op	   10482 allocs/op
+BenchmarkServer_AtomicCounter-4           	     300	   4450239 ns/op	 1725751 B/op	   10406 allocs/op
+BenchmarkServer_AtomicCounter-8           	     500	   3121161 ns/op	 1627260 B/op	    9925 allocs/op
+BenchmarkServer_AtomicCounter-16          	     500	   2963900 ns/op	 1465410 B/op	    8873 allocs/op
+
+BenchmarkServer_ChannelCounter_NoBuffer   	     100	 113879946 ns/op	 1801659 B/op	   10602 allocs/op
+BenchmarkServer_ChannelCounter_NoBuffer-2 	      20	 111064393 ns/op	 1742514 B/op	   10512 allocs/op
+BenchmarkServer_ChannelCounter_NoBuffer-4 	      20	 110180521 ns/op	 1801574 B/op	   10566 allocs/op
+BenchmarkServer_ChannelCounter_NoBuffer-8 	     100	  30717707 ns/op	 1990469 B/op	   10692 allocs/op
+BenchmarkServer_ChannelCounter_NoBuffer-16	     100	  24029631 ns/op	 1689640 B/op	    9902 allocs/op
+
+BenchmarkServer_ChannelCounter_Buffer     	       2	1126995870 ns/op	 1576520 B/op	   10680 allocs/op
+BenchmarkServer_ChannelCounter_Buffer-2   	       3	 684545001 ns/op	 1710218 B/op	   10609 allocs/op
+BenchmarkServer_ChannelCounter_Buffer-4   	       3	 417227794 ns/op	 1782202 B/op	   10636 allocs/op
+BenchmarkServer_ChannelCounter_Buffer-8   	      10	 188985058 ns/op	 1850097 B/op	   10654 allocs/op
+BenchmarkServer_ChannelCounter_Buffer-16  	      10	 119519447 ns/op	 1591680 B/op	    9212 allocs/op
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `NaiveCounter`
+
+[**_`NaiveCounter` is the fastest way to count but subject to race
+conditions, as [here](http://play.golang.org/p/wBW-vMCSLl). 
+This is not thread-safe:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// NaiveCounter counts in a naive way.
+// Do not use this with concurrency.
+// It will cause race conditions.
+type NaiveCounter float64
+
+func (c *NaiveCounter) Get() float64 {
+
+	// return (*c).(float64)
+	// (X) (*c).(float64) (non-interface type NaiveCounter on left)
+
+	return float64(*c)
+}
+
+func (c *NaiveCounter) Add(delta float64) {
+	*c += NaiveCounter(delta)
+}
+
+func main() {
+	counter := new(NaiveCounter)
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -38.12999999999999
+}
+
+/*
+go run -race 00_naive.go
+
+==================
+WARNING: DATA RACE
+Read by goroutine 7:
+  main.main.func1()
+      /home/ubuntu/go/src/github.com/gyuho/learn/doc/go_concurrent_count/code/00_naive.go:43 +0x70
+
+Previous write by goroutine 6:
+  main.main.func1()
+      /home/ubuntu/go/src/github.com/gyuho/learn/doc/go_concurrent_count/code/00_naive.go:43 +0x88
+
+Goroutine 7 (running) created at:
+  main.main()
+      /home/ubuntu/go/src/github.com/gyuho/learn/doc/go_concurrent_count/code/00_naive.go:49 +0xc5
+
+Goroutine 6 (finished) created at:
+  main.main()
+      /home/ubuntu/go/src/github.com/gyuho/learn/doc/go_concurrent_count/code/00_naive.go:49 +0xc5
+==================
+-38.12999999999999
+Found 1 data race(s)
+exit status 66
+
+*/
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `MutexCounter`
+
+Try [this](http://play.golang.org/p/gxD7rxQ1b7):
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// MutexCounter implements Counter with sync.Mutex.
+type MutexCounter struct {
+	mu    sync.Mutex // guards the following
+	value float64
+}
+
+func (c *MutexCounter) Get() float64 {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.value
+}
+
+func (c *MutexCounter) Add(delta float64) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.value += delta
+}
+
+func main() {
+	counter := new(MutexCounter)
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// 962.0000000000002
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `RWMutexCounter`
+
+Try [this](http://play.golang.org/p/1cWPcFVvPA):
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// RWMutexCounter implements Counter with sync.RWMutex.
+type RWMutexCounter struct {
+	mu    sync.RWMutex // guards the following sync.
+	value float64
+}
+
+func (c *RWMutexCounter) Get() float64 {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.value
+}
+
+func (c *RWMutexCounter) Add(delta float64) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.value += delta
+}
+
+func main() {
+	counter := new(RWMutexCounter)
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -38.12999999999999
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `AtomicIntCounter`
+
+Try [this](http://play.golang.org/p/HlGY7UnZDg):
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"sync/atomic"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// AtomicIntCounter implements Counter with atomic package.
+// Go has only int64 atomic variable.
+// This truncates float value into integer.
+type AtomicIntCounter int64
+
+func (c *AtomicIntCounter) Get() float64 {
+	return float64(atomic.LoadInt64((*int64)(c)))
+}
+
+// Add ignores the non-integer part of delta.
+func (c *AtomicIntCounter) Add(delta float64) {
+	atomic.AddInt64((*int64)(c), int64(delta))
+}
+
+func main() {
+	counter := new(AtomicIntCounter)
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -40
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `AtomicCounter`
+
+Try [this](http://play.golang.org/p/cbMs7C-zSH):
+
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+	"sync"
+	"sync/atomic"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// AtomicCounter implements Counter with atomic package.
+// Go has only int64 atomic variable.
+// This uses math.Float64frombits package for the floating
+// point number corresponding the IEEE 754 binary representation
+type AtomicCounter uint64
+
+func (c *AtomicCounter) Get() float64 {
+	return math.Float64frombits(atomic.LoadUint64((*uint64)(c)))
+}
+
+// Add ignores the non-integer part of delta.
+func (c *AtomicCounter) Add(delta float64) {
+	for {
+		oldBits := atomic.LoadUint64((*uint64)(c))
+		newBits := math.Float64bits(math.Float64frombits(oldBits) + delta)
+		if atomic.CompareAndSwapUint64((*uint64)(c), oldBits, newBits) {
+			return
+		}
+	}
+}
+
+func main() {
+	counter := new(AtomicCounter)
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -38.12999999999999
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `ChannelCounter` (No Buffer)
+
+Try this:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// ChannelCounter counts through channels.
+type ChannelCounter struct {
+	valueChan chan float64
+	deltaChan chan float64
+	done      chan struct{}
+}
+
+func NewChannelCounter(buf int) *ChannelCounter {
+	c := &ChannelCounter{
+		make(chan float64),
+		make(chan float64, buf), // only buffer the deltaChan
+		make(chan struct{}),
+	}
+	go c.Run()
+	return c
+}
+
+func (c *ChannelCounter) Run() {
+
+	var value float64
+
+	for {
+		// "select" statement chooses which of a set of
+		// possible send or receive operations will proceed.
+		select {
+
+		case delta := <-c.deltaChan:
+			value += delta
+
+		case <-c.done:
+			return
+
+		case c.valueChan <- value:
+			// Do nothing.
+
+			// If there is no default case, the "select" statement
+			// blocks until at least one of the communications can proceed.
+		}
+	}
+}
+
+func (c *ChannelCounter) Get() float64 {
+	return <-c.valueChan
+}
+
+func (c *ChannelCounter) Add(delta float64) {
+	c.deltaChan <- delta
+}
+
+func (c *ChannelCounter) Done() {
+	c.done <- struct{}{}
+}
+
+func (c *ChannelCounter) Close() {
+	close(c.deltaChan)
+}
+
+func main() {
+	counter := NewChannelCounter(0)
+	defer counter.Done()
+	defer counter.Close()
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -38.12999999999997
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: `ChannelCounter` (Buffer)
+
+Try this:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+// Counter is an interface for counting.
+// It contains counting data as long as a type
+// implements all the methods in the interface.
+type Counter interface {
+	// Get returns the current count.
+	Get() float64
+
+	// Add adds the delta value to the counter.
+	Add(delta float64)
+}
+
+// ChannelCounter counts through channels.
+type ChannelCounter struct {
+	valueChan chan float64
+	deltaChan chan float64
+	done      chan struct{}
+}
+
+func NewChannelCounter(buf int) *ChannelCounter {
+	c := &ChannelCounter{
+		make(chan float64),
+		make(chan float64, buf), // only buffer the deltaChan
+		make(chan struct{}),
+	}
+	go c.Run()
+	return c
+}
+
+func (c *ChannelCounter) Run() {
+
+	var value float64
+
+	for {
+		// "select" statement chooses which of a set of
+		// possible send or receive operations will proceed.
+		select {
+
+		case delta := <-c.deltaChan:
+			value += delta
+
+		case <-c.done:
+			return
+
+		case c.valueChan <- value:
+			// Do nothing.
+
+			// If there is no default case, the "select" statement
+			// blocks until at least one of the communications can proceed.
+		}
+	}
+}
+
+func (c *ChannelCounter) Get() float64 {
+	return <-c.valueChan
+}
+
+func (c *ChannelCounter) Add(delta float64) {
+	c.deltaChan <- delta
+}
+
+func (c *ChannelCounter) Done() {
+	c.done <- struct{}{}
+}
+
+func (c *ChannelCounter) Close() {
+	close(c.deltaChan)
+}
+
+func main() {
+	counter := NewChannelCounter(10)
+	defer counter.Done()
+	defer counter.Close()
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			counter.Add(1.347)
+			counter.Get()
+			counter.Add(-5.5)
+			counter.Get()
+			counter.Add(0.340)
+			counter.Get()
+		}()
+	}
+	wg.Wait()
+
+	fmt.Println(counter.Get())
+	// -38.12999999999997
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Count: benchmark results
+
+`Add`, in the descending order of time per operation:
+
+1. `NaiveCounter` but should be ignored. Not thread-safe
+2. `AtomicIntCounter` but only supports `int64` type
+3. `AtomicCounter`
+4. `MutexCounter`
+5. `RWMutexCounter`
+6. `ChannelCounter_Buffer` is faster than non-buffered channel
+7. `ChannelCounter_NoBuffer`
+
+<br>
+`Get`, in the descending order of time per operation:
+
+1. `NaiveCounter` but should be ignored. Not thread-safe
+2. `AtomicIntCounter` but only supports `int64` type
+3. `AtomicCounter`
+4. `MutexCounter`
+5. `RWMutexCounter`
+6. `ChannelCounter_Buffer` is faster than non-buffered channel
+7. `ChannelCounter_NoBuffer`
+
+<br>
+And `channel` is slower than `sync.Mutex` because it allocates more memory.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Dequeue problem
+
+> [In 2002] I got asked to fix the log analysis problem we had there. We were
+> getting things like **web query logs coming at a literally exponential rate
+> at the time**. And the analysis was written in Python and was **getting close
+> to one day per day**, and at some point it was clear that that wasn’t going
+> to last and we had to be able to generate the bills. … We’re talking massive,
+> massive injection rates. You can’t do queries while you’re that much data.
+> Even if you build a database to hold that much data, the incremental changes
+> would kill you. … We designed a system called Sawmil … **Time to process a
+> day’s log dropped from 24 hours to 2 minutes. Program runs on thousands of
+> machines in parallel.**
+>
+> [**_From Parallel to Concurrent by Rob
+> Pike_**](https://channel9.msdn.com/Events/Lang-NEXT/Lang-NEXT-2014/From-Parallel-to-Concurrent)
+
+<br><br>
+
+Here's similar situation. Suppose a **queue** where you have to:
+- Consume the queue.
+- Decode raw messages into meaningful data.
+- Only insert the unique data into a database.
+- Messaging queue can be anything. In this case, use [*SQS*](http://aws.amazon.com/sqs/) from *AWS*.
+- And *PostgreSQL* to store the data.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Solution #1: In-Memory
+
+Given *no memory constraint*, I would **hash every message into a Python
+dictionary**, and use it as a **lookup table** and **only insert the ones that
+are not in the database yet**.
+
+It would take only a few minutes to write a Python script for this:
+
+```python
+def do():
+    # connect to AWS SQS
+    conn = boto.sqs.connect_to_region(...)
+    queue = conn.get_queue('message')
+	
+	# messages need to be unique
+    existing_message = {}
+    cur = database.execute("select msg from table")
+    for r in cur:
+        existing_message[r['msg']] = True
+
+	while True:
+        msgs = queue.get_messages(...)
+        
+        for msg in msgs:
+            raw = msg.get_body()
+
+			# transform(decode) the raw message
+            parsed = json.loads(raw)
+
+			# skip duplicate message
+            if parsed['msg'] in existing_message:
+                continue
+
+			# insert into database
+            database.execute("insert...")
+
+		print "Done"
+```
+
+This would *work* only with a *small amount of data*. With data growing at an
+exponential rate, messages would keep piling up and processing would take
+longer than it should.
+
+And even worse when we add more challenges as below:
+
+- Messages are **NOT sorted** and contain some **duplicate entries**.
+- One message in database must be **unique** against all entries in the
+  database.
+- There are over **millions of messages** coming every day.
+	- They are too big to fit in memory.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Solution #2: Disk Key/Value Storage + Concurrency
+
+But if you have millions of messages everyday, in-memory method cannot work. *MySQL* and *PostgreSQL* have
+[**INSERT**](http://www.postgresql.org/docs/8.2/static/sql-insert.html) syntax
+to handle entries with primary key conflicts. However:
+
+- **`INSERTING`**ing each row manually is too slow.
+- Using a **temporary table** to join data into the database is also **slow**.
+
+We need
+[**`COPY`**](http://www.postgresql.org/docs/current/interactive/populate.html)
+command and import local *csv* files, which is much faster. But this does not
+ensure the message uniqueness or prevent primary key conflicts. One primary key
+conflict in a *csv* file can fail the whole *csv* import command. 
+
+So I first tried with a separate database:
+1. Rewrite Python code in [**Go**](http://golang.org/) in order to *dequeue*
+   and *decode* raw messages with concurrency
+2. Set up a separate database [**LevelDB**](https://github.com/google/leveldb) to maintain the data uniqueness.
+3. Import the filtered data in *csv* format, with `COPY` command.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Result
+
+- **Python version** took **_3 minutes_** to process *5,000 messages*.
+- **Go version** takes only **_15 seconds_**: *12x faster*.
+
+```go
+package main
+
+import (
+	"encoding/base64"
+	"fmt"
+	"log"
+	"os"
+	"runtime"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/service/sqs"
+)
+
+const (
+	awsAccessKey = "YOUR_ACCESS_KEY"
+	awsSecretKey = "YOUR_SECRET_KEY"
+	queueURL     = "YOUR_SQS_ENDPOINT"
+)
+
+func init() {
+	println()
+	maxCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(maxCPU)
+	log.Println("Running with", maxCPU, "cpus")
+	println()
+}
+
+func main() {
+	msgs, receipts := getMessages(1)
+	for _, msg := range msgs {
+		fmt.Println(msg)
+	}
+	deleteMessageBatch(receipts)
+}
+
+type data struct {
+	// Use your own data type
+	// with your parsing function
+	rawMessage string
+
+	// receipt can be used later
+	// to delete messages
+	// after you process them
+	receipt *string
+}
+
+// in the actual code, I have my own JSON parsing
+// function, which will be parallelized with these goroutines
+func parse(bt []byte) string {
+	return string(bt)
+}
+
+func getMessages(maxSet int) ([]string, []*string) {
+	if err := os.Setenv("AWS_ACCESS_KEY", awsAccessKey); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Setenv("AWS_SECRET_KEY", awsSecretKey); err != nil {
+		log.Fatal(err)
+	}
+	creds := credentials.NewEnvCredentials()
+	config := aws.Config{}
+	config.Credentials = creds
+	config.Region = "us-west-2"
+	sqsClient := sqs.New(&config)
+
+	rcvInput := &sqs.ReceiveMessageInput{}
+	rcvInput.QueueURL = aws.String(queueURL)
+	var (
+		maxNum      int64 = 10
+		vizTimeout  int64 = 120
+		waitTimeout int64 = 10
+	)
+	rcvInput.MaxNumberOfMessages = &maxNum
+	rcvInput.VisibilityTimeout = &vizTimeout
+	rcvInput.WaitTimeSeconds = &waitTimeout
+
+	decodedEvents := []string{}
+	receiptHandlesToDelete := []*string{}
+
+	iterCount := 0
+
+	for {
+		fmt.Println("Dequeuing ", iterCount*10)
+
+		rcvOutput, err := sqsClient.ReceiveMessage(rcvInput)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if rcvOutput == nil {
+			log.Println("No messages")
+			break
+		}
+		if rcvOutput.Messages == nil {
+			log.Println("No messages")
+			break
+		}
+		msgSize := len(rcvOutput.Messages)
+		if msgSize == 0 {
+			log.Println("No messages")
+			break
+		}
+
+		dataCh := make(chan data, 10)
+
+		for _, msg := range rcvOutput.Messages {
+			go func(msg *sqs.Message) {
+				if msg.Body == nil {
+					return
+				}
+				byteData, err := base64.StdEncoding.DecodeString(*msg.Body)
+				if err != nil {
+					log.Fatalf("sqs.Message: %+v %+v", msg, err)
+				}
+				oneData := data{}
+				oneData.rawMessage = parse(byteData)
+				oneData.receipt = msg.ReceiptHandle
+				dataCh <- oneData
+			}(msg)
+		}
+
+		i := 0
+		for data := range dataCh {
+			decodedEvents = append(decodedEvents, data.rawMessage)
+			receiptHandlesToDelete = append(receiptHandlesToDelete, data.receipt)
+			i++
+			if i == msgSize {
+				close(dataCh)
+			}
+		}
+
+		iterCount++
+		if iterCount == maxSet {
+			break
+		}
+	}
+
+	return decodedEvents, receiptHandlesToDelete
+}
+
+func deleteMessageBatch(receiptHandlesToDelete []*string) {
+	if err := os.Setenv("AWS_ACCESS_KEY", awsAccessKey); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Setenv("AWS_SECRET_KEY", awsSecretKey); err != nil {
+		log.Fatal(err)
+	}
+	creds := credentials.NewEnvCredentials()
+	config := aws.Config{}
+	config.Credentials = creds
+	config.Region = "us-west-2"
+	sqsClient := sqs.New(&config)
+	slices := []*sqs.DeleteMessageBatchInput{}
+	tempEntries := []*sqs.DeleteMessageBatchRequestEntry{}
+	for i, id := range receiptHandlesToDelete {
+		one := &sqs.DeleteMessageBatchRequestEntry{}
+		one.ID = aws.String(fmt.Sprintf("%d", i))
+		one.ReceiptHandle = id
+		tempEntries = append(tempEntries, one)
+		if len(tempEntries) == 10 {
+			dmbInput := &sqs.DeleteMessageBatchInput{}
+			dmbInput.QueueURL = aws.String(queueURL)
+			entries := []*sqs.DeleteMessageBatchRequestEntry{}
+			for _, elem := range tempEntries {
+				entries = append(entries, elem)
+			}
+			dmbInput.Entries = entries
+			tempEntries = []*sqs.DeleteMessageBatchRequestEntry{}
+			slices = append(slices, dmbInput)
+		}
+	}
+	for i, dinput := range slices {
+		if i%100 == 0 {
+			log.Println("Deleting", i*10, "/", len(receiptHandlesToDelete))
+		}
+		if _, err := sqsClient.DeleteMessageBatch(dinput); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+```
+
+If you want even more concurrency:
+
+```go
+package main
+
+import (
+	"encoding/base64"
+	"fmt"
+	"log"
+	"os"
+	"runtime"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/service/sqs"
+)
+
+const (
+	awsAccessKey = "YOUR_ACCESS_KEY"
+	awsSecretKey = "YOUR_SECRET_KEY"
+	queueURL     = "YOUR_SQS_ENDPOINT"
+)
+
+func init() {
+	println()
+	maxCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(maxCPU)
+	log.Println("Running with", maxCPU, "cpus")
+	println()
+}
+
+func main() {
+	msgs, receipts := getMessages(1)
+	for _, msg := range msgs {
+		fmt.Println(msg)
+	}
+	deleteMessageBatch(receipts)
+}
+
+type data struct {
+	// Use your own data type
+	// with your parsing function
+	rawMessage string
+
+	// receipt can be used later
+	// to delete messages
+	// after you process them
+	receipt *string
+}
+
+// in the actual code, I have my own JSON parsing
+// function, which will be parallelized with these goroutines
+func parse(bt []byte) string {
+	return string(bt)
+}
+
+func getMessages(maxSet int) ([]string, []*string) {
+	if err := os.Setenv("AWS_ACCESS_KEY", awsAccessKey); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Setenv("AWS_SECRET_KEY", awsSecretKey); err != nil {
+		log.Fatal(err)
+	}
+	creds := credentials.NewEnvCredentials()
+	config := aws.Config{}
+	config.Credentials = creds
+	config.Region = "us-west-2"
+	sqsClient := sqs.New(&config)
+
+	rcvInput := &sqs.ReceiveMessageInput{}
+	rcvInput.QueueURL = aws.String(queueURL)
+	var (
+		maxNum      int64 = 10
+		vizTimeout  int64 = 120
+		waitTimeout int64 = 10
+	)
+	rcvInput.MaxNumberOfMessages = &maxNum
+	rcvInput.VisibilityTimeout = &vizTimeout
+	rcvInput.WaitTimeSeconds = &waitTimeout
+
+	decodedEvents := []string{}
+	receiptHandlesToDelete := []*string{}
+
+	iterCount := 0
+
+	dataCh := make(chan data, 10*maxSet)
+	msgSize := 0
+	for {
+		fmt.Println("Dequeuing ", iterCount*10)
+
+		rcvOutput, err := sqsClient.ReceiveMessage(rcvInput)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if rcvOutput == nil {
+			log.Println("No messages")
+			break
+		}
+		if rcvOutput.Messages == nil {
+			log.Println("No messages")
+			break
+		}
+		size := len(rcvOutput.Messages)
+		msgSize += size
+		if size == 0 {
+			log.Println("No messages")
+			break
+		}
+
+		for _, msg := range rcvOutput.Messages {
+			go func(msg *sqs.Message) {
+				if msg.Body == nil {
+					return
+				}
+				byteData, err := base64.StdEncoding.DecodeString(*msg.Body)
+				if err != nil {
+					log.Fatalf("sqs.Message: %+v %+v", msg, err)
+				}
+				oneData := data{}
+				oneData.rawMessage = parse(byteData)
+				oneData.receipt = msg.ReceiptHandle
+				dataCh <- oneData
+			}(msg)
+		}
+
+		iterCount++
+		if iterCount == maxSet {
+			break
+		}
+	}
+
+	i := 0
+	for data := range dataCh {
+		decodedEvents = append(decodedEvents, data.rawMessage)
+		receiptHandlesToDelete = append(receiptHandlesToDelete, data.receipt)
+		i++
+		if i == msgSize {
+			close(dataCh)
+		}
+	}
+
+	return decodedEvents, receiptHandlesToDelete
+}
+
+func deleteMessageBatch(receiptHandlesToDelete []*string) {
+	if err := os.Setenv("AWS_ACCESS_KEY", awsAccessKey); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Setenv("AWS_SECRET_KEY", awsSecretKey); err != nil {
+		log.Fatal(err)
+	}
+	creds := credentials.NewEnvCredentials()
+	config := aws.Config{}
+	config.Credentials = creds
+	config.Region = "us-west-2"
+	sqsClient := sqs.New(&config)
+	slices := []*sqs.DeleteMessageBatchInput{}
+	tempEntries := []*sqs.DeleteMessageBatchRequestEntry{}
+	for i, id := range receiptHandlesToDelete {
+		one := &sqs.DeleteMessageBatchRequestEntry{}
+		one.ID = aws.String(fmt.Sprintf("%d", i))
+		one.ReceiptHandle = id
+		tempEntries = append(tempEntries, one)
+		if len(tempEntries) == 10 {
+			dmbInput := &sqs.DeleteMessageBatchInput{}
+			dmbInput.QueueURL = aws.String(queueURL)
+			entries := []*sqs.DeleteMessageBatchRequestEntry{}
+			for _, elem := range tempEntries {
+				entries = append(entries, elem)
+			}
+			dmbInput.Entries = entries
+			tempEntries = []*sqs.DeleteMessageBatchRequestEntry{}
+			slices = append(slices, dmbInput)
+		}
+	}
+	for i, dinput := range slices {
+		if i%100 == 0 {
+			log.Println("Deleting", i*10, "/", len(receiptHandlesToDelete))
+		}
+		if _, err := sqsClient.DeleteMessageBatch(dinput); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+```
+
+And here's how you would use **LevelDB** for this case:
+
+```go
+package main
+
+import (
+	"log"
+	"runtime"
+	"strings"
+	"time"
+
+	"github.com/syndtr/goleveldb/leveldb"
+)
+
+func init() {
+	maxCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	log.Println("Concurrent execution with", maxCPU, "CPUs.")
+}
+
+func main() {
+	start := time.Now()
+
+	levelDBpath := "./db"
+	ldb, err := leveldb.OpenFile(levelDBpath, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer ldb.Close()
+
+	maxSet := 450 // import maxSet * 10 messages
+	decodedEvents, receiptHandlersToDelete := getMessages(maxSet)
+
+	foundEvent := make(map[string]bool)
+	idsToPut := []string{}
+	for _, msg := range decodedEvents {
+
+		// check id collision within a batch
+		if _, ok := foundEvent[msg.EventHash]; ok {
+			continue
+		} else {
+			foundEvent[msg.EventHash] = true
+
+			data, err := ldb.Get([]byte(msg.EventHash), nil)
+			if err != nil {
+				if !strings.Contains(err.Error(), "not found") {
+					log.Fatal(err)
+				}
+			}
+			if data != nil {
+				log.Printf("Found Duplicate Event: %s", string(data))
+				continue
+			}
+
+			idsToPut = append(idsToPut, msg.EventHash)
+		}
+	}
+
+	// do your data import job here
+
+	log.Println("maintain the lookup table")
+	for _, id := range idsToPut {
+		// maintain the lookup table
+		if err := ldb.Put([]byte(id), []byte("true"), nil); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+```
+
+Or you can even write directly to local disk storage:
+
+```go
+package main
+
+import (
+	"crypto/sha512"
+	"encoding/hex"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
+)
+
+func exist(fpath string) bool {
+	// Does a directory exist
+	st, err := os.Stat(fpath)
+	if err != nil {
+		return false
+	}
+	if st.IsDir() {
+		return true
+	}
+	if _, err := os.Stat(fpath); err != nil {
+		if strings.Contains(err.Error(), "no such file") {
+			return false
+		}
+	}
+	return true
+}
+
+func getHash(bt []byte) string {
+	if bt == nil {
+		return ""
+	}
+	h := sha512.New()
+	h.Write(bt)
+	sha512Hash := hex.EncodeToString(h.Sum(nil))
+	return sha512Hash
+}
+
+func main() {
+	var events = []string{
+		"Hello World!",
+		"Hello World!",
+		"different",
+	}
+	for _, event := range events {
+		eventHash := getHash([]byte(event))
+		if !exist(eventHash) {
+			if err := ioutil.WriteFile(eventHash, nil, 0644); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("Saved", event, "with", eventHash)
+		} else {
+			fmt.Println("Found duplicate events:", event)
+		}
+	}
+}
+
+/*
+Saved Hello World! with 861844d6704e8573fec34d967e20bcfef3d424cf48be04e6dc08f2bd58c729743371015ead891cc3cf1c9d34b49264b510751b1ff9e537937bc46b5d6ff4ecc8
+Found duplicate events: Hello World!
+Saved different with 49d5b8799558e22d3890d03b56a6c7a46faa1a7d216c2df22507396242ab3540e2317b870882b2384d707254333a8439fd3ca191e93293f745786ff78ef069f8
+*/
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+
+
+#### But, don't do this!
+
+My coworker pointed out the unnecessary use of external database. For this
+particular problem, we didn’t need a separate database. Just **_creating
+indexes in PostgreSQL was enough_**.
+
+```sql
+CREATE UNIQUE INDEX event_id
+ON events_table (event_id)
+;
+SELECT event_id AS duplicate_id
+FROM events_table
+WHERE event_id IN ('EVENT_IDs from 5,000 Messages, ...')
+;
+```
+
+This query finds the duplicates that could have failed the `COPY` command. It
+is slightly slower than *LevelDB* but is a good compromise considering the cost
+of maintaining the separate database. And if I still need a separate
+key-value database, I would switch to a [**_Redis_**](http://redis.io/) server
+to avoid the data loss in local disk storage.
+
+
+<br><br>
+
+Lesson learned. **_Don’t introduce complexity unless it’s needed. The simplest
+are the best._**, and:
+
+> The **competent programmer is fully aware of the strictly limited size of his
+> own skull;** therefore he approaches the programming task in full humility,
+> and among other things he **avoids clever tricks like the plague.**
+>
+> We shall do a much better programming job, provided that we approach the task
+> with a full appreciation of its tremendous difficulty, provided that we stick
+> to modest and elegant programming languages, **provided that we respect the
+> intrinsic limitations of the human mind and approach the task as Very Humble
+> Programmers.**
+>
+> [**_The Humble
+> Programmer_**](https://www.cs.utexas.edu/~EWD/transcriptions/EWD03xx/EWD340.html)
+> *by* [*Edsger W. Dijkstra*](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra)
+
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Deque Summary
+
+And back to our original question: *You have billions of events that do not fit
+in memory. How would you detect the duplicates?*
+
+- Most preferable is using **traditional databases**, such as *MySQL* or
+  *PostgreSQL*. And create an index (*primary key) for its unique identifiers.
+  You can get this by hashing the raw message.
+- You can also have a **separate key-value database**, such as *LevelDB* or
+  *Redis*. And maintain the **unique event identifier table** to filter out the
+  duplicate events. This would be fastest but you need to maintain the separate
+  database.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Find duplicates with concurrency
+
+What if you don’t have *PostgreSQL* or *LevelDB*? How would you find duplicates
+out of big data that is too big to fit in memory? It's an interesting problem
+and I thought **concurrency** would be a good fit for this.
+
+Simplest way is to **sort the whole data** and **traverse them in order until
+duplicates are found**. With concurrency, you can break the big chunk of data
+into smaller parts in order to sort each chunk independently, and later to
+merge.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Concurrency: Merge Sort
+
+[**Merge sort**](https://en.wikipedia.org/wiki/Merge_sort) seems perfect for
+this because it uses [*divide and conquer
+algorithm*](https://en.wikipedia.org/wiki/Divide_and_conquer_algorithms). That
+is, it **_divides(breaks)_** the problem into several *sub-problems*. And then
+it **_conquers(solves)_** the *sub-problems* recursively, and **_combine those
+solutions_** to the original problem. **Merge sort** divides a list of elements
+into a single element, and then **merge** those single elements into one
+**sorted list**. 
+
+![merge_sort_00](img/merge_sort_00.png)
+
+![merge_sort_01](img/merge_sort_01.png)
+
+![merge_sort_02](img/merge_sort_02.png)
+
+And [code](http://play.golang.org/p/q80UYMgqyx):
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println(mergeSort([]int{-5, 1, 43, 6, 3, 6, 7}))
+	// [-5 1 3 6 6 7 43]
+}
+
+// O(n * log n)
+// Recursively splits the array into subarrays, until only one element.
+// From each subarray, merge them into a sorted array.
+func mergeSort(slice []int) []int {
+	if len(slice) < 2 {
+		return slice
+	}
+	idx := len(slice) / 2
+	left := mergeSort(slice[:idx])
+	right := mergeSort(slice[idx:])
+	return merge(left, right)
+}
+
+// O(n)
+func merge(s1, s2 []int) []int {
+	final := make([]int, len(s1)+len(s2))
+	i, j := 0, 0
+	for i < len(s1) && j < len(s2) {
+		if s1[i] <= s2[j] {
+			final[i+j] = s1[i]
+			i++
+			continue
+		}
+		final[i+j] = s2[j]
+		j++
+	}
+	for i < len(s1) {
+		final[i+j] = s1[i]
+		i++
+	}
+	for j < len(s2) {
+		final[i+j] = s2[j]
+		j++
+	}
+	return final
+}
+```
+
+**_They seem to be doing the same thing in two parts(left and right)_**. Then
+what if we parallelize those two operations, like
+[here](http://play.golang.org/p/KZf4gGI_Rl)?
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"runtime"
+)
+
+func init() {
+	maxCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	log.Println("Concurrent execution with", maxCPU, "CPUs.")
+}
+
+func main() {
+	result := make(chan []int)
+	go concurrentMergeSort([]int{-5, 1, 43, 6, 3, 6, 7}, result)
+	fmt.Println(<-result)
+	// [-5 1 3 6 6 7 43]
+}
+
+func concurrentMergeSort(slice []int, result chan []int) {
+	if len(slice) < 2 {
+		result <- slice
+		return
+	}
+	idx := len(slice) / 2
+	ch1, ch2 := make(chan []int), make(chan []int)
+
+	go concurrentMergeSort(slice[:idx], ch1)
+	go concurrentMergeSort(slice[idx:], ch2)
+
+	left := <-ch1
+	right := <-ch2
+
+	result <- merge(left, right)
+}
+
+func merge(s1, s2 []int) []int {
+	final := make([]int, len(s1)+len(s2))
+	i, j := 0, 0
+	for i < len(s1) && j < len(s2) {
+		if s1[i] <= s2[j] {
+			final[i+j] = s1[i]
+			i++
+			continue
+		}
+		final[i+j] = s2[j]
+		j++
+	}
+	for i < len(s1) {
+		final[i+j] = s1[i]
+		i++
+	}
+	for j < len(s2) {
+		final[i+j] = s2[j]
+		j++
+	}
+	return final
+}
+```
+
+<br>
+Theoretically, this concurrent code *should sort faster* since it's
+**parallel**. However, benchmark results show the opposite:
+
+```go
+package merge_sort
+
+import (
+	"math/rand"
+	"sort"
+	"testing"
+)
+
+func merge(s1, s2 []int) []int {
+	final := make([]int, len(s1)+len(s2))
+	i, j := 0, 0
+	for i < len(s1) && j < len(s2) {
+		if s1[i] <= s2[j] {
+			final[i+j] = s1[i]
+			i++
+			continue
+		}
+		final[i+j] = s2[j]
+		j++
+	}
+	for i < len(s1) {
+		final[i+j] = s1[i]
+		i++
+	}
+	for j < len(s2) {
+		final[i+j] = s2[j]
+		j++
+	}
+	return final
+}
+
+func mergeSort(slice []int) []int {
+	if len(slice) < 2 {
+		return slice
+	}
+	idx := len(slice) / 2
+	left := mergeSort(slice[:idx])
+	right := mergeSort(slice[idx:])
+	return merge(left, right)
+}
+
+func concurrentMergeSort(slice []int, result chan []int) {
+	if len(slice) < 2 {
+		result <- slice
+		return
+	}
+	idx := len(slice) / 2
+	ch1, ch2 := make(chan []int), make(chan []int)
+
+	go concurrentMergeSort(slice[:idx], ch1)
+	go concurrentMergeSort(slice[idx:], ch2)
+
+	left := <-ch1
+	right := <-ch2
+
+	result <- merge(left, right)
+}
+
+func BenchmarkStandardPackage(b *testing.B) {
+	var sampleIntSlice = []int{}
+	sampleIntSlice = rand.New(rand.NewSource(123123)).Perm(999999)
+	for i := 0; i < b.N; i++ {
+		sort.Ints(sampleIntSlice)
+	}
+}
+
+func BenchmarkMergeSort(b *testing.B) {
+	var sampleIntSlice = []int{}
+	sampleIntSlice = rand.New(rand.NewSource(123123)).Perm(999999)
+	for i := 0; i < b.N; i++ {
+		mergeSort(sampleIntSlice)
+	}
+}
+
+func BenchmarkConcurrentMergeSort(b *testing.B) {
+	var sampleIntSlice = []int{}
+	sampleIntSlice = rand.New(rand.NewSource(123123)).Perm(999999)
+	for i := 0; i < b.N; i++ {
+		result := make(chan []int)
+		go concurrentMergeSort(sampleIntSlice, result)
+		<-result
+	}
+}
+
+/*
+go get github.com/cespare/prettybench
+go test -bench . -benchmem -cpu 1,2,4 | prettybench
+benchmark                        iter       time/iter      bytes alloc              allocs
+---------                        ----       ---------      -----------              ------
+BenchmarkStandardPackage           10    131.37 ms/op      800929 B/op         1 allocs/op
+BenchmarkStandardPackage-2         10    132.84 ms/op      800929 B/op         1 allocs/op
+BenchmarkStandardPackage-4         10    131.81 ms/op      800929 B/op         1 allocs/op
+BenchmarkMergeSort                  5    204.42 ms/op   166369507 B/op    999998 allocs/op
+BenchmarkMergeSort-2                5    202.03 ms/op   166369507 B/op    999998 allocs/op
+BenchmarkMergeSort-4                5    229.62 ms/op   166369507 B/op    999998 allocs/op
+BenchmarkConcurrentMergeSort        1   3994.73 ms/op   488144848 B/op   3537113 allocs/op
+BenchmarkConcurrentMergeSort-2      1   2134.87 ms/op   377522704 B/op   3199159 allocs/op
+BenchmarkConcurrentMergeSort-4      1   1242.12 ms/op   377254480 B/op   3194968 allocs/op
+ok  	github.com/gyuho/kway/benchmarks/merge_sort	18.784s
+*/
+```
+
+As you see, **_the concurrent merge-sort code is much slower_** because of the
+**_heavy memory usage in concurrency_**.
+
+<br>
+
+> *Why does using GOMAXPROCS > 1 sometimes make my program slower?*?
+>
+> It depends on the nature of your program. **Problems that are intrinsically
+> sequential cannot be sped up by adding more goroutines.** Concurrency only
+> becomes parallelism when the problem is intrinsically parallel.
+>
+> [**_Go FAQ_**](https://golang.org/doc/faq#Why_GOMAXPROCS)
+
+Merge sort works by merging the list of sub-lists that constantly requires
+additional memories. And **_merge_** has to happen in **_sequential order_** in
+order to combine every single sub-list. That is, it is not a **_intrinsically
+parallel problem_**. You only loose when you use concurrency for inherently
+sequential problems.
+
+
+Or maybe I am just doing it wrong... I will get back to this later.
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+
+
+
+#### Concurrency: Prime Sieve
+
+One legendary example is [concurrent prime sieve](http://play.golang.org/p/wkOiMwlrl5):
+
+- [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes)
+- [Sieve of Eratosthenes in Haskell](https://wiki.haskell.org/Prime_numbers)
+
+
+```go
+// A concurrent prime sieve
+// https://golang.org/doc/play/sieve.go
+
+package main
+
+import "fmt"
+
+// Send the sequence 2, 3, 4, ... to channel 'ch'.
+func Generate(ch chan<- int) {
+	for i := 2; ; i++ {
+		ch <- i // Send 'i' to channel 'ch'.
+	}
+}
+
+// Copy the values from channel 'in' to channel 'out',
+// removing those divisible by 'prime'.
+func Filter(in <-chan int, out chan<- int, prime int) {
+	for {
+		i := <-in // Receive value from 'in'.
+		if i%prime != 0 {
+			out <- i // Send 'i' to 'out'.
+		}
+	}
+}
+
+// The prime sieve: Daisy-chain Filter processes.
+func main() {
+	ch := make(chan int) // Create a new channel.
+	go Generate(ch)      // Launch Generate goroutine.
+	for i := 0; i < 10; i++ {
+		prime := <-ch
+		fmt.Println(prime)
+		ch1 := make(chan int)
+		go Filter(ch, ch1, prime)
+		ch = ch1
+	}
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br>
+<hr>
+

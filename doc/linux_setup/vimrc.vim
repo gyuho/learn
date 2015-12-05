@@ -47,6 +47,8 @@ map <Leader>d :bd<Return>     " close current buffer
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
 
+let g:gitgutter_max_signs = 10000
+
 " https://github.com/scrooloose/syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}

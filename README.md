@@ -30,7 +30,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 - [C++](#c-1)
 - [Go](#go)
 - [Python](#python)
-- [Concurrency, parallelism](#concurrency-parallelism)
 - [Computer systems](#computer-systems)
 - [Security systems](#security-systems)
 - [Database systems](#database-systems)
@@ -42,7 +41,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Unix, linux
@@ -58,7 +56,6 @@ Unix is essential in software development.
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Assembly
@@ -80,7 +77,6 @@ Unix is essential in software development.
 <br><br>
 
 
-
 ## C
 
 C is a small language. And it helps you better understand
@@ -94,7 +90,6 @@ I only wish I had more time to learn more about C.
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## C++
@@ -122,10 +117,10 @@ Yes! I really want to learn more about C++:
 - [*C++: struct, union*](https://github.com/gyuho/learn/tree/master/doc/cpp_struct_union)
 - [*C++: class, object*](https://github.com/gyuho/learn/tree/master/doc/cpp_class_object)
 - [*C++: STL*](https://github.com/gyuho/learn/tree/master/doc/cpp_stl)
+- [*C++: concurrency*](https://github.com/gyuho/learn/tree/master/doc/cpp_concurrency)
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Go
@@ -148,15 +143,16 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: struct*](https://github.com/gyuho/learn/tree/master/doc/go_struct)
 - [**_Go: interface_**](https://github.com/gyuho/learn/tree/master/doc/go_interface)
 - [**_Go: os, io_**](https://github.com/gyuho/learn/tree/master/doc/go_os_io)
+- [**_Go: concurrency_**](https://github.com/gyuho/learn/tree/master/doc/go_concurrency)
 - [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
 - [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
 - [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
 - [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
+- [**_Go: network, ssh, net, http, web_**](https://github.com/gyuho/learn/tree/master/doc/go_network_ssh_net_http_web)
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Python
@@ -183,23 +179,6 @@ data science, web frameworks, scripting, and many others.
 <br><br>
 
 
-
-## Concurrency, parallelism
-
-*Parallelism* is about doing many things at the same time
-instead of sequentially (one after another). *Concurrency* is about
-composing those independently executing computations.
-
-- [**_Go: concurrency_**](https://github.com/gyuho/learn/tree/master/doc/go_concurrency)
-- [*Go: concurrent count*](https://github.com/gyuho/learn/tree/master/doc/go_concurrent_count)
-- [*Go: concurrency, queue*](https://github.com/gyuho/learn/tree/master/doc/go_concurrency_queue)
-- [*C++: concurrency*](https://github.com/gyuho/learn/tree/master/doc/cpp_concurrency)
-
-[↑ top](#contents)
-<br><br>
-
-
-
 ## Computer systems
 
 It's very important to understand hardware and low-level programming.
@@ -217,7 +196,6 @@ I need―nothing like cramming 1,200 page computer systems book in 12 weeks.
 <br><br>
 
 
-
 ## Security systems
 
 [*MIT course*](http://css.csail.mit.edu/6.858/2014/schedule.html) explains that
@@ -228,7 +206,6 @@ to make sure there is no way for adversary within threat model to violate this p
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Database systems
@@ -248,20 +225,6 @@ analysis applications.
 <br><br>
 
 
-
-## Network systems
-
-I will show how to build web applications from scratch, with full-working code.
-
-- [**_network, net, http_**](https://github.com/gyuho/learn/tree/master/doc/network_net_http)
-- [**_ssh, scp_**](https://github.com/gyuho/learn/tree/master/doc/ssh_scp)
-- [**_Go: web application_**](https://github.com/gyuho/learn/tree/master/doc/go_web_application)
-
-[↑ top](#contents)
-<br><br>
-
-
-
 ## Distributed systems
 
 You have one machine to run your program. What if that one machine fails? 
@@ -269,11 +232,9 @@ The whole system goes down. You want to have multiple, distributed machines
 always available, so that even if one fails, others can keep running.
 
 - [**_Distributed systems, raft_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_raft)
-- [**_etcd, priority queue, aws, gcp_**](https://github.com/gyuho/learn/tree/master/doc/etcd_priority_queue_aws_gcp)
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Linguistics, natural language processing
@@ -288,7 +249,6 @@ I love linguistics, and its computational applications.
 <br><br>
 
 
-
 ## Mathematics, statistics
 
 Most prominent solutions in Computer Science often come from mathematics. 
@@ -300,7 +260,6 @@ algorithms, machine learning algorithms, etc.
 
 [↑ top](#contents)
 <br><br>
-
 
 
 ## Data structures and algorithms
