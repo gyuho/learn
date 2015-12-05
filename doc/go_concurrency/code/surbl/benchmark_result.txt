@@ -1,0 +1,65 @@
+##############################################################################################################
+#1
+
+BenchmarkCheckNoCuncurrency   	      10	 120263549 ns/op	  149200 B/op	    1957 allocs/op
+BenchmarkCheckNoCuncurrency-2 	      10	 126123928 ns/op	  149292 B/op	    1958 allocs/op
+BenchmarkCheckNoCuncurrency-4 	      10	 123777064 ns/op	  149427 B/op	    1959 allocs/op
+BenchmarkCheckNoCuncurrency-8 	      10	 122388208 ns/op	  149259 B/op	    1957 allocs/op
+BenchmarkCheckNoCuncurrency-16	      10	 125126148 ns/op	  149212 B/op	    1957 allocs/op
+
+BenchmarkCheckWithLockBatch   	      20	  65516764 ns/op	  149768 B/op	    1972 allocs/op
+BenchmarkCheckWithLockBatch-2 	      20	  62284971 ns/op	  149873 B/op	    1973 allocs/op
+BenchmarkCheckWithLockBatch-4 	      20	 314340747 ns/op	  150090 B/op	    1975 allocs/op
+BenchmarkCheckWithLockBatch-8 	      20	  68568940 ns/op	  151227 B/op	    1980 allocs/op
+BenchmarkCheckWithLockBatch-16	      20	  70352883 ns/op	  151416 B/op	    1979 allocs/op
+
+BenchmarkCheckWithLock        	     100	  73032395 ns/op	  149328 B/op	    1961 allocs/op
+BenchmarkCheckWithLock-2      	     100	  73151925 ns/op	  149371 B/op	    1962 allocs/op
+BenchmarkCheckWithLock-4      	      50	 124766761 ns/op	  149474 B/op	    1963 allocs/op
+BenchmarkCheckWithLock-8      	      50	  22952625 ns/op	  149879 B/op	    1964 allocs/op
+BenchmarkCheckWithLock-16     	      50	 126122965 ns/op	  150508 B/op	    1967 allocs/op
+
+BenchmarkCheck                	     100	 184853661 ns/op	  149780 B/op	    1974 allocs/op
+BenchmarkCheck-2              	     100	 124283447 ns/op	  149742 B/op	    1974 allocs/op
+BenchmarkCheck-4              	     100	 128578550 ns/op	  149758 B/op	    1974 allocs/op
+BenchmarkCheck-8              	     100	  74226839 ns/op	  149833 B/op	    1975 allocs/op
+BenchmarkCheck-16             	      50	  24317567 ns/op	  149880 B/op	    1975 allocs/op
+
+ok  	github.com/gyuho/surbl	100.267s
+
+
+##############################################################################################################
+#2
+
+BenchmarkCheckNoCuncurrency   	      10	 110371964 ns/op	  149257 B/op	    1957 allocs/op
+BenchmarkCheckNoCuncurrency-2 	      10	 112385927 ns/op	  149276 B/op	    1958 allocs/op
+BenchmarkCheckNoCuncurrency-4 	      10	 128281108 ns/op	  149603 B/op	    1959 allocs/op
+BenchmarkCheckNoCuncurrency-8 	      10	 117129636 ns/op	  149392 B/op	    1957 allocs/op
+BenchmarkCheckNoCuncurrency-16	      10	 122693681 ns/op	  149264 B/op	    1957 allocs/op
+
+BenchmarkCheckWithLockBatch   	      20	  72730625 ns/op	  149768 B/op	    1972 allocs/op
+BenchmarkCheckWithLockBatch-2 	      20	  68945136 ns/op	  149900 B/op	    1973 allocs/op
+BenchmarkCheckWithLockBatch-4 	      20	  68685515 ns/op	  150212 B/op	    1974 allocs/op
+BenchmarkCheckWithLockBatch-8 	      20	  67542508 ns/op	  151052 B/op	    1979 allocs/op
+BenchmarkCheckWithLockBatch-16	      20	  65311665 ns/op	  150925 B/op	    1978 allocs/op
+
+BenchmarkCheckWithLock        	     100	  71546504 ns/op	  149404 B/op	    1962 allocs/op
+BenchmarkCheckWithLock-2      	     100	  22599751 ns/op	  149292 B/op	    1961 allocs/op
+BenchmarkCheckWithLock-4      	      50	  22964493 ns/op	  149363 B/op	    1962 allocs/op
+BenchmarkCheckWithLock-8      	     100	  23191589 ns/op	  149766 B/op	    1964 allocs/op
+BenchmarkCheckWithLock-16     	     100	 122863773 ns/op	  150088 B/op	    1966 allocs/op
+
+BenchmarkCheck                	     100	  22931610 ns/op	  149616 B/op	    1973 allocs/op
+BenchmarkCheck-2              	      50	  23449185 ns/op	  149686 B/op	    1973 allocs/op
+BenchmarkCheck-4              	     100	 172899770 ns/op	  149871 B/op	    1976 allocs/op
+BenchmarkCheck-8              	      50	 126596857 ns/op	  149995 B/op	    1977 allocs/op
+BenchmarkCheck-16             	     100	  71776558 ns/op	  150058 B/op	    1976 allocs/op
+
+ok  	github.com/gyuho/surbl	73.813s
+
+
+##############################################################################################################
+
+Concurrency is faster (than parallelization)!
+goroutine is cheaper than thread!
+Parallelize by goroutines, not by the number of threads!
