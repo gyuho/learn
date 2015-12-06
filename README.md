@@ -33,7 +33,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 - [Computer systems](#computer-systems)
 - [Security systems](#security-systems)
 - [Database systems](#database-systems)
-- [Network systems](#network-systems)
 - [Distributed systems](#distributed-systems)
 - [Linguistics, natural language processing](#linguistics-natural-language-processing)
 - [Mathematics, statistics](#mathematics-statistics)
@@ -149,7 +148,7 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
 - [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
 - [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
-- [**_Go: network, ssh, net, http, web_**](https://github.com/gyuho/learn/tree/master/doc/go_network_ssh_net_http_web)
+- [**_Go: network_**](https://github.com/gyuho/learn/tree/master/doc/go_network)
 
 [↑ top](#contents)
 <br><br>
