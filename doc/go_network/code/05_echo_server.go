@@ -36,20 +36,17 @@ func handleRequests(conn net.Conn) {
 }
 
 func main() {
-	const port = ":5000"
+	const port = ":8080"
 	startServer(port)
 }
 
 /*
-From client side:
-echo "Hello server" | nc localhost 5000
+$ echo "Hello server" | nc localhost 8080
 
-Received from 127.0.0.1:58405 → 127.0.0.1:5000
-Received from 127.0.0.1:58406 → 127.0.0.1:5000
-Received from 127.0.0.1:58407 → 127.0.0.1:5000
-Received from 127.0.0.1:58408 → 127.0.0.1:5000
-Received from 127.0.0.1:58409 → 127.0.0.1:5000
+Received from 127.0.0.1:58405 → 127.0.0.1:8080
+Received from 127.0.0.1:58406 → 127.0.0.1:8080
+Received from 127.0.0.1:58407 → 127.0.0.1:8080
+Received from 127.0.0.1:58408 → 127.0.0.1:8080
+Received from 127.0.0.1:58409 → 127.0.0.1:8080
 ...
-
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:5000/gio')
 */

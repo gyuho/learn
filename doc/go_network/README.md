@@ -1,7 +1,7 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# Go: network, ssh, net, http, web
+# Go: network
 
 - [Reference](#reference)
 - [Overview of network layers](#overview-of-network-layers)
@@ -18,23 +18,18 @@
 	- [`http` session](#http-session)
 	- [`https`](#https)
 	- [`http2`](#http2)
-- [communicate between networks](#communicate-between-networks)
-	- [simple echo server](#simple-echo-server)
-	- [simple rpc server](#simple-rpc-server)
-	- [loopback, localhost](#loopback-localhost)
-	- [simple web server](#simple-web-server)
-- [http request, roundtrip](#http-request-roundtrip)
+- [Go: hello world](#go-hello-world)
+- [Go: kill process, netstat](#go-kill-process-netstat)
+- [Go: loopback, localhost](#go-loopback-localhost)
+- [Go: simple web server](#go-simple-web-server)
+- [Go: http request, roundtrip](#go-http-request-roundtrip)
+- [Go: simple echo server](#go-simple-echo-server)
+- [Go: simple rpc server](#go-simple-rpc-server)
 - [error: too many open files](#error-too-many-open-files)
-- [`netstat`, kill process](#netstat-kill-process)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Reference
@@ -43,14 +38,9 @@
 - [Network hardware](https://en.wikipedia.org/wiki/Networking_hardware)
 - [package `net`](http://golang.org/pkg/net/)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
-
-
-
-
-
 
 
 #### Overview of network layers
@@ -59,8 +49,9 @@
 ![network_layers](img/network_layers.png)
 <br>
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### physical layer
 
@@ -81,8 +72,9 @@ other interfaces. But this can generate unnecessary traffic and
 waste bandwidth. This is where [network switch](https://en.wikipedia.org/wiki/Network_switch)
 comes in.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### data link layer
 
@@ -108,8 +100,9 @@ But what if we want to send packets across different networks?
 This is where [router](https://en.wikipedia.org/wiki/Router_(computing))
 comes in.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### network layer
 
@@ -151,8 +144,9 @@ concept with limited time period, so that DHCP server can reclaim, reallocate,
 and renew IP addresses.
 ![dhcp](img/dhcp.png)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### transport layer
 
@@ -191,16 +185,18 @@ Some network devices do not support `UDP`. Many video streamings are served
 via `TCP` if the data are stored statically. Online live streaming would use
 `UDP`.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### session layer
 
 [Session layer](https://en.wikipedia.org/wiki/Session_layer) stores
 states between two connections.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### presentation layer
 
@@ -208,8 +204,9 @@ states between two connections.
 converts between different formats of data, such as encoding, encryption,
 or decryption.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
+
 
 ##### application layer
 
@@ -217,16 +214,9 @@ or decryption.
 to shared protocols and interface methods between hosts, such as HTTP, SSH,
 SMTP (which will be covered separately).
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
 
 
 #### `http`, `proxy`, `https`, `http2`
@@ -242,7 +232,6 @@ to the server, then the server returns **response** message (*or resource*)
 to client.
 
 ![http](img/http.png)
-
 
 <br>
 #### cache server
@@ -425,160 +414,297 @@ framing, better utilization of available network capacity with a single
 long-lived connections, instead of multiple TCP connections, less round-trips
 with server push, cheaper `HTTP` request by compressing headers, etc.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
-
-
-
-
-
-
-
-#### communicate between networks
-
-<br><br>
-##### simple echo server
+#### Go: hello world
 
 ```go
 package main
 
 import (
 	"fmt"
-	"net"
+	"log"
+	"net/http"
 )
 
-func startServer(port string) {
-	// Listen function creates servers,
-	// listening for incoming connections.
-	ln, err := net.Listen("tcp", port)
-	if err != nil {
-		panic(err)
-	}
-	defer ln.Close()
-	fmt.Println("Listening on", port)
-	for {
-		// Listen for an incoming connection.
-		conn, err := ln.Accept()
-		if err != nil {
-			panic(err)
-		}
-		go handleRequests(conn)
-	}
-}
-
-// Handles incoming requests.
-func handleRequests(conn net.Conn) {
-	fmt.Printf("Received from %s → %s\n", conn.RemoteAddr(), conn.LocalAddr())
-	buf := make([]byte, 5) // read max 5 characters
-	if _, err := conn.Read(buf); err != nil {
-		panic(err)
-	}
-	conn.Write([]byte("received message: " + string(buf) + "\n"))
-	conn.Close()
-}
+const port = ":8080"
 
 func main() {
-	const port = ":5000"
-	startServer(port)
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+
+	log.Println("Serving http://localhost" + port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
 }
 
 /*
-From client side:
-echo "Hello server" | nc localhost 5000
-
-Received from 127.0.0.1:58405 → 127.0.0.1:5000
-Received from 127.0.0.1:58406 → 127.0.0.1:5000
-Received from 127.0.0.1:58407 → 127.0.0.1:5000
-Received from 127.0.0.1:58408 → 127.0.0.1:5000
-Received from 127.0.0.1:58409 → 127.0.0.1:5000
-...
-
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:5000/gio')
+curl http://localhost:8080
+Hello World!
 */
+
+func handler(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "GET":
+		fmt.Fprintln(w, "Hello World!")
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	}
+}
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-##### simple rpc server
+#### Go: kill process, netstat
 
 ```go
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
-	"net"
-	"net/rpc"
-	"net/rpc/jsonrpc"
+	"io"
+	"net/http"
+	"os"
+	"os/exec"
+	"strconv"
+	"strings"
+	"syscall"
 )
 
-type Args struct {
-	A, B int
-}
-
-type Arith int
-
-func (t *Arith) Multiply(args *Args, reply *int) error {
-	*reply = args.A * args.B
-	return nil
-}
-
-func startServer(port string) {
-	srv := rpc.NewServer()
-	arith := new(Arith)
-	srv.Register(arith)
-	srv.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
-	// Listen function creates servers,
-	// listening for incoming connections.
-	ln, err := net.Listen("tcp", port)
-	if err != nil {
-		panic(err)
-	}
-	defer ln.Close()
-	fmt.Println("Listening on", port)
-	for {
-		// Listen for an incoming connection.
-		conn, err := ln.Accept()
-		if err != nil {
-			panic(err)
+func helloWorld(lw io.Writer, port string) {
+	handler := func(w http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case "GET":
+			fmt.Fprintln(w, "Hello World!")
+		default:
+			http.Error(w, "Method Not Allowed", 405)
 		}
-		go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+	}
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+	fmt.Fprintln(lw, "Serving http://localhost"+port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
 	}
 }
 
 func main() {
-	const port = ":5000"
-	go startServer(port)
+	var (
+		w       = os.Stdout
+		socket  = "tcp6"
+		program = ""
+		port    = ":8080"
+	)
 
-	conn, err := net.Dial("tcp", "localhost"+port)
+	// go helloWorld(w, port)
+	// time.Sleep(5 * time.Second)
+
+	ps, err := netStat(w, socket, program, port)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(-1)
 	}
-	defer conn.Close()
 
-	args := &Args{5, 10}
-	var reply int
+	Kill(w, ps...)
+	/*
+	   [netStat] socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
+	   [Kill] syscall.Kill -> socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
+	   [Kill] Done!
+	*/
+}
 
-	client := jsonrpc.NewClient(conn)
-	if err := client.Call("Arith.Multiply", args, &reply); err != nil {
-		panic(err)
+// Process describes OS processes.
+type Process struct {
+	Socket  string
+	Program string
+	Host    string
+	Port    string
+	PID     int
+}
+
+func (p Process) String() string {
+	return fmt.Sprintf("socket: '%s' / program: '%s' / host: '%s' / port: '%s' / pid: '%d'",
+		p.Socket,
+		p.Program,
+		p.Host,
+		p.Port,
+		p.PID,
+	)
+}
+
+// Kill kills all processes in arguments.
+func Kill(w io.Writer, ps ...Process) {
+	for _, v := range ps {
+		fmt.Fprintf(w, "[Kill] syscall.Kill -> %s\n", v)
+		if err := syscall.Kill(v.PID, syscall.SIGINT); err != nil {
+			fmt.Fprintln(w, "[Kill - error]", err)
+		}
 	}
-	fmt.Println("reply:", reply)
-	// reply: 50
+	fmt.Fprintln(w, "[Kill] Done!")
+}
+
+/*
+netStat parses the output of netstat command in linux.
+Pass '' or '*' to match all. For example, call Kill("tcp", "bin/etcd", "*")
+to kill all processes that are running "bin/etcd":
+
+	netstat -tlpn
+
+	(Not all processes could be identified, non-owned process info
+	 will not be shown, you would have to be root to see it all.)
+	Active Internet connections (only servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      21524/bin/etcd
+	tcp        0      0 127.0.0.1:22379         0.0.0.0:*               LISTEN      21526/bin/etcd
+	tcp        0      0 127.0.0.1:22380         0.0.0.0:*               LISTEN      21526/bin/etcd
+	tcp        0      0 127.0.0.1:32379         0.0.0.0:*               LISTEN      21528/bin/etcd
+	tcp        0      0 127.0.0.1:12379         0.0.0.0:*               LISTEN      21529/bin/etcd
+	tcp        0      0 127.0.0.1:32380         0.0.0.0:*               LISTEN      21528/bin/etcd
+	tcp        0      0 127.0.0.1:12380         0.0.0.0:*               LISTEN      21529/bin/etcd
+	tcp        0      0 127.0.0.1:53697         0.0.0.0:*               LISTEN      2608/python2
+	tcp6       0      0 :::8555                 :::*                    LISTEN      21516/goreman
+
+Otherwise, you would have to run something like the following:
+
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:12379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:22379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:32379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:2379/gio');
+	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
+
+*/
+func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
+	socket = strings.TrimSpace(socket)
+	program = strings.TrimSpace(program)
+	if program == "" {
+		program = "*"
+	}
+	port = strings.TrimSpace(port)
+	if port == "" {
+		port = "*"
+	}
+	if port != "*" {
+		if !strings.HasPrefix(port, ":") {
+			port = ":" + port
+		}
+	}
+	if program == "*" && port == "*" {
+		fmt.Fprintln(w, "[netStat - warning] grepping all programs.")
+	}
+
+	var flag string
+	flagFormat := "-%slpn"
+	switch socket {
+	case "tcp":
+		flag = fmt.Sprintf(flagFormat, "t")
+	case "tcp6":
+		flag = fmt.Sprintf(flagFormat, "t")
+	case "udp":
+		flag = fmt.Sprintf(flagFormat, "u")
+	default:
+		return nil, fmt.Errorf("socket '%s' is unknown", socket)
+	}
+
+	cmd := exec.Command("netstat", flag)
+	buf := new(bytes.Buffer)
+	cmd.Stdout = buf
+	cmd.Stderr = buf
+	if err := cmd.Run(); err != nil {
+		return nil, err
+	}
+
+	rd := bufio.NewReader(buf)
+	lines := [][]string{}
+	for {
+		l, _, err := rd.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		s := string(l)
+		if !strings.HasPrefix(s, socket) {
+			continue
+		}
+		sl := strings.Fields(s)
+		lines = append(lines, sl)
+	}
+
+	socketIdx := 0
+	portIdx := 3
+	programIdx := 6
+
+	ps := []Process{}
+
+	for _, sl := range lines {
+
+		theSocket := sl[socketIdx]
+		if theSocket != socket {
+			continue
+		}
+
+		asl := strings.Split(sl[portIdx], ":")
+		if len(asl) < 2 {
+			continue
+		}
+		thePort := ":" + asl[len(asl)-1]
+		if port != "*" {
+			if thePort != port {
+				continue
+			}
+		}
+
+		theHost := strings.TrimSpace(strings.Replace(sl[portIdx], thePort, "", -1))
+
+		psl := strings.SplitN(sl[programIdx], "/", 2)
+		if len(psl) != 2 {
+			continue
+		}
+		theProgram := strings.TrimSpace(psl[1])
+		if program != "*" {
+			if theProgram != program {
+				continue
+			}
+		}
+
+		thePID := 0
+		if d, err := strconv.Atoi(psl[0]); err != nil {
+			continue
+		} else {
+			thePID = d
+		}
+
+		p := Process{}
+		p.Socket = theSocket
+		p.Program = theProgram
+		p.Host = theHost
+		p.Port = thePort
+		p.PID = thePID
+		ps = append(ps, p)
+	}
+
+	for _, v := range ps {
+		fmt.Fprintf(w, "[netStat] %s\n", v)
+	}
+	return ps, nil
 }
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-##### loopback, localhost
+#### Go: loopback, localhost
 
 ```go
 package main
@@ -590,85 +716,12 @@ import (
 	"net/http"
 )
 
-// RemoteAddr is for the remote client's IP and port
-// (original requester or last proxy address).
-// Whenever a client sends a request, its OS open an ephemeral port
-// (https://en.wikipedia.org/wiki/Ephemeral_port) to send that request,
-// and then the IP and port used for this request is shown in RemoteAddr.
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "r.RemoteAddr: %s\n", r.RemoteAddr)
-	/*
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57065
-
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57066
-
-	   $ curl -L http://localhost:5000
-	   r.RemoteAddr: 127.0.0.1:57067
-	*/
-}
-
-const port = ":5000"
-
-func handlerResolve(w http.ResponseWriter, r *http.Request) {
-	lp, err := Localhost()
-	if err != nil {
-		panic(err)
-	}
-	ips := lp.String()
-	fmt.Println("ip:", ips) // 127.0.0.1
-
-	netaddr, err := net.ResolveIPAddr("ip4", ips)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("netaddr:", netaddr.String()) // 127.0.0.1
-
-	conn, err := net.ListenIP("ip4:icmp", netaddr)
-	if err != nil {
-		panic(err)
-	}
-
-	buf := make([]byte, 1024)
-	num, _, _ := conn.ReadFrom(buf)
-	// build and ping localhost with sudo
-	fmt.Printf("ReadPacket: %X\n", buf[:num])
-	// ReadPacket: 0800FD6729...
-}
-
-func runServer() {
-	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", handler)
-	mainRouter.HandleFunc("/resolve", handlerResolve)
-	fmt.Println("Serving http://localhost" + port)
-	if err := http.ListenAndServe(port, mainRouter); err != nil {
-		panic(err)
-	}
-}
-
-func main() {
-	runServer()
-}
-
 // Below, copied from
 // https://github.com/camlistore/camlistore/blob/master/pkg/netutil/netutil.go
 
-// Localhost returns the first address found when
-// doing a lookup of "localhost". If not successful,
-// it looks for an ip on the loopback interfaces.
-func Localhost() (net.IP, error) {
-	if ip := localhostLookup(); ip != nil {
-		return ip, nil
-	}
-	if ip := loopbackIP(); ip != nil {
-		return ip, nil
-	}
-	return nil, errors.New("No loopback ip found.")
-}
-
 // localhostLookup looks for a loopback IP by resolving localhost.
 func localhostLookup() net.IP {
+	// IPv6, it returns 0:0:0:0:0:0:0:1 or ::1
 	if ips, err := net.LookupIP("localhost"); err == nil && len(ips) > 0 {
 		return ips[0]
 	}
@@ -697,14 +750,69 @@ func loopbackIP() net.IP {
 	return nil
 }
 
+// localhost returns the first address found when
+// doing a lookup of "localhost". If not successful,
+// it looks for an ip on the loopback interfaces.
+func localhost() (net.IP, error) {
+	if ip := localhostLookup(); ip != nil {
+		return ip, nil
+	}
+	if ip := loopbackIP(); ip != nil {
+		return ip, nil
+	}
+	return nil, errors.New("No loopback ip found.")
+}
+
+func main() {
+	lp, err := localhost()
+	if err != nil {
+		panic(err)
+	}
+	if lp.To4() != nil {
+		fmt.Println(lp.String(), "is IPv4!")
+	} else if lp.To16() != nil {
+		fmt.Println(lp.String(), "is IPv6!")
+	}
+	// ::1 is IPv6!
+
+	fmt.Println("loopbackIP:", loopbackIP().String())
+	// loopbackIP: 127.0.0.1
+
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+
+	const port = ":8080"
+	fmt.Println("Serving http://localhost" + port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
+}
+
+/*
+$ curl http://localhost:8080
+r.RemoteAddr: [::1]:52310
+
+$ curl -L http://localhost:8080
+r.RemoteAddr: [::1]:52316
+*/
+
+// RemoteAddr is for the remote client's IP and port
+// (original requester or last proxy address).
+// Whenever a client sends a request, its OS open an ephemeral port
+// (https://en.wikipedia.org/wiki/Ephemeral_port) to send that request,
+// and then the IP and port used for this request is shown in RemoteAddr.
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "r.RemoteAddr: %s\n", r.RemoteAddr)
+}
+
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-
-##### simple web server
+#### Go: simple web server
 
 ```go
 package main
@@ -722,58 +830,52 @@ import (
 	stdlog "log"
 )
 
-/*
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:5000/gio')
-*/
+var (
+	port   = ":8080"
+	logger = stdlog.New(os.Stdout, "[TEST] ", stdlog.Ldate|stdlog.Ltime)
+)
+
+func wrapFunc(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		fn(w, req)
+		logger.Printf("wrapFunc: %s %s | Took %s", req.Method, req.URL.Path, time.Since(start))
+	}
+}
+
+func wrapHandlerFunc(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		h.ServeHTTP(w, req)
+		logger.Printf("wrapHandlerFunc: %s %s | Took %s", req.Method, req.URL.Path, time.Since(start))
+	}
+}
 
 func main() {
-	const port = ":5000"
 	go sendRequest(port, "/")
 	go sendRequest(port, "/json")
 	go sendRequest(port, "/gob")
+
 	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", wrapHandlerFunc0(handler))
-	mainRouter.HandleFunc("/hello", wrapHandlerFunc0(helloHandler))
-	mainRouter.HandleFunc("/json", wrapHandlerFunc1(handlerJSON))
-	mainRouter.HandleFunc("/gob", wrapHandlerFunc1(handlerGOB))
-	fmt.Println("Serving http://localhost" + port)
+	mainRouter.HandleFunc("/", wrapFunc(handler))
+	mainRouter.HandleFunc("/json", wrapHandlerFunc(handlerJSON))
+	mainRouter.HandleFunc("/gob", wrapHandlerFunc(handlerGOB))
+
+	stdlog.Println("Serving http://localhost" + port)
 	if err := http.ListenAndServe(port, mainRouter); err != nil {
 		panic(err)
 	}
 }
 
 /*
-Serving http://localhost:5000
-[TEST] 2015/09/03 12:42:35 v0 GET /   |  Took 4.564µs
-[TEST] 2015/09/03 12:42:35 v0 GET /favicon.ico   |  Took 4.115µs
-[TEST] 2015/09/03 12:42:36 v0 GET /   |  Took 2.913µs
-[TEST] 2015/09/03 12:42:36 v1 GET /json   |  Took 63.403µs
-[TEST] 2015/09/03 12:42:36 v1 GET /gob   |  Took 145.274µs
-response for /gob = {Go 1000 2015-09-03 12:42:36}
-response for /json = {Go 1000 2015-09-03 12:42:36}
+XXXX/XX/XX 17:17:15 Serving http://localhost:8080
+[TEST] XXXX/XX/XX 17:17:18 wrapHandlerFunc: GET /json | Took 59.349µs
+[TEST] XXXX/XX/XX 17:17:18 wrapFunc: GET / | Took 7.359µs
 response for / = Hello World!
-[TEST] 2015/09/03 12:42:45 v0 GET /hello   |  Took 6.74µs
-[TEST] 2015/09/03 12:42:45 v0 GET /favicon.ico   |  Took 6.325µs
-...
+[TEST] XXXX/XX/XX 17:17:18 wrapHandlerFunc: GET /gob | Took 132.61µs
+response for /json = {Go 1000 XXXX-XX-XX 17:17:18}
+response for /gob = {Go 1000 XXXX-XX-XX 17:17:18}
 */
-
-var logger = stdlog.New(os.Stdout, "[TEST] ", stdlog.Ldate|stdlog.Ltime)
-
-func wrapHandlerFunc0(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
-	return func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-		fn(w, req)
-		logger.Printf("v0 %s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
-	}
-}
-
-func wrapHandlerFunc1(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-		h.ServeHTTP(w, req)
-		logger.Printf("v1 %s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
-	}
-}
 
 type Data struct {
 	Name  string
@@ -785,15 +887,6 @@ func handler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
 		fmt.Fprintf(w, "Hello World!")
-	default:
-		http.Error(w, "Method Not Allowed", 405)
-	}
-}
-
-func helloHandler(w http.ResponseWriter, req *http.Request) {
-	switch req.Method {
-	case "GET":
-		fmt.Fprintf(w, "Hello!")
 	default:
 		http.Error(w, "Method Not Allowed", 405)
 	}
@@ -879,16 +972,12 @@ func sendRequest(port, endPoint string) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
-
-
-
-
-#### http request, roundtrip
+#### Go: http request, roundtrip
 
 [`RoundTripper`](http://golang.org/pkg/net/http/#RoundTripper)
 is an interface for a single HTTP transaction.
@@ -1143,16 +1232,148 @@ func roundTrip(requestType, target string) (int, error) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
+#### Go: simple echo server
+
+```go
+package main
+
+import (
+	"fmt"
+	"net"
+)
+
+func startServer(port string) {
+	// Listen function creates servers,
+	// listening for incoming connections.
+	ln, err := net.Listen("tcp", port)
+	if err != nil {
+		panic(err)
+	}
+	defer ln.Close()
+	fmt.Println("Listening on", port)
+	for {
+		// Listen for an incoming connection.
+		conn, err := ln.Accept()
+		if err != nil {
+			panic(err)
+		}
+		go handleRequests(conn)
+	}
+}
+
+// Handles incoming requests.
+func handleRequests(conn net.Conn) {
+	fmt.Printf("Received from %s → %s\n", conn.RemoteAddr(), conn.LocalAddr())
+	buf := make([]byte, 5) // read max 5 characters
+	if _, err := conn.Read(buf); err != nil {
+		panic(err)
+	}
+	conn.Write([]byte("received message: " + string(buf) + "\n"))
+	conn.Close()
+}
+
+func main() {
+	const port = ":8080"
+	startServer(port)
+}
+
+/*
+$ echo "Hello server" | nc localhost 8080
+
+Received from 127.0.0.1:58405 → 127.0.0.1:8080
+Received from 127.0.0.1:58406 → 127.0.0.1:8080
+Received from 127.0.0.1:58407 → 127.0.0.1:8080
+Received from 127.0.0.1:58408 → 127.0.0.1:8080
+Received from 127.0.0.1:58409 → 127.0.0.1:8080
+...
+*/
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
+#### Go: simple rpc server
 
+```go
+package main
 
+import (
+	"fmt"
+	"net"
+	"net/rpc"
+	"net/rpc/jsonrpc"
+)
 
+func main() {
+	const port = ":8080"
+	go startServer(port)
+
+	conn, err := net.Dial("tcp", "localhost"+port)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	args := &Args{5, 10}
+	var reply int
+
+	client := jsonrpc.NewClient(conn)
+	if err := client.Call("Arith.Multiply", args, &reply); err != nil {
+		panic(err)
+	}
+	fmt.Println("reply:", reply)
+	// reply: 50
+}
+
+type Args struct {
+	A, B int
+}
+
+type Arith int
+
+func (t *Arith) Multiply(args *Args, reply *int) error {
+	*reply = args.A * args.B
+	return nil
+}
+
+func startServer(port string) {
+	srv := rpc.NewServer()
+	arith := new(Arith)
+	srv.Register(arith)
+	srv.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
+
+	// Listen function creates servers,
+	// listening for incoming connections.
+	ln, err := net.Listen("tcp", port)
+	if err != nil {
+		panic(err)
+	}
+	defer ln.Close()
+
+	fmt.Println("Listening on", port)
+	for {
+		// Listen for an incoming connection.
+		conn, err := ln.Accept()
+		if err != nil {
+			panic(err)
+		}
+		go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+	}
+}
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
 #### error: too many open files
@@ -1372,152 +1593,7 @@ Get [ 5525] : Hello, client
 ...
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
-
-
-
-
-
-#### `netstat`, kill process
-
-How to find and kill processes using Go? How to use `netstat` with Go?
-
-```go
-package main
-
-import (
-	"bufio"
-	"bytes"
-	"fmt"
-	"io"
-	"os/exec"
-	"strconv"
-	"strings"
-	"syscall"
-)
-
-type Process struct {
-	Program string
-	Socket  string
-
-	Host string
-	Port string
-	PID  int
-}
-
-func main() {
-	rs, err := Getpid("bin/etcd", "tcp")
-	if err != nil {
-		panic(err)
-	}
-	for _, v := range rs {
-		fmt.Printf("Terminating %+v\n", v)
-		syscall.Kill(v.PID, syscall.SIGINT)
-	}
-}
-
-/*
-Getpid parses the output of netstat command in linux:
-
-	netstat -tlpn
-	(Not all processes could be identified, non-owned process info
-	 will not be shown, you would have to be root to see it all.)
-	Active Internet connections (only servers)
-	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-	tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      21524/bin/etcd
-	tcp        0      0 127.0.0.1:22379         0.0.0.0:*               LISTEN      21526/bin/etcd
-	tcp        0      0 127.0.0.1:22380         0.0.0.0:*               LISTEN      21526/bin/etcd
-	tcp        0      0 127.0.0.1:32379         0.0.0.0:*               LISTEN      21528/bin/etcd
-	tcp        0      0 127.0.0.1:12379         0.0.0.0:*               LISTEN      21529/bin/etcd
-	tcp        0      0 127.0.0.1:32380         0.0.0.0:*               LISTEN      21528/bin/etcd
-	tcp        0      0 127.0.0.1:12380         0.0.0.0:*               LISTEN      21529/bin/etcd
-	tcp        0      0 127.0.0.1:53697         0.0.0.0:*               LISTEN      2608/python2
-	tcp6       0      0 :::8555                 :::*                    LISTEN      21516/goreman
-
-*/
-func Getpid(program, socket string) ([]Process, error) {
-	var flag string
-	flagFormat := "-%slpn"
-	switch socket {
-	case "tcp":
-		flag = fmt.Sprintf(flagFormat, "t")
-	case "tcp6":
-		flag = fmt.Sprintf(flagFormat, "t")
-	case "udp":
-		flag = fmt.Sprintf(flagFormat, "u")
-	default:
-		return nil, fmt.Errorf("%s is not supported", socket)
-	}
-	cmd := exec.Command("netstat", flag)
-	buf := new(bytes.Buffer)
-	cmd.Stdout = buf
-	cmd.Stderr = buf
-	err := cmd.Run()
-	if err != nil {
-		return nil, err
-	}
-	rd := bufio.NewReader(buf)
-	lines := [][]string{}
-	for {
-		l, _, err := rd.ReadLine()
-		if err == io.EOF {
-			break
-		}
-		s := string(l)
-		if !strings.HasPrefix(s, socket) {
-			continue
-		}
-		ss := strings.Fields(s)
-		lines = append(lines, ss)
-	}
-	addrIdx, pidIdx := 3, 6
-	rs := []Process{}
-	for _, v := range lines {
-		addr := strings.Split(v[addrIdx], ":")
-		if len(addr) < 2 {
-			continue
-		}
-		port := ":" + addr[len(addr)-1]
-		host := strings.Replace(v[addrIdx], port, "", -1)
-		pidProgram := v[pidIdx]
-		pp := strings.SplitN(pidProgram, "/", 2)
-		if len(pp) != 2 {
-			continue
-		}
-		processID, err := strconv.Atoi(pp[0])
-		if err != nil {
-			continue
-		}
-		programName := pp[1]
-		if programName != program {
-			continue
-		}
-		p := Process{}
-		p.Program = programName
-		p.Socket = socket
-		p.Host = host
-		p.Port = port
-		p.PID = processID
-		rs = append(rs, p)
-	}
-	return rs, nil
-}
-
-/*
-Otherwise you have to something like:
-
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:12379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:22379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:32379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:2379/gio');
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
-*/
-
-```
-
-[↑ top](#go-network-ssh-net-http-web)
-<br><br><br><br>
-<hr>

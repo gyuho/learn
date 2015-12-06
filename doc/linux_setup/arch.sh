@@ -48,6 +48,7 @@ sudo pacman --noconfirm -Su systemd;
 sudo pacman --noconfirm -Su systemd-arch-units;
 sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
+sudo pacman --noconfirm -Su gnu-netcat;
 sudo pacman --noconfirm -Su ntp;
 
 timedatectl set-ntp true;
