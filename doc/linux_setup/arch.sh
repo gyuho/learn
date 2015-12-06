@@ -111,13 +111,20 @@ sudo cp ./arch_lxde_shortcuts.xml $HOME/.config/openbox/lxde-rc.xml;
 # startx;
 
 #############################################################
-printf "\n\n\n\n\ninstalling chrome...\n\n" && sleep 1s;
+printf "\n\n\n\n\ninstalling chromium...\n\n" && sleep 1s;
 
 # install chrome
 sudo pacman --noconfirm -Su chromium;
 
 # yaourt --noconfirm -S google-chrome;
 # google-chrome-stable
+
+#############################################################
+printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
+
+cd $HOME && rm -rf protobuf && git clone https://github.com/google/protobuf.git;
+cd $HOME/protobuf;
+./configure && make && make check && make install;
 
 #############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;

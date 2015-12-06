@@ -15,7 +15,7 @@ import (
 
 var logger = stdlog.New(os.Stdout, "[TEST] ", stdlog.Ldate|stdlog.Ltime)
 
-func wrapHandlerFunc0(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
+func wrapFunc(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		start := time.Now()
 		fn(w, req)
@@ -23,15 +23,7 @@ func wrapHandlerFunc0(fn func(w http.ResponseWriter, req *http.Request)) func(w 
 	}
 }
 
-func wrapHandlerFunc1(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-		h.ServeHTTP(w, req)
-		logger.Printf("%s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
-	}
-}
-
-func wrapHandlerFunc2(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
+func wrapFuncWithLogrus(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -59,5 +51,13 @@ func wrapHandlerFunc2(fn func(w http.ResponseWriter, req *http.Request)) func(w 
 			"real_ip":    getRealIP(req),
 			"uuid":       uuid.NewV4(),
 		}).Debugf("took %s", took)
+	}
+}
+
+func wrapHandlerFunc(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		h.ServeHTTP(w, req)
+		logger.Printf("%s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
 	}
 }
