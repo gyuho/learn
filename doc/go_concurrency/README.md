@@ -11,9 +11,7 @@
 > simultaneously and yet computing tools that we have are not good at
 > expressing this kind of world-views. […] **Go is a concurrent language.**
 >
-> [**_Concurrency is not parallelism_**](https://www.youtube.com/watch?v=cN_DpYBzKso) *by Rob Pike*
-
-<br>
+> [**_Concurrency is not parallelism_**](https://www.youtube.com/watch?v=cN_DpYBzKso) *by Rob Pike* <br>
 
 - [Reference](#reference)
 - [**Concurrency is not parallelism**](#concurrency-is-not-parallelism)
@@ -47,9 +45,9 @@
 - [Dequeue problem](#dequeue-problem)
 	- [Solution #1: In-Memory](#solution-1-in-memory)
 	- [Solution #2: Disk Key/Value Storage + Concurrency](#solution-2-disk-keyvalue-storage--concurrency)
-	- [Result](#result)
+	- [Dequeue result](#dequeue-result)
 	- [But, don't do this!](#but-dont-do-this)
-	- [Deque Summary](#deque-summary)
+	- [Dequeue Summary](#dequeue-summary)
 - [Find duplicates with concurrency](#find-duplicates-with-concurrency)
 - [Concurrency: Merge Sort](#concurrency-merge-sort)
 - [Concurrency: Prime Sieve](#concurrency-prime-sieve)
@@ -57,8 +55,6 @@
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### Reference
@@ -86,10 +82,7 @@
 <hr>
 
 
-
-
 #### Concurrency is not parallelism
-
 
 My YouTube video on Go concurrency:
 
@@ -183,8 +176,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### goroutine ≠ thread
@@ -345,8 +336,6 @@ b() called
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### `defer`, `recover`
@@ -654,12 +643,6 @@ func run() {
 <hr>
 
 
-
-
-
-
-
-
 #### **Be careful with `defer` and deadlock**
 
 Again, **`defer`** **_delays the function execution_** **until just
@@ -707,15 +690,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
 
 
 #### channel to communicate
@@ -924,9 +898,8 @@ func main() {
 <hr>
 
 
-
-
 ### questions:
+
 - Senders only block until an unbuffered channel receiver has received the
   value, or buffered channel receiver has copied the value to the buffer (when
   the buffer is full, it waits until some receiver has retrieved the value).
@@ -939,8 +912,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### #1-1. synchronous, asynchronous channel
@@ -1076,8 +1047,6 @@ func init() {
 <hr>
 
 
-
-
 #### #1-2. **buffered channel faster** because it’s *non-blocking*?
 
 Not always. Lack of buffers is, *in most cases*, inconsequential to the
@@ -1135,8 +1104,6 @@ func Serve(queue chan *Request) {
 <hr>
 
 
-
-
 #### #1-3. **be careful with buffered channel!**
 
 > just fixed a bug where we blocked during shutdown sending
@@ -1163,14 +1130,6 @@ func Serve(queue chan *Request) {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
 
 
 #### #1-4. **non-deterministic receive from buffered channel**
@@ -1359,13 +1318,6 @@ func (c *ChannelCounter) Close() {
 <hr>
 
 
-
-
-
-
-
-
-
 #### #2. why is this receiving only one value?
 
 ```go
@@ -1506,7 +1458,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### #3. wait for all goroutines to finish with `close`
@@ -1728,10 +1679,8 @@ Note that **received values from a channel are in order**:
 <hr>
 
 
-
-
-
 #### **select for channel**: `select` ≠ `switch`
+
 [`select`](https://golang.org/ref/spec#Select_statements) is *like*
 [`switch`](https://golang.org/doc/effective_go.html#switch) *for*
 **_channels_**. Try this [code](http://play.golang.org/p/Ugbe5aUIQM) with
@@ -2007,15 +1956,6 @@ func head(
 <hr>
 
 
-
-
-
-
-
-
-
-
-
 #### **receive `nil` from channel**
 
 Try this [code](http://play.golang.org/p/m4P8knWILd). Note that
@@ -2047,16 +1987,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
-
-
-
-
 
 
 #### `sync.Mutex`, race condition
@@ -2291,8 +2221,6 @@ func hosten(dom string) string {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### Share memory by communicating
@@ -3016,14 +2944,6 @@ too much memory and slows down the program.*)
 <hr>
 
 
-
-
-
-
-
-
-
-
 #### memory leak
 
 When there is a `defer` statement that never gets run
@@ -3107,15 +3027,6 @@ func toString(fpath string) (string, error) {
 <hr>
 
 
-
-
-
-
-
-
-
-
-
 #### `sync/atomic`
 
 In concurrent programming, an operation (or set of operations) is **atomic,
@@ -3165,8 +3076,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
 
 
 #### web server
@@ -3255,13 +3164,6 @@ Content-Type: text/plain; charset=utf-8
 <hr>
 
 
-
-
-
-
-
-
-
 #### `sync.Mutex` is just a value
 
 Try [this](http://play.golang.org/p/bmh9CsBnuw):
@@ -3336,12 +3238,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
-
-
-
-
-
 
 
 #### `goroutine`, closure
@@ -3429,7 +3325,6 @@ func wrap(err error) {
 <hr>
 
 
-
 #### Counting problem
 
 Suppose millions of **concurrent** web requests coming to your web application. 
@@ -3442,7 +3337,6 @@ with concurrency?
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Count: simulate web requests
@@ -3559,7 +3453,6 @@ BenchmarkServer_ChannelCounter_Buffer-16  	      10	 119519447 ns/op	 1591680 B/
 <hr>
 
 
-
 #### Count: `NaiveCounter`
 
 [**_`NaiveCounter` is the fastest way to count but subject to race
@@ -3657,7 +3550,6 @@ exit status 66
 <hr>
 
 
-
 #### Count: `MutexCounter`
 
 Try [this](http://play.golang.org/p/gxD7rxQ1b7):
@@ -3725,7 +3617,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Count: `RWMutexCounter`
@@ -3797,7 +3688,6 @@ func main() {
 <hr>
 
 
-
 #### Count: `AtomicIntCounter`
 
 Try [this](http://play.golang.org/p/HlGY7UnZDg):
@@ -3862,7 +3752,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Count: `AtomicCounter`
@@ -3937,7 +3826,6 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Count: `ChannelCounter` (No Buffer)
@@ -4050,7 +3938,6 @@ func main() {
 <hr>
 
 
-
 #### Count: `ChannelCounter` (Buffer)
 
 Try this:
@@ -4161,7 +4048,6 @@ func main() {
 <hr>
 
 
-
 #### Count: benchmark results
 
 `Add`, in the descending order of time per operation:
@@ -4193,7 +4079,6 @@ And `channel` is slower than `sync.Mutex` because it allocates more memory.
 <hr>
 
 
-
 #### Dequeue problem
 
 > [In 2002] I got asked to fix the log analysis problem we had there. We were
@@ -4222,7 +4107,6 @@ Here's similar situation. Suppose a **queue** where you have to:
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Solution #1: In-Memory
@@ -4281,7 +4165,6 @@ And even worse when we add more challenges as below:
 <hr>
 
 
-
 #### Solution #2: Disk Key/Value Storage + Concurrency
 
 But if you have millions of messages everyday, in-memory method cannot work. *MySQL* and *PostgreSQL* have
@@ -4308,8 +4191,7 @@ So I first tried with a separate database:
 <hr>
 
 
-
-#### Result
+#### Dequeue result
 
 - **Python version** took **_3 minutes_** to process *5,000 messages*.
 - **Go version** takes only **_15 seconds_**: *12x faster*.
@@ -4828,9 +4710,6 @@ Saved different with 49d5b8799558e22d3890d03b56a6c7a46faa1a7d216c2df22507396242a
 <hr>
 
 
-
-
-
 #### But, don't do this!
 
 My coworker pointed out the unnecessary use of external database. For this
@@ -4873,14 +4752,12 @@ are the best._**, and:
 > Programmer_**](https://www.cs.utexas.edu/~EWD/transcriptions/EWD03xx/EWD340.html)
 > *by* [*Edsger W. Dijkstra*](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra)
 
-
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
 
 
-
-#### Deque Summary
+#### Dequeue Summary
 
 And back to our original question: *You have billions of events that do not fit
 in memory. How would you detect the duplicates?*
@@ -4898,7 +4775,6 @@ in memory. How would you detect the duplicates?*
 <hr>
 
 
-
 #### Find duplicates with concurrency
 
 What if you don’t have *PostgreSQL* or *LevelDB*? How would you find duplicates
@@ -4913,7 +4789,6 @@ merge.
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Concurrency: Merge Sort
@@ -5182,7 +5057,6 @@ Or maybe I am just doing it wrong... I will get back to this later.
 [↑ top](#go-concurrency)
 <br><br><br><br>
 <hr>
-
 
 
 #### Concurrency: Prime Sieve
