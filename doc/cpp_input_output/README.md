@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: input, output
 
@@ -8,11 +7,7 @@
 - [write, read](#write-read)
 
 [↑ top](#c-input-output)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### input, output
@@ -38,11 +33,7 @@ The value you entered is 111 and its double is 222.
 ```
 
 [↑ top](#c-input-output)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### exist
@@ -65,11 +56,7 @@ int main()
 ```
 
 [↑ top](#c-input-output)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### write, read
@@ -118,6 +105,5 @@ File successfully deleted
 ```
 
 [↑ top](#c-input-output)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

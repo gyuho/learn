@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: logic, loop
 
@@ -11,14 +10,7 @@
 - [fizzbuzz](#fizzbuzz)
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### logic
@@ -51,15 +43,7 @@ int main()
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `if` 
@@ -92,13 +76,7 @@ int main()
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `switch`
@@ -181,15 +159,7 @@ Breaking out of loop!
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `for`
@@ -215,15 +185,7 @@ int main()
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `while`
@@ -250,15 +212,7 @@ int main()
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### fizzbuzz
@@ -311,5 +265,4 @@ int main()
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

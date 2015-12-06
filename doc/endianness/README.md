@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Endianness
 
@@ -8,11 +7,7 @@
 - [`endianness`](#endianness)
 
 [↑ top](#endianness)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -20,12 +15,7 @@
 - [Endianness](https://en.wikipedia.org/wiki/Endianness)
 
 [↑ top](#endianness)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### bit, byte
@@ -133,12 +123,7 @@ int main()
 ```
 
 [↑ top](#endianness)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `endianness`
@@ -270,7 +255,5 @@ Little-Endian
 ```
 
 [↑ top](#endianness)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 

@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: struct, union
 
@@ -7,13 +6,7 @@
 - [`union`](#union)
 
 [↑ top](#c-character-string)
-<br><br><br><br>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `struct`
@@ -47,14 +40,7 @@ int main()
 ```
 
 [↑ top](#c-character-string)
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `union`
@@ -89,5 +75,4 @@ int main()
 ```
 
 [↑ top](#c-character-string)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

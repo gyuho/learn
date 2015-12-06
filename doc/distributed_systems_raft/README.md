@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Distributed systems, raft
 
@@ -12,8 +11,8 @@ personal learning log, and it's repetitive and unorganized.
 - [raft algorithm: terminology](#raft-algorithm-terminology)
 - [raft algorithm: properties](#raft-algorithm-properties)
 - [raft algorithm: leader election](#raft-algorithm-leader-election)
-	- [restrictions on `leader election`](#restrictions-on-leader-election)
-	- [restrictions on `log commit`](#restrictions-on-log-commit)
+- [restrictions on `leader election`](#restrictions-on-leader-election)
+- [restrictions on `log commit`](#restrictions-on-log-commit)
 - [raft algorithm: log replication](#raft-algorithm-log-replication)
 - [raft algorithm: log consistency](#raft-algorithm-log-consistency)
 - [raft algorithm: old leader](#raft-algorithm-old-leader)
@@ -24,14 +23,7 @@ personal learning log, and it's repetitive and unorganized.
 - [raft algorithm: configuration(membership) changes](#raft-algorithm-configurationmembership-changes)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -46,13 +38,7 @@ personal learning log, and it's repetitive and unorganized.
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### distributed systems, consensus algorithm
@@ -230,14 +216,7 @@ with it? [*Kubernetes*](http://kubernetes.io) uses `etcd` to manage a cluster
 of application containers in a distributed system.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: introduction
@@ -320,16 +299,7 @@ state of the entire system on a stable storage, so that logs stored
 up to the `snapshot` point can be discarded.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: terminology
@@ -392,12 +362,7 @@ up to the `snapshot` point can be discarded.
   rejected.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: properties
@@ -425,13 +390,7 @@ up to the `snapshot` point can be discarded.
 	  other server will ever apply different log entries for the same index.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: leader election
@@ -494,7 +453,6 @@ And server states in *Raft*:
 
 ![raft_server_state](img/raft_server_state.png)
 
-
 <br>
 Here's how election works:
 
@@ -530,10 +488,11 @@ To guarantee these safety requirements, **Raft has this safety property**:
 In order to guarantee this property, we need more restrictions on `leader
 election` and `log commit`.
 
+[↑ top](#distributed-systems-raft)
+<br><br><br><br><hr>
 
-<br><br>
 
-##### restrictions on `leader election`
+#### restrictions on `leader election`
 
 So we want to elect the **best leader**. Best leader is the one that **holds
 all of the committed log entries**.
@@ -572,10 +531,10 @@ For example,
 ![raft_leader_election_commit_03](img/raft_leader_election_commit_03.png)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br>
+<br><br><br><br><hr>
 
 
-##### restrictions on `log commit`
+#### restrictions on `log commit`
 
 Below `leader` tries to decide if an entry is committed in its *current* or
 *earlier* term:
@@ -594,12 +553,7 @@ A `leader` decides a log entry is committed only if:
 ![raft_commit](img/raft_commit.png)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: log replication
@@ -692,12 +646,7 @@ Then:
    of last new entry)`.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: log consistency
@@ -771,13 +720,7 @@ from `leader`, it deletes all the subsequent entries**.
 ![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01.png)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
- 
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: old leader
@@ -799,13 +742,7 @@ updates their `term` through RPCs. Therefore, deposed server cannot commit new
 log entries.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: safety
@@ -835,13 +772,7 @@ leader's entry. And *deletes any extraneous entries after that
 index*, in `follower`'s log. This is done by `AppendEntries` RPC.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: follower and candidate crashes
@@ -862,15 +793,7 @@ Summary of
 > [*§5.5 Follower and candidate crashes*](http://ramcloud.stanford.edu/raft.pdf)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: client interaction
@@ -960,16 +883,7 @@ func stepFollower(r *raft, m pb.Message) {
 ```
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: log compaction
@@ -992,12 +906,7 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 ![raft_log_compaction_01](img/raft_log_compaction_01.png)
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### raft algorithm: configuration(membership) changes
@@ -1075,6 +984,5 @@ But what if one wants to replace five-server cluster at once? Raft uses
   final configuration.
 
 [↑ top](#distributed-systems-raft)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

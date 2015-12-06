@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: introduction
 
@@ -9,14 +8,7 @@
 - [argument](#argument)
 
 [↑ top](#c-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -37,15 +29,7 @@
 - [C++ Primer Plus by Stephen Prata](http://www.amazon.com/Primer-Plus-Edition-Developers-Library/dp/0321776402/ref=sr_1_3?ie=UTF8&qid=1394277384&sr=8-3&keywords=C%2B%2B)
 
 [↑ top](#c-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Install
@@ -53,14 +37,7 @@
 Please visit [here](https://gcc.gnu.org/).
 
 [↑ top](#c-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Hello World!
@@ -92,16 +69,7 @@ from command line. If you do not need to process it,
 just use `int main()` or `int main(void)`.
 
 [↑ top](#c-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### argument
@@ -132,5 +100,4 @@ Then
 ```
 
 [↑ top](#c-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

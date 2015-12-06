@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C: logic, loop
 
@@ -11,8 +10,7 @@
 - [fizzbuzz](#fizzbuzz)
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### logic
@@ -51,8 +49,7 @@ b > c : 0
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `if` 
@@ -85,8 +82,7 @@ i != 3 is false
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `switch`
@@ -162,8 +158,7 @@ Breaking out of loop!
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `for`
@@ -197,8 +192,7 @@ Array Updated
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `while`
@@ -258,8 +252,7 @@ a: 19
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### fizzbuzz
@@ -313,5 +306,4 @@ int main(void)
 ```
 
 [↑ top](#c-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

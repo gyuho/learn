@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: STL
 
@@ -21,13 +20,7 @@
 - [`sort`](#sort)
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -37,15 +30,6 @@
 - [cplusplus.com/reference](http://www.cplusplus.com/reference/)
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
 
 
 #### `array`
@@ -213,16 +197,7 @@ The size of array container is 10
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `vector`
@@ -357,12 +332,7 @@ Remove which element? 3
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `list`
@@ -415,13 +385,7 @@ total: 500307
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `forward_list`
@@ -455,15 +419,7 @@ int main()
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `stack`
@@ -514,17 +470,7 @@ size of stack has become 0
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `queue`
@@ -574,14 +520,7 @@ size of queue has become 0
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `heap`
@@ -628,14 +567,7 @@ final sorted range : 5 10 15 20 99
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `priority_queue`
@@ -774,14 +706,7 @@ Popping out elements: 1000 100 55 20 20 17 15 10
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `map`
@@ -868,17 +793,7 @@ Hello => 100
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `unordered_map`
@@ -940,19 +855,7 @@ A => 1
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `set`
@@ -1010,17 +913,7 @@ myset size: 4
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `unordered_set`
@@ -1078,18 +971,7 @@ myset size: 4
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `binary_search`
@@ -1138,17 +1020,7 @@ looking for a 5: found! 5
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `min`, `max`
@@ -1184,20 +1056,7 @@ max(3.14,2.72)==3.14
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `sort`
@@ -1245,5 +1104,4 @@ int main () {
 ```
 
 [↑ top](#c-stl)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

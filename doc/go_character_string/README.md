@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: character, string
 
@@ -13,14 +12,7 @@
 - [reverse `string`](#reverse-string)
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### bit, byte, character
@@ -65,15 +57,7 @@ But **in Go, all source code is in UTF-8**.
 > Go*](http://blog.golang.org/strings) *by Rob Pike*
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### mutable `bytes` and `rune`, immutable `string`
@@ -131,16 +115,7 @@ func main() {
 ```
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `range` over `string`
@@ -188,12 +163,7 @@ U+006F, 'o' 111
 ```
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `string` literals
@@ -250,13 +220,7 @@ print "\""  # "
 <br><br>
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `string` literals in Python
@@ -354,18 +318,10 @@ But there are many other corner cases you need to consider, as explained
 [here](https://pythonhosted.org/kitchen/unicode-frustrations.html).
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `string` literals in Go
-
-<br>
 
 > **Go source code is UTF-8**, so the source code for the string literal is UTF-8
 > text. If that string literal contains no escape sequences, which a raw string
@@ -454,14 +410,7 @@ func main() {
 ```
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Unicode and UTF-8
@@ -487,14 +436,7 @@ article*](http://www.joelonsoftware.com/articles/Unicode.html).
 
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### reverse `string`
@@ -650,5 +592,4 @@ func swapCaseII(str string) string {
 ```
 
 [↑ top](#go-character-string)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

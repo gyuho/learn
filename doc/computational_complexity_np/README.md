@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Computational complexity, NP
 
@@ -8,8 +7,7 @@
 - [NP](#np)
 
 [↑ top](#computational-complexity-np)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -20,8 +18,7 @@
 - [Stanford cs161 lecture note](http://web.stanford.edu/class/archive/cs/cs161/cs161.1138/lectures/19/Small19.pdf)
 
 [↑ top](#computational-complexity-np)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Computational complexity
@@ -54,8 +51,7 @@ large inputs, `find` function with simple iteration computes *no faster
 than* the **upper bound `O(n)`** when `n` is the size of the inputs.
 
 [↑ top](#computational-complexity-np)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### NP
@@ -93,5 +89,4 @@ No polynomial-time algorithm is found for any `NP-hard` problems.
 ![np](img/np.png)
 
 [↑ top](#computational-complexity-np)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

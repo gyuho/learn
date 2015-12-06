@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Binary search tree
 
@@ -11,8 +10,7 @@
 - [`bst`: delete](#bst-delete)
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -20,8 +18,7 @@
 - [Binary Trees, Stanford CS 110](http://cslibrary.stanford.edu/110/BinaryTrees.html)
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Binary Search Tree (`bst`)
@@ -37,8 +34,7 @@ with the following properties:
 (It depends on the implementation how to handle duplicate keys.)
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bst`: insert
@@ -238,8 +234,7 @@ int main()
 ```
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bst`: search
@@ -594,8 +589,7 @@ int main()
 ```
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bst`: traverse
@@ -997,8 +991,7 @@ func (tr *Tree) LevelOrder() []*Node {
 ```
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bst`: delete
@@ -1425,5 +1418,4 @@ func (tr *Tree) Delete(key Interface) Interface {
 ```
 
 [↑ top](#binary-search-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

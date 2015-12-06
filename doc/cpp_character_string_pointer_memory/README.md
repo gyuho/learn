@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: character, string, pointer, memory
 
@@ -15,8 +14,7 @@
 - [pointer, array, function](#pointer-array-function)
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -24,8 +22,7 @@
 - [Pointers and Memory](http://cslibrary.stanford.edu/102/)
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### character
@@ -82,8 +79,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `string`
@@ -113,8 +109,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### reverse string
@@ -193,8 +188,7 @@ string reverseRecursive(string str)
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `string` to character array
@@ -220,8 +214,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### STL `string`
@@ -245,8 +238,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer
@@ -272,8 +264,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer, array
@@ -344,8 +335,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### ampersand `&`
@@ -395,8 +385,7 @@ int main()
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer, array, function
@@ -457,5 +446,4 @@ getSize2: 2
 ```
 
 [↑ top](#c-character-string-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

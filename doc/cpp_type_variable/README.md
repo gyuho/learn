@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: type, variable
 
@@ -7,14 +6,7 @@
 - [variable](#variable)
 
 [↑ top](#c-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### type
@@ -22,15 +14,7 @@
 - [C++ type system](https://msdn.microsoft.com/en-us/library/hh279663.aspx)
 
 [↑ top](#c-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### variable
@@ -88,5 +72,4 @@ int main()
 ```
 
 [↑ top](#c-type-variable)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Bitwise operation
 
@@ -11,8 +10,7 @@
 - [hamming distance](#hamming-distance)
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -26,8 +24,7 @@
 - [XOR'd play: Normalized Hamming Distance](http://trustedsignal.blogspot.com/2015/06/xord-play-normalized-hamming-distance.html?view=classic)
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### bit, byte
@@ -136,8 +133,7 @@ int main()
 ```
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bitwise operation`
@@ -525,8 +521,7 @@ Right Shift:  x >> 1
 ```
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bit mask`
@@ -739,8 +734,7 @@ Bitmasking:  x & y
 ```
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `bitset`
@@ -793,8 +787,7 @@ mybits.reset(1): 0000
 ```
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### hamming distance
@@ -952,6 +945,5 @@ int main()
 ```
 
 [↑ top](#bitwise-operation)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

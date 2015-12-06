@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: archive, compress, encoding
 
@@ -12,10 +11,7 @@
 - [encoding, decoding `yaml`](#encoding-decoding-yaml)
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -24,12 +20,7 @@
 - [Journey into cryptography](https://www.khanacademy.org/computing/computer-science/cryptography)
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `archive`
@@ -206,12 +197,7 @@ func main() {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### untar, unzip
@@ -461,12 +447,7 @@ func deleteFiles() {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `compress`
@@ -593,11 +574,7 @@ func zLibToBytes(fpath string) ([]byte, error) {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### encoding, decoding `json`
@@ -830,11 +807,7 @@ func main() {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### encoding, decoding `xml`
@@ -934,11 +907,7 @@ func main() {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### encoding, decoding `yaml`
@@ -1089,5 +1058,4 @@ func isJSON(data []byte) bool {
 ```
 
 [↑ top](#go-archive-compress-encoding)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

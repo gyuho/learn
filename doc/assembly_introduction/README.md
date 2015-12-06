@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Assembly: introduction
 
@@ -9,8 +8,7 @@
 - [`nasm` syntax](#nasm-syntax)
 
 [↑ top](#assembly-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,8 +21,7 @@
 - [github.com/0xAX/asm](https://github.com/0xAX/asm)
 
 [↑ top](#assembly-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Install
@@ -77,8 +74,7 @@ sudo apt-get install nasm;
 ```
 
 [↑ top](#assembly-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Hello World!
@@ -139,8 +135,7 @@ This prints `Hello World!`.
 
 
 [↑ top](#assembly-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `nasm` syntax
@@ -271,5 +266,4 @@ And:
   exit**.
 
 [↑ top](#assembly-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

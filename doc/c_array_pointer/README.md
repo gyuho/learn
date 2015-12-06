@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C: array, pointer
 
@@ -13,8 +12,7 @@
 - [pointer array](#pointer-array)
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,8 +21,7 @@
 - [Pointers and Memory](http://cslibrary.stanford.edu/102/)
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### array
@@ -113,8 +110,7 @@ int main(void)
 ```
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `char`
@@ -195,8 +191,7 @@ int main(void)
 ```
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer
@@ -230,8 +225,7 @@ int main(void)
 ```
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### array, pointer 
@@ -297,8 +291,7 @@ int main()
 ```
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer arithmetic
@@ -329,8 +322,7 @@ int main()
 ![pointer_arithmetic](img/pointer_arithmetic.png)
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `char` array
@@ -362,8 +354,7 @@ int main()
 ![c_string](img/c_string.png)
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### pointer array
@@ -390,6 +381,5 @@ int main()
 ```
 
 [↑ top](#c-array-pointer)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

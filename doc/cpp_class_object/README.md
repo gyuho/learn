@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: class, object
 
@@ -13,8 +12,7 @@
 - [template](#template)
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ### Object Oriented Programming
@@ -32,8 +30,7 @@ An object can contains:
 - memory to store things
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `class`
@@ -85,8 +82,7 @@ Area is 50
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `class`: `private`, `protected`, `public`
@@ -107,8 +103,7 @@ class MyClass {
 - `public`: everything can access.
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### constructor
@@ -162,8 +157,7 @@ Area is 50
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### overload constructor
@@ -226,8 +220,7 @@ Area is 20000
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### overload operator
@@ -262,8 +255,7 @@ int main () {
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### inheritance
@@ -304,8 +296,7 @@ int main () {
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### template
@@ -345,5 +336,4 @@ int main () {
 ```
 
 [↑ top](#c-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -1,9 +1,6 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: concurrency
-
-<br>
 
 > If you look at the programming languages of today, you probably get this idea
 > that the world is objected-oriented. But it’s not. It’s actually parallel.
@@ -34,7 +31,8 @@
 - [`sync/atomic`](#syncatomic)
 - [web server](#example-web-server)
 - [`sync.Mutex` is just a value](#syncmutex-is-just-a-value)
-- [`goroutine`, closure](#goroutine-closure)
+- [**`goroutine`, closure**](#goroutine-closure)
+- [rate limit](#rate-limit)
 - [Counting problem](#counting-problem)
 - [Count: simulate web requests](#count-simulate-web-requests)
 - [Count: `NaiveCounter`](#count-naivecounter)
@@ -53,8 +51,7 @@
 - [Concurrency: Prime Sieve](#concurrency-prime-sieve)
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -78,8 +75,7 @@
 - [beorn7/concurrentcount](https://github.com/beorn7/concurrentcount)
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Concurrency is not parallelism
@@ -174,8 +170,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### goroutine ≠ thread
@@ -334,8 +329,7 @@ b() called
 
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `defer`, `recover`
@@ -639,8 +633,7 @@ func run() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### **Be careful with `defer` and deadlock**
@@ -688,8 +681,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### channel to communicate
@@ -894,8 +886,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ### questions:
@@ -910,8 +901,7 @@ func main() {
 
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #1-1. synchronous, asynchronous channel
@@ -1043,8 +1033,7 @@ func init() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #1-2. **buffered channel faster** because it’s *non-blocking*?
@@ -1100,8 +1089,7 @@ func Serve(queue chan *Request) {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #1-3. **be careful with buffered channel!**
@@ -1128,8 +1116,7 @@ func Serve(queue chan *Request) {
 
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #1-4. **non-deterministic receive from buffered channel**
@@ -1314,8 +1301,7 @@ func (c *ChannelCounter) Close() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #2. why is this receiving only one value?
@@ -1456,8 +1442,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### #3. wait for all goroutines to finish with `close`
@@ -1675,8 +1660,7 @@ Note that **received values from a channel are in order**:
 
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### **select for channel**: `select` ≠ `switch`
@@ -1952,8 +1936,7 @@ func head(
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### **receive `nil` from channel**
@@ -1985,8 +1968,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `sync.Mutex`, race condition
@@ -2219,8 +2201,7 @@ func hosten(dom string) string {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Share memory by communicating
@@ -2940,8 +2921,7 @@ BenchmarkCheck-16             	      50	  24317567 ns/op	  149880 B/op	    1975 
 too much memory and slows down the program.*)
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### memory leak
@@ -3023,8 +3003,7 @@ func toString(fpath string) (string, error) {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `sync/atomic`
@@ -3074,8 +3053,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### web server
@@ -3160,8 +3138,7 @@ Content-Type: text/plain; charset=utf-8
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `sync.Mutex` is just a value
@@ -3236,15 +3213,12 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `goroutine`, closure
 
-
 Try [this](http://play.golang.org/p/8iiDFmcov1):
-
 
 ```go
 package main
@@ -3321,8 +3295,169 @@ func wrap(err error) {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
+
+
+#### rate limit
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"sync"
+	"time"
+)
+
+func main() {
+	func() {
+		q := NewQueue(10, time.Second/3)
+		for range []int{0, 1, 2, 3, 4, 5, 6, 7, 8} {
+			if q.Push(time.Now()) {
+				log.Fatalf("should not have exceeded the rate limit: %+v", q)
+			}
+		}
+		for range []int{0, 1, 2, 3, 4, 5, 6, 7, 8} {
+			if !q.Push(time.Now()) {
+				log.Fatalf("should have exceeded the rate limit: %+v", q)
+			}
+		}
+		if q.slice.length() != 10 {
+			log.Fatalf("Queue should only have 10 timestamps: %+v", q)
+		}
+	}()
+
+	func() {
+		q := NewQueue(10, time.Second/10)
+		tick := time.NewTicker(time.Second / 8)
+		done := make(chan struct{})
+		go func() {
+			now := time.Now()
+			for tk := range tick.C {
+				log.Println("took:", time.Since(now))
+				now = time.Now()
+				isExceeded := q.Push(tk)
+				if isExceeded {
+					log.Println(tk, "has exceeded the rate limit", q.rate)
+					tick.Stop()
+					done <- struct{}{}
+					break
+				}
+			}
+		}()
+		select {
+		case <-time.After(3 * time.Second):
+			log.Fatalln("time out!")
+		case <-done:
+			log.Println("success")
+		}
+	}()
+}
+
+// timeSlice stores a slice of time.Time
+// in a thread-safe way.
+type timeSlice struct {
+	// RWMutex is more expensive
+	// https://blogs.oracle.com/roch/entry/beware_of_the_performance_of
+	// sync.RWMutex
+	//
+	// to synchronize access to shared state across multiple goroutines.
+	//
+	mu sync.Mutex
+
+	times []time.Time
+}
+
+func newTimeSlice() *timeSlice {
+	tslice := timeSlice{}
+	sl := make([]time.Time, 0)
+	tslice.times = sl
+	return &tslice
+}
+
+func (t *timeSlice) push(ts time.Time) {
+	t.mu.Lock()
+	t.times = append(t.times, ts)
+	t.mu.Unlock()
+}
+
+func (t *timeSlice) length() int {
+	t.mu.Lock()
+	d := len(t.times)
+	t.mu.Unlock()
+	return d
+}
+
+func (t *timeSlice) pop() {
+	if t.length() != 0 {
+		t.mu.Lock()
+		t.times = t.times[1:len(t.times):len(t.times)]
+		t.mu.Unlock()
+	}
+}
+
+func (t *timeSlice) first() (time.Time, bool) {
+	if t.length() == 0 {
+		return time.Time{}, false
+	}
+	t.mu.Lock()
+	v := t.times[0]
+	t.mu.Unlock()
+	return v, true
+}
+
+// Queue contains the slice of timestamps
+// and other rate limiter configurations.
+type Queue struct {
+	slice *timeSlice
+
+	// burstSize is like a buffer.
+	// If burstSize is 5, it allows rate exceeding
+	// for the fist 5 elements.
+	burstSize int
+	rate      time.Duration
+}
+
+// NewQueue returns a new Queue.
+func NewQueue(burstSize int, rate time.Duration) *Queue {
+	tslice := newTimeSlice()
+	q := Queue{}
+	q.slice = tslice
+	q.burstSize = burstSize
+	q.rate = rate
+	return &q
+}
+
+// Push appends the timestamp to the Queue.
+// It return true if rate has exceeded.
+// We need a pointer of Queue, where it defines
+// timeSlice with pointer as well. To append to slice
+// and update struct members, we need pointer types.
+func (q *Queue) Push(ts time.Time) bool {
+	if q.slice.length() == q.burstSize {
+		q.slice.pop()
+	}
+	q.slice.push(ts)
+	if q.slice.length() < q.burstSize {
+		return false
+	}
+	ft, ok := q.slice.first()
+	if !ok {
+		return false
+	}
+	diff := ft.Sub(ts)
+	return q.rate > diff
+}
+
+func (q *Queue) String() string {
+	return fmt.Sprintf("times: %+v / burstSize: %d / rate: %v", q.slice.times, q.burstSize, q.rate)
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
 
 
 #### Counting problem
@@ -3335,8 +3470,7 @@ multiple requests can cause contentions. Then what would be the best way to **co
 with concurrency?
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: simulate web requests
@@ -3449,8 +3583,7 @@ BenchmarkServer_ChannelCounter_Buffer-16  	      10	 119519447 ns/op	 1591680 B/
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `NaiveCounter`
@@ -3546,8 +3679,7 @@ exit status 66
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `MutexCounter`
@@ -3615,8 +3747,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `RWMutexCounter`
@@ -3684,8 +3815,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `AtomicIntCounter`
@@ -3750,8 +3880,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `AtomicCounter`
@@ -3824,8 +3953,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `ChannelCounter` (No Buffer)
@@ -3934,8 +4062,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: `ChannelCounter` (Buffer)
@@ -4044,8 +4171,7 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Count: benchmark results
@@ -4075,8 +4201,7 @@ func main() {
 And `channel` is slower than `sync.Mutex` because it allocates more memory.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Dequeue problem
@@ -4105,8 +4230,7 @@ Here's similar situation. Suppose a **queue** where you have to:
 - And *PostgreSQL* to store the data.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Solution #1: In-Memory
@@ -4161,8 +4285,7 @@ And even worse when we add more challenges as below:
 	- They are too big to fit in memory.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Solution #2: Disk Key/Value Storage + Concurrency
@@ -4187,8 +4310,7 @@ So I first tried with a separate database:
 3. Import the filtered data in *csv* format, with `COPY` command.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Dequeue result
@@ -4706,8 +4828,7 @@ Saved different with 49d5b8799558e22d3890d03b56a6c7a46faa1a7d216c2df22507396242a
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### But, don't do this!
@@ -4753,8 +4874,7 @@ are the best._**, and:
 > *by* [*Edsger W. Dijkstra*](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra)
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Dequeue Summary
@@ -4771,8 +4891,7 @@ in memory. How would you detect the duplicates?*
   database.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Find duplicates with concurrency
@@ -4787,8 +4906,7 @@ into smaller parts in order to sort each chunk independently, and later to
 merge.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Concurrency: Merge Sort
@@ -5051,12 +5169,10 @@ order to combine every single sub-list. That is, it is not a **_intrinsically
 parallel problem_**. You only loose when you use concurrency for inherently
 sequential problems.
 
-
 Or maybe I am just doing it wrong... I will get back to this later.
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Concurrency: Prime Sieve
@@ -5109,6 +5225,5 @@ func main() {
 ```
 
 [↑ top](#go-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

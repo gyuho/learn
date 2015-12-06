@@ -1,6 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
-
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Assembly: arithmetics, if
 
@@ -8,8 +6,7 @@
 - [arithmetics, if](#arithmetics-if)
 
 [↑ top](#assembly-arithmetics-if)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -22,8 +19,7 @@
 - [github.com/0xAX/asm](https://github.com/0xAX/asm)
 
 [↑ top](#assembly-arithmetics-if)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### arithmetics, if
@@ -116,6 +112,5 @@ ld -o 00_arithmetics_if 00_arithmetics_if.o
 This will prints out the message `Correct`.
 
 [↑ top](#assembly-arithmetics-if)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

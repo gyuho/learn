@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: b-tree 
 
@@ -9,12 +8,7 @@
 - [`btree`: insert](#btree-insert)
 
 [↑ top](#go-b-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,13 +17,7 @@
 - [*B-tree implementation*](https://github.com/google/btree) by *Graeme Connel*
 
 [↑ top](#go-b-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Tree
@@ -71,18 +59,10 @@ data retrieval**.
 ![btree](img/btree.png)
 
 [↑ top](#go-b-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### B-tree
-
-<br>
 
 > **_B-tree_** is a tree data structure that keeps data sorted and allows searches,
 > sequential access, insertions, and deletions in logarithmic time. The B-tree
@@ -122,12 +102,7 @@ store *1000 x 1000 x 1000* keys. And since the root node can be
 kept in main memory, you only need 2 disk accesses to tree search.
 
 [↑ top](#go-b-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `btree`: insert
@@ -518,7 +493,5 @@ func (t *BTree) Get(key Item) Item {
 
 ```
 
-
 [↑ top](#go-b-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

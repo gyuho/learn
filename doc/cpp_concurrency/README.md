@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: concurrency
 
@@ -9,14 +8,7 @@
 - [`atomic`](#atomic)
 
 [↑ top](#c-concurrency)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -24,15 +16,7 @@
 - [Concurrency in C++11](https://www.classes.cs.uchicago.edu/archive/2013/spring/12300-1/labs/lab6/)
 
 [↑ top](#c-concurrency)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `thread`
@@ -87,14 +71,7 @@ We need mutex!
 ```
 
 [↑ top](#c-concurrency)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `mutex`
@@ -148,11 +125,7 @@ no race conditions!
 ```
 
 [↑ top](#c-concurrency)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `atomic`
@@ -202,5 +175,4 @@ no race conditions!
 ```
 
 [↑ top](#c-concurrency)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

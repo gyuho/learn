@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C++: function
 
 - [function](#function)
 
 [↑ top](#c-function)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### function
@@ -44,5 +36,4 @@ int max(int num1, int num2)
 ```
 
 [↑ top](#c-function)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -2,52 +2,68 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"sync"
 	"time"
 )
 
 func main() {
-	q := NewQueue(10, time.Second/10)
-	tick := time.NewTicker(time.Second / 8)
-	now := time.Now()
-	for t := range tick.C {
-		fmt.Println("took:", time.Since(now))
-		now = time.Now()
-
-		isExceeded := q.Push(t)
-		if isExceeded {
-			fmt.Println(t, "has exceeded the rate limit", q.rate)
-			tick.Stop()
-			break
+	func() {
+		q := NewQueue(10, time.Second/3)
+		for range []int{0, 1, 2, 3, 4, 5, 6, 7, 8} {
+			if q.Push(time.Now()) {
+				log.Fatalf("should not have exceeded the rate limit: %+v", q)
+			}
 		}
-	}
-	/*
-	   took: 125.18325ms
-	   took: 124.804029ms
-	   took: 124.965582ms
-	   took: 124.955137ms
-	   took: 124.960788ms
-	   took: 124.965522ms
-	   took: 124.982369ms
-	   took: 124.959646ms
-	   took: 124.944575ms
-	   took: 124.927333ms
-	   2015-09-03 14:45:27.868522371 -0700 PDT has exceeded the rate limit 100ms
-	*/
+		for range []int{0, 1, 2, 3, 4, 5, 6, 7, 8} {
+			if !q.Push(time.Now()) {
+				log.Fatalf("should have exceeded the rate limit: %+v", q)
+			}
+		}
+		if q.slice.length() != 10 {
+			log.Fatalf("Queue should only have 10 timestamps: %+v", q)
+		}
+	}()
+
+	func() {
+		q := NewQueue(10, time.Second/10)
+		tick := time.NewTicker(time.Second / 8)
+		done := make(chan struct{})
+		go func() {
+			now := time.Now()
+			for tk := range tick.C {
+				log.Println("took:", time.Since(now))
+				now = time.Now()
+				isExceeded := q.Push(tk)
+				if isExceeded {
+					log.Println(tk, "has exceeded the rate limit", q.rate)
+					tick.Stop()
+					done <- struct{}{}
+					break
+				}
+			}
+		}()
+		select {
+		case <-time.After(3 * time.Second):
+			log.Fatalln("time out!")
+		case <-done:
+			log.Println("success")
+		}
+	}()
 }
 
 // timeSlice stores a slice of time.Time
 // in a thread-safe way.
 type timeSlice struct {
-	times []time.Time
-
 	// RWMutex is more expensive
 	// https://blogs.oracle.com/roch/entry/beware_of_the_performance_of
 	// sync.RWMutex
 	//
 	// to synchronize access to shared state across multiple goroutines.
 	//
-	sync.Mutex
+	mu sync.Mutex
+
+	times []time.Time
 }
 
 func newTimeSlice() *timeSlice {
@@ -58,23 +74,23 @@ func newTimeSlice() *timeSlice {
 }
 
 func (t *timeSlice) push(ts time.Time) {
-	t.Lock()
+	t.mu.Lock()
 	t.times = append(t.times, ts)
-	t.Unlock()
+	t.mu.Unlock()
 }
 
 func (t *timeSlice) length() int {
-	t.Lock()
+	t.mu.Lock()
 	d := len(t.times)
-	t.Unlock()
+	t.mu.Unlock()
 	return d
 }
 
 func (t *timeSlice) pop() {
 	if t.length() != 0 {
-		t.Lock()
+		t.mu.Lock()
 		t.times = t.times[1:len(t.times):len(t.times)]
-		t.Unlock()
+		t.mu.Unlock()
 	}
 }
 
@@ -82,9 +98,9 @@ func (t *timeSlice) first() (time.Time, bool) {
 	if t.length() == 0 {
 		return time.Time{}, false
 	}
-	t.Lock()
+	t.mu.Lock()
 	v := t.times[0]
-	t.Unlock()
+	t.mu.Unlock()
 	return v, true
 }
 

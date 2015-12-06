@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: bandit algorithms, adversarial bandits 
 
@@ -12,12 +11,7 @@
 - [Regret](#regret)
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -26,12 +20,7 @@
 - [*Adversarial Bandits and the Exp3 Algorithm*](http://jeremykun.com/2013/11/08/adversarial-bandits-and-the-exp3-algorithm/) *by [Jeremy Kun](http://jeremykun.com/about/)*
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Multi-armed bandit problem
@@ -45,15 +34,11 @@ around this classical problem. This is about **Exp3** from this
 [*paper*](http://cseweb.ucsd.edu/~yfreund/papers/bandits.pdf)
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Terms
+
 - **_Arms_**: Each slot **machine** gives you an option: *to play* or *to not
   play*. You also have an **option** to choose the **order**: *machine B then
   A* or *machine A first, then B*. **Options** are **_possible actions_**, and
@@ -82,15 +67,11 @@ around this classical problem. This is about **Exp3** from this
   spend pulling down those bad ones. *You want to* **_minimize the regret_**.
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Why Bandit algorithms?
+
 Traditional [A/B testing](https://en.wikipedia.org/wiki/A/B_testing) has two
 variants of models: you run *two models in parallel* and later **choose** the
 better one. They give you data, controls, evidence, etc. Then **_why bandit
@@ -127,13 +108,7 @@ Here's a sample simulation:
 As you see, weights change dynamically to rewards overtime.
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Exp3: notations
@@ -185,13 +160,7 @@ As you see, weights change dynamically to rewards overtime.
 ![regret](img/regret.png)
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Exp3
@@ -201,7 +170,6 @@ As you see, weights change dynamically to rewards overtime.
 - Weights are used for weighted choice on actions.
 - You need to maintain the list of weights for each action.
 - If an action rewards well, it should get high weights.
-
 
 [Here](http://play.golang.org/p/zvcEUWvwVF)'s Go version:
 
@@ -565,10 +533,7 @@ Done
 ```
 
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### Regret
@@ -593,7 +558,5 @@ It's called **_adversarial_** because **inferior ones** have complete **control
 over how you play** the games. For more detail, please check out this
 [article](http://jeremykun.com/2013/11/08/adversarial-bandits-and-the-exp3-algorithm/).
 
-
 [↑ top](#go-bandit-algorithms-adversarial-bandits)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

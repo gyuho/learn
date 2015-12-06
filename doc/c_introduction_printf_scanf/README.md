@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # C: introduction, printf, scanf
 
@@ -10,8 +9,7 @@
 - [`scanf`](#scanf)
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -28,8 +26,7 @@
 - [Everything You Need to Know to Write Good C Code](https://github.com/btrask/stronglink/blob/master/SUBSTANCE.md)
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Install
@@ -37,8 +34,7 @@
 Please visit [here](https://gcc.gnu.org/).
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### Hello World!
@@ -68,8 +64,7 @@ execution without any error in Linux. You can return something other than 0 to
 tell there's something wrong.
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `printf`
@@ -101,8 +96,7 @@ int main(void)
 ```
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### `scanf`
@@ -144,6 +138,5 @@ Float: 0.000012
 ```
 
 [↑ top](#c-introduction-printf-scanf)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
