@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # the matasano crypto challenges: set 1
 
@@ -11,9 +10,7 @@
 - [Implement repeating-key `XOR`](#implement-repeating-key-xor)
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,9 +20,7 @@
 - [the matasano crypto challenges](http://cryptopals.com/)
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Convert `hex` to `base64`
@@ -90,9 +85,7 @@ decodedBase64: I'm killing your brain like a poisonous mushroom
 ```
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Fixed `XOR`
@@ -194,11 +187,7 @@ func toUint64(bstr string) uint64 {
 ```
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### Single-byte `XOR` cipher
@@ -339,11 +328,7 @@ func main() {
 ```
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### Detect single-character `XOR`
@@ -498,12 +483,7 @@ func main() {
 ```
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Implement repeating-key `XOR`
@@ -565,5 +545,4 @@ func main() {
 ```
 
 [↑ top](#the-matasano-crypto-challenges-set-1)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

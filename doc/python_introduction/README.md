@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: introduction
 
@@ -7,14 +6,7 @@
 - [Hello World!](#hello-world)
 
 [↑ top](#python-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -24,12 +16,7 @@
 - [Learn python the hard way](http://learnpythonthehardway.org/book/)
 
 [↑ top](#python-introduction)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Hello World!
@@ -46,5 +33,4 @@ You can either:
 - `python` and `print "Hello World!"` in the intepreter
 
 [↑ top](#python-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

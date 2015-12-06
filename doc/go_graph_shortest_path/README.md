@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, shortest path
 
@@ -8,13 +7,7 @@
 - [Bellman–Ford algorithm](#bellmanford-algorithm)
 
 [↑ top](#go-graph-shortest-path)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -26,14 +19,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-shortest-path)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Dijkstra algorithm
@@ -704,14 +690,7 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-shortest-path)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Bellman–Ford algorithm
@@ -1390,5 +1369,4 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-shortest-path)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

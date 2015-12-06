@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: random
 
 - [random](#random)
 
-[↑ top](#assembly-gdb)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+[↑ top](#python-random)
+<br><br><br><br><hr>
 
 
 #### random
@@ -30,6 +22,5 @@ if __name__ == "__main__":
 
 ```
 
-[↑ top](#assembly-gdb)
-<br><br><br><br>
-<hr>
+[↑ top](#python-random)
+<br><br><br><br><hr>

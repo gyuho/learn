@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Recursion
 
@@ -21,9 +20,7 @@
 - [dynamic programming, longest common subsequence](#dynamic-programming-longest-common-subsequence)
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -40,15 +37,7 @@
 - [Divide and conquer, Princeton CS](http://www.cs.princeton.edu/~wayne/cs423/lectures/divide-and-conquer-4up.pdf)
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, stack overflow
@@ -165,17 +154,7 @@ int main()
 
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, stack
@@ -395,19 +374,7 @@ For more detail, please check out:
 - [**_Go: graph, strongly connected components_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_strongly_connected_components)
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, factorial
@@ -520,11 +487,7 @@ programming_**](https://en.wikipedia.org/wiki/Dynamic_programming).
    *functional programming languages*.
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, convert to binary number
@@ -573,15 +536,8 @@ int main()
 
 ```
 
-
-
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, closure, fibonacci
@@ -635,7 +591,6 @@ int main()
 
 ```
 
-
 <br>
 [Closure](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 is a function with its own environment and at least on bound variable.
@@ -668,9 +623,7 @@ func main() {
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### recursion, reverse string
@@ -786,11 +739,7 @@ string reverseRecursive(string str)
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, tower hanoi
@@ -953,11 +902,7 @@ Move the disk 1 from 'S' to 'D'
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### recursion, binary search tree
@@ -1270,11 +1215,7 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### divide and conquer, merge sort
@@ -1382,9 +1323,7 @@ int main () {
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### divide and conquer, quick sort
@@ -1533,9 +1472,7 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### divide and conquer, maximum contiguous sum
@@ -1690,8 +1627,7 @@ algorithm uses a simple version of dynamic programming
 using previous computation.
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### dynamic programming, coin change
@@ -1803,9 +1739,7 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### dynamic programming, rob houses
@@ -1959,9 +1893,7 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### dynamic programming, stairs
@@ -2054,9 +1986,7 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### dynamic programming, longest common subsequence
@@ -2212,5 +2142,4 @@ int main()
 ```
 
 [↑ top](#recursion)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

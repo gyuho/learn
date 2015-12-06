@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: segment
 
@@ -8,9 +7,7 @@
 - [Segment algorithm](#segment-algorithm)
 
 [↑ top](#go-segment)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -19,13 +16,7 @@
 - [*Natural Language Corpus Data by Peter Norvig*](http://norvig.com/ngrams/ch14.pdf)
 
 [↑ top](#go-segment)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Segment
@@ -36,13 +27,7 @@ physically or auditorily, in the stream of speech"*. The goal of segmentation
 is: `Ilovecomputerscience.` → `I love computer science.`
 
 [↑ top](#go-segment)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Segment algorithm
@@ -185,5 +170,4 @@ func Get(txt string, probFunc func(string) float64) []string {
 ```
 
 [↑ top](#go-segment)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

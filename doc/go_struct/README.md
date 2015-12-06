@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: struct
 
@@ -7,13 +6,7 @@
 - [empty `struct`](#empty-struct)
 
 [↑ top](#go-struct)
-<br><br><br><br>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `struct` for data, `interface` for method
@@ -32,7 +25,6 @@ Go **struct** controls the layout of **data**, while Go **interface**:
 > Go_**](https://golang.org/doc/effective_go.html#interfaces_and_types)
 
 <br>
-
 
 For instance,
 [`time.Time`](https://go.googlesource.com/go/+/master/src/time/time.go) is
@@ -100,17 +92,11 @@ func main() {
 	fmt.Printf("%q\n", words)
 	// ["d" "kkkk" "qqqq" "adasdasd" "aaasdasdasd"]
 }
+
 ```
 
 [↑ top](#go-struct)
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### empty `struct`
@@ -163,5 +149,4 @@ for i in range(10):
 ```
 
 [↑ top](#go-struct)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

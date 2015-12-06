@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: function, method, pointer, nil, map, slice
 
@@ -24,17 +23,11 @@
 - [tree](#tree)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### What are function and method?
+
 Think of a **function** as **an operation(on arguments if any)**. And **method as a
 behavior of a type**. A **method** is *a function that takes a receiver*, and always
 *used in conjunction with types*. Try this
@@ -130,6 +123,7 @@ func plusOne(num int) funcType {
 		return num + 1
 	}
 }
+
 ```
 
 A **function name** in the function signature must be **unique**: [**there is
@@ -190,15 +184,11 @@ func main() {
 	)
 	// 6
 }
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### What is pointer?
@@ -246,14 +236,7 @@ gets the copy of the pointer._** And pointer is not the data itself but
 dereferenced data by its pointer inside the function can update the original data.**
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Why pointer?
@@ -310,6 +293,7 @@ func main() {
 	(&one).change()
 	fmt.Printf("%+v\n", one) // {val:400}
 }
+
 ```
 
 A *function* or *method* updates the original data **only when we pass the
@@ -346,18 +330,11 @@ func main() {
 	pointer.val = 300
 	fmt.Printf("%+v\n", one) // {val:300}
 }
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Where pointer?
@@ -405,21 +382,10 @@ OK](http://golang.org/doc/effective_go.html#composite_literals) and the data is
 still** **_refer-able_** **after function return.**.
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Why `list` as a pointer?
-
 
 And back to the original question:
 ```go
@@ -466,14 +432,7 @@ with methods. Define with# pointer to globally pass things around and to update
 it anywhere.
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### pointer: copy `struct`
@@ -511,13 +470,7 @@ func main() {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### pointer: `map` and `slice`
@@ -629,8 +582,8 @@ func makeslice(t *slicetype, len64 int64, cap64 int64) sliceStruct {
 	p := newarray(t.elem, uintptr(cap))
 	return sliceStruct{p, len, cap}
 }
-```
 
+```
 
 <br>
 And take a look at this [code](http://play.golang.org/p/g8y8_BGVKo) and
@@ -675,6 +628,7 @@ func main() {
 	(*arrayType)(&array).changeArray2pt()
 	fmt.Println(".changeArray2pt():", array) // [Y ZZ C]
 }
+
 ```
 
 ```go
@@ -739,6 +693,7 @@ func main() {
 	(*sliceType)(&slice).changeSlice4pt()
 	fmt.Println(".changeSlice4pt():", slice) // [Y YY C YYY YYYY]
 }
+
 ```
 
 According to [Go FAQ](https://golang.org/doc/faq#references), **_slice is a
@@ -763,14 +718,7 @@ slice implementation is
 This is why array elements are values and slice elements are references.
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### pointer: `channel`
@@ -826,13 +774,7 @@ func main() {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Recap
@@ -911,23 +853,13 @@ elements of an array, **slice values** act like a pointer. They are
 [descriptors pointing](https://golang.org/doc/faq#Pointers) to the underlying
 slice data.
 
-
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### swap: `array` and `slice`
 
 Try [this](http://play.golang.org/p/3yzDHS15ey):
-
 
 ```go
 package main
@@ -979,18 +911,11 @@ func swapSlice1(i, j int, slice []int) {
 func swapSlice2(i, j int, slice *[]int) {
 	(*slice)[i], (*slice)[j] = (*slice)[j], (*slice)[i]
 }
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `nil`
@@ -1091,11 +1016,7 @@ channel became nil: <nil>
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `map`
@@ -1381,12 +1302,7 @@ Loop:
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### initialize and empty `map`
@@ -1687,15 +1603,7 @@ func main() {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### *non-deterministic* `range` `map`
@@ -1904,14 +1812,7 @@ And about `for` loop:
 > [Go Spec](https://golang.org/ref/spec#For_statements)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `map` internals
@@ -2169,6 +2070,7 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
 		}
 	}
 }
+
 ```
 
 What this does:
@@ -2183,17 +2085,7 @@ What this does:
    to the zero object for the value type—it never returns `nil`.
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### slice tricks
@@ -2299,18 +2191,7 @@ func main() {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### slice vs. map
@@ -2319,14 +2200,7 @@ func main() {
 - [**map_to_slice_vs_map**](./map_to_slice_vs_map)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### permute `string`
@@ -2535,13 +2409,7 @@ func permuteStrings(slice []string) [][]string {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### destroy `struct`
@@ -2610,16 +2478,7 @@ func main() {
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### tree
@@ -2722,8 +2581,8 @@ func delete1(nd *Node) {
 func delete2(nd *Node) {
 	*nd = Node{}
 }
+
 ```
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

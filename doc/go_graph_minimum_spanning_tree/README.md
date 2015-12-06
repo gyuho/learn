@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, minimum spanning tree
 
@@ -8,13 +7,7 @@
 - [Prim algorithm](#prim-algorithm)
 
 [↑ top](#go-graph-minimum-spanning-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -25,15 +18,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-minimum-spanning-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Kruskal algorithm
@@ -667,14 +652,7 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-minimum-spanning-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Prim algorithm
@@ -1363,5 +1341,4 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-minimum-spanning-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

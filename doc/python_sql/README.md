@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: sql
 
@@ -7,16 +6,7 @@
 - [`sql`](#sql)
 
 [↑ top](#python-sql)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -24,15 +14,7 @@
 - [SQLAlchemy](http://docs.sqlalchemy.org)
 
 [↑ top](#python-sql)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `sql`
@@ -51,9 +33,7 @@ class _db:
         self.connection_string = cs
  
     def __call__(self):
-        return self.db()
- 
-    def db(self):
+        return self.db() def db(self):
  
         connect_args = {}
             
@@ -112,5 +92,4 @@ with open(fpath, 'wb') as f:
 ```
 
 [↑ top](#python-sql)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

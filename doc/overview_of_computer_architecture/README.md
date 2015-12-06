@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Overview of computer architecture
 
@@ -13,9 +12,7 @@
 - [stack, heap](#stack-heap)
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -25,9 +22,7 @@
 - [**Memory : Stack vs Heap**](http://gribblelab.org/CBootcamp/7_Memory_Stack_vs_Heap.html)
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Computer system
@@ -45,13 +40,7 @@ Here's an example computer architecture in very high level:
 	slower to read from disks.
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Memory hierarchy
@@ -68,11 +57,7 @@ Here's an example computer architecture in very high level:
 	but more expensive. It's typically used for **`CPU` cache**.
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `register`
@@ -85,11 +70,7 @@ and store the data back to main memory.
 , and provides the fastest way to access data.
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `word`
@@ -105,12 +86,7 @@ Modern processors usually have a word size of `32` or `64` bits.
 	**consecutive memory address**.
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### process, thread
@@ -197,11 +173,7 @@ can handle two `threads` simultaneously.
 > *by Dave Cheney*
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### virtual memory
@@ -259,11 +231,7 @@ is limited by the size of pointers on a given operating system.
 ![virtual_address_space](img/virtual_address_space.png)
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### stack, heap
@@ -349,5 +317,4 @@ int main() {
 ```
 
 [↑ top](#overview-of-computer-architecture)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

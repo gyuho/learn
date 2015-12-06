@@ -1,16 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: argument, flag
 
 - [flag](#flag)
 
 [↑ top](#python-argument-flag)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### flag
@@ -53,5 +48,4 @@ True
 ```
 
 [↑ top](#python-argument-flag)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

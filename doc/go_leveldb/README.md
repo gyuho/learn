@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: leveldb
 
 - [leveldb](#leveldb)
 
 [↑ top](#go-leveldb)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### leveldb
@@ -94,5 +86,4 @@ func main() {
 ```
 
 [↑ top](#go-leveldb)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

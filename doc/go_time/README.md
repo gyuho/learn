@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: time
 
@@ -8,15 +7,7 @@
 - [Calendar](#calendar)
 
 [↑ top](#go-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Now with timezone
@@ -157,15 +148,7 @@ func timeTag(t time.Time) string {
 ```
 
 [↑ top](#go-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Parse
@@ -293,13 +276,7 @@ func parseTS(stamp string) time.Time {
 ```
 
 [↑ top](#go-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Calendar
@@ -545,6 +522,5 @@ func isMotherFather(t time.Time) (string, bool) {
 ```
 
 [↑ top](#go-time)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

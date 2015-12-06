@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Linked list
 
@@ -8,12 +7,7 @@
 	- [singly linked list implementation](#singly-linked-list-implementation)
 
 [↑ top](#linked-list)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `container/list`, linked list
@@ -149,17 +143,7 @@ total: 500307
 ```
 
 [↑ top](#linked-list)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### doubly linked list implementation
@@ -403,6 +387,7 @@ func (l *List) PushFrontList(other *List) {
 		l.insertValue(e.Value, l.root)
 	}
 }
+
 ```
 
 <br>
@@ -552,17 +537,7 @@ Nodes in reverse order :
 ```
 
 [↑ top](#linked-list)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### singly linked list implementation
@@ -800,5 +775,4 @@ int main() {
 ```
 
 [↑ top](#linked-list)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

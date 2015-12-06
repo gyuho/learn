@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: strings, regex
 
@@ -12,16 +11,7 @@
 - [space, tab](#space-tab)
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `string`
@@ -80,17 +70,7 @@ func main() {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### clean up
@@ -261,14 +241,7 @@ func toSentences(str string) []string {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### regex
@@ -304,11 +277,7 @@ func main() {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### comma
@@ -392,16 +361,7 @@ func insertCommaFloat64(num float64) string {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### replace
@@ -527,13 +487,7 @@ func expand(str string) string {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### extract numbers
@@ -574,11 +528,7 @@ func extractNumber(str string) []string {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### space, tab
@@ -659,5 +609,4 @@ func spaceToTab(str string) string {
 ```
 
 [↑ top](#go-strings-regex)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

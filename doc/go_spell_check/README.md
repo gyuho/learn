@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: spell check
 
@@ -7,9 +6,7 @@
 - [Spell check algorithm](#spell-check-algorithm)
 
 [↑ top](#go-spell-check)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -17,9 +14,7 @@
 - [How to Write a Spelling Corrector by Peter Norvig](http://norvig.com/spell-correct.html)
 
 [↑ top](#go-spell-check)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Spell check algorithm
@@ -149,5 +144,4 @@ func Suggest(txt string, fmap map[string]int) string {
 ```
 
 [↑ top](#go-spell-check)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: red black tree
 
@@ -17,14 +16,7 @@
 - [`llrb`: Delete](#llrb-delete)
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -38,13 +30,7 @@
   by *me*
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Tree
@@ -86,13 +72,7 @@ data retrieval**.
 ![btree](img/btree.png)
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Left-Leaning Red-Black Tree (`llrb`)
@@ -105,9 +85,7 @@ data retrieval**.
 - Two red nodes in a row are not allowed.
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: RotateToLeft
@@ -364,14 +342,7 @@ func main() {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: RotateToRight
@@ -633,14 +604,7 @@ func main() {
 }
 ```
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: FlipColor
@@ -894,14 +858,7 @@ func main() {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: MoveRedFromRightToLeft
@@ -917,13 +874,7 @@ Here's how to [**_`MoveRedFromRightToLeft`_**](https://godoc.org/github.com/gyuh
 ![llrb_move_red_from_right_to_left_result](img/llrb_move_red_from_right_to_left_result.png)
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: MoveRedFromLeftToRight
@@ -938,13 +889,7 @@ Here's how to [**_`MoveRedFromLeftToRight`_**](https://godoc.org/github.com/gyuh
 ![llrb_move_red_from_left_to_right_result](img/llrb_move_red_from_left_to_right_result.png)
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: Insert
@@ -1218,13 +1163,7 @@ func main() {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: Search
@@ -1561,13 +1500,7 @@ func main() {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: Traverse
@@ -2077,14 +2010,7 @@ func (tr *Tree) LevelOrder() []*Node {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `llrb`: Delete
@@ -2743,5 +2669,4 @@ func (tr *Tree) delete(nd *Node, key Interface) (*Node, Interface) {
 ```
 
 [↑ top](#go-red-black-tree)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # mysql, postgresql, redshift
 
@@ -26,22 +25,15 @@
     - [PostgreSQL, Redshift](#postgresql-redshift-4)
  
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
 
 - [PostgreSQL Guide](http://www.postgresguide.com/)
 
-
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 ## SQL and Relational database
@@ -60,11 +52,8 @@ workings of database systems. But you **must know a few things** to prevent
 performance issues. One simple query can easily stall its whole database
 server.
 
-
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 ## Connect, Create, Index
@@ -201,8 +190,7 @@ ON myschema.example_table (col1)
 ```
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ## Alter table
@@ -232,7 +220,6 @@ ALTER TABLE myschema.example_table CHANGE col1 col2 INT;
 # to modify a column
 ALTER TABLE myschema.example_table MODIFY col1 VARCHAR(250) default '0';
 ```
-
 
 <br>
 
@@ -290,8 +277,7 @@ END TRANSACTION;
 ```
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ## Update, Delete
@@ -336,8 +322,7 @@ LIMIT 1
 
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ## Insert, Upsert
@@ -478,8 +463,7 @@ DROP TABLE myschema.example_table;
 
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 ## Import from csv
@@ -536,9 +520,7 @@ COMMIT;
 ```
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 ## Select
@@ -821,5 +803,4 @@ WHERE agg5.identifier != ''
 ```
 
 [↑ top](#mysql-postgresql-redshift)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

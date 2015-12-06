@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Virtual memory
 
@@ -9,9 +8,7 @@
 - [Page cache](#page-cache)
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,9 +20,7 @@
 - [Varnish Architect Notes](https://www.varnish-cache.org/trac/wiki/ArchitectNotes)
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Computer system
@@ -43,13 +38,7 @@ Here's an example computer architecture in very high level:
 	slower to read from disks.
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Memory hierarchy
@@ -66,12 +55,7 @@ Here's an example computer architecture in very high level:
 	but more expensive. It's typically used for **`CPU` cache**.
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Why virtual memory?
@@ -184,11 +168,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > Memory*](http://eces.colorado.edu/~coxaj/software/memsim/memsim.html)
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### Page cache
@@ -315,6 +295,5 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*mmap*](https://en.wikipedia.org/wiki/Mmap) *by Wikipedia*
 
 [↑ top](#virtual-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

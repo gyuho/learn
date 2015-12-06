@@ -1,16 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: function
 
 - [function](#function)
 
 [↑ top](#python-function)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### function
@@ -27,5 +22,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-function)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

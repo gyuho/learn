@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: logic, loop
 
@@ -14,14 +13,7 @@
 - [fizzbuzz](#fizzbuzz)
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### logic, `if`
@@ -158,17 +150,11 @@ func main() {
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `switch`
+
 Go has [*`switch`*](https://golang.org/doc/effective_go.html#switch) statement
 for *if-else-if-else* patterns, as [here](http://play.golang.org/p/Gh6D0kDPtj):
 
@@ -255,17 +241,11 @@ func eval(t interface{}) {
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `select`
+
 [*`select`*](http://blog.golang.org/pipelines) is similar to *`switch`*: **`select`**
 controls channels in Go, as [here](http://play.golang.org/p/9OwTUHX7iy):
 
@@ -317,14 +297,7 @@ Done!
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `for`
@@ -751,16 +724,7 @@ Cont:
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### review `goto`
@@ -798,13 +762,7 @@ After goto Escape.
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### review `switch`, `break`
@@ -850,14 +808,7 @@ num > 4
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### review `fallthrough`
@@ -943,13 +894,7 @@ func main() {
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### empty `struct`
@@ -1002,15 +947,7 @@ for i in range(10):
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### fizzbuzz
@@ -1078,5 +1015,4 @@ func main() {
 ```
 
 [↑ top](#go-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

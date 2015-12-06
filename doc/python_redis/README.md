@@ -1,18 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: redis
 
 - [redis](#redis)
 
 [↑ top](#python-redis)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### redis
@@ -53,5 +46,4 @@ not_in_key_1 = db.MY_REDIS_DATABASE.sdiff("MY_KEY_2", "MY_KEY_1")
 ```
 
 [↑ top](#python-redis)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

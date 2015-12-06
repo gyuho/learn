@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, interface
 
@@ -8,13 +7,7 @@
 - [graph visualization with DOT](#graph-visualization-with-dot)
 
 [↑ top](#go-graph-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -27,14 +20,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### graph
@@ -582,16 +568,7 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### graph visualization with DOT
@@ -734,5 +711,4 @@ digraph graphname {
 ![label_02](dot/label_02.png)
 
 [↑ top](#go-graph-interface)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

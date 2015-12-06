@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: os, io
 
@@ -26,12 +25,7 @@
 - [`importDeps`](#importdeps)
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -39,11 +33,7 @@
 - [CORE TECHNOLOGY: SIGNALS(Linux)](http://www.linuxvoice.com/core-technology-signals/)
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### package `os`
@@ -179,15 +169,7 @@ Killed
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### package `os/exec`
@@ -367,15 +349,7 @@ Bob is 32 years old
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### package `flag`
@@ -427,10 +401,7 @@ description: Hello World!
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### package `io`
@@ -556,15 +527,7 @@ func decodeString(jsonStream string) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `io.Pipe`
@@ -612,17 +575,7 @@ func main() {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### package `io/ioutil`
@@ -730,16 +683,7 @@ the server that you are getting response from, as
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### stdout, stdin, stderr
@@ -860,15 +804,7 @@ func main() {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `exist`, `readDir`, `recover`
@@ -1025,16 +961,7 @@ func copy(src, dst string) error {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `create/open/write`: files, directories
@@ -1183,12 +1110,7 @@ func main() {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `io/ioutil`, file
@@ -1504,11 +1426,7 @@ func OpenFile(name string, flag int, perm os.FileMode) (file *os.File, err error
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `bufio`, file
@@ -1698,10 +1616,7 @@ func toBytes(fpath string) ([]byte, error) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### `copy`: files, directories
@@ -1912,14 +1827,7 @@ func openToAppend(fpath string) (*os.File, error) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `csv`
@@ -1997,16 +1905,7 @@ func fromCSV(fpath string) ([][]string, error) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `tsv`
@@ -2088,14 +1987,7 @@ func fromTSV(fpath string) ([][]string, error) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `compress/gzip`
@@ -2173,8 +2065,7 @@ func toBytes(fpath string) ([]byte, error) {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 
 
 #### temporary file
@@ -2284,10 +2175,7 @@ func copy(src, dst string) error {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### walk
@@ -2524,11 +2412,7 @@ walkDir: testdata/sub
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `http.Flusher`
@@ -2594,16 +2478,7 @@ testdata
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `os.Signal`
@@ -2656,11 +2531,7 @@ func handleInterrupts() {
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### `importDeps`
@@ -2953,5 +2824,4 @@ importDepsWithProjectPath: go/token
 ```
 
 [↑ top](#go-os-io)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

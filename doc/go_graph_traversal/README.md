@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, traversal
 
@@ -9,13 +8,7 @@
 - [graph traversal: DFS recursion](#graph-traversal-dfs-recursion)
 
 [↑ top](#go-graph-traversal)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -28,14 +21,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-traversal)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### graph traversal: BFS
@@ -555,13 +541,7 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-traversal)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### graph traversal: DFS
@@ -1088,13 +1068,7 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-traversal)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### graph traversal: DFS recursion
@@ -1596,5 +1570,4 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-traversal)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

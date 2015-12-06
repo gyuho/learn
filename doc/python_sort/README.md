@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: sort
 
@@ -7,10 +6,7 @@
 - [sort list of dictionaries](#sort-list-of-dictionaries)
 
 [↑ top](#python-sort)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### `sort`
@@ -26,17 +22,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-sort)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort list of dictionaries
@@ -69,5 +55,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-sort)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

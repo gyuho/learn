@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: sequence
 
@@ -7,11 +6,7 @@
 - [immutable tuple](#immutable-tuple)
 
 [↑ top](#python-sequence)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### list
@@ -30,15 +25,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### immutable tuple
@@ -54,5 +41,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-sequence)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: character, string
 
@@ -8,16 +7,7 @@
 - [`string` literals in Python](#string-literals-in-python)
 
 [↑ top](#python-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### immutable string
@@ -44,18 +34,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### escape special characters
@@ -70,16 +49,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-character-string)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `string` literals in Python
@@ -177,5 +147,4 @@ But there are many other corner cases you need to consider, as explained
 [here](https://pythonhosted.org/kitchen/unicode-frustrations.html).
 
 [↑ top](#python-character-string)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

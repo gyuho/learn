@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, strongly connected components
 
@@ -7,15 +6,7 @@
 - [Strongly Connected Components: Tarjan](#strongly-connected-components-tarjan)
 
 [↑ top](#go-graph-strongly-connected-components)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -25,14 +16,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-strongly-connected-components)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Strongly Connected Components: Tarjan
@@ -721,5 +705,4 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-strongly-connected-components)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

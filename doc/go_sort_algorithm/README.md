@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: sort, algorithm
 
@@ -17,15 +16,7 @@
 - [radix sort](#radix-sort)
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `int`
@@ -50,15 +41,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `float`
@@ -83,15 +66,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `string`
@@ -116,14 +91,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `string` `slice` by length
@@ -168,15 +136,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `struct`
@@ -224,14 +184,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort `map`
@@ -324,16 +277,7 @@ func main() {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort table
@@ -529,21 +473,11 @@ func (ms *multiSorter) Less(i, j int) bool {
 	}
 	return ms.less[k](p, q)
 }
+
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### bubble sort
@@ -585,18 +519,7 @@ func bubbleSort(nums []int) {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### insertion sort
@@ -643,18 +566,7 @@ func insertionSortInterface(data sort.Interface, a, b int) {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### selection sort
@@ -692,18 +604,7 @@ func selectionSort(nums []int) {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### counting sort
@@ -778,18 +679,7 @@ func max(nums []int) int {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### radix sort
@@ -894,5 +784,4 @@ func max(nums []int) int {
 ```
 
 [↑ top](#go-sort-algorithm)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

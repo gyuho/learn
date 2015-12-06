@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # linux setup
 
@@ -9,11 +8,7 @@ Some of my favorite tools: arch linux, vim.
 - [`vim`](#vim)
 
 [↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -22,12 +17,7 @@ Some of my favorite tools: arch linux, vim.
 - [*The art of command line*](https://github.com/jlevy/the-art-of-command-line)
 
 [↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `vim`
@@ -50,9 +40,7 @@ Some of my favorite tools: arch linux, vim.
 - <kbd>$</kbd> : `end of a line`
 - <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>s</kbd> : `split horizontally`
 - <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>v</kbd> : `split vertically`
-- <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>arrow</kbd> : `move between panels`
-- <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>ctrl</kbd> + <kbd>w</kbd> : `move between panels`
-- <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>q</kbd> : `close a panel`
+- <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>arrow</kbd> : `move between panels` - <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>ctrl</kbd> + <kbd>w</kbd> : `move between panels` - <kbd>ctrl</kbd> + <kbd>w</kbd>, <kbd>q</kbd> : `close a panel`
 - <kbd>:vertical resize +10</kbd> : `horizontal increase`
 - <kbd>F2</kbd> : `toggle NerdTree`
 - <kbd>F3</kbd> : `cycle NerdTree`
@@ -92,5 +80,4 @@ Some of my favorite tools: arch linux, vim.
 - <kbd>NUMBER</kbd> + <kbd>></kbd>: `indent the visual select lines`
 
 [↑ top](#linux-setup)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

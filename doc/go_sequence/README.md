@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: sequence
 
@@ -16,13 +15,7 @@
 - [thread-safe, generic **set**](#thread-safe-generic-set)
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### mutable `bytes` and `rune`, immutable `string`
@@ -80,18 +73,7 @@ func main() {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### interface
@@ -124,15 +106,7 @@ compatible code.
 > [**_Laws of Reflection by Rob Pike_**](http://blog.golang.org/laws-of-reflection)
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### pointer
@@ -187,15 +161,7 @@ it anywhere.
 
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `container/list`, linked list
@@ -284,16 +250,7 @@ func main() {
 
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### doubly linked list implementation
@@ -540,16 +497,7 @@ func (l *List) PushFrontList(other *List) {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### singly linked list implementation
@@ -734,15 +682,7 @@ func reverseList(l *List) *List {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### array
@@ -802,15 +742,7 @@ func swapSlice2(i, j int, slice *[]int) {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `slice`, **slice tricks**
@@ -917,16 +849,7 @@ func main() {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### thread-safe, generic **`slice`**
@@ -1428,13 +1351,7 @@ func CommonPrefix(more ...*Data) []interface{} {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `slice` vs. `container/list`
@@ -1496,13 +1413,7 @@ BenchmarkContainerListFind-16	       5	 214934224 ns/op	28799980 B/op	 1399998 a
 <br>
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### thread-safe, generic **set**
@@ -1900,5 +1811,4 @@ func (d Data) String() string {
 ```
 
 [↑ top](#go-sequence)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

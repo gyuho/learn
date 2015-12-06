@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: type, variable
 
@@ -7,12 +6,7 @@
 - [type](#type)
 
 [↑ top](#python-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -20,13 +14,7 @@
 - [Python types](https://docs.python.org/2/library/types.html)
 
 [↑ top](#python-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### type
@@ -45,5 +33,4 @@ print isinstance("A", str)
 ```
 
 [↑ top](#python-type-variable)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

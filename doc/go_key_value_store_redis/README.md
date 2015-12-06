@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: key/value store, redis
 
@@ -7,13 +6,7 @@
 - [redis](#redis)
 
 [↑ top](#go-keyvalue-store-redis)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### key/value store
@@ -96,14 +89,7 @@ Saved different with 49d5b8799558e22d3890d03b56a6c7a46faa1a7d216c2df22507396242a
 ```
 
 [↑ top](#go-keyvalue-store-redis)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### redis
@@ -161,5 +147,4 @@ func main() {
 ```
 
 [↑ top](#go-keyvalue-store-redis)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

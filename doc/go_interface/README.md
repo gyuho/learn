@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: interface
 
@@ -20,12 +19,7 @@
 - [permute `bytes`](#permute-bytes)
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -52,13 +46,7 @@ interface and transcribe them line by line. This summarizes what I have
 learned from that practice.
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Why Interface: Less is More
@@ -133,12 +121,7 @@ own. This has a huge impact on program design and encourages to write
 compatible code.
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### **`struct` for data, `interface` for method: then how does `interface` contain data?**
@@ -355,13 +338,7 @@ build a generic function that takes an `interface`, such as `sort.Sort`,
 and accept any type as long as it satisfies the `interface`.
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### empty `interface`
@@ -409,13 +386,7 @@ slice <[]interface {} Value>
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### interface in `io.Reader` and `io.Writer`
@@ -537,13 +508,7 @@ Here are types that satisfy **_`io.Writer`_** interface by implementing
 
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### package `io/ioutil`
@@ -651,15 +616,7 @@ the server that you are getting response from, as
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### interface in `container/heap`
@@ -747,14 +704,7 @@ func main() {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### **review `interface`**, and `interface` pointer, `interface` internal
@@ -885,15 +835,7 @@ once* and caches it. For more detail, please read:
 - [**_Go Data Structures: Interfaces_** *by Russ Cox*](http://research.swtch.com/interfaces)
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### implicitly exporting `interface`
@@ -1039,17 +981,7 @@ func main() {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `ioprogress`
@@ -1121,15 +1053,7 @@ func open(fpath string) (*os.File, error) {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `sort`
@@ -1176,16 +1100,7 @@ func main() {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### sort table
@@ -1384,15 +1299,7 @@ func (ms *multiSorter) Less(i, j int) bool {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### permute `string`
@@ -1532,12 +1439,7 @@ func permuteStrings(slice []string) [][]string {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### random `bytes`
@@ -1589,15 +1491,7 @@ func randBytes(n int) []byte {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### permute `bytes`
@@ -1725,5 +1619,4 @@ func permuteBytes(bts []byte) []string {
 ```
 
 [↑ top](#go-interface)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

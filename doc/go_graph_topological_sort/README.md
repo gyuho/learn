@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: graph, topological sort
 
@@ -7,14 +6,7 @@
 - [Topological sort](#topological-sort)
 
 [↑ top](#go-graph-topological-sort)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,14 +15,7 @@
 - [**github.com/gyuho/goraph**](https://github.com/gyuho/goraph)
 
 [↑ top](#go-graph-topological-sort)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Topological sort
@@ -598,5 +583,4 @@ func (g *defaultGraph) String() string {
 ```
 
 [↑ top](#go-graph-topological-sort)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

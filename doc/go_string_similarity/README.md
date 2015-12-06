@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: string similarity
 
@@ -10,9 +9,7 @@
 - [string similarity](#string-similarity)
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -22,9 +19,7 @@
 - [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance)
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Cosine similarity
@@ -109,9 +104,7 @@ func main() {
 ```
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Hamming distance
@@ -203,9 +196,7 @@ func main() {
 ```
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Levenshtein distance
@@ -333,10 +324,7 @@ func main() {
 ```
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
-
-
+<br><br><br><br><hr>
 
 
 #### string similarity
@@ -519,5 +507,4 @@ func create2Dslice(row, column int) [][]int {
 ```
 
 [↑ top](#go-string-similarity)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

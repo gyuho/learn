@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: time
 
@@ -8,14 +7,7 @@
 - [Calendar](#calendar)
 
 [↑ top](#python-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Now with timezone
@@ -56,15 +48,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Parse
@@ -83,15 +67,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-time)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Calendar
@@ -109,5 +85,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-time)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

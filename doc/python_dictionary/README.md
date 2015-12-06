@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: dictionary
 
 - [dictionary](#dictionary)
 
 [↑ top](#python-dictionary)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### dictionary
@@ -72,5 +64,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-dictionary)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

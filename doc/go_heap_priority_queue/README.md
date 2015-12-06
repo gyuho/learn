@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: heap, priority queue 
 
@@ -12,12 +11,7 @@
 - [Priority Queue](#priority-queue)
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Heap and Priority Queue
@@ -42,7 +36,6 @@ height would be:
 
 Keep this in mind. This is *important* when we calculate the *time complexities*
 of data structures.
-
 
 <br>
 There are *two* kinds of **_heap_**:
@@ -109,13 +102,7 @@ Therefore, tighter bound would be:
 
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Heap Implementation
@@ -419,16 +406,7 @@ after push: 3
 ```
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### standard `container/heap` package
@@ -543,16 +521,7 @@ after push: 3
 ```
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Build Min-Heap
@@ -587,15 +556,7 @@ And **`Build Min-Heap`** would be like:
 Now the **`Min-Heap`** got built.
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `heap.Push`
@@ -616,14 +577,7 @@ func push(h heap, val interface{}) {
 ![heap_push_03](img/heap_push_03.png)
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `heap.Pop`
@@ -650,16 +604,7 @@ func pop(h heap) interface{} {
 ![heap_pop_04](img/heap_pop_04.png)
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Priority Queue
@@ -767,5 +712,4 @@ func main() {
 ```
 
 [↑ top](#go-heap-priority-queue)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

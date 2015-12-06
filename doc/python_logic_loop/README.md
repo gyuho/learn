@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: logic, loop
 
@@ -8,14 +7,7 @@
 - [loop](#loop)
 
 [↑ top](#python-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### logic
@@ -36,15 +28,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### if
@@ -65,14 +49,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-logic-loop)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### loop
@@ -135,5 +112,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-logic-loop)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

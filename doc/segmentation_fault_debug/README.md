@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Segmentation fault, debug
 
@@ -8,13 +7,7 @@
 - [stack overflow](#stack-overflow)
 
 [↑ top](#segmentation-fault-debug)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -28,12 +21,7 @@
 - [mailgun/godebug](https://github.com/mailgun/godebug)
 
 [↑ top](#segmentation-fault-debug)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### segmentation fault
@@ -124,15 +112,7 @@ Program received signal SIGSEGV, Segmentation fault.
 ```
 
 [↑ top](#segmentation-fault-debug)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### stack overflow
@@ -197,5 +177,4 @@ int main()
 ```
 
 [↑ top](#segmentation-fault-debug)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

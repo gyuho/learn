@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: sql
 
 - [`sql`](#sql)
 
 [↑ top](#go-sql)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### `sql`
@@ -261,5 +253,4 @@ func float64ToInt64(num float64) int64 {
 ```
 
 [↑ top](#go-sql)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

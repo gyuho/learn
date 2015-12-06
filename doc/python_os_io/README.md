@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: os, io
 
@@ -8,14 +7,7 @@
 - [write csv](#write-csv)
 
 [↑ top](#python-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### read file
@@ -31,15 +23,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### write file
@@ -65,14 +49,7 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-os-io)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### write csv
@@ -115,5 +92,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-os-io)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

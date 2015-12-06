@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: type, variable
 
@@ -9,12 +8,7 @@
 - [empty struct](#empty-struct)
 
 [↑ top](#go-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -23,14 +17,7 @@
 - [Go variables](https://golang.org/ref/spec#Variables)
 
 [↑ top](#go-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### type
@@ -79,15 +66,7 @@ func main() {
 ```
 
 [↑ top](#go-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### variable
@@ -127,13 +106,7 @@ func main() {
 ```
 
 [↑ top](#go-type-variable)
-<br><br><br><br>
-<hr>
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### empty `struct`
@@ -186,5 +159,5 @@ for i in range(10):
 ```
 
 [↑ top](#go-type-variable)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
+

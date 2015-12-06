@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: introduction
 
@@ -7,9 +6,7 @@
 - [Hello World!](#hello-world)
 
 [↑ top](#go-introduction)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Reference
@@ -18,9 +15,7 @@
 - [Go Tour](http://tour.golang.org/welcome/1)
 
 [↑ top](#go-introduction)
-<br><br><br><br>
-<hr>
-
+<br><br><br><br><hr>
 
 
 #### Hello World!
@@ -44,6 +39,5 @@ You can either:
 - `cd hello/` and `go install` and `hello`
 
 [↑ top](#go-introduction)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
 

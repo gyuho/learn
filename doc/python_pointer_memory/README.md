@@ -1,19 +1,11 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: pointer, memory
 
 - [reference](#reference)
 
 [↑ top](#python-pointer-memory)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### reference
@@ -39,5 +31,4 @@ For more, please read this
 [article](https://www.jeffknupp.com/blog/2012/11/13/is-python-callbyvalue-or-callbyreference-neither/).
 
 [↑ top](#python-pointer-memory)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

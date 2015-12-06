@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Python: class, object
 
@@ -7,13 +6,7 @@
 - [class](#class)
 
 [↑ top](#python-class-object)
-<br><br>
-<hr>
-<br><br>
-
-
-
-
+<br><br><br><br><hr>
 
 
 ### Object Oriented Programming
@@ -31,12 +24,7 @@ An object can contains:
 - memory to store things
 
 [↑ top](#python-class-object)
-<br><br><br><br>
-<hr>
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### class
@@ -50,8 +38,7 @@ class Mail:
         self.html_list = []
         self.attachments = []
 
-    def html(self, h):
-        self.html_list.append(h)
+    def html(self, h): self.html_list.append(h)
 
     def attach(self, t):
         self.attachments.append(t)
@@ -93,5 +80,4 @@ if __name__ == "__main__":
 ```
 
 [↑ top](#python-class-object)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>

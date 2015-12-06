@@ -1,5 +1,4 @@
-[*back to contents*](https://github.com/gyuho/learn#contents)
-<br>
+[*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
 # Go: random
 
@@ -10,30 +9,15 @@
 - [random `bytes`](#random-bytes)
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### Reference
 
-- package [`math/rand`](http://golang.org/pkg/math/rand/)
+- [package `math/rand`](http://golang.org/pkg/math/rand/)
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### random integer
@@ -68,15 +52,7 @@ func main() {
 ```
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### random float
@@ -108,17 +84,7 @@ func main() {
 ```
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### random duration
@@ -156,14 +122,7 @@ func duration(min, max time.Duration) time.Duration {
 ```
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
-
-
-
-
-
-
+<br><br><br><br><hr>
 
 
 #### random `bytes`
@@ -222,5 +181,4 @@ func randBytes(n int) []byte {
 ```
 
 [↑ top](#go-random)
-<br><br><br><br>
-<hr>
+<br><br><br><br><hr>
