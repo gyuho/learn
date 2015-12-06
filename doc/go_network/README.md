@@ -23,7 +23,7 @@
 - [simple web server](#simple-web-server)
 - [http request, roundtrip](#http-request-roundtrip)
 - [simple echo server](#simple-echo-server)
-- [simple rpc server](#simple-rpc-server)
+- [simple JSON RPC server/client](#simple-json-rpc-serverclient)
 - [error: too many open files](#error-too-many-open-files)
 - [**_`net/context`_**](#netcontext)
 - [`text/template`](#texttemplate)
@@ -1328,54 +1328,57 @@ Received from 127.0.0.1:58409 → 127.0.0.1:8080
 <br><br><br><br><hr>
 
 
-#### simple rpc server
+#### simple JSON RPC server/client
 
 ```go
 package main
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+	"strings"
+	"time"
 )
 
+var (
+	port     = ":8080"
+	endpoint = "localhost" + port
+	msg      = MessageType{
+		Contents: "    hello    world!   ",
+	}
+
+	callSize = 15000
+)
+
+type MessageType struct {
+	Contents string
+}
+
 func main() {
-	const port = ":8080"
-	go startServer(port)
 
-	conn, err := net.Dial("tcp", "localhost"+port)
-	if err != nil {
-		panic(err)
+	go startServerJSONRPC(port)
+	sj := time.Now()
+	for i := 0; i < callSize; i++ {
+		clientJSONRPC(endpoint, msg)
 	}
-	defer conn.Close()
+	fmt.Printf("clientJSONRPC took %v for %d calls.\n", time.Since(sj), callSize)
 
-	args := &Args{5, 10}
-	var reply int
-
-	client := jsonrpc.NewClient(conn)
-	if err := client.Call("Arith.Multiply", args, &reply); err != nil {
-		panic(err)
-	}
-	fmt.Println("reply:", reply)
-	// reply: 50
 }
 
-type Args struct {
-	A, B int
-}
-
-type Arith int
-
-func (t *Arith) Multiply(args *Args, reply *int) error {
-	*reply = args.A * args.B
+func (r *MessageType) MyMethod(msg MessageType, resp *MessageType) error {
+	resp.Contents = strings.Join(strings.Fields(strings.TrimSpace(msg.Contents)), " ")
 	return nil
 }
 
-func startServer(port string) {
+func startServerJSONRPC(port string) {
+	log.Println("RPC on", port)
+
 	srv := rpc.NewServer()
-	arith := new(Arith)
-	srv.Register(arith)
+	s := new(MessageType)
+	srv.Register(s)
 	srv.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
 
 	// Listen function creates servers,
@@ -1386,7 +1389,6 @@ func startServer(port string) {
 	}
 	defer ln.Close()
 
-	fmt.Println("Listening on", port)
 	for {
 		// Listen for an incoming connection.
 		conn, err := ln.Accept()
@@ -1394,6 +1396,26 @@ func startServer(port string) {
 			panic(err)
 		}
 		go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+	}
+}
+
+func clientJSONRPC(endpoint string, msg MessageType) {
+	conn, err := net.Dial("tcp", endpoint)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	client := jsonrpc.NewClient(conn)
+
+	resp := &MessageType{}
+
+	if err := client.Call("MessageType.MyMethod", msg, resp); err != nil {
+		panic(err)
+	}
+
+	if resp.Contents != "hello world!" {
+		log.Fatalf("rpc failed with %v", resp.Contents)
 	}
 }
 
