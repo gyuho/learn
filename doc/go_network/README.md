@@ -1,7 +1,7 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)
 <br>
 
-# Go: network, ssh, net, http, web
+# Go: network
 
 - [Reference](#reference)
 - [Overview of network layers](#overview-of-network-layers)
@@ -18,17 +18,16 @@
 	- [`http` session](#http-session)
 	- [`https`](#https)
 	- [`http2`](#http2)
-- [communicate between networks](#communicate-between-networks)
-	- [Go: hello world](#go-hello-world)
-	- [Go: kill process, netstat](#go-kill-process-netstat)
-	- [Go: loopback, localhost](#go-loopback-localhost)
-	- [simple echo server](#simple-echo-server)
-	- [simple rpc server](#simple-rpc-server)
-	- [simple web server](#simple-web-server)
-- [http request, roundtrip](#http-request-roundtrip)
+- [Go: hello world](#go-hello-world)
+- [Go: kill process, netstat](#go-kill-process-netstat)
+- [Go: loopback, localhost](#go-loopback-localhost)
+- [Go: simple web server](#go-simple-web-server)
+- [Go: http request, roundtrip](#go-http-request-roundtrip)
+- [Go: simple echo server](#go-simple-echo-server)
+- [Go: simple rpc server](#go-simple-rpc-server)
 - [error: too many open files](#error-too-many-open-files)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
@@ -39,7 +38,7 @@
 - [Network hardware](https://en.wikipedia.org/wiki/Networking_hardware)
 - [package `net`](http://golang.org/pkg/net/)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
@@ -50,7 +49,7 @@
 ![network_layers](img/network_layers.png)
 <br>
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -73,7 +72,7 @@ other interfaces. But this can generate unnecessary traffic and
 waste bandwidth. This is where [network switch](https://en.wikipedia.org/wiki/Network_switch)
 comes in.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -101,7 +100,7 @@ But what if we want to send packets across different networks?
 This is where [router](https://en.wikipedia.org/wiki/Router_(computing))
 comes in.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -145,7 +144,7 @@ concept with limited time period, so that DHCP server can reclaim, reallocate,
 and renew IP addresses.
 ![dhcp](img/dhcp.png)
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -186,7 +185,7 @@ Some network devices do not support `UDP`. Many video streamings are served
 via `TCP` if the data are stored statically. Online live streaming would use
 `UDP`.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -195,7 +194,7 @@ via `TCP` if the data are stored statically. Online live streaming would use
 [Session layer](https://en.wikipedia.org/wiki/Session_layer) stores
 states between two connections.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -205,7 +204,7 @@ states between two connections.
 converts between different formats of data, such as encoding, encryption,
 or decryption.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br>
 
 
@@ -215,7 +214,7 @@ or decryption.
 to shared protocols and interface methods between hosts, such as HTTP, SSH,
 SMTP (which will be covered separately).
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
@@ -415,15 +414,12 @@ framing, better utilization of available network capacity with a single
 long-lived connections, instead of multiple TCP connections, less round-trips
 with server push, cheaper `HTTP` request by compressing headers, etc.
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
-#### communicate between networks
-
-<br><br>
-##### Go: hello world
+#### Go: hello world
 
 ```go
 package main
@@ -462,11 +458,12 @@ func handler(w http.ResponseWriter, req *http.Request) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-##### Go: kill process, netstat
+#### Go: kill process, netstat
 
 ```go
 package main
@@ -702,149 +699,12 @@ func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-##### simple echo server
-
-```go
-package main
-
-import (
-	"fmt"
-	"net"
-)
-
-func startServer(port string) {
-	// Listen function creates servers,
-	// listening for incoming connections.
-	ln, err := net.Listen("tcp", port)
-	if err != nil {
-		panic(err)
-	}
-	defer ln.Close()
-	fmt.Println("Listening on", port)
-	for {
-		// Listen for an incoming connection.
-		conn, err := ln.Accept()
-		if err != nil {
-			panic(err)
-		}
-		go handleRequests(conn)
-	}
-}
-
-// Handles incoming requests.
-func handleRequests(conn net.Conn) {
-	fmt.Printf("Received from %s → %s\n", conn.RemoteAddr(), conn.LocalAddr())
-	buf := make([]byte, 5) // read max 5 characters
-	if _, err := conn.Read(buf); err != nil {
-		panic(err)
-	}
-	conn.Write([]byte("received message: " + string(buf) + "\n"))
-	conn.Close()
-}
-
-func main() {
-	const port = ":5000"
-	startServer(port)
-}
-
-/*
-From client side:
-echo "Hello server" | nc localhost 5000
-
-Received from 127.0.0.1:58405 → 127.0.0.1:5000
-Received from 127.0.0.1:58406 → 127.0.0.1:5000
-Received from 127.0.0.1:58407 → 127.0.0.1:5000
-Received from 127.0.0.1:58408 → 127.0.0.1:5000
-Received from 127.0.0.1:58409 → 127.0.0.1:5000
-...
-
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:5000/gio')
-*/
-
-```
-
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
-
-
-##### simple rpc server
-
-```go
-package main
-
-import (
-	"fmt"
-	"net"
-	"net/rpc"
-	"net/rpc/jsonrpc"
-)
-
-type Args struct {
-	A, B int
-}
-
-type Arith int
-
-func (t *Arith) Multiply(args *Args, reply *int) error {
-	*reply = args.A * args.B
-	return nil
-}
-
-func startServer(port string) {
-	srv := rpc.NewServer()
-	arith := new(Arith)
-	srv.Register(arith)
-	srv.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
-	// Listen function creates servers,
-	// listening for incoming connections.
-	ln, err := net.Listen("tcp", port)
-	if err != nil {
-		panic(err)
-	}
-	defer ln.Close()
-	fmt.Println("Listening on", port)
-	for {
-		// Listen for an incoming connection.
-		conn, err := ln.Accept()
-		if err != nil {
-			panic(err)
-		}
-		go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
-	}
-}
-
-func main() {
-	const port = ":5000"
-	go startServer(port)
-
-	conn, err := net.Dial("tcp", "localhost"+port)
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
-
-	args := &Args{5, 10}
-	var reply int
-
-	client := jsonrpc.NewClient(conn)
-	if err := client.Call("Arith.Multiply", args, &reply); err != nil {
-		panic(err)
-	}
-	fmt.Println("reply:", reply)
-	// reply: 50
-}
-
-```
-
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
-
-
-##### Go: loopback, localhost
+#### Go: loopback, localhost
 
 ```go
 package main
@@ -947,11 +807,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
-<br><br>
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
-##### simple web server
+#### Go: simple web server
 
 ```go
 package main
@@ -969,58 +830,52 @@ import (
 	stdlog "log"
 )
 
-/*
-sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:5000/gio')
-*/
+var (
+	port   = ":8080"
+	logger = stdlog.New(os.Stdout, "[TEST] ", stdlog.Ldate|stdlog.Ltime)
+)
+
+func wrapFunc(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		fn(w, req)
+		logger.Printf("wrapFunc: %s %s | Took %s", req.Method, req.URL.Path, time.Since(start))
+	}
+}
+
+func wrapHandlerFunc(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		h.ServeHTTP(w, req)
+		logger.Printf("wrapHandlerFunc: %s %s | Took %s", req.Method, req.URL.Path, time.Since(start))
+	}
+}
 
 func main() {
-	const port = ":5000"
 	go sendRequest(port, "/")
 	go sendRequest(port, "/json")
 	go sendRequest(port, "/gob")
+
 	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", wrapHandlerFunc0(handler))
-	mainRouter.HandleFunc("/hello", wrapHandlerFunc0(helloHandler))
-	mainRouter.HandleFunc("/json", wrapHandlerFunc1(handlerJSON))
-	mainRouter.HandleFunc("/gob", wrapHandlerFunc1(handlerGOB))
-	fmt.Println("Serving http://localhost" + port)
+	mainRouter.HandleFunc("/", wrapFunc(handler))
+	mainRouter.HandleFunc("/json", wrapHandlerFunc(handlerJSON))
+	mainRouter.HandleFunc("/gob", wrapHandlerFunc(handlerGOB))
+
+	stdlog.Println("Serving http://localhost" + port)
 	if err := http.ListenAndServe(port, mainRouter); err != nil {
 		panic(err)
 	}
 }
 
 /*
-Serving http://localhost:5000
-[TEST] 2015/09/03 12:42:35 v0 GET /   |  Took 4.564µs
-[TEST] 2015/09/03 12:42:35 v0 GET /favicon.ico   |  Took 4.115µs
-[TEST] 2015/09/03 12:42:36 v0 GET /   |  Took 2.913µs
-[TEST] 2015/09/03 12:42:36 v1 GET /json   |  Took 63.403µs
-[TEST] 2015/09/03 12:42:36 v1 GET /gob   |  Took 145.274µs
-response for /gob = {Go 1000 2015-09-03 12:42:36}
-response for /json = {Go 1000 2015-09-03 12:42:36}
+XXXX/XX/XX 17:17:15 Serving http://localhost:8080
+[TEST] XXXX/XX/XX 17:17:18 wrapHandlerFunc: GET /json | Took 59.349µs
+[TEST] XXXX/XX/XX 17:17:18 wrapFunc: GET / | Took 7.359µs
 response for / = Hello World!
-[TEST] 2015/09/03 12:42:45 v0 GET /hello   |  Took 6.74µs
-[TEST] 2015/09/03 12:42:45 v0 GET /favicon.ico   |  Took 6.325µs
-...
+[TEST] XXXX/XX/XX 17:17:18 wrapHandlerFunc: GET /gob | Took 132.61µs
+response for /json = {Go 1000 XXXX-XX-XX 17:17:18}
+response for /gob = {Go 1000 XXXX-XX-XX 17:17:18}
 */
-
-var logger = stdlog.New(os.Stdout, "[TEST] ", stdlog.Ldate|stdlog.Ltime)
-
-func wrapHandlerFunc0(fn func(w http.ResponseWriter, req *http.Request)) func(w http.ResponseWriter, req *http.Request) {
-	return func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-		fn(w, req)
-		logger.Printf("v0 %s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
-	}
-}
-
-func wrapHandlerFunc1(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-		h.ServeHTTP(w, req)
-		logger.Printf("v1 %s %s   |  Took %s", req.Method, req.URL.Path, time.Since(start))
-	}
-}
 
 type Data struct {
 	Name  string
@@ -1032,15 +887,6 @@ func handler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
 		fmt.Fprintf(w, "Hello World!")
-	default:
-		http.Error(w, "Method Not Allowed", 405)
-	}
-}
-
-func helloHandler(w http.ResponseWriter, req *http.Request) {
-	switch req.Method {
-	case "GET":
-		fmt.Fprintf(w, "Hello!")
 	default:
 		http.Error(w, "Method Not Allowed", 405)
 	}
@@ -1126,16 +972,12 @@ func sendRequest(port, endPoint string) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
-
-
-
-
-#### http request, roundtrip
+#### Go: http request, roundtrip
 
 [`RoundTripper`](http://golang.org/pkg/net/http/#RoundTripper)
 is an interface for a single HTTP transaction.
@@ -1390,16 +1232,148 @@ func roundTrip(requestType, target string) (int, error) {
 
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
 
+#### Go: simple echo server
+
+```go
+package main
+
+import (
+	"fmt"
+	"net"
+)
+
+func startServer(port string) {
+	// Listen function creates servers,
+	// listening for incoming connections.
+	ln, err := net.Listen("tcp", port)
+	if err != nil {
+		panic(err)
+	}
+	defer ln.Close()
+	fmt.Println("Listening on", port)
+	for {
+		// Listen for an incoming connection.
+		conn, err := ln.Accept()
+		if err != nil {
+			panic(err)
+		}
+		go handleRequests(conn)
+	}
+}
+
+// Handles incoming requests.
+func handleRequests(conn net.Conn) {
+	fmt.Printf("Received from %s → %s\n", conn.RemoteAddr(), conn.LocalAddr())
+	buf := make([]byte, 5) // read max 5 characters
+	if _, err := conn.Read(buf); err != nil {
+		panic(err)
+	}
+	conn.Write([]byte("received message: " + string(buf) + "\n"))
+	conn.Close()
+}
+
+func main() {
+	const port = ":8080"
+	startServer(port)
+}
+
+/*
+$ echo "Hello server" | nc localhost 8080
+
+Received from 127.0.0.1:58405 → 127.0.0.1:8080
+Received from 127.0.0.1:58406 → 127.0.0.1:8080
+Received from 127.0.0.1:58407 → 127.0.0.1:8080
+Received from 127.0.0.1:58408 → 127.0.0.1:8080
+Received from 127.0.0.1:58409 → 127.0.0.1:8080
+...
+*/
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
+#### Go: simple rpc server
 
+```go
+package main
 
+import (
+	"fmt"
+	"net"
+	"net/rpc"
+	"net/rpc/jsonrpc"
+)
 
+func main() {
+	const port = ":8080"
+	go startServer(port)
+
+	conn, err := net.Dial("tcp", "localhost"+port)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	args := &Args{5, 10}
+	var reply int
+
+	client := jsonrpc.NewClient(conn)
+	if err := client.Call("Arith.Multiply", args, &reply); err != nil {
+		panic(err)
+	}
+	fmt.Println("reply:", reply)
+	// reply: 50
+}
+
+type Args struct {
+	A, B int
+}
+
+type Arith int
+
+func (t *Arith) Multiply(args *Args, reply *int) error {
+	*reply = args.A * args.B
+	return nil
+}
+
+func startServer(port string) {
+	srv := rpc.NewServer()
+	arith := new(Arith)
+	srv.Register(arith)
+	srv.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
+
+	// Listen function creates servers,
+	// listening for incoming connections.
+	ln, err := net.Listen("tcp", port)
+	if err != nil {
+		panic(err)
+	}
+	defer ln.Close()
+
+	fmt.Println("Listening on", port)
+	for {
+		// Listen for an incoming connection.
+		conn, err := ln.Accept()
+		if err != nil {
+			panic(err)
+		}
+		go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+	}
+}
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br>
+<hr>
 
 
 #### error: too many open files
@@ -1619,7 +1593,7 @@ Get [ 5525] : Hello, client
 ...
 ```
 
-[↑ top](#go-network-ssh-net-http-web)
+[↑ top](#go-network)
 <br><br><br><br>
 <hr>
 
