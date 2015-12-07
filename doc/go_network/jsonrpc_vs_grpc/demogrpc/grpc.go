@@ -28,7 +28,6 @@ func (s *KVStoreGRPC) Put(ctx context.Context, r *pb.PutRequest) (*pb.PutRespons
 	} else {
 		s.store[string(r.Key)] = r.Value
 	}
-	fmt.Println("Got", len(s.store))
 	return resp, nil
 }
 
@@ -58,6 +57,12 @@ func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients in
 
 	go startServerGRPC(port)
 
+	// 	conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// 	defer conn.Close()
+
 	conns := make([]*grpc.ClientConn, totalConns)
 	for i := range conns {
 		conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
@@ -71,12 +76,6 @@ func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients in
 	for i := range clients {
 		clients[i] = pb.NewKVClient(conns[i%int(totalConns)])
 	}
-
-	// 	conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	defer conn.Close()
 
 	requests := make(chan *pb.PutRequest, len(keys))
 

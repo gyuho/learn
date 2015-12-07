@@ -17,8 +17,8 @@
 	- [`http` session](#http-session)
 	- [`https`](#https)
 	- [`http2`](#http2)
-- [hello world](#hello-world)
 - [**kill process, netstat**](#kill-process-netstat)
+- [hello world](#hello-world)
 - [loopback, localhost](#loopback-localhost)
 - [simple web server](#simple-web-server)
 - [http request, roundtrip](#http-request-roundtrip)
@@ -453,49 +453,6 @@ with server push, cheaper `HTTP` request by compressing headers, etc.
 <br><br><br><br><hr>
 
 
-#### hello world
-
-```go
-package main
-
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
-
-const port = ":8080"
-
-func main() {
-	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", handler)
-
-	log.Println("Serving http://localhost" + port)
-	if err := http.ListenAndServe(port, mainRouter); err != nil {
-		panic(err)
-	}
-}
-
-/*
-curl http://localhost:8080
-Hello World!
-*/
-
-func handler(w http.ResponseWriter, req *http.Request) {
-	switch req.Method {
-	case "GET":
-		fmt.Fprintln(w, "Hello World!")
-	default:
-		http.Error(w, "Method Not Allowed", 405)
-	}
-}
-
-```
-
-[↑ top](#go-network)
-<br><br><br><br><hr>
-
-
 #### kill process, netstat
 
 ```go
@@ -533,8 +490,13 @@ func helloWorld(lw io.Writer, port string) {
 
 func main() {
 	var (
-		w       = os.Stdout
-		socket  = "tcp6"
+		w = os.Stdout
+
+		sudo = true
+
+		// socket = "tcp"
+		socket = "tcp6"
+
 		program = ""
 		port    = ":8080"
 	)
@@ -542,7 +504,7 @@ func main() {
 	// go helloWorld(w, port)
 	// time.Sleep(5 * time.Second)
 
-	ps, err := netStat(w, socket, program, port)
+	ps, err := netStat(w, sudo, socket, program, port)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(-1)
@@ -616,7 +578,7 @@ Otherwise, you would have to run something like the following:
 	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
 
 */
-func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
+func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, error) {
 	socket = strings.TrimSpace(socket)
 	program = strings.TrimSpace(program)
 	if program == "" {
@@ -649,6 +611,9 @@ func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
 	}
 
 	cmd := exec.Command("netstat", flag)
+	if sudo {
+		cmd = exec.Command("sudo", "netstat", flag)
+	}
 	buf := new(bytes.Buffer)
 	cmd.Stdout = buf
 	cmd.Stderr = buf
@@ -677,20 +642,24 @@ func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
 
 	ps := []Process{}
 
+	fmt.Fprintf(w, "[netstat] 'netstat %s' returned %d lines.\n", flag, len(lines))
 	for _, sl := range lines {
 
 		theSocket := sl[socketIdx]
 		if theSocket != socket {
+			fmt.Fprintln(w, "[netStat] different socket. Skipping", sl)
 			continue
 		}
 
 		asl := strings.Split(sl[portIdx], ":")
 		if len(asl) < 2 {
+			fmt.Fprintln(w, "[netStat] skipping", sl)
 			continue
 		}
 		thePort := ":" + asl[len(asl)-1]
 		if port != "*" {
 			if thePort != port {
+				fmt.Fprintln(w, "[netStat] different port. Skipping", sl)
 				continue
 			}
 		}
@@ -704,12 +673,14 @@ func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
 		theProgram := strings.TrimSpace(psl[1])
 		if program != "*" {
 			if theProgram != program {
+				fmt.Fprintln(w, "[netStat] different program. Skipping", sl)
 				continue
 			}
 		}
 
 		thePID := 0
 		if d, err := strconv.Atoi(psl[0]); err != nil {
+			fmt.Fprintln(w, "[netStat - error] %v / Skipping %+v\n", err, sl)
 			continue
 		} else {
 			thePID = d
@@ -728,6 +699,49 @@ func netStat(w io.Writer, socket, program, port string) ([]Process, error) {
 		fmt.Fprintf(w, "[netStat] %s\n", v)
 	}
 	return ps, nil
+}
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br><hr>
+
+
+#### hello world
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+const port = ":8080"
+
+func main() {
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+
+	log.Println("Serving http://localhost" + port)
+	if err := http.ListenAndServe(port, mainRouter); err != nil {
+		panic(err)
+	}
+}
+
+/*
+curl http://localhost:8080
+Hello World!
+*/
+
+func handler(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "GET":
+		fmt.Fprintln(w, "Hello World!")
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	}
 }
 
 ```

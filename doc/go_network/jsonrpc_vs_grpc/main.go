@@ -1,31 +1,73 @@
 package main
 
 import (
+	"flag"
+	"log"
 	"math/rand"
 	"time"
 
 	"github.com/gyuho/learn/doc/go_network/jsonrpc_vs_grpc/demogrpc"
+	"github.com/gyuho/learn/doc/go_network/jsonrpc_vs_grpc/demojsonrpc"
 )
 
 var (
-	port     = ":5000"
+	port     = ":8080"
 	endpoint = "localhost" + port
 
-	callSize = 10000
-	keys     = make([][]byte, callSize)
-	vals     = make([][]byte, callSize)
+	totalConns   = 1
+	totalClients = 1
+	// totalClients = 100
+
+	size = 100000
+	opt  = "grpc"
+
+	keys = make([][]byte, size)
+	vals = make([][]byte, size)
 )
 
 func init() {
+	sizePt := flag.Int(
+		"size",
+		100000,
+		"Size of keys to put",
+	)
+	optPt := flag.String(
+		"opt",
+		"grpc",
+		"'grpc' or 'jsonrpc'",
+	)
+	flag.Parse()
+
+	size = *sizePt
+	opt = *optPt
+	if opt != "grpc" && opt != "jsonrpc" {
+		log.Fatalf("%s is unknown\n", opt)
+	}
+	log.Println("Size chosen:", size)
+	log.Println("Option chosen:", opt)
+
+	keys = make([][]byte, size)
+	vals = make([][]byte, size)
 	for i := range keys {
 		keys[i] = randBytes(100)
 		vals[i] = randBytes(100)
 	}
+	log.Println("Done with generating random data...")
 }
 
 func main() {
-	demogrpc.Run(port, endpoint, keys, vals, 1, 1)
-	// demojsonrpc.Run(port, endpoint, keys, vals)
+	switch opt {
+
+	case "grpc":
+		demogrpc.Run(port, endpoint, keys, vals, totalConns, totalClients)
+		// [1 client]   clientGRPC took 11.843282277s for 100000 calls.
+		// [100 client] clientGRPC took 2.65338435s for 100000 calls.
+
+	case "jsonrpc":
+		demojsonrpc.Run(port, endpoint, keys, vals)
+		// jsonrpc took 3m0.294311949s for 100000 calls.
+
+	}
 }
 
 const (
