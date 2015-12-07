@@ -122,9 +122,10 @@ sudo pacman --noconfirm -Su chromium;
 #############################################################
 printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
 
-cd $HOME && rm -rf protobuf && git clone https://github.com/google/protobuf.git;
-cd $HOME/protobuf;
-./configure && make && make check && make install;
+cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google;
+cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git;
+cd $HOME/go/src/github.com/google/protobuf && \
+	./configure && make && make check && make install;
 
 #############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
