@@ -1,7 +1,6 @@
 package demogrpc
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -105,5 +104,5 @@ func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients in
 
 	wg.Wait()
 
-	fmt.Printf("clientGRPC took %v for %d calls.\n", time.Since(st), len(keys))
+	log.Printf("clientGRPC took %v for %d calls.\n", time.Since(st), len(keys))
 }

@@ -55,14 +55,14 @@ do
 	fi
 done
 
-echo "$(echo $benchmark_function_name):" > $HOME/benchmark_results.txt;
+echo "$(echo $benchmark_function_name):" > $current_dir/benchmark_results.txt;
 for i in `seq 1 $repeat_size`;
 do
-	echo "[$(echo $i)]:" >> $HOME/benchmark_results.txt;
+	echo "[$(echo $i)]:" >> $current_dir/benchmark_results.txt;
 	old_path="$(echo $current_dir)/old_$i.txt" && new_path="$(echo $current_dir)/new_$i.txt" && \
-	benchcmp $old_path $new_path >> $HOME/benchmark_results.txt && \
-	echo "" >> $HOME/benchmark_results.txt && \
-	echo "" >> $HOME/benchmark_results.txt;
+	benchcmp $old_path $new_path >> $current_dir/benchmark_results.txt && \
+	echo "" >> $current_dir/benchmark_results.txt && \
+	echo "" >> $current_dir/benchmark_results.txt;
 done
 
 ################################################################

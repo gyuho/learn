@@ -1,7 +1,6 @@
 package demojsonrpc
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/rpc"
@@ -100,5 +99,5 @@ func Run(port, endpoint string, keys, vals [][]byte) {
 		}
 		clientJSONRPC(endpoint, msg)
 	}
-	fmt.Printf("jsonrpc took %v for %d calls.\n", time.Since(st), len(keys))
+	log.Printf("jsonrpc took %v for %d calls.\n", time.Since(st), len(keys))
 }
