@@ -1,0 +1,30 @@
+syntax = "proto3";
+package messagepb;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_getters_all) = false;
+
+service KV {
+  // Put puts the given key into the store.
+  // A put request increases the revision of the store,
+  // and generates one event in the event history.
+  rpc Put(PutRequest) returns (PutResponse) {}
+}
+
+message PutRequest {
+  bytes key = 1;
+  bytes value = 2;
+}
+
+message ResponseHeader {
+  bool exist = 1;
+  bytes value = 2;
+}
+
+message PutResponse {
+  ResponseHeader header = 1;
+}
