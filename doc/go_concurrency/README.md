@@ -31,6 +31,7 @@
 - [`sync/atomic`](#syncatomic)
 - [web server](#example-web-server)
 - [`sync.Mutex` is just a value](#syncmutex-is-just-a-value)
+- [`sync.Once`](#synconce)
 - [**`goroutine`, closure**](#goroutine-closure)
 - [rate limit](#rate-limit)
 - [Counting problem](#counting-problem)
@@ -3209,6 +3210,79 @@ func main() {
 	   map[2015-11-05 20:42:36.516629792 -0800 PST:2015-11-05 20:42:36.516678634 -0800 PST 2015-11-05 20:42:36.516685141 -0800 PST:2015-11-05 20:42:36.516686379 -0800 PST]
 	*/
 }
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### `sync.Once`
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type Mine struct {
+	createOnce *sync.Once
+}
+
+func main() {
+	m := Mine{}
+	m.createOnce = &sync.Once{}
+	onceBody := func() {
+		fmt.Println("Only once")
+	}
+	done := make(chan bool)
+	for i := 0; i < 10; i++ {
+		go func() {
+
+			// m.createOnce = &sync.Once{}
+
+			m.createOnce.Do(onceBody)
+
+			done <- true
+		}()
+	}
+	for i := 0; i < 10; i++ {
+		<-done
+	}
+
+	fmt.Println()
+
+	for i := 0; i < 10; i++ {
+		go func() {
+
+			m.createOnce = &sync.Once{}
+
+			m.createOnce.Do(onceBody)
+
+			done <- true
+		}()
+	}
+	for i := 0; i < 10; i++ {
+		<-done
+	}
+}
+
+/*
+Only once
+
+Only once
+Only once
+Only once
+Only once
+Only once
+Only once
+Only once
+Only once
+Only once
+Only once
+*/
 
 ```
 
