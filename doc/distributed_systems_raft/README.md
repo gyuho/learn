@@ -166,10 +166,12 @@ operations:
 > Wikipedia*
 
 <br><br>
-**Each linearizable operation** applied by concurrent processes
-*takes effect instantaneously* at some point **between its invocation and its
-response**. It's an **atomic**, *or linearizable*, operation. But what if a
-system cannot satisfy this requirement?
+**Each linearizable operation applied by concurrent processes
+takes effect instantaneously at some point between its invocation and its
+response**. It's an **atomic**, **_or linearizable_**, operation.
+
+<br>
+But what if a system cannot satisfy this requirement?
 
 **Sequential consistency** is another consistency model, *weaker than
 linearizability*. Each operation can take effect **before its invocation**
@@ -191,8 +193,8 @@ response as in linearizability*). And it is still considered *consistent*:
 key-value** store,
 [*`/etc`*](http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/etc.html)
 distributed. The directory `/etc` in Linux contains system configuration files
-for program controls. `etcd` is a distributed key-value store for these
-system configurations. There are many
+for program controls. `etcd` is a distributed store for these system
+configurations. There are many
 [key/value databases](http://nosql-database.org/). For example,
 [**_Redis_**](http://redis.io/) is an **key-value** cache and store, a data
 structure server for **_RE_**mote **_DI_**ctionary **_S_**erver.
