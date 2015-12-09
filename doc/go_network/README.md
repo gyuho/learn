@@ -24,7 +24,7 @@
 - [http request, roundtrip](#http-request-roundtrip)
 - [simple echo server](#simple-echo-server)
 - [simple JSON RPC server/client](#simple-json-rpc-serverclient)
-- [error: too many open files](#error-too-many-open-files)
+- [file descriptors, error too many open files](#file-descriptors-error-too-many-open-files)
 - [**_`net/context`_**](#netcontext)
 - [`text/template`](#texttemplate)
 - [serve image](#serve-image)
@@ -1421,7 +1421,7 @@ func clientJSONRPC(endpoint string, msg MessageType) {
 <br><br><br><br><hr>
 
 
-#### error: too many open files
+#### file descriptors, error too many open files
 
 > Everything is a file.
 >
