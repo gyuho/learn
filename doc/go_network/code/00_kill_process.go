@@ -5,30 +5,12 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"syscall"
 )
-
-func helloWorld(lw io.Writer, port string) {
-	handler := func(w http.ResponseWriter, req *http.Request) {
-		switch req.Method {
-		case "GET":
-			fmt.Fprintln(w, "Hello World!")
-		default:
-			http.Error(w, "Method Not Allowed", 405)
-		}
-	}
-	mainRouter := http.NewServeMux()
-	mainRouter.HandleFunc("/", handler)
-	fmt.Fprintln(lw, "Serving http://localhost"+port)
-	if err := http.ListenAndServe(port, mainRouter); err != nil {
-		panic(err)
-	}
-}
 
 func main() {
 	var (
@@ -40,12 +22,11 @@ func main() {
 		socket = "tcp6"
 
 		program = ""
-		port    = ":8080"
-		// port = ":6060"
-	)
+		// program = "bin/etcd"
 
-	// go helloWorld(w, port)
-	// time.Sleep(5 * time.Second)
+		// port = ""
+		port = ":8080"
+	)
 
 	ps, err := netStat(w, sudo, socket, program, port)
 	if err != nil {
