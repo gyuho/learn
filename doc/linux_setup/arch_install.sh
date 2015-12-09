@@ -85,6 +85,15 @@ mount /dev/sdxY /mnt;
 # 1. Once you're back in ChromeOS, start a terminal via Ctrl+Alt+T.
 # 2. Type shell to get a real bash prompt.
 # 3. Type sudo crossystem dev_boot_usb=1 dev_boot_legacy=1
+fdisk -l;
+sudo mkfs.ext4 /dev/sdxY;
+mount /dev/sdxY /mnt;
+
+# Type exit or press Ctrl+D
+# UnMount Partitions
+umount -R /mnt
+# Shutdown, unplug usb drive.
+shutdown -h now
 ##################################
 
 # install basic libraries
@@ -93,7 +102,7 @@ pacman --noconfirm -Syyu;
 
 # generate fstab to define how disk partitions
 # should be mounted into the filesystem
-genfstab -U /mnt > /mnt/etc/fstab;
+genfstab -U -p /mnt >> /mnt/etc/fstab;
 vi /mnt/etc/fstab;
 
 # chroot to /mnt, /bin/bash just for CLI
@@ -102,6 +111,7 @@ arch-chroot /mnt /bin/bash;
 # install bootloader
 pacman --noconfirm -Su grub grub-bios os-prober;
 grub-install --recheck /dev/sdx;
+# GRUB_TERMINAL_OUTPUT=console
 grub-mkconfig -o /boot/grub/grub.cfg;
 
 # set username
