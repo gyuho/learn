@@ -78,6 +78,15 @@ mount /dev/sdxY /mnt;
 
 ##################################
 
+##################################
+# INSTALL with Chromebook
+##################################
+# 0. Boot into developer mode.
+# 1. Once you're back in ChromeOS, start a terminal via Ctrl+Alt+T.
+# 2. Type shell to get a real bash prompt.
+# 3. Type sudo crossystem dev_boot_usb=1 dev_boot_legacy=1
+##################################
+
 # install basic libraries
 pacstrap /mnt base base-devel;
 pacman --noconfirm -Syyu;
