@@ -22,21 +22,19 @@ func main() {
 }
 
 /*
-go run 02_flag.go -h
+You can:
 
-Usage of /tmp/go-build105642507/command-line-arguments/_obj/exe/02_flag:
-  -description string
-        Describe the argument. (default "None")
-  -index int
-        Specify the index.
-exit status 2
+-description aaa
+-description 'aaa'
+-description "aaa"
+-description=aaa
+-description='aaa'
+-description="aaa"
 
-
-
-go run 02_flag.go -index=10 \
--description="Hello World!"
-;
-
-index: 10
-description: Hello World!
+--description aaa
+--description 'aaa'
+--description "aaa"
+--description=aaa
+--description='aaa'
+--description="aaa"
 */
