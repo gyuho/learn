@@ -159,7 +159,9 @@ func NetStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 		}
 		s := string(l)
 		if !strings.HasPrefix(s, socket) {
-			continue
+			if !strings.HasPrefix(s, "tcp") && socket != "tcp*" {
+				continue
+			}
 		}
 		sl := strings.Fields(s)
 		lines = append(lines, sl)
