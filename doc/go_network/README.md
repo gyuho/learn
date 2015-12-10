@@ -486,7 +486,7 @@ func main() {
 		port = ":8080"
 	)
 
-	ps, err := netStat(w, sudo, socket, program, port)
+	ps, err := NetStat(w, sudo, socket, program, port)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(-1)
@@ -494,7 +494,7 @@ func main() {
 
 	Kill(w, ps...)
 	/*
-	   [netStat] socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
+	   [NetStat] socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
 	   [Kill] syscall.Kill -> socket: 'tcp6' / program: '00_hello_world' / host: '::' / port: ':8080' / pid: '9768'
 	   [Kill] Done!
 	*/
@@ -534,7 +534,7 @@ func Kill(w io.Writer, ps ...Process) {
 }
 
 /*
-netStat parses the output of netstat command in linux.
+NetStat parses the output of netstat command in linux.
 Pass '' or '*' to match all. For example, call Kill("tcp", "bin/etcd", "*")
 to kill all processes that are running "bin/etcd":
 
@@ -563,7 +563,7 @@ Otherwise, you would have to run something like the following:
 	sudo kill $(sudo netstat -tlpn | perl -ne 'my @a = split /[ \/]+/; print "$a[6]\n" if m/:8080/gio');
 
 */
-func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, error) {
+func NetStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, error) {
 	socket = strings.TrimSpace(socket)
 	program = strings.TrimSpace(program)
 	if program == "" {
@@ -579,7 +579,7 @@ func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 		}
 	}
 	if program == "*" && port == "*" {
-		fmt.Fprintln(w, "[netStat - warning] grepping all programs.")
+		fmt.Fprintln(w, "[NetStat - warning] grepping all programs.")
 	}
 
 	var flag string
@@ -632,19 +632,19 @@ func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 
 		theSocket := sl[socketIdx]
 		if theSocket != socket {
-			fmt.Fprintln(w, "[netStat] different socket. Skipping", sl)
+			fmt.Fprintln(w, "[NetStat] different socket. Skipping", sl)
 			continue
 		}
 
 		asl := strings.Split(sl[portIdx], ":")
 		if len(asl) < 2 {
-			fmt.Fprintln(w, "[netStat] skipping", sl)
+			fmt.Fprintln(w, "[NetStat] skipping", sl)
 			continue
 		}
 		thePort := ":" + asl[len(asl)-1]
 		if port != "*" {
 			if thePort != port {
-				fmt.Fprintln(w, "[netStat] different port. Skipping", sl)
+				fmt.Fprintln(w, "[NetStat] different port. Skipping", sl)
 				continue
 			}
 		}
@@ -658,14 +658,14 @@ func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 		theProgram := strings.TrimSpace(psl[1])
 		if program != "*" {
 			if theProgram != program {
-				fmt.Fprintln(w, "[netStat] different program. Skipping", sl)
+				fmt.Fprintln(w, "[NetStat] different program. Skipping", sl)
 				continue
 			}
 		}
 
 		thePID := 0
 		if d, err := strconv.Atoi(psl[0]); err != nil {
-			fmt.Fprintln(w, "[netStat - error] %v / Skipping %+v\n", err, sl)
+			fmt.Fprintln(w, "[NetStat - error] %v / Skipping %+v\n", err, sl)
 			continue
 		} else {
 			thePID = d
@@ -681,7 +681,7 @@ func netStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 	}
 
 	for _, v := range ps {
-		fmt.Fprintf(w, "[netStat] %s\n", v)
+		fmt.Fprintf(w, "[NetStat] %s\n", v)
 	}
 	return ps, nil
 }
