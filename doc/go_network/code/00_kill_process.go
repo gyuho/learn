@@ -63,6 +63,9 @@ func (p Process) String() string {
 
 // Kill kills all processes in arguments.
 func Kill(w io.Writer, ps ...Process) {
+	defer func() {
+		recover()
+	}()
 	for _, v := range ps {
 		fmt.Fprintf(w, "[Kill] syscall.Kill -> %s\n", v)
 		if err := syscall.Kill(v.PID, syscall.SIGINT); err != nil {
