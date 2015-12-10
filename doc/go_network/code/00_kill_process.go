@@ -131,6 +131,8 @@ func NetStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 		flag = fmt.Sprintf(flagFormat, "t")
 	case "tcp6":
 		flag = fmt.Sprintf(flagFormat, "t")
+	case "tcp*": // match all tcp connections
+		flag = fmt.Sprintf(flagFormat, "t")
 	case "udp":
 		flag = fmt.Sprintf(flagFormat, "u")
 	default:
@@ -174,8 +176,10 @@ func NetStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 
 		theSocket := sl[socketIdx]
 		if theSocket != socket {
-			fmt.Fprintln(w, "[NetStat] different socket. Skipping", sl)
-			continue
+			if !strings.HasPrefix(theSocket, "tcp") && socket != "tcp*" {
+				fmt.Fprintln(w, "[NetStat] different socket. Skipping", sl)
+				continue
+			}
 		}
 
 		asl := strings.Split(sl[portIdx], ":")
