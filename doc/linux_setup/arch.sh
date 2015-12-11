@@ -228,6 +228,9 @@ go get -v -u github.com/alecthomas/gometalinter && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
 
+echo "Installing Go from source..."
+cd $HOME && mkdir go;
+
 #############################################################
 printf "\n\n\n\n\nDONE\n\n\n\n\n"
 
