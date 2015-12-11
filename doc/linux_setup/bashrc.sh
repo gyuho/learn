@@ -66,6 +66,7 @@ extract () {
  }
 
 export GOPATH=$HOME/go
+export GOROOT_BOOTSTRAP=$HOME/go1.4
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin
  
 # http://ezprompt.net/
