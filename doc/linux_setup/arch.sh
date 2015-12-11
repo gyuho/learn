@@ -204,8 +204,8 @@ sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | su
 cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 ..;
 cd $HOME && sudo rm -rf $HOME/go1.4_temp;
 
-cd $HOME && rm -rf ./go-master;
-cd $HOME/go-dev && git clone https://go.googlesource.com/go && cd $HOME/go-dev/go/src && ./all.bash;
+cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master;
+cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash;
 
 echo "Installing Go..."
 cd /usr/local && sudo rm -rf ./go;
