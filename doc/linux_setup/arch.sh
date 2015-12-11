@@ -197,6 +197,10 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
+<<COMMENT
+comments here...
+COMMENT
+
 echo "Installing Go from source..."
 cd $HOME && sudo rm -rf go1.4;
 cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp;
