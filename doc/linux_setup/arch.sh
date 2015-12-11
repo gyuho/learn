@@ -197,7 +197,6 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
-<<COMMENT
 echo "Installing Go from source..."
 cd $HOME && sudo rm -rf go1.4;
 cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp;
@@ -205,10 +204,8 @@ sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | su
 cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 ..;
 cd $HOME && sudo rm -rf $HOME/go1.4_temp;
 
-cd $HOME && rm -rf ./go;
-export GOROOT_BOOTSTRAP=$HOME/go1.4;
-git clone https://go.googlesource.com/go && cd $HOME/go/src && ./all.bash;
-COMMENT
+cd $HOME && rm -rf ./go-master;
+cd $HOME/go-dev && git clone https://go.googlesource.com/go && cd $HOME/go-dev/go/src && ./all.bash;
 
 echo "Installing Go..."
 cd /usr/local && sudo rm -rf ./go;
