@@ -18,9 +18,11 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
+Plugin 'powerline/fonts', { 'do': './install.sh' }
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
+Plugin 'ntpeters/vim-better-whitespace'
 
 call vundle#end()
 filetype plugin on
@@ -74,6 +76,7 @@ set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
 let g:syntastic_mode_map = {
     \ "mode": "active",
     \ "passive_filetypes": ["go", "asm"] }
@@ -84,10 +87,25 @@ let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 let g:airline_detect_modified=1
 let g:airline_detect_paste=1
 let g:airline_section_b = '%{strftime("%c")}'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='badwolf'
+let g:airline_powerline_fonts=1
 
 " NERDTree
 map <F2> :NERDTreeToggle<cr>
 map <F3> <C-w><C-w>
+
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
 set wrap
