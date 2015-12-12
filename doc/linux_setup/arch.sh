@@ -9,7 +9,7 @@ mkdir -p $HOME/go/src/github.com/coreos;
 # systemctl enable dhcpcd@INTERFACENAME.service;
 # INTERFACENAME is usually e*
 # dhcpcd INTERFACENAME;
- 
+
 # wireless
 # ls /sys/class/net;
 
@@ -50,6 +50,7 @@ sudo pacman --noconfirm -Su networkmanager;
 sudo pacman --noconfirm -Su net-tools;
 sudo pacman --noconfirm -Su gnu-netcat;
 sudo pacman --noconfirm -Su ntp;
+sudo pacman --noconfirm -Su python-pip;
 
 timedatectl set-ntp true;
 sudo systemctl enable ntpd;
@@ -144,7 +145,7 @@ echo "[user]
   status = auto
   branch = auto
   ui = auto" > $HOME/.gitconfig;
-  
+
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
 git config --global core.editor "vim";
@@ -160,6 +161,8 @@ sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
 sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
+
+cd $HOME;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./vimrc.vim ~/.vimrc;

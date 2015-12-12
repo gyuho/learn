@@ -19,7 +19,6 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
-Plugin 'powerline/fonts', { 'do': './install.sh' }
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
@@ -90,7 +89,7 @@ let g:airline_detect_paste=1
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='badwolf'
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=0
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
