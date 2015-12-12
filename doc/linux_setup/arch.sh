@@ -175,17 +175,17 @@ ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 # https://github.com/Valloric/YouCompleteMe
 sudo pacman --noconfirm -Su cmake python;
 
+<<COMMENT
+
 sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
 cd $HOME/.vim/bundle/YouCompleteMe && \
 sudo ./install.sh --clang-completer --system-libclang;
-
-cd $HOME && \
-mkdir ycm_build && \
-cd ycm_build;
-
+cd $HOME && mkdir ycm_build && cd ycm_build;
 sudo cmake -G "Unix Makefiles" . \
 	~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp && \
 sudo make ycm_support_libs;
+
+COMMENT
 
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;

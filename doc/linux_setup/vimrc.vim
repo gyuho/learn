@@ -19,7 +19,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
-Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()
 filetype plugin indent on
