@@ -145,7 +145,7 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
-colorscheme industry
+colorscheme koehler
 " colorscheme default
 
 syntax off
