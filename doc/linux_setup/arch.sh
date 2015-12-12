@@ -156,6 +156,7 @@ sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
 sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
 
+cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./vimrc.vim ~/.vimrc && \
 source $HOME/.vimrc && \
 vim +PluginInstall +qall && \
