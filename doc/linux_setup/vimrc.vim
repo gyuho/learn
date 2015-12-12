@@ -22,6 +22,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'Shougo/neocomplete'
 
 call vundle#end()
+filetype plugin on
 filetype plugin indent on
 " End of Vundle.vim
 
