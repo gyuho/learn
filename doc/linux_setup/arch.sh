@@ -161,9 +161,10 @@ source $HOME/.vimrc && \
 vim +PluginInstall +qall && \
 vim +PluginClean +qall;
 
+<<COMMENT
+
 sudo pacman --noconfirm -Su ctags && \
-cd $HOME/go && ctags -R ./* && \
-cd $HOME;
+cd $HOME/go && ctags -R ./* && cd $HOME;
 
 sudo mkdir -p $HOME/.vim/ctags && \
 cd $HOME/.vim/ctags && \
@@ -174,8 +175,6 @@ ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
 
 # https://github.com/Valloric/YouCompleteMe
 sudo pacman --noconfirm -Su cmake python;
-
-<<COMMENT
 
 sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
 cd $HOME/.vim/bundle/YouCompleteMe && \
