@@ -10,17 +10,17 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " Plugins
+Plugin 'Raimondi/delimitMate'
+Plugin 'Shougo/neocomplete'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'fatih/vim-go'
-Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
-Plugin 'Shougo/neocomplete'
 
 call vundle#end()
 filetype plugin on
@@ -66,10 +66,10 @@ let g:go_fmt_autosave = 1
 let g:gitgutter_max_signs = 10000
 
 " https://github.com/scrooloose/syntastic
+set laststatus=2 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-set laststatus=2
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -79,8 +79,11 @@ let g:syntastic_mode_map = {
     \ "passive_filetypes": ["go", "asm"] }
 
 let g:syntastic_cpp_compiler_options = '-std=c++11'
-let g:airline#extensions#tabline#enabled = 1
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+
+let g:airline_detect_modified=1
+let g:airline_detect_paste=1
+let g:airline_section_b = '%{strftime("%c")}'
 
 " NERDTree
 map <F2> :NERDTreeToggle<cr>
