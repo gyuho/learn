@@ -19,6 +19,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
+Plugin 'Shougo/neocomplete'
 
 call vundle#end()
 filetype plugin indent on
@@ -26,6 +27,9 @@ filetype plugin indent on
 
 " prepend in comparison with the line above
 vnoremap . :norm.<CR>
+
+" neocomplete
+let g:neocomplete#enable_at_startup = 1
 
 " <space> + w to save the file
 let mapleader = " "

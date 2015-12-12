@@ -161,31 +161,6 @@ source $HOME/.vimrc && \
 vim +PluginInstall +qall && \
 vim +PluginClean +qall;
 
-<<COMMENT
-
-sudo pacman --noconfirm -Su ctags && \
-cd $HOME/go && ctags -R ./* && cd $HOME;
-
-sudo mkdir -p $HOME/.vim/ctags && \
-cd $HOME/.vim/ctags && \
-pacman -Ql glibc | awk '/\/usr\/include/{print $2}' > c_headers && \
-ctags -L c_headers --c-kinds=+p --fields=+iaS --extra=+q -f c && \
-pacman -Ql gcc | awk '/\/usr\/include/{print $2}' > c++_headers && \
-ctags -L c++_headers --c++-kinds=+p --fields=+iaS --extra=+q -f c++;
-
-# https://github.com/Valloric/YouCompleteMe
-sudo pacman --noconfirm -Su cmake python;
-
-sudo mkdir -p $HOME/.vim/bundle/YouCompleteMe && \
-cd $HOME/.vim/bundle/YouCompleteMe && \
-sudo ./install.sh --clang-completer --system-libclang;
-cd $HOME && mkdir ycm_build && cd ycm_build;
-sudo cmake -G "Unix Makefiles" . \
-	~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp && \
-sudo make ycm_support_libs;
-
-COMMENT
-
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
 
@@ -197,8 +172,6 @@ mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
 <<COMMENT
-comments here...
-COMMENT
 
 echo "Installing Go from source..."
 cd $HOME && sudo rm -rf go1.4;
@@ -209,6 +182,8 @@ cd $HOME && sudo rm -rf $HOME/go1.4_temp;
 
 cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master;
 cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash;
+
+COMMENT
 
 echo "Installing Go..."
 cd /usr/local && sudo rm -rf ./go;
