@@ -12,6 +12,7 @@ Plugin 'gmarik/Vundle.vim'
 " Plugins
 Plugin 'Raimondi/delimitMate'
 Plugin 'Shougo/neocomplete'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
