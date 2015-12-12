@@ -72,6 +72,8 @@ sudo pacman --noconfirm -Su transmission-qt;
 sudo pacman --noconfirm -Su gnome-screenshot;
 sudo pacman --noconfirm -Su vlc;
 
+<<COMMENT
+
 yaourt --noconfirm -Sb ttf-nanum;
 sudo pacman --noconfirm -Su noto-fonts;
 sudo pacman --noconfirm -Su noto-fonts-cjk;
@@ -83,6 +85,8 @@ sudo pacman --noconfirm -Su ttf-baekmuk;
 sudo pacman --noconfirm -Su libreoffice-fresh;
 sudo pacman --noconfirm -Su hunspell-en;
 sudo pacman --noconfirm -Su hunspell;
+
+COMMENT
 
 sudo pacman --noconfirm -Su xorg;
 sudo pacman --noconfirm -Su xorg-xinit;
@@ -98,6 +102,7 @@ sudo pacman --noconfirm -Syu && sudo pacman --noconfirm -Rns $(sudo pacman -Qtdq
 # sudo reboot;
 
 sudo mkdir -p $HOME/fontconfig;
+cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
 sudo cp ./bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
@@ -157,9 +162,9 @@ sudo chmod -R +x $HOME/.vim;
 sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo cp ./vimrc.vim ~/.vimrc && \
-source $HOME/.vimrc && \
-vim +PluginInstall +qall && \
+sudo cp ./vimrc.vim ~/.vimrc;
+source $HOME/.vimrc;
+vim +PluginInstall +qall;
 vim +PluginClean +qall;
 
 #############################################################
