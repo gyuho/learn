@@ -175,7 +175,7 @@ func NetStat(w io.Writer, sudo bool, socket, program, port string) ([]Process, e
 
 	ps := []Process{}
 
-	fmt.Fprintf(w, "[netstat] 'netstat %s' returned %d lines.\n", flag, len(lines))
+	fmt.Fprintf(w, "[NetStat] 'netstat %s' returned %d lines.\n", flag, len(lines))
 	for _, sl := range lines {
 
 		theSocket := sl[socketIdx]
