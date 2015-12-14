@@ -55,7 +55,7 @@ benchmark_name="results_jsonrpc_vs_grpc.txt"
 echo "$(echo $benchmark_function_name):" > $current_dir/$benchmark_name;
 for i in `seq 1 $repeat_size`;
 do
-	echo "[$(echo $i)]:" >> $current_dir/results_jsonrpc_vs_grpc.txt;
+	echo "[$(echo $i)]:" >> $current_dir/$benchmark_name;
 	jsonrpc_path="$(echo $current_dir)/jsonrpc_$i.txt" && \
 	grpc_path="$(echo $current_dir)/grpc_$i.txt" && \
 	benchcmp $jsonrpc_path $grpc_path >> $current_dir/$benchmark_name && \
@@ -67,7 +67,7 @@ benchmark_name="results_jsonrpc_vs_grpc_multiclients.txt"
 echo "$(echo $benchmark_function_name):" > $current_dir/$benchmark_name;
 for i in `seq 1 $repeat_size`;
 do
-	echo "[$(echo $i)]:" >>	$current_dir/results_jsonrpc_vs_grpc_multiclients.txt;
+	echo "[$(echo $i)]:" >> $current_dir/$benchmark_name;
 	jsonrpc_path="$(echo $current_dir)/jsonrpc_$i.txt" && \
 	grpc_multiclients_path="$(echo $current_dir)/grpc_multiclients_$i.txt" && \
 	benchcmp $jsonrpc_path $grpc_multiclients_path >> $current_dir/$benchmark_name && \
@@ -79,7 +79,7 @@ benchmark_name="results_grpc_vs_grpc_multiclients.txt"
 echo "$(echo $benchmark_function_name):" > $current_dir/$benchmark_name;
 for i in `seq 1 $repeat_size`;
 do
-	echo "[$(echo $i)]:" >> $current_dir/results_jsonrpc_vs_grpc.txt;
+	echo "[$(echo $i)]:" >> $current_dir/$benchmark_name;
 	grpc_path="$(echo $current_dir)/grpc_$i.txt" && \
 	grpc_multiclients_path="$(echo $current_dir)/grpc_multiclients_$i.txt" && \
 	benchcmp $grpc_path $grpc_multiclients_path >> $current_dir/$benchmark_name && \

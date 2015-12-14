@@ -1,4 +1,5 @@
 BenchmarkStress:
+[1]:
 benchmark             old ns/op       new ns/op      delta
 BenchmarkStress-4     36716116701     7168591678     -80.48%
 
