@@ -21,7 +21,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-sensible'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Plugin 'ntpeters/vim-better-whitespace'
 
@@ -119,10 +118,21 @@ set smartcase     " ignore case if search pattern is all lowercase,
                   " case-sensitive otherwise
 set smarttab      " insert tabs on the start of a line according to
                   " shiftwidth, not tabstop
+
 set incsearch     " show search matches as you type
 set hlsearch      " highlight all search matches
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+set autoread
 
 set noswapfile
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
