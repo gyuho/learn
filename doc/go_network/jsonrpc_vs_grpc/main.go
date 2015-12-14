@@ -16,21 +16,21 @@ go run main.go -opt="jsonrpc" -size=300000
 2015/12/14 02:52:03 Option chosen: jsonrpc
 2015/12/14 02:52:12 Done with generating random data...
 2015/12/14 02:52:12 JSONRPC on :8080
-2015/12/14 03:00:19 JSONRPC took 8m7.104095469s for 300000 calls (1.62368ms per each).
+2015/12/14 03:00:19 JSONRPC took 8m7.104095469s for 300000 requests (1.62368ms per each).
 
 go run main.go -opt="grpc" -size=300000
 2015/12/14 03:00:22 Size chosen: 300000
 2015/12/14 03:00:22 Option chosen: grpc
 2015/12/14 03:00:31 Done with generating random data...
 2015/12/14 03:00:31 GRPC on :8080
-2015/12/14 03:01:07 GRPC took 36.38581904s for 300000 calls (121.286µs per each).
+2015/12/14 03:01:07 GRPC took 36.38581904s for 300000 requests (121.286µs per each).
 
 go run main.go -opt="grpc" -size=300000 -numc=100
 2015/12/14 03:38:50 Size chosen: 300000
 2015/12/14 03:38:50 Option chosen: grpc
 2015/12/14 03:38:59 Done with generating random data...
 2015/12/14 03:38:59 GRPC on :8080
-2015/12/14 03:39:07 GRPC took 7.907762062s for 300000 calls with 100 client(s) (26.359µs per each).
+2015/12/14 03:39:07 GRPC took 7.907762062s for 300000 requests with 100 client(s) (26.359µs per each).
 */
 
 func main() {

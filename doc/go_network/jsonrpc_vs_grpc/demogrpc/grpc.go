@@ -109,5 +109,5 @@ func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int
 	tt := time.Since(st)
 	size := len(keys)
 	pt := tt / time.Duration(size)
-	log.Printf("GRPC took %v for %d calls with %d client(s) (%v per each).\n", tt, size, numClients, pt)
+	log.Printf("GRPC took %v for %d requests with %d client(s) (%v per each).\n", tt, size, numClients, pt)
 }
