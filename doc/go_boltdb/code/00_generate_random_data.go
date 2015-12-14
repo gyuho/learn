@@ -14,8 +14,12 @@ import (
 const (
 	// these will create 2GB database.
 	numKeys = 500000
-	keyLen  = 100
-	valLen  = 750
+
+	// 5GB
+	// numKeys = 1250000
+
+	keyLen = 100
+	valLen = 750
 
 	bucketName = "test_bucket"
 	writable   = true
