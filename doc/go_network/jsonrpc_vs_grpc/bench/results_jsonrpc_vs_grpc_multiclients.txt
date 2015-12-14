@@ -9,4 +9,3 @@ BenchmarkStress-4     32747687       25230286       -22.96%
 benchmark             old bytes      new bytes      delta
 BenchmarkStress-4     3182814152     1795831944     -43.58%
 
-
