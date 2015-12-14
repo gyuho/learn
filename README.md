@@ -149,6 +149,10 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
 - [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
 - [**_Go: network_**](https://github.com/gyuho/learn/tree/master/doc/go_network)
+- [*Go: sql*](https://github.com/gyuho/learn/tree/master/doc/go_sql)
+- [*Go: boltdb*](https://github.com/gyuho/learn/tree/master/doc/go_boltdb)
+- [*Go: key/value store, redis*](https://github.com/gyuho/learn/tree/master/doc/go_key_value_store_redis)
+- [*Go: leveldb*](https://github.com/gyuho/learn/tree/master/doc/go_leveldb)
 
 [↑ top](#contents)
 <br><br>
@@ -214,9 +218,6 @@ pace in human history. Database systems are the workhorses of our data
 analysis applications.
 
 - [*mysql, postgresql, redshift*](https://github.com/gyuho/learn/tree/master/doc/mysql_postgresql_redshift)
-- [*Go: sql*](https://github.com/gyuho/learn/tree/master/doc/go_sql)
-- [*Go: key/value store, redis*](https://github.com/gyuho/learn/tree/master/doc/go_key_value_store_redis)
-- [*Go: leveldb*](https://github.com/gyuho/learn/tree/master/doc/go_leveldb)
 - [*Python: sql*](https://github.com/gyuho/learn/tree/master/doc/python_sql)
 - [*Python: redis*](https://github.com/gyuho/learn/tree/master/doc/python_redis)
 
