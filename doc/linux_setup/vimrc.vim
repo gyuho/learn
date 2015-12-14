@@ -21,6 +21,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-sensible'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Plugin 'ntpeters/vim-better-whitespace'
 
