@@ -89,9 +89,11 @@ func clientJSONRPC(endpoint string, msg PutRequest) {
 	}
 }
 
-func Run(port, endpoint string, keys, vals [][]byte) {
+func Stress(port, endpoint string, keys, vals [][]byte) {
 	go startServerJSONRPC(port)
+
 	st := time.Now()
+
 	for i := range keys {
 		msg := PutRequest{
 			Key:   keys[i],
@@ -99,5 +101,9 @@ func Run(port, endpoint string, keys, vals [][]byte) {
 		}
 		clientJSONRPC(endpoint, msg)
 	}
-	log.Printf("jsonrpc took %v for %d calls.\n", time.Since(st), len(keys))
+
+	tt := time.Since(st)
+	size := len(keys)
+	pt := tt / time.Duration(size)
+	log.Printf("JSONRPC Took %v for %d calls (%v per each).\n", tt, size, pt)
 }

@@ -52,17 +52,11 @@ func startServerGRPC(port string) {
 	}()
 }
 
-func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients int) {
+func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int) {
 
 	go startServerGRPC(port)
 
-	// 	conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	defer conn.Close()
-
-	conns := make([]*grpc.ClientConn, totalConns)
+	conns := make([]*grpc.ClientConn, numConns)
 	for i := range conns {
 		conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
 		if err != nil {
@@ -70,29 +64,28 @@ func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients in
 		}
 		conns[i] = conn
 	}
-
-	clients := make([]pb.KVClient, totalClients)
+	clients := make([]pb.KVClient, numClients)
 	for i := range clients {
-		clients[i] = pb.NewKVClient(conns[i%int(totalConns)])
+		clients[i] = pb.NewKVClient(conns[i%int(numConns)])
 	}
 
 	requests := make(chan *pb.PutRequest, len(keys))
-
-	var wg sync.WaitGroup
+	done, errChan := make(chan struct{}), make(chan error)
 
 	for i := range clients {
-		wg.Add(1)
 		go func(i int, requests chan *pb.PutRequest) {
-			defer wg.Done()
 			for r := range requests {
 				if _, err := clients[i].Put(context.Background(), r); err != nil {
-					panic(err)
+					errChan <- err
+					return
 				}
 			}
+			done <- struct{}{}
 		}(i, requests)
 	}
 
 	st := time.Now()
+
 	for i := range keys {
 		r := &pb.PutRequest{
 			Key:   keys[i],
@@ -100,9 +93,21 @@ func Run(port, endpoint string, keys, vals [][]byte, totalConns, totalClients in
 		}
 		requests <- r
 	}
+
 	close(requests)
 
-	wg.Wait()
+	cn := 0
+	for cn != len(clients) {
+		select {
+		case err := <-errChan:
+			panic(err)
+		case <-done:
+			cn++
+		}
+	}
 
-	log.Printf("clientGRPC took %v for %d calls.\n", time.Since(st), len(keys))
+	tt := time.Since(st)
+	size := len(keys)
+	pt := tt / time.Duration(size)
+	log.Printf("GRPC Took %v for %d calls (%v per each).\n", tt, size, pt)
 }

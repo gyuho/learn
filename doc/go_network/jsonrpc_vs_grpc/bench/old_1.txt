@@ -1,3 +1,3 @@
 PASS
-BenchmarkRun-4	       1	527890385666 ns/op	3181442520 B/op	32720883 allocs/op
-ok  	github.com/gyuho/learn/doc/go_network/jsonrpc_vs_grpc/bench	536.867s
+BenchmarkStress-4	       1	487808864912 ns/op	3181605288 B/op	32723209 allocs/op
+ok  	github.com/gyuho/learn/doc/go_network/jsonrpc_vs_grpc/bench	497.102s

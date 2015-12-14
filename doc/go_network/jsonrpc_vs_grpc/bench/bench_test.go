@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	totalConns   = 1
-	totalClients = 1
-	// totalClients = 100
+	numConns   = 1
+	numClients = 1
+	// numClients = 100
 
 	size = 100000
 	opt  = "grpc"
@@ -56,7 +56,7 @@ func init() {
 
 var once sync.Once
 
-func BenchmarkRun(b *testing.B) {
+func BenchmarkStress(b *testing.B) {
 	b.StartTimer()
 	b.ReportAllocs()
 
@@ -65,11 +65,11 @@ func BenchmarkRun(b *testing.B) {
 		case "grpc":
 			port := ":3500"
 			endpoint := "localhost" + port
-			demogrpc.Run(port, endpoint, keys, vals, totalConns, totalClients)
+			demogrpc.Stress(port, endpoint, keys, vals, numConns, numClients)
 		case "jsonrpc":
 			port := ":3501"
 			endpoint := "localhost" + port
-			demojsonrpc.Run(port, endpoint, keys, vals)
+			demojsonrpc.Stress(port, endpoint, keys, vals)
 		}
 	}
 	once.Do(oncebody)

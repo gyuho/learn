@@ -5,7 +5,7 @@ test_size=300000
 current_dir=$(pwd)
 dot="."
 test_function_name="XXX"
-benchmark_function_name="BenchmarkRun"
+benchmark_function_name="BenchmarkStress"
 
 repeat_size=1
 

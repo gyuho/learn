@@ -10,13 +10,44 @@ import (
 	"github.com/gyuho/learn/doc/go_network/jsonrpc_vs_grpc/demojsonrpc"
 )
 
+/*
+go run main.go -opt="grpc"
+go run main.go -opt="jsonrpc"
+
+go run main.go -opt="grpc"
+2015/12/14 00:29:05 Size chosen: 100000
+2015/12/14 00:29:05 Option chosen: grpc
+2015/12/14 00:29:08 Done with generating random data...
+2015/12/14 00:29:08 GRPC on :8080
+2015/12/14 00:29:20 GRPC Took 11.96749331s for 100000 calls (119.674µs per each).
+
+go run main.go -opt="jsonrpc"
+2015/12/14 00:29:32 Size chosen: 100000
+2015/12/14 00:29:32 Option chosen: jsonrpc
+2015/12/14 00:29:35 Done with generating random data...
+2015/12/14 00:29:35 JSONRPC on :8080
+2015/12/14 00:32:13 JSONRPC Took 2m38.121612447s for 100000 calls (1.581216ms per each).
+*/
+
+func main() {
+	switch opt {
+
+	case "grpc":
+		demogrpc.Stress(port, endpoint, keys, vals, numConns, numClients)
+
+	case "jsonrpc":
+		demojsonrpc.Stress(port, endpoint, keys, vals)
+
+	}
+}
+
 var (
 	port     = ":8080"
 	endpoint = "localhost" + port
 
-	totalConns   = 1
-	totalClients = 1
-	// totalClients = 100
+	numConns   = 1
+	numClients = 1
+	// numClients = 100
 
 	size = 100000
 	opt  = "grpc"
@@ -53,21 +84,6 @@ func init() {
 		vals[i] = randBytes(100)
 	}
 	log.Println("Done with generating random data...")
-}
-
-func main() {
-	switch opt {
-
-	case "grpc":
-		demogrpc.Run(port, endpoint, keys, vals, totalConns, totalClients)
-		// [1 client]   clientGRPC took 11.843282277s for 100000 calls.
-		// [100 client] clientGRPC took 2.65338435s for 100000 calls.
-
-	case "jsonrpc":
-		demojsonrpc.Run(port, endpoint, keys, vals)
-		// jsonrpc took 3m0.294311949s for 100000 calls.
-
-	}
 }
 
 const (
