@@ -1,12 +1,12 @@
 BenchmarkStress:
 [1]:
 benchmark             old ns/op        new ns/op       delta
-BenchmarkStress-4     487808864912     37298246501     -92.35%
+BenchmarkStress-4     541181429074     36239185831     -93.30%
 
 benchmark             old allocs     new allocs     delta
-BenchmarkStress-4     32723209       25221436       -22.92%
+BenchmarkStress-4     32667681       25221144       -22.79%
 
 benchmark             old bytes      new bytes      delta
-BenchmarkStress-4     3181605288     1795116112     -43.58%
+BenchmarkStress-4     3178762152     1795123920     -43.53%
 
 

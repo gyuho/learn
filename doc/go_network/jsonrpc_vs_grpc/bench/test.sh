@@ -22,6 +22,8 @@ do
 	fi
 done
 
+printf "\n"
+
 for i in `seq 1 $repeat_size`;
 do
 	echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh && cd $HOME/go/pkg && rm -rf *;

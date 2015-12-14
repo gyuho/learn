@@ -63,11 +63,11 @@ func BenchmarkStress(b *testing.B) {
 	oncebody := func() {
 		switch opt {
 		case "grpc":
-			port := ":3500"
+			port := ":8000"
 			endpoint := "localhost" + port
 			demogrpc.Stress(port, endpoint, keys, vals, numConns, numClients)
 		case "jsonrpc":
-			port := ":3501"
+			port := ":8001"
 			endpoint := "localhost" + port
 			demojsonrpc.Stress(port, endpoint, keys, vals)
 		}
