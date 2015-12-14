@@ -1,18 +1,26 @@
 ./test.sh
 
 running only BenchmarkStress
-2015/12/14 02:21:23 Size chosen: 300000
-2015/12/14 02:21:23 Option chosen: jsonrpc
-2015/12/14 02:21:32 Done with generating random data...
+2015/12/14 03:24:27 Size chosen: 300000
+2015/12/14 03:24:27 Option chosen: jsonrpc
+2015/12/14 03:24:35 Done with generating random data...
 testing: warning: no tests to run
-2015/12/14 02:21:32 JSONRPC on :8001
-2015/12/14 02:30:34 JSONRPC took 9m1.181366854s for 300000 calls (1.803937ms per each).
+2015/12/14 03:24:35 JSONRPC on :8001
+2015/12/14 03:32:43 JSONRPC took 8m7.270985268s for 300000 calls 1 client(s) (1.624236ms per each).
 
 running only BenchmarkStress
-2015/12/14 02:30:37 Size chosen: 300000
-2015/12/14 02:30:37 Option chosen: grpc
-2015/12/14 02:30:46 Done with generating random data...
+2015/12/14 03:32:46 Size chosen: 300000
+2015/12/14 03:32:46 Option chosen: grpc
+2015/12/14 03:32:54 Done with generating random data...
 testing: warning: no tests to run
-2015/12/14 02:30:46 GRPC on :8000
-2015/12/14 02:31:22 GRPC took 36.238048102s for 300000 calls (120.793µs per each).
+2015/12/14 03:32:54 GRPC on :8000
+2015/12/14 03:33:31 GRPC took 36.715177872s for 300000 calls with 1 client(s) (122.383µs per each).
+
+running only BenchmarkStress
+2015/12/14 03:33:34 Size chosen: 300000
+2015/12/14 03:33:34 Option chosen: grpc
+2015/12/14 03:33:43 Done with generating random data...
+testing: warning: no tests to run
+2015/12/14 03:33:43 GRPC on :8000
+2015/12/14 03:33:50 GRPC took 7.167679931s for 300000 calls with 100 client(s) (23.892µs per each).
 

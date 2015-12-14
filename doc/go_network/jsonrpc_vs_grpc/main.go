@@ -11,22 +11,26 @@ import (
 )
 
 /*
-go run main.go -opt="grpc"
-go run main.go -opt="jsonrpc"
+go run main.go -opt="jsonrpc" -size=300000
+2015/12/14 02:52:03 Size chosen: 300000
+2015/12/14 02:52:03 Option chosen: jsonrpc
+2015/12/14 02:52:12 Done with generating random data...
+2015/12/14 02:52:12 JSONRPC on :8080
+2015/12/14 03:00:19 JSONRPC took 8m7.104095469s for 300000 calls (1.62368ms per each).
 
-go run main.go -opt="grpc"
-2015/12/14 00:29:05 Size chosen: 100000
-2015/12/14 00:29:05 Option chosen: grpc
-2015/12/14 00:29:08 Done with generating random data...
-2015/12/14 00:29:08 GRPC on :8080
-2015/12/14 00:29:20 GRPC took 11.96749331s for 100000 calls (119.674µs per each).
+go run main.go -opt="grpc" -size=300000
+2015/12/14 03:00:22 Size chosen: 300000
+2015/12/14 03:00:22 Option chosen: grpc
+2015/12/14 03:00:31 Done with generating random data...
+2015/12/14 03:00:31 GRPC on :8080
+2015/12/14 03:01:07 GRPC took 36.38581904s for 300000 calls (121.286µs per each).
 
-go run main.go -opt="jsonrpc"
-2015/12/14 00:29:32 Size chosen: 100000
-2015/12/14 00:29:32 Option chosen: jsonrpc
-2015/12/14 00:29:35 Done with generating random data...
-2015/12/14 00:29:35 JSONRPC on :8080
-2015/12/14 00:32:13 JSONRPC took 2m38.121612447s for 100000 calls (1.581216ms per each).
+go run main.go -opt="grpc" -size=300000 -numc=100
+2015/12/14 03:38:50 Size chosen: 300000
+2015/12/14 03:38:50 Option chosen: grpc
+2015/12/14 03:38:59 Done with generating random data...
+2015/12/14 03:38:59 GRPC on :8080
+2015/12/14 03:39:07 GRPC took 7.907762062s for 300000 calls with 100 client(s) (26.359µs per each).
 */
 
 func main() {
@@ -60,16 +64,22 @@ func init() {
 	sizePt := flag.Int(
 		"size",
 		100000,
-		"Size of keys to put",
+		"Size of keys to put.",
+	)
+	numClienstsPt := flag.Int(
+		"numc",
+		1,
+		"Size of clients to run.",
 	)
 	optPt := flag.String(
 		"opt",
 		"grpc",
-		"'grpc' or 'jsonrpc'",
+		"'grpc' or 'jsonrpc'.",
 	)
 	flag.Parse()
 
 	size = *sizePt
+	numClients = *numClienstsPt
 	opt = *optPt
 	if opt != "grpc" && opt != "jsonrpc" {
 		log.Fatalf("%s is unknown\n", opt)

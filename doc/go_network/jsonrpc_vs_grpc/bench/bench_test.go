@@ -30,6 +30,11 @@ func init() {
 		100000,
 		"Size of keys to put",
 	)
+	numClienstsPt := flag.Int(
+		"numc",
+		1,
+		"Size of clients to run.",
+	)
 	optPt := flag.String(
 		"opt",
 		"grpc",
@@ -38,6 +43,7 @@ func init() {
 	flag.Parse()
 
 	size = *sizePt
+	numClients = *numClienstsPt
 	opt = *optPt
 	if opt != "grpc" && opt != "jsonrpc" {
 		log.Fatalf("%s is unknown\n", opt)

@@ -105,5 +105,5 @@ func Stress(port, endpoint string, keys, vals [][]byte) {
 	tt := time.Since(st)
 	size := len(keys)
 	pt := tt / time.Duration(size)
-	log.Printf("JSONRPC took %v for %d calls (%v per each).\n", tt, size, pt)
+	log.Printf("JSONRPC took %v for %d calls with 1 client(s) (%v per each).\n", tt, size, pt)
 }
