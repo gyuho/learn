@@ -130,8 +130,11 @@ printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
 
 cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google;
 cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git;
-cd $HOME/go/src/github.com/google/protobuf && \
-	./configure && make && make check && make install;
+cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh;
+cd $HOME/go/src/github.com/google/protobuf && ./configure;
+cd $HOME/go/src/github.com/google/protobuf && make;
+cd $HOME/go/src/github.com/google/protobuf && make check;
+cd $HOME/go/src/github.com/google/protobuf && make install;
 
 #############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
