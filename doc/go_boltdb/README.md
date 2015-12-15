@@ -179,6 +179,12 @@ func main() {
 }
 
 func read(mapPop bool) {
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	dbPath := filepath.Join(usr.HomeDir, "test.db")
+
 	opt := &bolt.Options{Timeout: 5 * time.Minute, ReadOnly: true}
 	if mapPop {
 		fmt.Println("read with MAP_POPULATE flag...")
@@ -186,11 +192,6 @@ func read(mapPop bool) {
 	} else {
 		fmt.Println("read without MAP_POPULATE flag...")
 	}
-	usr, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	dbPath := filepath.Join(usr.HomeDir, "test.db")
 
 	to := time.Now()
 	db, err := bolt.Open(dbPath, 0600, opt)
