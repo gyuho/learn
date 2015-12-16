@@ -23,12 +23,12 @@ var (
 )
 
 func init() {
-	fmt.Println("Generating random data...")
+	fmt.Println("Starting writing random data...")
 	for i := range keys {
 		keys[i] = randBytes(keyLen)
 		vals[i] = randBytes(valLen)
 	}
-	fmt.Println("Done with random data...")
+	fmt.Println("Done with writing random data...")
 }
 
 func main() {
@@ -43,6 +43,7 @@ func main() {
 	}
 	defer db.Close()
 
+	fmt.Println("Starting writing...")
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte(bucketName))
 		if err != nil {
@@ -57,35 +58,42 @@ func main() {
 	}); err != nil {
 		panic(err)
 	}
+	fmt.Println("Done with writing...")
 
+	fmt.Println("Starting reading...")
 	if err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName))
 		for i := range keys {
-			fmt.Printf("%s ---> %s\n", keys[i], b.Get(keys[i]))
+			k := keys[i]
+			v := b.Get(k)
+			fmt.Printf("Read: %s ---> %s\n", k, v)
 		}
 		return nil
 	}); err != nil {
 		panic(err)
 	}
-	fmt.Println("Done with db.View")
+	fmt.Println("Done with reading...")
 }
 
 /*
-Generating random data...
-Done with random data...
-dbPath: xHUfNFaPy4YPcKDhbVC3qM.db
-bucketName: gSjrPgznxEa8q7roSRXpLd
-zWN ---> LKckYKJ
-yLp ---> lvWgBBc
-BAD ---> xasSjyf
-ilB ---> wVWExop
-sSZ ---> kSwzVtf
-Ntv ---> NkcpxBO
-EVq ---> dXnWnZR
-PJu ---> TTQCqLc
-WEU ---> HyCQkFw
-dnL ---> WYBvMaH
-Done with db.View
+Starting writing random data...
+Done with writing random data...
+dbPath: MAD96XbjYFenxMQBSnMxvY.db
+bucketName: zeXeJqUhpMhYD5kPVMRVBi
+Starting writing...
+Done with writing...
+Starting reading...
+Read: uWN ---> qpjxtgO
+Read: vPH ---> kgBMOcz
+Read: unX ---> XgGmeOJ
+Read: gLd ---> ekPAyFk
+Read: dVa ---> yjgXook
+Read: otW ---> nyiOWvj
+Read: rBV ---> viufTKO
+Read: wto ---> NVFceGz
+Read: Dtg ---> RlPULZS
+Read: PLC ---> NqLporc
+Done with reading...
 */
 
 func randBytes(n int) []byte {

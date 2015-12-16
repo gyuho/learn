@@ -43,15 +43,22 @@ func main() {
 	}
 	defer db.Close()
 
+	fmt.Println("Starting writing random data...")
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte(bucketName))
 		if err != nil {
 			return err
 		}
 		for i := 0; i < numKeys; i++ {
-			fmt.Println("Writing", i, "/", numKeys)
+			if i%10000 == 0 {
+				fmt.Println("Writing", i+1, "/", numKeys)
+			}
 			if err := b.Put(randBytes(keyLen), randBytes(valLen)); err != nil {
 				return err
+			}
+			if i+1 == numKeys {
+				fmt.Println("Writing", i+1, "/", numKeys)
+				fmt.Println("Done with writing random data...")
 			}
 		}
 		return nil
