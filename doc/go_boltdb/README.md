@@ -5,6 +5,7 @@
 - [Reference](#reference)
 - [Generate random data](#generate-random-data)
 - [Read all data](#read-all-data)
+- [Write, read](#write-read)
 
 [↑ top](#go-boltdb)
 <br><br><br><br><hr>
@@ -220,6 +221,12 @@ func read(mapPop bool) {
 }
 
 ```
+
+[↑ top](#go-boltdb)
+<br><br><br><br><hr>
+
+
+#### Write, read
 
 [↑ top](#go-boltdb)
 <br><br><br><br><hr>
