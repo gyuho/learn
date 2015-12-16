@@ -16,18 +16,24 @@ var (
 	bucketName = shortuuid.New()
 
 	// 2GB
-	numKeys = 500000
-	keyLen  = 100
-	valLen  = 750
+	// numKeys = 500000
+	numKeys = 10000
+
+	keyLen = 100
+	valLen = 750
 
 	keys = make([][]byte, numKeys)
 	vals = make([][]byte, numKeys)
 
 	keysForRead = make([][]byte, numKeys)
 
-	printIdx     = 2000
-	readStartIdx = 300000
-	timeout      = time.Second
+	printIdx = 2000
+
+	// readStartIdx = 300000
+	readStartIdx = 300
+
+	readRepeat = 1000
+	timeout    = time.Second
 )
 
 func init() {
@@ -84,7 +90,7 @@ func main() {
 			}
 			st := time.Now()
 			ch := make(chan struct{})
-			go func() {
+			go func(i int) {
 				if err := db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte(bucketName))
 					if err := b.Put(keys[i], vals[i]); err != nil {
@@ -95,7 +101,7 @@ func main() {
 					panic(err)
 				}
 				ch <- struct{}{}
-			}()
+			}(i)
 			select {
 			case <-ch:
 				if i%printIdx == 0 {
@@ -112,32 +118,34 @@ func main() {
 
 	go func() {
 		<-readyToRead
-		fmt.Println("Starting long-running reading...")
-		for i := range keysForRead {
-			st := time.Now()
-			ch := make(chan struct{})
-			go func() {
-				if err := db.View(func(tx *bolt.Tx) error {
-					b := tx.Bucket([]byte(bucketName))
-					k := keys[i]
-					v := b.Get(k)
-					// fmt.Printf("Read: %s ---> %s\n", k, v)
-					_ = k
-					_ = v
-					return nil
-				}); err != nil {
-					panic(err)
+		for j := 0; j < readRepeat; j++ {
+			fmt.Printf("Starting long-running reading...#%d\n", j)
+			for i := range keysForRead {
+				st := time.Now()
+				ch := make(chan struct{})
+				go func(i int) {
+					if err := db.View(func(tx *bolt.Tx) error {
+						b := tx.Bucket([]byte(bucketName))
+						k := keys[i]
+						v := b.Get(k)
+						// fmt.Printf("Read: %s ---> %s\n", k, v)
+						_ = k
+						_ = v
+						return nil
+					}); err != nil {
+						panic(err)
+					}
+					ch <- struct{}{}
+				}(i)
+				select {
+				case <-ch:
+					if i%printIdx == 0 {
+						fmt.Printf("Read took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
+					}
+					continue
+				case <-time.After(timeout):
+					log.Fatalf("Read timeout: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 				}
-				ch <- struct{}{}
-			}()
-			select {
-			case <-ch:
-				if i%printIdx == 0 {
-					fmt.Printf("Read took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
-				}
-				continue
-			case <-time.After(timeout):
-				log.Fatalf("Read timeout: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 			}
 		}
 		doneWithRead <- struct{}{}
