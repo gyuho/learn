@@ -377,6 +377,7 @@ var (
 
 	keysForRead = make([][]byte, numKeys)
 
+	printIdx     = 20000
 	readStartIdx = 300000
 	timeout      = time.Second
 )
@@ -384,7 +385,7 @@ var (
 func init() {
 	fmt.Println("Starting generating random data...")
 	for i := range keys {
-		if i%10000 == 0 {
+		if i%printIdx == 0 {
 			fmt.Println("Generating", i+1, "/", numKeys)
 		}
 		keys[i] = randBytes(keyLen)
@@ -449,7 +450,7 @@ func main() {
 			}()
 			select {
 			case <-ch:
-				if i%10000 == 0 {
+				if i%printIdx == 0 {
 					fmt.Printf("Write took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 				}
 				continue
@@ -483,7 +484,7 @@ func main() {
 			}()
 			select {
 			case <-ch:
-				if i%10000 == 0 {
+				if i%printIdx == 0 {
 					fmt.Printf("Read took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 				}
 				continue
