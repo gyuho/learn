@@ -3,7 +3,7 @@
 # Go: boltdb
 
 - [Reference](#reference)
-- [Generate random data](#generate-random-data)
+- [Write random data](#write-random-data)
 - [Read all data](#read-all-data)
 - [Write, read](#write-read)
 
@@ -19,7 +19,7 @@
 <br><br><br><br><hr>
 
 
-#### Generate random data
+#### Write random data
 
 ```go
 package main
@@ -27,7 +27,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"os/user"
 	"path/filepath"
 	"time"
@@ -35,30 +34,29 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-const (
-	// these will create 2GB database.
-	numKeys = 500000
-
+var (
+	dbPath     = "test.db"
+	bucketName = "test_bucket" 
 	// 5GB
 	// numKeys = 1250000
 
-	keyLen = 100
-	valLen = 750
-
-	bucketName = "test_bucket"
-	writable   = true
+	// 2GB
+	numKeys = 500000
+	keyLen  = 100
+	valLen  = 750
 )
 
-func main() {
+func init() {
 	usr, err := user.Current()
 	if err != nil {
 		panic(err)
 	}
-	dbPath := filepath.Join(usr.HomeDir, "test.db")
+	dbPath = filepath.Join(usr.HomeDir, dbPath)
+}
 
-	if err := os.RemoveAll(dbPath); err != nil {
-		panic(err)
-	}
+func main() {
+	fmt.Println("dbPath:", dbPath)
+	fmt.Println("bucketName:", bucketName)
 
 	// Open the dbPath data file in your current directory.
 	// It will be created if it doesn't exist.
@@ -68,50 +66,34 @@ func main() {
 	}
 	defer db.Close()
 
-	// Start a writable transaction.
-	tx, err := db.Begin(writable)
-	if err != nil {
-		panic(err)
-	}
-	defer tx.Rollback()
-
-	// Use the transaction
-	b, err := tx.CreateBucket([]byte(bucketName))
-	if err != nil {
-		panic(err)
-	}
-
-	// Write to database
-	for i := 0; i < numKeys; i++ {
-		k := randBytes(keyLen)
-		v := randBytes(valLen)
-		fmt.Println("Writing", i, "/", numKeys)
-		if err := b.Put(k, v); err != nil {
-			panic(err)
+	if err := db.Update(func(tx *bolt.Tx) error {
+		b, err := tx.CreateBucket([]byte(bucketName))
+		if err != nil {
+			return err
 		}
-	}
-
-	// Commit the transaction
-	fmt.Println("Committing...")
-	if err := tx.Commit(); err != nil {
+		for i := 0; i < numKeys; i++ {
+			fmt.Println("Writing", i, "/", numKeys)
+			if err := b.Put(randBytes(keyLen), randBytes(valLen)); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Done")
+	fmt.Println("Done! Saved:", db.Path())
 }
 
-const (
-	// http://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-golang
-	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	letterIdxBits = 6                    // 6 bits to represent a letter index
-	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
-	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
-)
-
 func randBytes(n int) []byte {
+	const (
+		letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		letterIdxBits = 6                    // 6 bits to represent a letter index
+		letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+		letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+	)
 	src := rand.NewSource(time.Now().UnixNano())
 	b := make([]byte, n)
-	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
 			cache, remain = src.Int63(), letterIdxMax
@@ -150,42 +132,42 @@ import (
 
 /*
 read with MAP_POPULATE flag...
-bolt.Open took 2.852110689s
-bolt Read took: 51.852398ms
+bolt.Open took 2.879063477s
+bolt read took: 51.952703ms
 
 read without MAP_POPULATE flag...
-bolt.Open took 448.019µs
-bolt Read took: 14.004116282s
+bolt.Open took 1.568715ms
+bolt read took: 13.795348869s
 */
 
-const (
+var (
+	dbPath     = "test.db"
 	bucketName = "test_bucket"
+	mapPop     = true
 	writable   = false
 )
 
-var mapPop bool
-
 func init() {
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	dbPath = filepath.Join(usr.HomeDir, "test.db")
+
 	mapPt := flag.Bool(
 		"populate",
 		true,
-		"'true' when running with MAP_POPULATE flag.",
+		"'true' for MAP_POPULATE flag.",
 	)
 	flag.Parse()
 	mapPop = *mapPt
 }
 
 func main() {
-	read(mapPop)
+	read(dbPath, mapPop)
 }
 
-func read(mapPop bool) {
-	usr, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	dbPath := filepath.Join(usr.HomeDir, "test.db")
-
+func read(dbPath string, mapPop bool) {
 	opt := &bolt.Options{Timeout: 5 * time.Minute, ReadOnly: true}
 	if mapPop {
 		fmt.Println("read with MAP_POPULATE flag...")
@@ -217,7 +199,7 @@ func read(mapPop bool) {
 		_ = k
 		_ = v
 	}
-	fmt.Println("bolt Read took:", time.Since(tr))
+	fmt.Println("bolt read took:", time.Since(tr))
 }
 
 ```
@@ -227,6 +209,122 @@ func read(mapPop bool) {
 
 
 #### Write, read
+
+```go
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"os"
+	"time"
+
+	"github.com/boltdb/bolt"
+	"github.com/renstrom/shortuuid"
+)
+
+var (
+	dbPath     = shortuuid.New() + ".db"
+	bucketName = shortuuid.New()
+
+	numKeys = 10
+	keyLen  = 3
+	valLen  = 7
+
+	keys = make([][]byte, numKeys)
+	vals = make([][]byte, numKeys)
+)
+
+func init() {
+	fmt.Println("Generating random data...")
+	for i := range keys {
+		keys[i] = randBytes(keyLen)
+		vals[i] = randBytes(valLen)
+	}
+	fmt.Println("Done with random data...")
+}
+
+func main() {
+	fmt.Println("dbPath:", dbPath)
+	fmt.Println("bucketName:", bucketName)
+
+	defer os.Remove(dbPath)
+
+	db, err := bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	if err := db.Update(func(tx *bolt.Tx) error {
+		b, err := tx.CreateBucket([]byte(bucketName))
+		if err != nil {
+			return err
+		}
+		for i := range keys {
+			if err := b.Put(keys[i], vals[i]); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
+		panic(err)
+	}
+
+	if err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(bucketName))
+		for i := range keys {
+			fmt.Printf("%s ---> %s\n", keys[i], b.Get(keys[i]))
+		}
+		return nil
+	}); err != nil {
+		panic(err)
+	}
+	fmt.Println("Done with db.View")
+}
+
+/*
+Generating random data...
+Done with random data...
+dbPath: xHUfNFaPy4YPcKDhbVC3qM.db
+bucketName: gSjrPgznxEa8q7roSRXpLd
+zWN ---> LKckYKJ
+yLp ---> lvWgBBc
+BAD ---> xasSjyf
+ilB ---> wVWExop
+sSZ ---> kSwzVtf
+Ntv ---> NkcpxBO
+EVq ---> dXnWnZR
+PJu ---> TTQCqLc
+WEU ---> HyCQkFw
+dnL ---> WYBvMaH
+Done with db.View
+*/
+
+func randBytes(n int) []byte {
+	const (
+		letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		letterIdxBits = 6                    // 6 bits to represent a letter index
+		letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+		letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+	)
+	src := rand.NewSource(time.Now().UnixNano())
+	b := make([]byte, n)
+	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+		if remain == 0 {
+			cache, remain = src.Int63(), letterIdxMax
+		}
+		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
+			b[i] = letterBytes[idx]
+			i--
+		}
+		cache >>= letterIdxBits
+		remain--
+	}
+	return b
+}
+
+```
 
 [↑ top](#go-boltdb)
 <br><br><br><br><hr>
