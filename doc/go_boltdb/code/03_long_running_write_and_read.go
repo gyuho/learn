@@ -25,7 +25,7 @@ var (
 
 	keysForRead = make([][]byte, numKeys)
 
-	printIdx     = 20000
+	printIdx     = 2000
 	readStartIdx = 300000
 	timeout      = time.Second
 )
