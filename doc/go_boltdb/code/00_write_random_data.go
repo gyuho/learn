@@ -3,40 +3,40 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
+	"os/user"
+	"path/filepath"
 	"time"
 
 	"github.com/boltdb/bolt"
-	"github.com/renstrom/shortuuid"
 )
 
 var (
-	dbPath     = shortuuid.New() + ".db"
-	bucketName = shortuuid.New()
+	dbPath     = "test.db"
+	bucketName = "test_bucket"
 
-	numKeys = 10
-	keyLen  = 3
-	valLen  = 7
+	// 5GB
+	// numKeys = 1250000
 
-	keys = make([][]byte, numKeys)
-	vals = make([][]byte, numKeys)
+	// 2GB
+	numKeys = 500000
+	keyLen  = 100
+	valLen  = 750
 )
 
 func init() {
-	fmt.Println("Generating random data...")
-	for i := range keys {
-		keys[i] = randBytes(keyLen)
-		vals[i] = randBytes(valLen)
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
 	}
-	fmt.Println("Done with random data...")
+	dbPath = filepath.Join(usr.HomeDir, dbPath)
 }
 
 func main() {
 	fmt.Println("dbPath:", dbPath)
 	fmt.Println("bucketName:", bucketName)
 
-	defer os.Remove(dbPath)
-
+	// Open the dbPath data file in your current directory.
+	// It will be created if it doesn't exist.
 	db, err := bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		panic(err)
@@ -48,8 +48,9 @@ func main() {
 		if err != nil {
 			return err
 		}
-		for i := range keys {
-			if err := b.Put(keys[i], vals[i]); err != nil {
+		for i := 0; i < numKeys; i++ {
+			fmt.Println("Writing", i, "/", numKeys)
+			if err := b.Put(randBytes(keyLen), randBytes(valLen)); err != nil {
 				return err
 			}
 		}
@@ -58,35 +59,8 @@ func main() {
 		panic(err)
 	}
 
-	if err := db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(bucketName))
-		for i := range keys {
-			fmt.Printf("%s ---> %s\n", keys[i], b.Get(keys[i]))
-		}
-		return nil
-	}); err != nil {
-		panic(err)
-	}
-	fmt.Println("Done with db.View")
+	fmt.Println("Done! Saved:", db.Path())
 }
-
-/*
-Generating random data...
-Done with random data...
-dbPath: xHUfNFaPy4YPcKDhbVC3qM.db
-bucketName: gSjrPgznxEa8q7roSRXpLd
-zWN ---> LKckYKJ
-yLp ---> lvWgBBc
-BAD ---> xasSjyf
-ilB ---> wVWExop
-sSZ ---> kSwzVtf
-Ntv ---> NkcpxBO
-EVq ---> dXnWnZR
-PJu ---> TTQCqLc
-WEU ---> HyCQkFw
-dnL ---> WYBvMaH
-Done with db.View
-*/
 
 func randBytes(n int) []byte {
 	const (

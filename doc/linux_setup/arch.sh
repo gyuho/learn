@@ -172,6 +172,7 @@ sudo cp ./vimrc.vim ~/.vimrc;
 source $HOME/.vimrc;
 vim +PluginInstall +qall;
 vim +PluginClean +qall;
+# :GoInstallBinaries
 
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;

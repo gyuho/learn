@@ -13,42 +13,42 @@ import (
 
 /*
 read with MAP_POPULATE flag...
-bolt.Open took 2.852110689s
-bolt Read took: 51.852398ms
+bolt.Open took 2.879063477s
+bolt read took: 51.952703ms
 
 read without MAP_POPULATE flag...
-bolt.Open took 448.019µs
-bolt Read took: 14.004116282s
+bolt.Open took 1.568715ms
+bolt read took: 13.795348869s
 */
 
-const (
+var (
+	dbPath     = "test.db"
 	bucketName = "test_bucket"
+	mapPop     = true
 	writable   = false
 )
 
-var mapPop bool
-
 func init() {
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	dbPath = filepath.Join(usr.HomeDir, "test.db")
+
 	mapPt := flag.Bool(
 		"populate",
 		true,
-		"'true' when running with MAP_POPULATE flag.",
+		"'true' for MAP_POPULATE flag.",
 	)
 	flag.Parse()
 	mapPop = *mapPt
 }
 
 func main() {
-	read(mapPop)
+	read(dbPath, mapPop)
 }
 
-func read(mapPop bool) {
-	usr, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	dbPath := filepath.Join(usr.HomeDir, "test.db")
-
+func read(dbPath string, mapPop bool) {
 	opt := &bolt.Options{Timeout: 5 * time.Minute, ReadOnly: true}
 	if mapPop {
 		fmt.Println("read with MAP_POPULATE flag...")
@@ -80,5 +80,5 @@ func read(mapPop bool) {
 		_ = k
 		_ = v
 	}
-	fmt.Println("bolt Read took:", time.Since(tr))
+	fmt.Println("bolt read took:", time.Since(tr))
 }
