@@ -97,20 +97,22 @@ func main() {
 			}()
 			select {
 			case <-ch:
-				fmt.Printf("Write took: %v (%d/%d)\n", time.Since(st), i, numKeys)
+				if i%10000 == 0 {
+					fmt.Printf("Write took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
+				}
 				continue
 			case <-time.After(timeout):
-				log.Fatalf("Write timeout: %v (%d/%d)\n", time.Since(st), i, numKeys)
+				log.Fatalf("Write timeout: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 			}
 		}
-		fmt.Println("Done with long-running writing...")
 		doneWithWrite <- struct{}{}
+		fmt.Println("Done with long-running writing...")
 	}()
 
 	go func() {
 		<-readyToRead
 		fmt.Println("Starting long-running reading...")
-		for i := range keys {
+		for i := range keysForRead {
 			st := time.Now()
 			ch := make(chan struct{})
 			go func() {
@@ -129,19 +131,20 @@ func main() {
 			}()
 			select {
 			case <-ch:
-				fmt.Printf("Read took: %v (%d/%d)\n", time.Since(st), i, numKeys)
+				if i%10000 == 0 {
+					fmt.Printf("Read took: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
+				}
 				continue
 			case <-time.After(timeout):
-				log.Fatalf("Read timeout: %v (%d/%d)\n", time.Since(st), i, numKeys)
+				log.Fatalf("Read timeout: %v (%d/%d)\n", time.Since(st), i+1, numKeys)
 			}
 		}
-		fmt.Println("Done with long-running reading...")
 		doneWithRead <- struct{}{}
+		fmt.Println("Done with long-running reading...")
 	}()
 
 	<-doneWithWrite
 	<-doneWithRead
-
 	fmt.Println("Done!")
 }
 
