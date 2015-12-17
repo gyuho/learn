@@ -105,6 +105,8 @@ func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int
 			cn++
 		}
 	}
+	close(done)
+	close(errChan)
 
 	tt := time.Since(st)
 	size := len(keys)

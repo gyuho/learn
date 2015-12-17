@@ -22,7 +22,7 @@
 	- [#1-3. **be careful with buffered channel!**](#1-3-be-careful-with-buffered-channel)
 	- [#1-4. **non-deterministic receive from buffered channel**](#1-4-non-deterministic-receive-from-buffered-channel)
 	- [#2. why is this receiving only one value?](#2-why-is-this-receiving-only-one-value)
-	- [#3. **wait for all goroutines to finish with `close`**](#3-wait-for-all-goroutines-to-finish-with-close)
+	- [#3. **wait for all goroutines to finish**](#3-wait-for-all-goroutines-to-finish)
 - [**select for channel**: `select` ≠ `switch`](#select-for-channel-select--switch)
 - [**receive `nil` from channel**](#receive-nil-from-channel)
 - [`sync.Mutex`, race condition](#syncmutex-race-condition)
@@ -1339,168 +1339,169 @@ func main() {
 <br>
 
 [Go FAQ](http://golang.org/doc/faq#closures_and_goroutines) explains about
-**closures** running as **goroutines**. Try [this](http://play.golang.org/p/8D_tOsXrZW):
+**closures** running as **goroutines**:
 
 ```go
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
+
+// defer function runs in Last In First Out order
+// after the surrounding function returns.
+// NOT AFTER FOR-LOOP
+//
+// variables that are defined ON or INSIDE for-loop
+// should be passed as arguments to the closure
 
 func main() {
-	// Deferred function runs
-	// in Last In First Out order
-	// after the surrounding function returns.
-	// NOT AFTER FOR-LOOP
-	for i := range []int{0, 1, 2, 3, 4, 5} {
-		defer func() {
-			fmt.Println("i:", i)
-		}()
-	}
-	fmt.Println()
-	/*
+	func() {
+		for _, i1 := range []int{0, 1, 2, 3} {
+			defer func() {
+				fmt.Println("defer i1:", i1)
+			}()
+		}
+		fmt.Println()
 
+		for _, i2 := range []int{0, 1, 2, 3} {
+			defer func(i2 int) {
+				fmt.Println("defer i2:", i2)
+			}(i2)
+		}
+		fmt.Println()
+
+		i := 0
+		for _, i3 := range []int{0, 1, 2, 3} {
+			i++
+			defer func(i3 int) {
+				fmt.Println("defer i, i3:", i, i3)
+			}(i3)
+		}
+		fmt.Println()
+
+		j := 0
+		for _, i4 := range []int{0, 1, 2, 3} {
+			j++
+			defer func(j, i4 int) {
+				fmt.Println("defer j, i4:", j, i4)
+			}(j, i4)
+		}
+		fmt.Println()
+	}()
+	/*
+		defer j, i4: 4 3
+		defer j, i4: 3 2
+		defer j, i4: 2 1
+		defer j, i4: 1 0
+		defer i, i3: 4 3
+		defer i, i3: 4 2
+		defer i, i3: 4 1
+		defer i, i3: 4 0
+		defer i2: 3
+		defer i2: 2
+		defer i2: 1
+		defer i2: 0
+		defer i1: 3
+		defer i1: 3
+		defer i1: 3
+		defer i1: 3
 	*/
 
-	// variables that are defined ON for-loop
-	// should be passed as arguments to the closure
-	i1 := 0
-	for i := 0; i < 3; i++ {
-		i1++
-		defer func() {
-			fmt.Println("i1:", i, i1)
-		}()
-	}
+	func() {
+		for _, i1 := range []int{0, 1, 2, 3} {
+			go func() {
+				fmt.Println("go i1:", i1)
+			}()
+		}
+		fmt.Println()
+		time.Sleep(time.Second)
 
-	i2 := 0
-	for i := 0; i < 3; i++ {
-		i2++
-		defer func(i, i2 int) {
-			fmt.Println("i2:", i, i2)
-		}(i, i2)
-	}
+		for _, i2 := range []int{0, 1, 2, 3} {
+			go func(i2 int) {
+				fmt.Println("go i2:", i2)
+			}(i2)
+		}
+		fmt.Println()
+		time.Sleep(time.Second)
+
+		i := 0
+		for _, i3 := range []int{0, 1, 2, 3} {
+			i++
+			go func(i3 int) {
+				fmt.Println("go i, i3:", i, i3)
+			}(i3)
+		}
+		fmt.Println()
+		time.Sleep(time.Second)
+
+		j := 0
+		for _, i4 := range []int{0, 1, 2, 3} {
+			j++
+			go func(j, i4 int) {
+				fmt.Println("go j, i4:", j, i4)
+			}(j, i4)
+		}
+		fmt.Println()
+		time.Sleep(time.Second)
+	}()
+	/*
+		go i1: 3
+		go i1: 3
+		go i1: 3
+		go i1: 3
+
+		go i2: 0
+		go i2: 1
+		go i2: 3
+		go i2: 2
+		go i, i3: 4 3
+		go i, i3: 4 0
+		go i, i3: 4 1
+		go i, i3: 4 2
+
+
+		go j, i4: 1 0
+		go j, i4: 2 1
+		go j, i4: 4 3
+		go j, i4: 3 2
+	*/
 }
-
-/*
-i2: 2 3
-i2: 1 2
-i2: 0 1
-i1: 3 3
-i1: 3 3
-i1: 3 3
-i: 5
-i: 5
-i: 5
-i: 5
-i: 5
-i: 5
-*/
 
 ```
 
-**Variables that are defined ON for-loop must be passed as arguments to the
-closure.** Again. **_Variables that are defined ON for-loop must be passed as
-arguments to the closure._** Try this
-[code](http://play.golang.org/p/aoTlXTcRVd):
-
-```go
-package main
- 
-import "fmt"
- 
-func main() {
-	ch1, ch2 := make(chan string), make(chan string)
- 
-	// variables that are defined ON for-loop
-	// should be passed as arguments to the closure
- 
-	i1 := 0
-	for i := 0; i < 3; i++ {
-		i1++
-		go func() {
-			ch1 <- fmt.Sprintf("i1: %d %d", i, i1)
-		}()
-	}
- 
-	i2 := 0
-	for i := 0; i < 3; i++ {
-		i2++
-		go func(i, i2 int) {
-			ch2 <- fmt.Sprintf("i2: %d %d", i, i2)
-		}(i, i2)
-	}
- 
-	for i := 0; i < 3; i++ {
-		fmt.Println("ch1:", <-ch1)
-	}
- 
-	for i := 0; i < 3; i++ {
-		fmt.Println("ch2:", <-ch2)
-	}
- 
-	/*
-		ch1: i1: 3 3
-		ch1: i1: 3 3
-		ch1: i1: 3 3
-		ch2: i2: 0 1
-		ch2: i2: 1 2
-		ch2: i2: 2 3
-	*/
-}
-```
+**Variables that are defined ON or INSIDE for-loop must be passed as arguments
+to the closure.** Again. **_Variables that are defined ON for-loop must be
+passed as arguments to the closure._**.
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
 
 
-#### #3. wait for all goroutines to finish with `close`
+#### #3. wait for all goroutines to finish
 
-Here's an **easier way to receive all values from a channel**.
-Just use the `for` loop, as [here](http://play.golang.org/p/fpGycVPyGy):
+`range` can also be used for iterating and receiving from a channel:
 
 ```go
 package main
- 
+
 import "fmt"
- 
+
 func main() {
 	ch := make(chan int)
- 
+
 	for i := 0; i < 5; i++ {
 		go func() {
 			ch <- i
 		}()
 	}
- 
-	for i := 0; i < 5; i++ {
-		fmt.Println(<-ch)
-	}
-}
-```
 
-<br>
-
-`range` can also be used for iterating and receiving from a channel, as
-[here](http://play.golang.org/p/-kiyFxUeKx):
-
-```go
-package main
- 
-import "fmt"
- 
-func main() {
-	ch := make(chan int)
- 
-	for i := 0; i < 5; i++ {
-		go func() {
-			ch <- i
-		}()
-	}
- 
 	for v := range ch {
 		fmt.Println(v)
 	}
 }
- 
+
 /*
 5
 5
@@ -1516,81 +1517,9 @@ main.main()
 ```
 
 This panics with [deadlock](http://en.wikipedia.org/wiki/Deadlock) message
-because when we *iterate a channel*, `range` **_ends only after the channel is
-closed_**. We MUST **make sure to** **_close the channel_** **after the last
-sent value is received by the channel**, as
-[here](http://play.golang.org/p/wiK2yjYWcC):
-
-```go
-package main
- 
-import "fmt"
- 
-func main() {
-	ch := make(chan int)
- 
-	for i := 0; i < 5; i++ {
-		go func() {
-			ch <- i
-		}()
-	}
- 
-	i := 0
-	for v := range ch {
-		fmt.Println(v)
-		i++
-		if i == 5 {
-			close(ch)
-		}
-	}
-}
- 
-/*
-5
-5
-5
-5
-5
-*/
-```
-
-<br>
-And try [this](http://play.golang.org/p/gjPJ1Lrfv1). Note that this code
-is not concurrent though:
-
-```go
-package main
- 
-import "fmt"
- 
-func main() {
-	ch := make(chan int)
- 
-	go func() {
-		defer close(ch)
-		for i := 0; i < 5; i++ {
-			ch <- i
-		}
-	}()
- 
-	for v := range ch {
-		fmt.Println(v)
-	}
-	// 0
-	// 1
-	// 2
-	// 3
-	// 4
- 
-	v, ok := <-ch
-	fmt.Println(v, ok) // 0 false
-	// any value received from closed channel succeeds without blocking
-	// , returning the zero value of channel type and false.
-}
-```
-
-<br>
-It should be like [this](http://play.golang.org/p/7o5Hs-0WIS):
+because when we *iterate a channel*, `range` **_ends only after the
+channel is closed_**. We MUST **make sure to** **_close the channel_**
+**after the last sent value is received by the channel**:
 
 ```go
 package main
@@ -1599,17 +1528,21 @@ import "fmt"
 
 func main() {
 	func() {
+
 		ch := make(chan int)
-		for i := 0; i < 5; i++ {
+		limit := 5
+
+		for i := 0; i < limit; i++ {
 			go func(i int) {
 				ch <- i
 			}(i)
 		}
+
 		cn := 0
 		for v := range ch {
 			fmt.Println(v)
 			cn++
-			if cn == 5 {
+			if cn == limit {
 				close(ch)
 			}
 		}
@@ -1618,39 +1551,47 @@ func main() {
 		// 2
 		// 3
 		// 4
+
 		v, ok := <-ch
 		fmt.Println(v, ok) // 0 false
 		// any value received from closed channel succeeds without blocking
 		// , returning the zero value of channel type and false.
+
 	}()
+
 	func() {
-		slice := []string{"A", "B", "C", "D", "E"}
-		if len(slice) > 0 {
-			// this only works when slice length
-			// is greater than 0. Otherwise, it will
-			// be deadlocking receiving no done message.
-			done := make(chan struct{})
-			for _, v := range slice {
-				go func(v string) {
-					fmt.Println("Printing:", v)
-					done <- struct{}{}
-				}(v)
-			}
-			cn := 0
-			for range done {
+
+		done, errChan := make(chan struct{}), make(chan error)
+
+		limit := 5
+		for i := 0; i < limit; i++ {
+			go func(i int) {
+				fmt.Println("Done at", i)
+				done <- struct{}{}
+			}(i)
+		}
+
+		cn := 0
+		for cn != limit {
+			select {
+			case err := <-errChan:
+				panic(err)
+			case <-done:
 				cn++
-				if cn == len(slice) {
-					close(done)
-				}
 			}
 		}
+
+		close(done)
+		close(errChan)
+
 		/*
-			Printing: E
-			Printing: A
-			Printing: B
-			Printing: C
-			Printing: D
+			Done at 4
+			Done at 0
+			Done at 1
+			Done at 2
+			Done at 3
 		*/
+
 	}()
 }
 
@@ -1665,7 +1606,6 @@ Note that **received values from a channel are in order**:
 >
 > [Go Spec](https://golang.org/ref/spec#For_statements)
 
-
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
 
@@ -1674,14 +1614,13 @@ Note that **received values from a channel are in order**:
 
 [`select`](https://golang.org/ref/spec#Select_statements) is *like*
 [`switch`](https://golang.org/doc/effective_go.html#switch) *for*
-**_channels_**. Try this [code](http://play.golang.org/p/Ugbe5aUIQM) with
-`switch`:
+**_channels_**:
 
 ```go
 package main
- 
+
 import "fmt"
- 
+
 func typeName1(v interface{}) string {
 	switch typedValue := v.(type) {
 	case int:
@@ -1696,7 +1635,7 @@ func typeName1(v interface{}) string {
 	}
 	panic("unreachable")
 }
- 
+
 func typeName2(v interface{}) string {
 	switch v.(type) {
 	case int:
@@ -1708,20 +1647,20 @@ func typeName2(v interface{}) string {
 	}
 	panic("unreachable")
 }
- 
+
 type Stringer interface {
 	String() string
 }
- 
+
 type fakeString struct {
 	content string
 }
- 
+
 // function used to implement the Stringer interface
 func (s *fakeString) String() string {
 	return s.content
 }
- 
+
 func printString(value interface{}) {
 	switch str := value.(type) {
 	case string:
@@ -1730,7 +1669,7 @@ func printString(value interface{}) {
 		fmt.Println(str.String())
 	}
 }
- 
+
 func main() {
 	fmt.Println(typeName1(1))
 	fmt.Println(typeName1("Hello"))
@@ -1743,29 +1682,29 @@ func main() {
 	   Value: -0.1
 	   unknown
 	*/
- 
+
 	fmt.Println(typeName2(1))       // int
 	fmt.Println(typeName2("Hello")) // string
 	fmt.Println(typeName2(-.1))     // unknown
- 
+
 	s := &fakeString{"Ceci n'est pas un string"}
 	printString(s)                // Ceci n'est pas un string
 	printString("Hello, Gophers") // Hello, Gophers
 }
+
 ```
 
 <br>
-
 [**`select`**](https://golang.org/ref/spec#Select_statements) chooses the one that is **firstly ready** to
 [*send*](https://golang.org/ref/spec#Send_statements) or
 [*receive*](https://golang.org/ref/spec#Receive_operator):
 
 
-> If one or more of the communications can proceed, a single one that can 
+> If one or more of the communications can proceed, a single one that can
 > proceed is chosen via a uniform pseudo-random selection.
 >
-> Otherwise, if there is a default case, that case is chosen. 
-> If there is **no default case**, the "select" statement **blocks until** at 
+> Otherwise, if there is a default case, that case is chosen.
+> If there is **no default case**, the "select" statement **blocks until** at
 > least one of the communications can proceed.
 >
 > [Go Spec](https://golang.org/ref/spec#Select_statements)
@@ -1777,12 +1716,12 @@ Try [this](http://play.golang.org/p/9OwTUHX7iy):
 
 ```go
 package main
- 
+
 import (
 	"fmt"
 	"time"
 )
- 
+
 func send(msg string) <-chan string {
 	ch := make(chan string)
 	go func() {
@@ -1796,7 +1735,7 @@ func send(msg string) <-chan string {
 	}()
 	return ch
 }
- 
+
 func main() {
 	ch := send("Hello")
 	for {
@@ -1809,7 +1748,7 @@ func main() {
 		}
 	}
 }
- 
+
 /*
 Received: Hello 0
 Received: Hello 1
@@ -1820,6 +1759,7 @@ Received: Hello 5
 Sleeping 2 seconds...
 Done!
 */
+
 ```
 
 <br>
@@ -1829,25 +1769,25 @@ Also try this [code](http://play.golang.org/p/1lNjyefPM2%27) from this
 
 ```go
 package main
- 
+
 import (
 	"log"
 	"time"
 )
- 
+
 func main() {
 	chs := make([]chan struct{}, 100)
- 
+
 	// init
 	for i := range chs {
 		chs[i] = make(chan struct{}, 1)
 	}
- 
+
 	// close
 	for _, ch := range chs {
 		close(ch)
 	}
- 
+
 	// receive
 	for _, ch := range chs {
 		select {
@@ -1857,7 +1797,7 @@ func main() {
 			// have been received, receive operations will return the zero
 			// value for the channel's type without blocking.
 			log.Println("Succeed")
- 
+
 			// http://golang.org/ref/spec#Select_statements
 			// time.After _is_ evaluated each time.
 			// https://groups.google.com/d/msg/golang-nuts/1tjcV80ccq8/hcoP9uMNiUcJ
@@ -1866,7 +1806,7 @@ func main() {
 		}
 	}
 }
- 
+
 /*
 ...
 2015/06/27 14:34:48 Succeed
@@ -1874,6 +1814,7 @@ func main() {
 2015/06/27 14:34:48 Succeed
 2015/06/27 14:34:48 Succeed
 */
+
 ```
 
 <br>
