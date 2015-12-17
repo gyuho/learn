@@ -1,14 +1,14 @@
 PASS
-BenchmarkSet     	       1	1521636537 ns/op	176229776 B/op	  175220 allocs/op
-BenchmarkSet-2   	       1	1377401697 ns/op	176302848 B/op	  175728 allocs/op
-BenchmarkSet-4   	       1	1223686278 ns/op	176234064 B/op	  175247 allocs/op
-BenchmarkSet-8   	       1	1253946446 ns/op	176270912 B/op	  175499 allocs/op
-BenchmarkExist   	       1	1075307845 ns/op	       0 B/op	       0 allocs/op
-BenchmarkExist-2 	       1	1075368488 ns/op	       0 B/op	       0 allocs/op
-BenchmarkExist-4 	       1	1057679366 ns/op	       0 B/op	       0 allocs/op
-BenchmarkExist-8 	       1	1039781746 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDelete  	       1	1121692901 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDelete-2	       1	1188477439 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDelete-4	       1	1140941107 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDelete-8	       1	1158884566 ns/op	       0 B/op	       0 allocs/op
-ok  	github.com/gyuho/learn/doc/go_concurrency/rwmutex_vs_mutex	102.412s
+BenchmarkSet     	2000000000	         0.20 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-2   	1000000000	         0.33 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-4   	2000000000	         0.17 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-8   	1000000000	         0.36 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist   	1000000000	         0.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-2 	1000000000	         0.28 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-4 	1000000000	         0.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-8 	1000000000	         0.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete  	1000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-2	2000000000	         0.15 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-4	2000000000	         0.14 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-8	1000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/gyuho/learn/doc/go_concurrency/rwmutex_vs_mutex	115.970s

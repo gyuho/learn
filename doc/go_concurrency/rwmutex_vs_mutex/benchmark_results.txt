@@ -1,89 +1,27 @@
 .:
 [1]:
-benchmark             old ns/op      new ns/op      delta
-BenchmarkSet          1526640960     1481670813     -2.95%
-BenchmarkSet-2        1395413022     1514870346     +8.56%
-BenchmarkSet-4        1651740591     1476052832     -10.64%
-BenchmarkSet-8        1517480496     1485810861     -2.09%
-BenchmarkExist        1010294750     1052191430     +4.15%
-BenchmarkExist-2      1011382003     1068466633     +5.64%
-BenchmarkExist-4      1011450904     1053982139     +4.20%
-BenchmarkExist-8      1012751373     1026375418     +1.35%
-BenchmarkDelete       1161122877     1183847366     +1.96%
-BenchmarkDelete-2     1160956586     1197569517     +3.15%
-BenchmarkDelete-4     1176326562     1227503182     +4.35%
-BenchmarkDelete-8     1161234438     1166616076     +0.46%
+benchmark             old ns/op     new ns/op     delta
+BenchmarkSet          542594852     0.69          -100.00%
+BenchmarkSet-4        350770599     0.79          -100.00%
+BenchmarkExist        0.25          0.26          +4.00%
+BenchmarkExist-4      0.26          0.25          -3.85%
+BenchmarkDelete       0.32          0.28          -12.50%
+BenchmarkDelete-4     0.30          0.62          +106.67%
 
 benchmark             old allocs     new allocs     delta
-BenchmarkSet          174414         175254         +0.48%
-BenchmarkSet-2        175588         175331         -0.15%
-BenchmarkSet-4        177999         177055         -0.53%
-BenchmarkSet-8        177310         176630         -0.38%
+BenchmarkSet          43892          0              -100.00%
+BenchmarkSet-4        29962          0              -100.00%
 BenchmarkExist        0              0              +0.00%
-BenchmarkExist-2      0              0              +0.00%
 BenchmarkExist-4      0              0              +0.00%
-BenchmarkExist-8      0              0              +0.00%
 BenchmarkDelete       0              0              +0.00%
-BenchmarkDelete-2     0              0              +0.00%
 BenchmarkDelete-4     0              0              +0.00%
-BenchmarkDelete-8     0              1              +Inf%
 
 benchmark             old bytes     new bytes     delta
-BenchmarkSet          176113728     176234672     +0.07%
-BenchmarkSet-2        176282784     176245680     -0.02%
-BenchmarkSet-4        176402608     176353376     -0.03%
-BenchmarkSet-8        176380992     176289936     -0.05%
+BenchmarkSet          44070800      0             -100.00%
+BenchmarkSet-4        29417978      0             -100.00%
 BenchmarkExist        0             0             +0.00%
-BenchmarkExist-2      0             0             +0.00%
 BenchmarkExist-4      0             0             +0.00%
-BenchmarkExist-8      0             0             +0.00%
 BenchmarkDelete       0             0             +0.00%
-BenchmarkDelete-2     0             0             +0.00%
 BenchmarkDelete-4     0             0             +0.00%
-BenchmarkDelete-8     0             64            +Inf%
-
-
-[2]:
-benchmark             old ns/op      new ns/op      delta
-BenchmarkSet          1516514388     1521636537     +0.34%
-BenchmarkSet-2        1398870973     1377401697     -1.53%
-BenchmarkSet-4        1505371150     1223686278     -18.71%
-BenchmarkSet-8        1649381210     1253946446     -23.97%
-BenchmarkExist        1009327992     1075307845     +6.54%
-BenchmarkExist-2      1008434469     1075368488     +6.64%
-BenchmarkExist-4      1050811261     1057679366     +0.65%
-BenchmarkExist-8      1044229987     1039781746     -0.43%
-BenchmarkDelete       1175155367     1121692901     -4.55%
-BenchmarkDelete-2     1179781100     1188477439     +0.74%
-BenchmarkDelete-4     1175996838     1140941107     -2.98%
-BenchmarkDelete-8     1171137582     1158884566     -1.05%
-
-benchmark             old allocs     new allocs     delta
-BenchmarkSet          174830         175220         +0.22%
-BenchmarkSet-2        174720         175728         +0.58%
-BenchmarkSet-4        177240         175247         -1.12%
-BenchmarkSet-8        177404         175499         -1.07%
-BenchmarkExist        0              0              +0.00%
-BenchmarkExist-2      0              0              +0.00%
-BenchmarkExist-4      0              0              +0.00%
-BenchmarkExist-8      0              0              +0.00%
-BenchmarkDelete       0              0              +0.00%
-BenchmarkDelete-2     0              0              +0.00%
-BenchmarkDelete-4     0              0              +0.00%
-BenchmarkDelete-8     0              0              +0.00%
-
-benchmark             old bytes     new bytes     delta
-BenchmarkSet          176173632     176229776     +0.03%
-BenchmarkSet-2        176157632     176302848     +0.08%
-BenchmarkSet-4        176372512     176234064     -0.08%
-BenchmarkSet-8        176317648     176270912     -0.03%
-BenchmarkExist        0             0             +0.00%
-BenchmarkExist-2      0             0             +0.00%
-BenchmarkExist-4      0             0             +0.00%
-BenchmarkExist-8      0             0             +0.00%
-BenchmarkDelete       0             0             +0.00%
-BenchmarkDelete-2     0             0             +0.00%
-BenchmarkDelete-4     0             0             +0.00%
-BenchmarkDelete-8     0             0             +0.00%
 
 

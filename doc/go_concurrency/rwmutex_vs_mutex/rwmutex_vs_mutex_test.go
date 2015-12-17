@@ -46,7 +46,7 @@ func TestInterface(t *testing.T) {
 
 var (
 	opt        string
-	testSize   = 3000000
+	testSize   = 1500000
 	testValues = []string{}
 )
 
