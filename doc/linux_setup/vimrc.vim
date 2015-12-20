@@ -99,8 +99,8 @@ let g:airline_symbols.space = "\ua0"
 " NERDTree
 " map <F2> :NERDTreeToggle<cr>
 " map <F3> <C-w><C-w>
-map <ESC>t :NERDTreeToggle<cr>
-map <ESC>m <C-w><C-w>
+map <ESC>2 :NERDTreeToggle<cr>
+map <ESC>3 <C-w><C-w>
 
 
 "http://nvie.com/posts/how-i-boosted-my-vim/

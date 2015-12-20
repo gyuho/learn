@@ -1,0 +1,14 @@
+PASS
+BenchmarkSet     	2000000000	         0.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-2   	2000000000	         0.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-4   	2000000000	         0.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSet-8   	2000000000	         0.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist   	       1	2054777681 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-2 	       1	2052437364 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-4 	       1	2051610575 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-8 	       1	2052519696 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete  	       1	2315372056 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-2	       1	2315534208 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-4	       1	2317785360 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-8	       1	2316348615 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/gyuho/learn/doc/go_function_method_pointer_nil_map_slice/slice_vs_map	18.080s

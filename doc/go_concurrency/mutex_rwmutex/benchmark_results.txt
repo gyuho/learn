@@ -1,0 +1,89 @@
+.:
+[1]:
+benchmark             old ns/op      new ns/op     delta
+BenchmarkSet          0.00           0.00          +0.00%
+BenchmarkSet-2        0.00           0.00          +0.00%
+BenchmarkSet-4        0.00           0.00          +0.00%
+BenchmarkSet-8        0.00           0.00          +0.00%
+BenchmarkExist        2050188623     0.00          -100.00%
+BenchmarkExist-2      2046132347     0.00          -100.00%
+BenchmarkExist-4      2044472593     0.00          -100.00%
+BenchmarkExist-8      2049214356     0.00          -100.00%
+BenchmarkDelete       1230567776     0.00          -100.00%
+BenchmarkDelete-2     1234716549     0.00          -100.00%
+BenchmarkDelete-4     1234450530     0.00          -100.00%
+BenchmarkDelete-8     1230391098     0.00          -100.00%
+
+benchmark             old allocs     new allocs     delta
+BenchmarkSet          0              0              +0.00%
+BenchmarkSet-2        0              0              +0.00%
+BenchmarkSet-4        0              0              +0.00%
+BenchmarkSet-8        0              0              +0.00%
+BenchmarkExist        0              0              +0.00%
+BenchmarkExist-2      0              0              +0.00%
+BenchmarkExist-4      0              0              +0.00%
+BenchmarkExist-8      0              0              +0.00%
+BenchmarkDelete       0              0              +0.00%
+BenchmarkDelete-2     0              0              +0.00%
+BenchmarkDelete-4     0              0              +0.00%
+BenchmarkDelete-8     0              0              +0.00%
+
+benchmark             old bytes     new bytes     delta
+BenchmarkSet          0             0             +0.00%
+BenchmarkSet-2        0             0             +0.00%
+BenchmarkSet-4        0             0             +0.00%
+BenchmarkSet-8        0             0             +0.00%
+BenchmarkExist        0             0             +0.00%
+BenchmarkExist-2      0             0             +0.00%
+BenchmarkExist-4      0             0             +0.00%
+BenchmarkExist-8      0             0             +0.00%
+BenchmarkDelete       0             0             +0.00%
+BenchmarkDelete-2     0             0             +0.00%
+BenchmarkDelete-4     0             0             +0.00%
+BenchmarkDelete-8     0             0             +0.00%
+
+
+[2]:
+benchmark             old ns/op      new ns/op     delta
+BenchmarkSet          0.00           0.00          +0.00%
+BenchmarkSet-2        0.00           0.00          +0.00%
+BenchmarkSet-4        0.00           0.00          +0.00%
+BenchmarkSet-8        0.00           0.00          +0.00%
+BenchmarkExist        2042666891     0.00          -100.00%
+BenchmarkExist-2      2048476781     0.00          -100.00%
+BenchmarkExist-4      2047585890     0.00          -100.00%
+BenchmarkExist-8      2044692890     0.00          -100.00%
+BenchmarkDelete       1230760335     0.00          -100.00%
+BenchmarkDelete-2     1230244546     0.00          -100.00%
+BenchmarkDelete-4     1232843746     0.00          -100.00%
+BenchmarkDelete-8     1228040492     0.00          -100.00%
+
+benchmark             old allocs     new allocs     delta
+BenchmarkSet          0              0              +0.00%
+BenchmarkSet-2        0              0              +0.00%
+BenchmarkSet-4        0              0              +0.00%
+BenchmarkSet-8        0              0              +0.00%
+BenchmarkExist        0              0              +0.00%
+BenchmarkExist-2      0              0              +0.00%
+BenchmarkExist-4      0              0              +0.00%
+BenchmarkExist-8      0              0              +0.00%
+BenchmarkDelete       0              0              +0.00%
+BenchmarkDelete-2     0              0              +0.00%
+BenchmarkDelete-4     0              0              +0.00%
+BenchmarkDelete-8     0              0              +0.00%
+
+benchmark             old bytes     new bytes     delta
+BenchmarkSet          0             0             +0.00%
+BenchmarkSet-2        0             0             +0.00%
+BenchmarkSet-4        0             0             +0.00%
+BenchmarkSet-8        0             0             +0.00%
+BenchmarkExist        0             0             +0.00%
+BenchmarkExist-2      0             0             +0.00%
+BenchmarkExist-4      0             0             +0.00%
+BenchmarkExist-8      0             0             +0.00%
+BenchmarkDelete       0             0             +0.00%
+BenchmarkDelete-2     0             0             +0.00%
+BenchmarkDelete-4     0             0             +0.00%
+BenchmarkDelete-8     0             0             +0.00%
+
+
