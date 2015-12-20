@@ -7,14 +7,14 @@ nano /etc/sudoers
 gyuho ALL=(ALL) NOPASSWD: ALL
 COMMENT
 
-sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
-sudo apt-get -y install build-essential;
+sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean && \
+sudo apt-get -y install build-essential && \
 sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
 
-sudo apt-get -y install git;
-sudo apt-get -y install curl wget;
-sudo apt-get -y install bash-completion;
-sudo apt-get -y install terminator;
+sudo apt-get -y install git  && \
+sudo apt-get -y install curl wget && \
+sudo apt-get -y install bash-completion && \
+sudo apt-get -y install terminator && \
 sudo apt-get -y install pcmanfm;
 
 <<COMMENT
@@ -57,13 +57,13 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
-cd $HOME && sudo rm -rf go1.4;
-cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp;
-sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | sudo tar -v -C $HOME/go1.4_temp -xz;
-cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 ..;
+cd $HOME && sudo rm -rf go1.4 && \
+cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp && \
+sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | sudo tar -v -C $HOME/go1.4_temp -xz && \
+cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 .. && \
 cd $HOME && sudo rm -rf $HOME/go1.4_temp;
 
-cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master;
+cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master && \
 cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash;
 
 cd /usr/local && sudo rm -rf ./go;
