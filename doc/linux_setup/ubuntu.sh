@@ -124,6 +124,7 @@ sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./vimrc.vim ~/.vimrc;
 source $HOME/.vimrc;
+
 vim +PluginInstall +qall;
 vim +PluginClean +qall;
 
