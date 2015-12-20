@@ -106,7 +106,7 @@ sudo mkdir -p $HOME/fontconfig;
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./arch_pacman.conf /etc/pacman.conf;
 sudo cp ./arch_xinitrc.conf $HOME/.xinitrc && sudo chmod +x $HOME/.xinitrc;
-sudo cp ./bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo cp ./arch_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 sudo cp ./arch_fonts.conf $HOME/fontconfig/fonts.conf;
 sudo cp ./arch_etc_rc.conf /etc/rc.conf;
 sudo cp ./arch_asoundrc.conf $HOME/.asoundrc;

@@ -133,7 +133,7 @@ sudo vim +PluginClean +qall;
 #############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
 
-sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
 
 sudo mkdir -p $HOME/.config/terminator;
 # sudo nano $HOME/.config/terminator/config;
