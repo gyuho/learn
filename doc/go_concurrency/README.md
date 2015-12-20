@@ -137,6 +137,7 @@ func main() {
 	// and gets garbage-collected
 }
 ```
+
 ```go
 package main
  
@@ -1527,7 +1528,7 @@ package main
 import "fmt"
 
 func main() {
-	func() {
+	{
 
 		ch := make(chan int)
 		limit := 5
@@ -1557,9 +1558,9 @@ func main() {
 		// any value received from closed channel succeeds without blocking
 		// , returning the zero value of channel type and false.
 
-	}()
+	}
 
-	func() {
+	{
 
 		done, errChan := make(chan struct{}), make(chan error)
 
@@ -1592,7 +1593,7 @@ func main() {
 			Done at 3
 		*/
 
-	}()
+	}
 }
 
 ```
