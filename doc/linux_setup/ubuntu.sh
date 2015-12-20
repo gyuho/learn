@@ -136,8 +136,8 @@ sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/bashrc.sh $HOME/.bas
 
 sudo mkdir -p $HOME/.config/terminator;
 # sudo nano $HOME/.config/terminator/config;
-# cp $HOME/.config/terminator/config $HOME/.config/terminator/ubuntu_terminator.confg;  
-sudo cp ./ubuntu_terminator.conf $HOME/.config/terminator/config;
+sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_terminator.confg $HOME/.config/terminator/config;
+# cp $HOME/.config/terminator/config $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_terminator.confg;  
 
 sudo apt-get -y install unzip gzip tar;
 sudo apt-get -y install tree htop;
