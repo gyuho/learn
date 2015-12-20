@@ -113,7 +113,7 @@ cd $HOME;
 #############################################################
 printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 1s;
 
-sudo apt-get -y install gvim vim;
+sudo apt-get -y install vim;
 sudo chown -R gyuho:gyuho $HOME/.vim;
 sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
