@@ -1,0 +1,14 @@
+PASS
+BenchmarkSet     	       1	1516514388 ns/op	176173632 B/op	  174830 allocs/op
+BenchmarkSet-2   	       1	1398870973 ns/op	176157632 B/op	  174720 allocs/op
+BenchmarkSet-4   	       1	1505371150 ns/op	176372512 B/op	  177240 allocs/op
+BenchmarkSet-8   	       1	1649381210 ns/op	176317648 B/op	  177404 allocs/op
+BenchmarkExist   	       1	1009327992 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-2 	       1	1008434469 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-4 	       1	1050811261 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExist-8 	       1	1044229987 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete  	       1	1175155367 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-2	       1	1179781100 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-4	       1	1175996838 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDelete-8	       1	1171137582 ns/op	       0 B/op	       0 allocs/op
+ok  	github.com/gyuho/learn/doc/go_concurrency/rwmutex_vs_mutex	102.568s

@@ -1,4 +1,4 @@
-package slice_vs_map
+package rwmutex_vs_mutex
 
 import (
 	"flag"
@@ -10,9 +10,9 @@ import (
 	"testing"
 )
 
-func TestMapTo(t *testing.T) {
+func TestInterface(t *testing.T) {
 	func() {
-		d := newSlice()
+		d := newDataRWMutex()
 		ix := rand.Perm(testSize)
 		for _, v := range testValues {
 			d.set(v)
@@ -28,7 +28,7 @@ func TestMapTo(t *testing.T) {
 	}()
 
 	func() {
-		d := newMap()
+		d := newDataMutex()
 		ix := rand.Perm(testSize)
 		for _, v := range testValues {
 			d.set(v)
@@ -46,15 +46,15 @@ func TestMapTo(t *testing.T) {
 
 var (
 	opt        string
-	testSize   = 30000
+	testSize   = 3000000
 	testValues = []string{}
 )
 
 func init() {
-	flag.StringVar(&opt, "opt", "slice", "'slice' or 'map'.")
+	flag.StringVar(&opt, "opt", "rwmutex", "'rwmutex' or 'mutex'.")
 	flag.Parse()
 	opt = strings.TrimSpace(strings.ToLower(opt))
-	if opt != "slice" && opt != "map" {
+	if opt != "rwmutex" && opt != "mutex" {
 		fmt.Fprintln(os.Stderr, fmt.Errorf("unknown option", opt))
 		os.Exit(1)
 	}
@@ -69,10 +69,10 @@ func init() {
 
 func BenchmarkSet(b *testing.B) {
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "rwmutex" {
+		d = newDataRWMutex()
 	} else {
-		d = newMap()
+		d = newDataMutex()
 	}
 
 	b.StartTimer()
@@ -86,10 +86,10 @@ func BenchmarkSet(b *testing.B) {
 func BenchmarkExist(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "rwmutex" {
+		d = newDataRWMutex()
 	} else {
-		d = newMap()
+		d = newDataMutex()
 	}
 	for _, v := range testValues {
 		d.set(v)
@@ -112,10 +112,10 @@ func BenchmarkExist(b *testing.B) {
 func BenchmarkDelete(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "rwmutex" {
+		d = newDataRWMutex()
 	} else {
-		d = newMap()
+		d = newDataMutex()
 	}
 	for _, v := range testValues {
 		d.set(v)

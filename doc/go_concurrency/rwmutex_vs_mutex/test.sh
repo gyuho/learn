@@ -35,10 +35,10 @@ do
 	cd $current_dir && fpath="$(echo $current_dir)/old_$i.txt";
 	if [ "$benchmark_function_name" == "$dot" ]; then
 		echo "running all benchmarks...";
-		go test -opt "slice" -run $test_function_name -bench . -benchmem -cpu 1,2,4,8 > $fpath;
+		go test -opt "rwmutex" -run $test_function_name -bench . -benchmem -cpu 1,2,4,8 > $fpath;
 	else
 		echo "running only $benchmark_function_name";
-		go test -opt "slice" -run $test_function_name -bench $benchmark_function_name -benchmem -cpu 1,2,4,8 > $fpath;
+		go test -opt "rwmutex" -run $test_function_name -bench $benchmark_function_name -benchmem -cpu 1,2,4,8 > $fpath;
 	fi
 done
 
@@ -48,10 +48,10 @@ do
 	cd $current_dir && fpath="$(echo $current_dir)/new_$i.txt";
 	if [ "$benchmark_function_name" == "$dot" ]; then
 		echo "running all benchmarks...";
-		go test -opt "map" -run $test_function_name -bench . -benchmem -cpu 1,2,4,8 > $fpath;
+		go test -opt "mutex" -run $test_function_name -bench . -benchmem -cpu 1,2,4,8 > $fpath;
 	else
 		echo "running only $benchmark_function_name";
-		go test -opt "map" -run $test_function_name -bench $benchmark_function_name -benchmem -cpu 1,2,4,8 > $fpath;
+		go test -opt "mutex" -run $test_function_name -bench $benchmark_function_name -benchmem -cpu 1,2,4,8 > $fpath;
 	fi
 done
 

@@ -1,4 +1,4 @@
-package slice_vs_map
+package rwmutex_vs_mutex
 
 import (
 	"math/rand"
