@@ -47,6 +47,16 @@ git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
 git config --global core.editor "vim";
 
+cd $HOME && \
+mkdir -p $HOME/go/src && \
+mkdir -p $HOME/go/src/github.com && \
+mkdir -p $HOME/go/src/github.com/coreos && \
+mkdir -p $HOME/go/src/github.com/gyuho && \
+mkdir -p $HOME/go/src/golang.org;
+
+cd $HOME/go/src/github.com/gyuho && git clone https://github.com/gyuho/learn.git;
+cd $HOME/go/src/github.com/coreos && git clone https://github.com/coreos/etcd.git;
+
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
 
