@@ -11,6 +11,12 @@ sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove 
 sudo apt-get -y install build-essential;
 sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
 
+sudo apt-get -y install git;
+sudo apt-get -y install curl wget;
+sudo apt-get -y install bash-completion;
+sudo apt-get -y install terminator;
+sudo apt-get -y install pcmanfm;
+
 <<COMMENT
 - Time & Date
 - Language Support
@@ -23,22 +29,9 @@ sudo reboot;
 COMMENT
 
 #############################################################
-printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 1s;
-
-sudo apt-get -y install terminator;
-sudo apt-get -y install pcmanfm;
-sudo apt-get -y install bash-completion;
-sudo apt-get -y install git;
-sudo apt-get -y install curl wget;
-sudo apt-get -y install unzip gzip tar;
-sudo apt-get -y install tree htop;
-sudo apt-get -y install openssh;
-
-sudo apt-get install -y python-pip python-dev build-essential;
-sudo pip install --upgrade pip;
-
-#############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
+
+sudo apt-get -y install git;
 
 echo "[user]
   email = gyuhox@gmail.com
@@ -53,17 +46,6 @@ echo "[user]
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
 git config --global core.editor "vim";
-
-#############################################################
-printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
-
-cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google;
-cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git;
-cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh;
-cd $HOME/go/src/github.com/google/protobuf && ./configure;
-cd $HOME/go/src/github.com/google/protobuf && make;
-cd $HOME/go/src/github.com/google/protobuf && make check;
-cd $HOME/go/src/github.com/google/protobuf && make install;
 
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
@@ -119,7 +101,6 @@ cd $HOME;
 printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 1s;
 
 sudo apt-get -y install gvim vim;
-
 sudo chown -R gyuho:gyuho $HOME/.vim;
 sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
@@ -134,6 +115,32 @@ vim +PluginInstall +qall;
 vim +PluginClean +qall;
 
 # :GoInstallBinaries
+
+#############################################################
+printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
+
+cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
+sudo mkdir -p $HOME/.config;
+sudo cp ./bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo cp ./ubuntu_terminator.conf $HOME/.config/terminator/config;
+
+sudo apt-get -y install unzip gzip tar;
+sudo apt-get -y install tree htop;
+sudo apt-get -y install openssh;
+
+sudo apt-get install -y python-pip python-dev build-essential;
+sudo pip install --upgrade pip;
+
+#############################################################
+printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
+
+cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google;
+cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git;
+cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh;
+cd $HOME/go/src/github.com/google/protobuf && ./configure;
+cd $HOME/go/src/github.com/google/protobuf && make;
+cd $HOME/go/src/github.com/google/protobuf && make check;
+cd $HOME/go/src/github.com/google/protobuf && make install;
 
 #############################################################
 printf "\n\n\n\n\ndone!\n\n\n\n\n"
