@@ -2,7 +2,7 @@
 COMMENT
 
 <<COMMENT
-su
+sudo su
 nano /etc/sudoers
 gyuho ALL=(ALL) NOPASSWD: ALL
 COMMENT
@@ -10,6 +10,17 @@ COMMENT
 sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
 sudo apt-get -y install build-essential;
 sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
+
+<<COMMENT
+- Time & Date
+- Language Support
+- https://www.google.com/chrome
+- Software Updater
+
+sudo reboot;
+
+- Keyboard
+COMMENT
 
 #############################################################
 printf "\n\n\n\n\ninstalling basics...\n\n" && sleep 1s;
@@ -53,26 +64,6 @@ cd $HOME/go/src/github.com/google/protobuf && ./configure;
 cd $HOME/go/src/github.com/google/protobuf && make;
 cd $HOME/go/src/github.com/google/protobuf && make check;
 cd $HOME/go/src/github.com/google/protobuf && make install;
-
-#############################################################
-printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 1s;
-
-sudo apt-get -y install gvim vim;
-
-sudo chown -R gyuho:gyuho $HOME/.vim;
-sudo mkdir -p $HOME/.vim/bundle;
-sudo mkdir -p $HOME/.vim/ftdetect;
-sudo mkdir -p $HOME/.vim/syntax;
-sudo chmod -R +x $HOME/.vim;
-sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
-
-cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo cp ./vimrc.vim ~/.vimrc;
-source $HOME/.vimrc;
-vim +PluginInstall +qall;
-vim +PluginClean +qall;
-
-# :GoInstallBinaries
 
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
@@ -123,6 +114,26 @@ go get -v -u github.com/jstemmer/gotags && \
 go get -v -u github.com/alecthomas/gometalinter && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
+
+#############################################################
+printf "\n\n\n\n\ninstalling vim...\n\n" && sleep 1s;
+
+sudo apt-get -y install gvim vim;
+
+sudo chown -R gyuho:gyuho $HOME/.vim;
+sudo mkdir -p $HOME/.vim/bundle;
+sudo mkdir -p $HOME/.vim/ftdetect;
+sudo mkdir -p $HOME/.vim/syntax;
+sudo chmod -R +x $HOME/.vim;
+sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
+
+cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
+sudo cp ./vimrc.vim ~/.vimrc;
+source $HOME/.vimrc;
+vim +PluginInstall +qall;
+vim +PluginClean +qall;
+
+# :GoInstallBinaries
 
 #############################################################
 printf "\n\n\n\n\ndone!\n\n\n\n\n"
