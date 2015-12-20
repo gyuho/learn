@@ -50,6 +50,9 @@ git config --global core.editor "vim";
 #############################################################
 printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
 
+sudo apt-get -y install gccgo-go;
+sudo apt-get -y remove gccgo;
+
 cd $HOME && \
 mkdir -p $HOME/go/src && \
 mkdir -p $HOME/go/src/github.com && \
