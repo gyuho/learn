@@ -125,8 +125,8 @@ cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./vimrc.vim ~/.vimrc;
 source $HOME/.vimrc;
 
-vim +PluginInstall +qall;
-vim +PluginClean +qall;
+sudo vim +PluginInstall +qall;
+sudo vim +PluginClean +qall;
 
 # :GoInstallBinaries
 
