@@ -120,8 +120,8 @@ vim +PluginClean +qall;
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo mkdir -p $HOME/.config;
 sudo cp ./bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
+sudo mkdir -p $HOME/.config/terminator;
 sudo cp ./ubuntu_terminator.conf $HOME/.config/terminator/config;
 
 sudo apt-get -y install unzip gzip tar;
