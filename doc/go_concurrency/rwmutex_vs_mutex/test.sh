@@ -39,8 +39,7 @@ do
 		go test -opt "rwmutex" -run $test_function_name -bench . -benchmem -cpu 1,4> $fpath;
 	else
 		echo "running only $benchmark_function_name";
-		go test -opt "rwmutex" -run $test_function_name -bench
-		$benchmark_function_name -benchmem -cpu 1,4 > $fpath;
+		go test -opt "rwmutex" -run $test_function_name -bench $benchmark_function_name -benchmem -cpu 1,4 > $fpath;
 	fi
 done
 
