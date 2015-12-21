@@ -157,6 +157,8 @@ sudo pip install --upgrade pip;
 #############################################################
 printf "\n\n\n\n\ninstalling protobuf...\n\n" && sleep 1s;
 
+sudo apt-get -y install dh-autoreconf;
+
 cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google;
 cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git;
 cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh;
