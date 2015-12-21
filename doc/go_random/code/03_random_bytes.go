@@ -18,6 +18,9 @@ func main() {
 
 	fmt.Println(string(randBytes(10)))
 	// IdPDZOxast
+
+	fmt.Println(multiRandBytes(3, 5))
+	// [[119 121 67] [114 70 70] [112 90 100] [74 85 77] [84 101 101]]
 }
 
 // http://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-golang
@@ -43,4 +46,19 @@ func randBytes(n int) []byte {
 		remain--
 	}
 	return b
+}
+
+func multiRandBytes(n, size int) [][]byte {
+	m := make(map[string]struct{})
+	rs := [][]byte{}
+	for len(rs) != size {
+		b := randBytes(n)
+		if _, ok := m[string(b)]; !ok {
+			rs = append(rs, b)
+			m[string(b)] = struct{}{}
+		} else {
+			continue
+		}
+	}
+	return rs
 }
