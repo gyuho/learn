@@ -3,7 +3,6 @@
 current_dir=$(pwd)
 
 <<COMMENT
-
 ################################################################
 printf "\n"
 echo "TEST #1 $ go test -v ./..."
@@ -13,7 +12,6 @@ go test -v ./...;
 printf "\n"
 echo "TEST #2 $ go test -v -race ./.."
 go test -v -race ./...;
-
 COMMENT
 
 ################################################################
@@ -23,7 +21,6 @@ go version && \
 printf "linux kernel: %s\n" $(uname -r) && \
 
 ################################################################
-
 printf "\n"
 echo "TEST #3 Benchmarks..."
 
@@ -71,7 +68,6 @@ do
 done
 
 ################################################################
-
 printf "\n"
 echo "Done"
 
