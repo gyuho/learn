@@ -37,7 +37,7 @@ func main() {
 	switch opt {
 
 	case "grpc":
-		demogrpc.Stress(port, endpoint, keys, vals, numConns, numClients)
+		demogrpc.Stress(port, endpoint, keys, vals, connsN, clientsN)
 
 	case "jsonrpc":
 		demojsonrpc.Stress(port, endpoint, keys, vals)
@@ -49,9 +49,9 @@ var (
 	port     = ":8080"
 	endpoint = "localhost" + port
 
-	numConns   = 1
-	numClients = 1
-	// numClients = 100
+	connsN   = 1
+	clientsN = 1
+	// clientsN = 100
 
 	size = 100000
 	opt  = "grpc"
@@ -79,7 +79,7 @@ func init() {
 	flag.Parse()
 
 	size = *sizePt
-	numClients = *numClienstsPt
+	clientsN = *numClienstsPt
 	opt = *optPt
 	if opt != "grpc" && opt != "jsonrpc" {
 		log.Fatalf("%s is unknown\n", opt)

@@ -52,11 +52,11 @@ func startServerGRPC(port string) {
 	}()
 }
 
-func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int) {
+func Stress(port, endpoint string, keys, vals [][]byte, connsN, clientsN int) {
 
 	go startServerGRPC(port)
 
-	conns := make([]*grpc.ClientConn, numConns)
+	conns := make([]*grpc.ClientConn, connsN)
 	for i := range conns {
 		conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
 		if err != nil {
@@ -64,9 +64,9 @@ func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int
 		}
 		conns[i] = conn
 	}
-	clients := make([]pb.KVClient, numClients)
+	clients := make([]pb.KVClient, clientsN)
 	for i := range clients {
-		clients[i] = pb.NewKVClient(conns[i%int(numConns)])
+		clients[i] = pb.NewKVClient(conns[i%int(connsN)])
 	}
 
 	requests := make(chan *pb.PutRequest, len(keys))
@@ -111,5 +111,5 @@ func Stress(port, endpoint string, keys, vals [][]byte, numConns, numClients int
 	tt := time.Since(st)
 	size := len(keys)
 	pt := tt / time.Duration(size)
-	log.Printf("GRPC took %v for %d requests with %d client(s) (%v per each).\n", tt, size, numClients, pt)
+	log.Printf("GRPC took %v for %d requests with %d client(s) (%v per each).\n", tt, size, clientsN, pt)
 }

@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	numConns   = 1
-	numClients = 1
-	// numClients = 100
+	connsN   = 1
+	clientsN = 1
+	// clientsN = 100
 
 	size = 100000
 	opt  = "grpc"
@@ -43,7 +43,7 @@ func init() {
 	flag.Parse()
 
 	size = *sizePt
-	numClients = *numClienstsPt
+	clientsN = *numClienstsPt
 	opt = *optPt
 	if opt != "grpc" && opt != "jsonrpc" {
 		log.Fatalf("%s is unknown\n", opt)
@@ -71,7 +71,7 @@ func BenchmarkStress(b *testing.B) {
 		case "grpc":
 			port := ":8000"
 			endpoint := "localhost" + port
-			demogrpc.Stress(port, endpoint, keys, vals, numConns, numClients)
+			demogrpc.Stress(port, endpoint, keys, vals, connsN, clientsN)
 		case "jsonrpc":
 			port := ":8001"
 			endpoint := "localhost" + port
