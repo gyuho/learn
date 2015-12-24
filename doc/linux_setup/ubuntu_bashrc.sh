@@ -84,14 +84,12 @@ alias ..='cd ..'
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
 alias hh="history | grep "
-alias pp="ps aux | grep "
 alias rm="rm -i "
 
 alias cpu='cat /proc/cpuinfo | grep "model name" | head -1; sensors;'
 alias disk='df -h;'
 alias memory='free -h;'
 alias htop='htop -d 2'
-alias showtime='while true; do echo -ne "`date`\r"; done'
 
 alias clean_page='echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh;'
 
