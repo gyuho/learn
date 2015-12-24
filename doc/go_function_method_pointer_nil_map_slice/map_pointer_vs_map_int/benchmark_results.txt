@@ -1,0 +1,89 @@
+.:
+[1]:
+benchmark             old ns/op      new ns/op      delta
+BenchmarkSet          5.17           3360212467     +64994438333.27%
+BenchmarkSet-2        20604807       2368496038     +11394.87%
+BenchmarkSet-4        1004842630     1987653119     +97.81%
+BenchmarkSet-8        538886142      1994592815     +270.13%
+BenchmarkExist        559294962      1476238441     +163.95%
+BenchmarkExist-2      1156724744     1524070684     +31.76%
+BenchmarkExist-4      1156368030     1292179394     +11.74%
+BenchmarkExist-8      113268574      1294543372     +1042.90%
+BenchmarkDelete       1179160594     1609355789     +36.48%
+BenchmarkDelete-2     1034328401     1370935932     +32.54%
+BenchmarkDelete-4     1290727835     1670016139     +29.39%
+BenchmarkDelete-8     1291324453     1412288016     +9.37%
+
+benchmark             old allocs     new allocs     delta
+BenchmarkSet          0              175881         +Inf%
+BenchmarkSet-2        3501           175184         +4903.83%
+BenchmarkSet-4        175118         175548         +0.25%
+BenchmarkSet-8        87752          175055         +99.49%
+BenchmarkExist        0              0              +0.00%
+BenchmarkExist-2      0              0              +0.00%
+BenchmarkExist-4      0              0              +0.00%
+BenchmarkExist-8      0              0              +0.00%
+BenchmarkDelete       0              0              +0.00%
+BenchmarkDelete-2     0              0              +0.00%
+BenchmarkDelete-4     0              0              +0.00%
+BenchmarkDelete-8     0              0              +0.00%
+
+benchmark             old bytes     new bytes     delta
+BenchmarkSet          0             176324880     +Inf%
+BenchmarkSet-2        1957819       176224512     +8901.06%
+BenchmarkSet-4        97894256      176277488     +80.07%
+BenchmarkSet-8        48962568      176208384     +259.88%
+BenchmarkExist        0             0             +0.00%
+BenchmarkExist-2      0             0             +0.00%
+BenchmarkExist-4      0             0             +0.00%
+BenchmarkExist-8      0             0             +0.00%
+BenchmarkDelete       0             0             +0.00%
+BenchmarkDelete-2     0             0             +0.00%
+BenchmarkDelete-4     0             0             +0.00%
+BenchmarkDelete-8     0             0             +0.00%
+
+
+[2]:
+benchmark             old ns/op      new ns/op      delta
+BenchmarkSet          1247985798     2286112203     +83.18%
+BenchmarkSet-2        1355245914     1470431371     +8.50%
+BenchmarkSet-4        1352045912     1491073766     +10.28%
+BenchmarkSet-8        1385595451     1622715064     +17.11%
+BenchmarkExist        1175084615     1065300713     -9.34%
+BenchmarkExist-2      1163857818     1078173635     -7.36%
+BenchmarkExist-4      1171255964     1218399686     +4.03%
+BenchmarkExist-8      1045392315     1088062231     +4.08%
+BenchmarkDelete       1246298099     1136047584     -8.85%
+BenchmarkDelete-2     1269299469     1619179372     +27.56%
+BenchmarkDelete-4     1188349024     1228523670     +3.38%
+BenchmarkDelete-8     1021973125     1228556317     +20.21%
+
+benchmark             old allocs     new allocs     delta
+BenchmarkSet          175703         175397         -0.17%
+BenchmarkSet-2        175616         174819         -0.45%
+BenchmarkSet-4        175082         176221         +0.65%
+BenchmarkSet-8        175343         177005         +0.95%
+BenchmarkExist        0              0              +0.00%
+BenchmarkExist-2      0              0              +0.00%
+BenchmarkExist-4      0              0              +0.00%
+BenchmarkExist-8      0              0              +0.00%
+BenchmarkDelete       0              0              +0.00%
+BenchmarkDelete-2     0              0              +0.00%
+BenchmarkDelete-4     0              0              +0.00%
+BenchmarkDelete-8     0              0              +0.00%
+
+benchmark             old bytes     new bytes     delta
+BenchmarkSet          97941040      176255184     +79.96%
+BenchmarkSet-2        97934096      176171872     +79.89%
+BenchmarkSet-4        97891376      176315280     +80.11%
+BenchmarkSet-8        97912256      176329872     +80.09%
+BenchmarkExist        0             0             +0.00%
+BenchmarkExist-2      0             0             +0.00%
+BenchmarkExist-4      0             0             +0.00%
+BenchmarkExist-8      0             0             +0.00%
+BenchmarkDelete       0             0             +0.00%
+BenchmarkDelete-2     0             0             +0.00%
+BenchmarkDelete-4     0             0             +0.00%
+BenchmarkDelete-8     0             0             +0.00%
+
+

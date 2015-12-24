@@ -28,3 +28,18 @@ func randBytes(n int) []byte {
 	}
 	return b
 }
+
+func multiRandBytes(bytesN, sliceN int) [][]byte {
+	m := make(map[string]struct{})
+	rs := [][]byte{}
+	for len(rs) != sliceN {
+		b := randBytes(bytesN)
+		if _, ok := m[string(b)]; !ok {
+			rs = append(rs, b)
+			m[string(b)] = struct{}{}
+		} else {
+			continue
+		}
+	}
+	return rs
+}

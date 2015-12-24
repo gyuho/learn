@@ -54,43 +54,43 @@ func TestMapTo(t *testing.T) {
 
 	func() {
 		d := newMapToSlice()
-		ix := rand.Perm(testSize)
+		ix := rand.Perm(testN)
 		k := "A"
-		for _, v := range testValues {
+		for _, v := range testVals {
 			d.set(k, v)
 		}
 		for _, idx := range ix {
-			d.delete(k, testValues[idx])
+			d.delete(k, testVals[idx])
 		}
 		for _, idx := range ix {
-			if d.exist(k, testValues[idx]) {
-				t.Errorf("%s should have not existed!", testValues[idx])
+			if d.exist(k, testVals[idx]) {
+				t.Errorf("%s should have not existed!", testVals[idx])
 			}
 		}
 	}()
 
 	func() {
 		d := newMapToMap()
-		ix := rand.Perm(testSize)
+		ix := rand.Perm(testN)
 		k := "A"
-		for _, v := range testValues {
+		for _, v := range testVals {
 			d.set(k, v)
 		}
 		for _, idx := range ix {
-			d.delete(k, testValues[idx])
+			d.delete(k, testVals[idx])
 		}
 		for _, idx := range ix {
-			if d.exist(k, testValues[idx]) {
-				t.Errorf("%s should have not existed!", testValues[idx])
+			if d.exist(k, testVals[idx]) {
+				t.Errorf("%s should have not existed!", testVals[idx])
 			}
 		}
 	}()
 }
 
 var (
-	opt        string
-	testSize   = 30000
-	testValues = []string{}
+	opt      string
+	testN    = 30000
+	testVals = make([]string, testN)
 )
 
 func init() {
@@ -104,8 +104,9 @@ func init() {
 	log.Println("Running benchmarks with", opt)
 
 	log.Println("Filling up the test data...")
-	for i := 0; i < testSize; i++ {
-		testValues = append(testValues, string(randBytes(15)))
+	vs := multiRandBytes(15, testN)
+	for i := 0; i < testN; i++ {
+		testVals[i] = string(vs[i])
 	}
 	log.Println("Done! Test data is ready!")
 }
@@ -122,7 +123,7 @@ func BenchmarkSet(b *testing.B) {
 	b.ReportAllocs()
 
 	k := "A"
-	for _, v := range testValues {
+	for _, v := range testVals {
 		d.set(k, v)
 	}
 }
@@ -136,20 +137,20 @@ func BenchmarkExist(b *testing.B) {
 		d = newMapToMap()
 	}
 	k := "A"
-	for _, v := range testValues {
+	for _, v := range testVals {
 		d.set(k, v)
 	}
 
 	// to make it not biased towards data structures
 	// with an order, such as slice.
-	ix := rand.Perm(testSize)
+	ix := rand.Perm(testN)
 
 	b.StartTimer()
 	b.ReportAllocs()
 
 	for _, idx := range ix {
-		if !d.exist(k, testValues[idx]) {
-			b.Errorf("%s should have existed!", testValues[idx])
+		if !d.exist(k, testVals[idx]) {
+			b.Errorf("%s should have existed!", testVals[idx])
 		}
 	}
 }
@@ -163,18 +164,18 @@ func BenchmarkDelete(b *testing.B) {
 		d = newMapToMap()
 	}
 	k := "A"
-	for _, v := range testValues {
+	for _, v := range testVals {
 		d.set(k, v)
 	}
 
 	// to make it not biased towards data structures
 	// with an order, such as slice.
-	ix := rand.Perm(testSize)
+	ix := rand.Perm(testN)
 
 	b.StartTimer()
 	b.ReportAllocs()
 
 	for _, idx := range ix {
-		d.delete(k, testValues[idx])
+		d.delete(k, testVals[idx])
 	}
 }

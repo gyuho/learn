@@ -1,4 +1,4 @@
-package map_to_slice_vs_map
+package map_pointer_vs_map_int
 
 import (
 	"math/rand"
@@ -14,6 +14,7 @@ func randBytes(n int) []byte {
 	)
 	src := rand.NewSource(time.Now().UnixNano())
 	b := make([]byte, n)
+	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
 			cache, remain = src.Int63(), letterIdxMax

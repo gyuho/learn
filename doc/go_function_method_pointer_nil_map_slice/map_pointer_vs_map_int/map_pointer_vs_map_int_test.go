@@ -1,4 +1,4 @@
-package slice_vs_map
+package map_pointer_vs_map_int
 
 import (
 	"flag"
@@ -10,9 +10,9 @@ import (
 	"testing"
 )
 
-func TestMapTo(t *testing.T) {
+func TestMap(t *testing.T) {
 	func() {
-		d := newSlice()
+		d := newMapPointer()
 		ix := rand.Perm(testN)
 		for _, v := range testVals {
 			d.set(v)
@@ -28,7 +28,7 @@ func TestMapTo(t *testing.T) {
 	}()
 
 	func() {
-		d := newMap()
+		d := newMapInt()
 		ix := rand.Perm(testN)
 		for _, v := range testVals {
 			d.set(v)
@@ -46,15 +46,15 @@ func TestMapTo(t *testing.T) {
 
 var (
 	opt      string
-	testN    = 30000
-	testVals = make([]string, testN)
+	testN    = 3000000
+	testVals = make([]*metric, testN)
 )
 
 func init() {
-	flag.StringVar(&opt, "opt", "slice", "'slice' or 'map'.")
+	flag.StringVar(&opt, "opt", "mappointer", "'mappointer' or 'mapint'.")
 	flag.Parse()
 	opt = strings.TrimSpace(strings.ToLower(opt))
-	if opt != "slice" && opt != "map" {
+	if opt != "mappointer" && opt != "mapint" {
 		fmt.Fprintln(os.Stderr, fmt.Errorf("unknown option", opt))
 		os.Exit(1)
 	}
@@ -63,17 +63,20 @@ func init() {
 	log.Println("Filling up the test data...")
 	vs := multiRandBytes(15, testN)
 	for i := 0; i < testN; i++ {
-		testVals[i] = string(vs[i])
+		m := metric{}
+		m.id = i
+		m.s = string(vs[i])
+		testVals[i] = &m
 	}
 	log.Println("Done! Test data is ready!")
 }
 
 func BenchmarkSet(b *testing.B) {
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "mappointer" {
+		d = newMapPointer()
 	} else {
-		d = newMap()
+		d = newMapInt()
 	}
 
 	b.StartTimer()
@@ -87,10 +90,10 @@ func BenchmarkSet(b *testing.B) {
 func BenchmarkExist(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "mappointer" {
+		d = newMapPointer()
 	} else {
-		d = newMap()
+		d = newMapInt()
 	}
 	for _, v := range testVals {
 		d.set(v)
@@ -113,10 +116,10 @@ func BenchmarkExist(b *testing.B) {
 func BenchmarkDelete(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "slice" {
-		d = newSlice()
+	if opt == "mappointer" {
+		d = newMapPointer()
 	} else {
-		d = newMap()
+		d = newMapInt()
 	}
 	for _, v := range testVals {
 		d.set(v)
