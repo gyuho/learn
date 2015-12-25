@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
 	b := make([]byte, 10)
 	if _, err := crand.Read(b); err != nil {
 		panic(err)
