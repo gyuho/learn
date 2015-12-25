@@ -98,7 +98,7 @@ func init() {
 	flag.Parse()
 	opt = strings.TrimSpace(strings.ToLower(opt))
 	if opt != "slice" && opt != "map" {
-		fmt.Fprintln(os.Stderr, fmt.Errorf("unknown option", opt))
+		fmt.Fprintln(os.Stderr, fmt.Errorf("unknown option %s", opt))
 		os.Exit(1)
 	}
 	log.Println("Running benchmarks with", opt)

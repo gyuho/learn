@@ -1,4 +1,4 @@
-package map_pointer_vs_map_int
+package map_string_vs_map_pointer
 
 import (
 	"flag"
@@ -12,33 +12,33 @@ import (
 
 func TestMap(t *testing.T) {
 	func() {
+		d := newMapString()
+		ix := rand.Perm(testN)
+		for _, v := range testVals {
+			d.set(v)
+		}
+		for _, idx := range ix {
+			d.delete(testVals[idx].id)
+		}
+		for _, idx := range ix {
+			if d.exist(testVals[idx].id) {
+				t.Errorf("%s should have not existed!", testVals[idx].id)
+			}
+		}
+	}()
+
+	func() {
 		d := newMapPointer()
 		ix := rand.Perm(testN)
 		for _, v := range testVals {
 			d.set(v)
 		}
 		for _, idx := range ix {
-			d.delete(testVals[idx])
+			d.delete(testVals[idx].id)
 		}
 		for _, idx := range ix {
-			if d.exist(testVals[idx]) {
-				t.Errorf("%s should have not existed!", testVals[idx])
-			}
-		}
-	}()
-
-	func() {
-		d := newMapInt()
-		ix := rand.Perm(testN)
-		for _, v := range testVals {
-			d.set(v)
-		}
-		for _, idx := range ix {
-			d.delete(testVals[idx])
-		}
-		for _, idx := range ix {
-			if d.exist(testVals[idx]) {
-				t.Errorf("%s should have not existed!", testVals[idx])
+			if d.exist(testVals[idx].id) {
+				t.Errorf("%s should have not existed!", testVals[idx].id)
 			}
 		}
 	}()
@@ -46,15 +46,15 @@ func TestMap(t *testing.T) {
 
 var (
 	opt      string
-	testN    = 3000000
+	testN    = 10000
 	testVals = make([]*node, testN)
 )
 
 func init() {
-	flag.StringVar(&opt, "opt", "mappointer", "'mappointer' or 'mapint'.")
+	flag.StringVar(&opt, "opt", "mapstring", "'mapstring' or 'mappointer'.")
 	flag.Parse()
 	opt = strings.TrimSpace(strings.ToLower(opt))
-	if opt != "mappointer" && opt != "mapint" {
+	if opt != "mapstring" && opt != "mappointer" {
 		fmt.Fprintln(os.Stderr, fmt.Errorf("unknown option %s", opt))
 		os.Exit(1)
 	}
@@ -64,8 +64,7 @@ func init() {
 	vs := multiRandBytes(15, testN)
 	for i := 0; i < testN; i++ {
 		m := node{}
-		m.id = i
-		m.s = string(vs[i])
+		m.id = string(vs[i])
 		testVals[i] = &m
 	}
 	log.Println("Done! Test data is ready!")
@@ -73,10 +72,10 @@ func init() {
 
 func BenchmarkSet(b *testing.B) {
 	var d Interface
-	if opt == "mappointer" {
-		d = newMapPointer()
+	if opt == "mapstring" {
+		d = newMapString()
 	} else {
-		d = newMapInt()
+		d = newMapPointer()
 	}
 
 	b.StartTimer()
@@ -90,10 +89,10 @@ func BenchmarkSet(b *testing.B) {
 func BenchmarkExist(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "mappointer" {
-		d = newMapPointer()
+	if opt == "mapstring" {
+		d = newMapString()
 	} else {
-		d = newMapInt()
+		d = newMapPointer()
 	}
 	for _, v := range testVals {
 		d.set(v)
@@ -107,7 +106,7 @@ func BenchmarkExist(b *testing.B) {
 	b.ReportAllocs()
 
 	for _, idx := range ix {
-		if !d.exist(testVals[idx]) {
+		if !d.exist(testVals[idx].id) {
 			b.Errorf("%s should have existed!", testVals[idx])
 		}
 	}
@@ -116,10 +115,10 @@ func BenchmarkExist(b *testing.B) {
 func BenchmarkDelete(b *testing.B) {
 	b.StopTimer()
 	var d Interface
-	if opt == "mappointer" {
-		d = newMapPointer()
+	if opt == "mapstring" {
+		d = newMapString()
 	} else {
-		d = newMapInt()
+		d = newMapPointer()
 	}
 	for _, v := range testVals {
 		d.set(v)
@@ -133,6 +132,6 @@ func BenchmarkDelete(b *testing.B) {
 	b.ReportAllocs()
 
 	for _, idx := range ix {
-		d.delete(testVals[idx])
+		d.delete(testVals[idx].id)
 	}
 }
