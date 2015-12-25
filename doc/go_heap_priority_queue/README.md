@@ -718,6 +718,17 @@ func main() {
 	fmt.Println()
 }
 
+/*
+[BEFORE] heap.Init(&pq): &{id:banana priority:1 index:0} &{id:apple priority:5 index:1} &{id:pear priority:10 index:2}
+[AFTER]  heap.Init(&pq): &{id:pear priority:10 index:0} &{id:apple priority:5 index:1} &{id:banana priority:1 index:2}
+
+[BEFORE] pq.update: &{id:pear priority:10 index:0} &{id:apple priority:5 index:1} &{id:banana priority:1 index:2} &{id:orange priority:1 index:3}
+[AFTER]  pq.update: &{id:pear priority:10 index:0} &{id:apple priority:5 index:1} &{id:banana priority:1 index:2} &{id:orange priority:5 index:3}
+
+10:pear 5:orange 5:apple 1:banana
+
+*/
+
 ```
 
 [↑ top](#go-heap-priority-queue)
