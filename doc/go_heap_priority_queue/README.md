@@ -31,8 +31,7 @@ lowest level.
 Suppose a binary tree of height *h* with *n* number of nodes. Then the heap
 height would be:
 
-![heap_height_00](img/heap_height_00.png)
-![heap_height_01](img/heap_height_01.png)
+![heap_height_00](img/heap_height_00.png) ![heap_height_01](img/heap_height_01.png)
 
 Keep this in mind. This is *important* when we calculate the *time complexities*
 of data structures.
@@ -611,8 +610,7 @@ func pop(h heap) interface{} {
 
 [**Priority queue**](https://en.wikipedia.org/wiki/Priority_queue) can be
 implemented by
-[`container/heap`](http://golang.org/pkg/container/heap/), like
-[here](http://play.golang.org/p/yNZyBW8Zcz):
+[`container/heap`](http://golang.org/pkg/container/heap/):
 
 ```go
 // This example demonstrates a priority queue built using the heap interface.
@@ -627,8 +625,9 @@ import (
 
 // An Item is something we manage in a priority queue.
 type Item struct {
-	value    string // The value of the item; arbitrary.
+	id       string // The id of the item.
 	priority int    // The priority of the item in the queue.
+
 	// The index is needed by update and is maintained by the heap.Interface methods.
 	index int // The index of the item in the heap.
 }
@@ -640,6 +639,7 @@ func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
 	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
+	// Highest priority comes at first in the array.
 	return pq[i].priority > pq[j].priority
 }
 
@@ -661,13 +661,13 @@ func (pq *PriorityQueue) Pop() interface{} {
 	n := len(old)
 	item := old[n-1]
 	item.index = -1 // for safety
-	*pq = old[0 : n-1]
+	*pq = old[:n-1]
 	return item
 }
 
 // update modifies the priority and value of an Item in the queue.
-func (pq *PriorityQueue) update(item *Item, value string, priority int) {
-	item.value = value
+func (pq *PriorityQueue) update(item *Item, id string, priority int) {
+	item.id = id
 	item.priority = priority
 	heap.Fix(pq, item.index)
 }
@@ -675,40 +675,49 @@ func (pq *PriorityQueue) update(item *Item, value string, priority int) {
 // This example creates a PriorityQueue with some items, adds and manipulates an item,
 // and then removes the items in priority order.
 func main() {
-	// Some items and their priorities.
-	items := map[string]int{
-		"banana": 3, "apple": 2, "pear": 4,
+	var unsortedItems = []Item{
+		Item{id: "banana", priority: 1},
+		Item{id: "apple", priority: 5},
+		Item{id: "pear", priority: 10},
 	}
 
 	// Create a priority queue, put the items in it, and
 	// establish the priority queue (heap) invariants.
-	pq := make(PriorityQueue, len(items))
-	i := 0
-	for value, priority := range items {
+	pq := make(PriorityQueue, len(unsortedItems))
+	for i := range unsortedItems {
 		pq[i] = &Item{
-			value:    value,
-			priority: priority,
+			id:       unsortedItems[i].id,
+			priority: unsortedItems[i].priority,
 			index:    i,
 		}
-		i++
 	}
+
+	fmt.Println()
+	fmt.Printf("[BEFORE] heap.Init(&pq): %+v %+v %+v\n", pq[0], pq[1], pq[2])
 	heap.Init(&pq)
+	fmt.Printf("[AFTER]  heap.Init(&pq): %+v %+v %+v\n", pq[0], pq[1], pq[2])
 
 	// Insert a new item and then modify its priority.
 	item := &Item{
-		value:    "orange",
+		id:       "orange",
 		priority: 1,
 	}
 	heap.Push(&pq, item)
-	pq.update(item, item.value, 5)
 
+	fmt.Println()
+	fmt.Printf("[BEFORE] pq.update: %+v %+v %+v %+v\n", pq[0], pq[1], pq[2], pq[3])
+	pq.update(item, item.id, 5)
+	fmt.Printf("[AFTER]  pq.update: %+v %+v %+v %+v\n", pq[0], pq[1], pq[2], pq[3])
+
+	fmt.Println()
 	// Take the items out; they arrive in decreasing priority order.
 	for pq.Len() > 0 {
 		item := heap.Pop(&pq).(*Item)
-		fmt.Printf("%.2d:%s ", item.priority, item.value)
+		fmt.Printf("%d:%s ", item.priority, item.id)
 	}
-	// 05:orange 04:pear 03:banana 02:apple 
+	fmt.Println()
 }
+
 ```
 
 [↑ top](#go-heap-priority-queue)
