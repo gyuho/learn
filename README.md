@@ -190,6 +190,7 @@ is not working or not performing well. I will take as much time as
 I need―nothing like cramming 1,200 page computer systems book in 12 weeks.
 
 - [*Overview of computer architecture*](https://github.com/gyuho/learn/tree/master/doc/overview_of_computer_architecture)
+- [*What Every Programmer Should Know About Memory (2007)*](https://github.com/gyuho/learn/tree/master/doc/what_every_programmer_should_know_about_memory_2007)
 - [*Virtual memory*](https://github.com/gyuho/learn/tree/master/doc/virtual_memory)
 - [*Endianness*](https://github.com/gyuho/learn/tree/master/doc/endianness)
 - [*Bitwise operation*](https://github.com/gyuho/learn/tree/master/doc/bitwise_operation)
