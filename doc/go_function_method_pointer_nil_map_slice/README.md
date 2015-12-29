@@ -22,6 +22,7 @@
 - [destroy `struct`](#destroy-struct)
 - [tree](#tree)
 - [slice struct pointer](#slice-struct-pointer)
+- [slice struct range](#slice-struct-range)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
 <br><br><br><br><hr>
@@ -2727,6 +2728,40 @@ func main() {
 	gp := &ki.generations[0]
 	gp.slice = append(gp.slice, 5)
 	fmt.Println(ki) // {[{[0 1 5]}]}
+}
+
+```
+
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br><hr>
+
+
+#### slice struct range
+
+```go
+package main
+
+import "fmt"
+
+type event struct {
+	val int
+}
+
+func main() {
+	evs := []event{
+		event{1},
+		event{2},
+		event{3},
+	}
+	for _, ev := range evs {
+		ev.val = 10
+	}
+	fmt.Println(evs) // [{1} {2} {3}]
+
+	for i := range evs {
+		evs[i].val = 100
+	}
+	fmt.Println(evs) // [{100} {100} {100}]
 }
 
 ```
