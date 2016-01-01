@@ -1,5 +1,5 @@
 # https://github.com/junegunn/vim-plug
-call plug#begin('~/.nvim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 Plug 'Raimondi/delimitMate'
 Plug 'Xuyuanp/nerdtree-git-plugin'
