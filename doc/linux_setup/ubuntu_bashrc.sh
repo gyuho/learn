@@ -108,6 +108,9 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 
+alias clone_etcd='git clone https://github.com/coreos/etcd.git'
+alias clone_gyuho='git clone https://github.com/gyuho/etcd.git'
+
 alias gh='cd $HOME/go/src/github.com/gyuho;'
 alias cs='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
