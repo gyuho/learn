@@ -81,6 +81,7 @@ alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
 
+export VIM=$HOME/.config/nvim
 alias vim="nvim"
 
 alias grep="grep --color=auto"

@@ -147,15 +147,15 @@ cd $HOME/neovim && make && rm -rf build/ && \
 	make install && \
 	export PATH="$HOME/neovim/bin:$PATH";
 
-sudo mkdir -p $HOME/.nvim/autoload;
-sudo chown -R gyuho:gyuho $HOME/.nvim;
-sudo curl -fLo $HOME/.nvim/autoload/plug.vim --create-dirs \
+sudo mkdir -p $HOME/.config/nvim/autoload;
+sudo chown -R gyuho:gyuho $HOME/.config;
+sudo curl -fLo $HOME/.config/nvim/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-sudo chmod -R +x $HOME/.nvim;
+sudo chmod -R +x $HOME/.config/nvim;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo cp ./nvimrc.vim $HOME/.nvimrc;
-source $HOME/.nvimrc;
+sudo cp ./nvimrc.vim $HOME/.config/nvim/sysinit.vim;
+source $HOME/.config/nvim/sysinit.vim;
 
 #############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
