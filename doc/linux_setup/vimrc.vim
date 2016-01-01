@@ -13,6 +13,10 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
 Plug 'nsf/gocode', {'rtp': 'vim'}
 Plug 'ntpeters/vim-better-whitespace'
+
+Plug 'kana/vim-operator-user'
+Plug 'haya14busa/vim-operator-flashy'
+
 call plug#end()
 
 " :PlugInstall
@@ -93,6 +97,9 @@ let g:airline_symbols.space = "\ua0"
 map <ESC>2 :NERDTreeToggle<cr>
 map <ESC>3 <C-w><C-w>
 
+" vim-operator-flashy
+map y <Plug>(operator-flashy)
+nmap Y <Plug>(operator-flashy)$
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
 set wrap
@@ -150,8 +157,7 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
-colorscheme morning
-" colorscheme default
+colorscheme darkblue
 
 syntax off
 
