@@ -140,7 +140,7 @@ sudo vim +PluginClean +qall;
 #############################################################
 printf "\n\n\n\n\ninstalling nvim...\n\n" && sleep 1s;
 
-sudo apt-get install libtool libtool-bin autoconf automake cmake g++ pkg-config unzip;
+sudo apt-get -y install libtool autoconf automake cmake g++ pkg-config unzip;
 cd $HOME && rm -rf neovim && git clone https://github.com/neovim/neovim.git;
 cd $HOME/neovim && make && rm -r build/ && \
 	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" && \
