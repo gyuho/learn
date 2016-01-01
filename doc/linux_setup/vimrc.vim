@@ -95,7 +95,6 @@ map <ESC>3 <C-w><C-w>
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
 set wrap
-set tw=79
 set formatoptions+=t
 set tabstop=4     " a tab is four spaces
 set backspace=indent,eol,start
@@ -163,3 +162,15 @@ function! Multiple_cursors_after()
     echo 'Enabled autocomplete'
 endfunction
 
+" https://github.com/jfrazelle/.vim/blob/master/vimrc
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cmap w!! w !sudo tee > /dev/null %
+
+" set 80 character line limit
+" set tw=79
+set textwidth=79
+if exists('+colorcolumn')
+	set colorcolumn=80
+else
+	au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
