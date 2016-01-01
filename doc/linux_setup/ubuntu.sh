@@ -45,7 +45,7 @@ echo "[user]
 
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
-git config --global core.editor "vim";
+git config --global core.editor "nvim";
 
 cd $HOME && \
 mkdir -p $HOME/go/src && \
@@ -138,6 +138,16 @@ sudo vim +PluginClean +qall;
 # :GoInstallBinaries
 
 #############################################################
+printf "\n\n\n\n\ninstalling nvim...\n\n" && sleep 1s;
+
+sudo apt-get install libtool libtool-bin autoconf automake cmake g++ pkg-config unzip;
+cd $HOME && rm -rf neovim && git clone https://github.com/neovim/neovim.git;
+cd $HOME/neovim && make && rm -r build/ && \
+	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" && \
+	make install && \
+	export PATH="$HOME/neovim/bin:$PATH";
+
+#############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
 
 sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;
@@ -145,7 +155,7 @@ sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_bashrc.sh $HO
 sudo mkdir -p $HOME/.config/terminator;
 # sudo nano $HOME/.config/terminator/config;
 sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_terminator.conf $HOME/.config/terminator/config;
-# cp $HOME/.config/terminator/config $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_terminator.conf;  
+# cp $HOME/.config/terminator/config $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_terminator.conf;
 
 sudo apt-get -y install unzip gzip tar;
 sudo apt-get -y install tree htop;

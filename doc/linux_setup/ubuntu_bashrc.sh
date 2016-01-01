@@ -67,12 +67,12 @@ extract () {
 
 export GOPATH=$HOME/go
 export GOROOT_BOOTSTRAP=$HOME/go1.4
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin:$HOME/neovim/bin
 
 # http://ezprompt.net/
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
 
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR="$VISUAL"
 
 alias l='ls -lh'
@@ -80,6 +80,8 @@ alias ls="ls --color=auto -F"
 alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
+
+alias vim="nvim"
 
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"
@@ -96,7 +98,6 @@ alias clean_page='echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh;'
 alias reboot='sudo reboot;'
 alias shutdown='sudo telinit 0;'
 
-alias vi='vim'
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
@@ -107,7 +108,6 @@ alias gbra='git branch;'
 alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
-
 alias clone_etcd='git clone https://github.com/coreos/etcd.git'
 alias clone_gyuho='git clone https://github.com/gyuho/etcd.git'
 
