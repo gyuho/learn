@@ -2,7 +2,6 @@
 call plug#begin('~/.nvim/plugged')
 
 Plug 'Raimondi/delimitMate'
-Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
@@ -21,8 +20,6 @@ call plug#end()
 " :PlugClean
 " :PlugUpdate
 " :PlugUpgrade
-
-
 
 filetype plugin on
 filetype plugin indent on
@@ -139,8 +136,6 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
-colorscheme morning
-" colorscheme default
 
 syntax off
 
