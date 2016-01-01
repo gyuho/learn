@@ -1,6 +1,5 @@
-call plug#begin()
 
-" Plugins
+call plug#begin('~/.vim/plugged')
 Plug 'Raimondi/delimitMate'
 Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -14,16 +13,12 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
 Plug 'nsf/gocode', {'rtp': 'vim'}
 Plug 'ntpeters/vim-better-whitespace'
-
 call plug#end()
 
 " :PlugInstall
 " :PlugClean
 " :PlugUpdate
 " :PlugUpgrade
-
-filetype plugin on
-filetype plugin indent on
 
 " prepend in comparison with the line above
 vnoremap . :norm.<CR>
