@@ -1,33 +1,29 @@
-" Start of Vundle.vim
-set nocompatible
-filetype off
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " Plugins
-Plugin 'Raimondi/delimitMate'
-Plugin 'Shougo/neocomplete'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'bling/vim-airline'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'fatih/vim-go'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tpope/vim-commentary'
-Plugin 'nsf/gocode', {'rtp': 'vim/'}
-Plugin 'ntpeters/vim-better-whitespace'
+Plug 'Raimondi/delimitMate'
+Plug 'Shougo/neocomplete'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-airline'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'fatih/vim-go'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/syntastic'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-commentary'
+Plug 'nsf/gocode', {'rtp': 'vim'}
+Plug 'ntpeters/vim-better-whitespace'
 
-call vundle#end()
+call plug#end()
+
+" :PlugInstall
+" :PlugClean
+" :PlugUpdate
+" :PlugUpgrade
+
 filetype plugin on
 filetype plugin indent on
-" End of Vundle.vim
 
 " prepend in comparison with the line above
 vnoremap . :norm.<CR>
@@ -68,7 +64,7 @@ let g:go_fmt_autosave = 1
 let g:gitgutter_max_signs = 10000
 
 " https://github.com/scrooloose/syntastic
-set laststatus=2 
+set laststatus=2
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*

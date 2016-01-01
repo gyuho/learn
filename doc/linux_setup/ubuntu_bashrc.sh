@@ -67,12 +67,12 @@ extract () {
 
 export GOPATH=$HOME/go
 export GOROOT_BOOTSTRAP=$HOME/go1.4
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin:$HOME/neovim/bin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin
 
 # http://ezprompt.net/
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
 
-export VISUAL=nvim
+export VISUAL=vim
 export EDITOR="$VISUAL"
 
 alias l='ls -lh'
@@ -81,8 +81,8 @@ alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
 
-export VIM=$HOME/.config/nvim
-alias vim="nvim"
+# export VIM=$HOME/.config/nvim
+alias vi="vim"
 
 alias grep="grep --color=auto"
 alias mkdir="mkdir -p"

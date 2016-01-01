@@ -45,7 +45,7 @@ echo "[user]
 
 git config --global user.name "Gyu-Ho Lee";
 git config --global user.email "gyuhox@gmail.com";
-git config --global core.editor "nvim";
+git config --global core.editor "vim";
 
 cd $HOME && \
 mkdir -p $HOME/go/src && \
@@ -126,16 +126,21 @@ sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
-sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
+
+sudo curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
 sudo cp ./vimrc.vim $HOME/.vimrc;
 source $HOME/.vimrc;
 
-sudo vim +PluginInstall +qall;
-sudo vim +PluginClean +qall;
-
-# :GoInstallBinaries
+<<COMMENT
+:PlugInstall
+:PlugClean
+:PlugUpdate
+:PlugUpgrade
+:GoInstallBinaries
+COMMENT
 
 #############################################################
 printf "\n\n\n\n\ninstalling neovim...\n\n" && sleep 1s;
