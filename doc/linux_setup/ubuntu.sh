@@ -147,8 +147,8 @@ cd $HOME/neovim && make && rm -rf build/ && \
 	make install && \
 	export PATH="$HOME/neovim/bin:$PATH";
 
-sudo chown -R gyuho:gyuho $HOME/.nvim;
 sudo mkdir -p $HOME/.nvim/autoload;
+sudo chown -R gyuho:gyuho $HOME/.nvim;
 sudo curl -fLo $HOME/.nvim/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 sudo chmod -R +x $HOME/.nvim;
