@@ -122,12 +122,11 @@ sudo apt-get -y install vim-gnome && \
 sudo apt-get -y install vim-athena;
 
 sudo chown -R gyuho:gyuho $HOME/.vim;
-sudo mkdir -p $HOME/.vim/bundle;
 sudo mkdir -p $HOME/.vim/ftdetect;
 sudo mkdir -p $HOME/.vim/syntax;
 sudo chmod -R +x $HOME/.vim;
 
-sudo curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
