@@ -2,6 +2,12 @@
 
 # Go: archive, compress, encoding
 
+In Go, `Marshal` means convert structured data to `[]byte`, so that it
+can send them over network. `Encode` puts those `[]byte` data into stream.
+`Encode` is sometimes called *serialize*.
+
+![websequence](img/websequence.png)
+
 - [Reference](#reference)
 - [`archive`](#archive)
 - [`compress`](#compress)
