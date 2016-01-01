@@ -58,7 +58,7 @@ cd $HOME/go/src/github.com/gyuho && git clone https://github.com/gyuho/learn.git
 cd $HOME/go/src/github.com/coreos && git clone https://github.com/coreos/etcd.git;
 
 #############################################################
-printf "\n\n\n\n\ninstalling go...\n\n" && sleep 1s;
+printf "\n\n\n\n\ninstalling go(golang)...\n\n" && sleep 1s;
 
 sudo apt-get -y install gccgo-go;
 sudo apt-get -y remove gccgo;
@@ -70,17 +70,20 @@ mkdir -p $HOME/go/src/github.com/coreos && \
 mkdir -p $HOME/go/src/github.com/gyuho && \
 mkdir -p $HOME/go/src/golang.org;
 
+# install go 1.4
 cd $HOME && sudo rm -rf go1.4 && \
 cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp && \
 sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | sudo tar -v -C $HOME/go1.4_temp -xz && \
 cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 .. && \
 cd $HOME && sudo rm -rf $HOME/go1.4_temp;
 
+# install go tip
 cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master && \
 cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash;
 
+# install latest go
 cd /usr/local && sudo rm -rf ./go;
-sudo curl -s https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+sudo curl -s https://storage.googleapis.com/golang/go1.6beta1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 if grep -q GOPATH "$(echo $HOME)/.bashrc"; then 
 	echo "bashrc already has GOPATH...";
