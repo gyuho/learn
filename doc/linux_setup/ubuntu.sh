@@ -129,7 +129,7 @@ sudo chmod -R +x $HOME/.vim;
 sudo git clone --progress https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim;
 
 cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo cp ./vimrc.vim ~/.vimrc;
+sudo cp ./vimrc.vim $HOME/.vimrc;
 source $HOME/.vimrc;
 
 sudo vim +PluginInstall +qall;
@@ -138,14 +138,24 @@ sudo vim +PluginClean +qall;
 # :GoInstallBinaries
 
 #############################################################
-printf "\n\n\n\n\ninstalling nvim...\n\n" && sleep 1s;
+printf "\n\n\n\n\ninstalling neovim...\n\n" && sleep 1s;
 
 sudo apt-get -y install libtool autoconf automake cmake g++ pkg-config unzip;
 cd $HOME && rm -rf neovim && git clone https://github.com/neovim/neovim.git;
-cd $HOME/neovim && make && rm -r build/ && \
+cd $HOME/neovim && make && rm -rf build/ && \
 	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" && \
 	make install && \
 	export PATH="$HOME/neovim/bin:$PATH";
+
+sudo chown -R gyuho:gyuho $HOME/.nvim;
+sudo mkdir -p $HOME/.nvim/autoload;
+sudo curl -fLo $HOME/.nvim/autoload/plug.vim --create-dirs \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+sudo chmod -R +x $HOME/.nvim;
+
+cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
+sudo cp ./nvimrc.vim $HOME/.nvimrc;
+source $HOME/.nvimrc;
 
 #############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
