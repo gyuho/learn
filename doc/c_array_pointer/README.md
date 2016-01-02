@@ -13,7 +13,8 @@
 - [pointer function](#pointer-function)
 - [swap](#swap)
 - [function pointer](#function-pointer)
-
+- [double pointer](#double-pointer)
+- 
 [↑ top](#c-array-pointer)
 <br><br><br><br><hr>
 
