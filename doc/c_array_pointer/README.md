@@ -10,6 +10,8 @@
 - [pointer arithmetic](#pointer-arithmetic)
 - [`char` array](#char-array)
 - [pointer array](#pointer-array)
+- [pointer function](#pointer-function)
+- [swap](#swap)
 
 [↑ top](#c-array-pointer)
 <br><br><br><br><hr>
@@ -374,6 +376,84 @@ int main()
 	printf("%s\n", sArr[0]); // AA
 	printf("%s\n", sArr[1]); // BB
 	printf("%s\n", sArr[2]); // CC
+
+	return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br><hr>
+
+
+#### pointer function
+
+```c
+#include <stdio.h>
+
+// argument is passed by value!
+// make sure to pass pointer if you want to update!
+void updateArray(int * arrPt, int len, int delta)
+{
+	int i;
+	for (i=0; i<len; i++)
+		arrPt[i] += delta;
+}
+
+void printArray(int * arrPt, int len)
+{
+	int i;
+	for (i=0; i<len; i++)
+		printf("%d ", arrPt[i]);
+	printf("\n");
+}
+
+int main()
+{
+	int arr[3] = {1,2,3};
+	updateArray(arr, sizeof(arr) / sizeof(int), 10);
+	printArray(arr, sizeof(arr) / sizeof(int));
+	// 11 12 13
+
+	return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br><hr>
+
+
+#### swap
+
+```c
+#include <stdio.h>
+
+void swapValue(int v1, int v2)
+{
+	int temp = v1;
+	v1 = v2;
+	v2 = temp;
+}
+
+void swapPointer(int * pt1, int * pt2)
+{
+	int temp = *pt1; // dereference
+	*pt1 = *pt2;
+	*pt2 = temp;
+}
+
+int main()
+{
+	int num1 = 1;
+	int num2 = 2;
+	swapValue(num1, num2);
+	printf("num1 num2: %d %d\n", num1, num2);
+	// 1 2
+
+	swapPointer(&num1, &num2);
+	printf("num1 num2: %d %d\n", num1, num2);
+	// 2 1
 
 	return 0;
 }
