@@ -12,6 +12,7 @@
 - [pointer array](#pointer-array)
 - [pointer function](#pointer-function)
 - [swap](#swap)
+- [function pointer](#function-pointer)
 
 [↑ top](#c-array-pointer)
 <br><br><br><br><hr>
@@ -454,6 +455,81 @@ int main()
 	swapPointer(&num1, &num2);
 	printf("num1 num2: %d %d\n", num1, num2);
 	// 2 1
+
+	return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br><hr>
+
+
+#### function pointer
+
+```c
+#include <stdio.h>
+
+void printAdd(int v1, int v2)
+{
+	printf("%d + %d = %d\n", v1, v2, v1 + v2);
+}
+
+void printString(char * str)
+{
+	printf("%s\n", str);
+}
+
+int main()
+{
+	int num1 = 1, num2 = 2;
+	void (*fpAdd)(int, int) = printAdd;
+	fpAdd(num1, num2);
+	// 1 + 2 = 3
+
+	char * str = "Hello World!";
+	void (*fpStr)(char *) = printString;
+	fpStr(str);
+	// Hello World!
+
+	return 0;
+}
+
+```
+
+[↑ top](#c-array-pointer)
+<br><br><br><br><hr>
+
+
+#### double pointer
+
+```c
+#include <stdio.h>
+
+/*
+void myFunc(TYPE * arr) {}
+void myFunc(TYPE arr[]) {}
+
+void myFunc(TYPE ** arr) {}
+void myFunc(TYPE * arr[]) {}
+*/
+
+void printStrings(int argc, char * argv[])
+{
+	int i;
+	for (i=0; i<argc; i++)
+		printf("%s ", argv[i]);
+	printf("\n");
+}
+
+int main(void)
+{
+	char * str[3] = {
+		"A", "B", "C"
+	};
+
+	printStrings(3, str);
+	// A B C
 
 	return 0;
 }
