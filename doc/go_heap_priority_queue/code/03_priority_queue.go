@@ -73,6 +73,18 @@ func (pq *PriorityQueue) pop() *Item {
 	return n
 }
 
+func (pq *PriorityQueue) replace(it *Item) bool {
+	for i := range *pq {
+		if (*pq)[i].id != it.id {
+			continue
+		}
+		(*pq)[i] = it
+		heap.Fix(pq, i)
+		return true
+	}
+	return false
+}
+
 // This example creates a PriorityQueue with some items, adds and manipulates an item,
 // and then removes the items in priority order.
 func main() {
@@ -90,22 +102,32 @@ func main() {
 			index:    i,
 		})
 	}
-	fmt.Printf("[AFTER]  heap.push: %+v %+v %+v\n", (*pq)[0], (*pq)[1], (*pq)[2])
-
-	fmt.Println()
+	fmt.Printf("After push all, pq.top(): %+v\n", pq.top())
+	// After push all, pq.top(): &{id:pear priority:10 index:0}
 
 	// Insert a new item and then modify its priority.
-	item := &Item{
+	pq.push(&Item{
 		id:       "orange",
-		priority: 1,
-	}
-	pq.push(item)
+		priority: 1000,
+	})
+	fmt.Printf("After push new item, pq.top(): %+v\n", pq.top())
+	// After push new item, pq.top(): &{id:orange priority:1000 index:0}
+
 	(*pq)[0].priority = -10
-	fmt.Printf("[BEFORE] heap.Fix: %+v %+v %+v %+v\n", (*pq)[0], (*pq)[1], (*pq)[2], (*pq)[3])
+	fmt.Printf("Before fix, pq.top(): %+v\n", pq.top())
+	// Before fix, pq.top(): &{id:orange priority:-10 index:0}
 
 	heap.Fix(pq, (*pq)[0].index)
-	fmt.Printf("[AFTER]  heap.Fix: %+v %+v %+v %+v\n", (*pq)[0], (*pq)[1], (*pq)[2], (*pq)[3])
-	fmt.Printf("[AFTER]  heap.Fix pq.top(): %+v\n", pq.top())
+	fmt.Printf("After fix, pq.top(): %+v\n", pq.top())
+	// After fix, pq.top(): &{id:pear priority:10 index:0}
+
+	(*pq)[0].priority = -100
+	fmt.Printf("Before replace, pq.top(): %+v\n", pq.top())
+	// Before replace, pq.top(): &{id:pear priority:-100 index:0}
+
+	pq.replace((*pq)[0])
+	fmt.Printf("After replace, pq.top(): %+v\n", pq.top())
+	// After replace, pq.top(): &{id:apple priority:5 index:0}
 
 	fmt.Println()
 
@@ -115,15 +137,6 @@ func main() {
 		item := pq.pop()
 		fmt.Printf("%d:%s ", item.priority, item.id)
 	}
+	fmt.Println()
+	// 5:apple 1:banana -10:orange -100:pear
 }
-
-/*
-[AFTER]  heap.push: &{id:pear priority:10 index:0} &{id:banana priority:1 index:1} &{id:apple priority:5 index:2}
-
-[BEFORE] heap.Fix: &{id:pear priority:-10 index:0} &{id:banana priority:1 index:1} &{id:apple priority:5 index:2} &{id:orange priority:1 index:3}
-[AFTER]  heap.Fix: &{id:apple priority:5 index:0} &{id:banana priority:1 index:1} &{id:pear priority:-10 index:2} &{id:orange priority:1 index:3}
-[AFTER]  heap.Fix pq.top(): &{id:apple priority:5 index:0}
-
-5:apple 1:orange 1:banana -10:pear
-
-*/
