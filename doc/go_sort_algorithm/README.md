@@ -427,7 +427,7 @@ func by(rows [][]string, lesses ...lessFunc) *multiSorter {
 // lessFunc compares between two string slices.
 type lessFunc func(p1, p2 *[]string) bool
 
-func makelessFunc(idx int) func(row1, row2 *[]string) bool {
+func makeAscendingFunc(idx int) func(row1, row2 *[]string) bool {
 	return func(row1, row2 *[]string) bool {
 		return (*row1)[idx] < (*row2)[idx]
 	}
