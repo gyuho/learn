@@ -110,7 +110,11 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 alias clone_etcd='git clone https://github.com/coreos/etcd.git'
-alias clone_gyuho='git clone https://github.com/gyuho/etcd.git'
+alias clone_gyuho='git clone https://github.com/gyuho/etcd.git && \
+	cd etcd && \
+	git remote add upstream https://github.com/coreos/etcd.git && \
+	git fetch upstream && \
+	git merge upstream/master;'
 
 alias gh='cd $HOME/go/src/github.com/gyuho;'
 alias cs='cd $HOME/go/src/github.com/coreos;'
