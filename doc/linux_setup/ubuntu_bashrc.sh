@@ -110,10 +110,18 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 
-alias clone='git clone https://github.com/coreos/etcd.git'
+alias clone='
+cd $GOPATH/src/github.com/coreos && \
+temp_dir="etcd_$(date +"%Y%m%d%H%M%S")" && \
+mv etcd $temp_dir && \
+rm -rf etcd && \
+git clone https://github.com/coreos/etcd.git
+'
 
 alias work='
 cd $GOPATH/src/github.com/coreos && \
+temp_dir="etcd_$(date +"%Y%m%d%H%M%S")" && \
+mv etcd $temp_dir && \
 rm -rf etcd && \
 git clone https://github.com/gyuho/etcd.git && \
 cd etcd && \
