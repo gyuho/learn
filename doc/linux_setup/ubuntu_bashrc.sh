@@ -115,7 +115,10 @@ cd $GOPATH/src/github.com/coreos && \
 temp_dir="etcd_$(date +"%Y%m%d%H%M%S")" && \
 mv etcd $temp_dir && \
 rm -rf etcd && \
-git clone https://github.com/coreos/etcd.git
+git clone https://github.com/coreos/etcd.git && \
+cd etcd && \
+git pull origin master && \
+git remote -v
 '
 
 alias work='
@@ -128,7 +131,8 @@ cd etcd && \
 git remote add upstream https://github.com/coreos/etcd.git && \
 git fetch upstream && \
 git merge upstream/master && \
-git remote -v'
+git remote -v
+'
 
 alias gh='cd $HOME/go/src/github.com/gyuho;'
 alias cs='cd $HOME/go/src/github.com/coreos;'
