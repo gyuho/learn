@@ -123,8 +123,11 @@ git remote -v
 
 alias work='
 cd $GOPATH/src/github.com/coreos/etcd && \
+title="etcd" && \
 current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p") && \
-temp_dir="etcd_$current_branch_$(date +"%Y%m%d%H%M%S")" && \
+date_string=$(date +"%Y%m%d%H%M%S") && \
+underscore="_" && \
+temp_dir=$title$underscore$current_branch$underscore$date_string && \
 cd $GOPATH/src/github.com/coreos && \
 mv etcd $temp_dir && \
 rm -rf etcd && \
