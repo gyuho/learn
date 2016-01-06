@@ -122,21 +122,24 @@ git remote -v
 '
 
 alias work='
-cd $GOPATH/src/github.com/coreos/etcd && \
-title="etcd" && \
-current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p") && \
-date_string=$(date +"%Y%m%d%H%M%S") && \
-underscore="_" && \
-temp_dir=$title$underscore$current_branch$underscore$date_string && \
-cd $GOPATH/src/github.com/coreos && \
-mv etcd $temp_dir && \
-rm -rf etcd && \
-git clone https://github.com/gyuho/etcd.git && \
-cd etcd && \
-git remote add upstream https://github.com/coreos/etcd.git && \
-git fetch upstream && \
-git merge upstream/master && \
-git remote -v
+cd $GOPATH/src/github.com/coreos/etcd;
+if [ -d "etcd" ]; then
+	title="etcd"
+	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
+	date_string=$(date +"%Y%m%d%H%M%S")
+	underscore="_"
+	temp_dir=$title$underscore$current_branch$underscore$date_string
+	cd $GOPATH/src/github.com/coreos
+	mv etcd $temp_dir
+	rm -rf etcd
+	git clone https://github.com/gyuho/etcd.git
+	cd etcd
+	git remote add upstream https://github.com/coreos/etcd.git
+	git fetch upstream
+	git merge upstream/master
+	git remote -v
+	cd ..
+fi
 '
 
 alias gh='cd $HOME/go/src/github.com/gyuho;'
