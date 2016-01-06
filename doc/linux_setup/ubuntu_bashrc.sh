@@ -122,8 +122,10 @@ git remote -v
 '
 
 alias work='
+cd $GOPATH/src/github.com/coreos/etcd && \
+current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p") && \
+temp_dir="etcd_$current_branch_$(date +"%Y%m%d%H%M%S")" && \
 cd $GOPATH/src/github.com/coreos && \
-temp_dir="etcd_$(date +"%Y%m%d%H%M%S")" && \
 mv etcd $temp_dir && \
 rm -rf etcd && \
 git clone https://github.com/gyuho/etcd.git && \
