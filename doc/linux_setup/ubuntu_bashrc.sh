@@ -117,40 +117,31 @@ alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 
 alias ready='
-prefix="backup_etcd_"
-underscore="_"
-date_string=$(date +"%Y%m%d%H%M%S")
-
 if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
 	echo "not exist!"
-	
-	echo "cloning..."
+
 	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
-	
-	echo "cd..."
+
 	cd $HOME/go/src/github.com/coreos/etcd
-	echo $(pwd)
 	git remote add upstream https://github.com/coreos/etcd.git
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
 	cd ..
 	ls
-
 else
-
 	echo "exist!"
+	prefix="backup_etcd_"
+	underscore="_"
+	date_string=$(date +"%Y%m%d%H%M%S")
 	cd $HOME/go/src/github.com/coreos/etcd
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
-	temp_dir=$prefix$underscore$current_branch$underscore$date_string
+	temp_dir=$prefix$current_branch$underscore$date_string
 	mv $HOME/go/src/github.com/coreos/etcd $HOME/go/src/github.com/coreos/$temp_dir
-	
-	echo "cloning..."
+
 	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
 
-	echo "cd..."
 	cd $HOME/go/src/github.com/coreos/etcd
-	echo $(pwd)
 	git remote add upstream https://github.com/coreos/etcd.git
 	git fetch upstream
 	git merge upstream/master
