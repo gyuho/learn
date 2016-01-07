@@ -122,16 +122,14 @@ cd $GOPATH/src/github.com/coreos
 echo "checking..."
 if [ -d "etcd" ]; then
 	echo "exist!"
-	cd ./etcd
+	cd etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
 	underscore="_"
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
-	cd $GOPATH/src/github.com/coreos
-	mv ./etcd $temp_dir
 	echo "etcd exists... moving..."
-	echo $temp_dir
+	mv ./etcd $temp_dir
 else
 	echo "etcd does not exist..."
 fi
@@ -153,16 +151,14 @@ cd $GOPATH/src/github.com/coreos
 echo "checking..."
 if [ -d "etcd" ]; then
 	echo "exist!"
-	cd ./etcd
+	cd etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
 	underscore="_"
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
-	cd $GOPATH/src/github.com/coreos
-	mv ./etcd $temp_dir
 	echo "etcd exists... moving..."
-	echo $temp_dir
+	mv ./etcd $temp_dir
 else
 	echo "etcd does not exist..."
 fi
