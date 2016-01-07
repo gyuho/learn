@@ -165,6 +165,29 @@ sudo cp ./nvimrc.vim $HOME/.config/nvim/sysinit.vim;
 source $HOME/.config/nvim/sysinit.vim;
 
 #############################################################
+printf "\n\n\n\n\ninstalling sublime...\n\n" && sleep 1s;
+
+<<COMMENT
+http://www.sublimetext.com/3
+https://packagecontrol.io/installation
+ctrl + `
+ctrl + shift + p
+install package
+
+terminal : ctrl + shift + t to open terminal
+gosublime
+COMMENT
+
+cp sublime_user_keymap.json \
+	$HOME/.config/sublime-text-3/Packages/User/Default\	\(Linux\).sublime-keymap
+
+cp sublime_user_terminal_setting.json \
+	$HOME/.config/sublime-text-3/Packages/Terminal/Terminal.sublime-settings
+
+cp sublime_default_gosublime_setting.json \
+	$HOME/.config/sublime-text-3/Packages/GoSublime/GoSublime.sublime-settings
+
+#############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
 
 sudo cp $HOME/go/src/github.com/gyuho/learn/doc/linux_setup/ubuntu_bashrc.sh $HOME/.bashrc && source $HOME/.bashrc;

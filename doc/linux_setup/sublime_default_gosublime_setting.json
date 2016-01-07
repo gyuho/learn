@@ -1,0 +1,316 @@
+{
+	// The maximum amount of memory(MiB) that MarGo is allowed to use
+	"margo_oom": 1000,
+
+	// you may set specific environment variables here
+	// e.g "env": { "PATH": "$HOME/go/bin:$PATH" }
+	// in values, $PATH and ${PATH} are replaced with
+	// the corresponding environment(PATH) variable, if it exists.
+	"env": { "GOPATH": "$HOME/go/src" },
+
+	// if set, whenever possible `GOPATH` will be set to `GS_GOPATH`.
+	// please see `Usage & Tips` `ctrl+dot,ctrl+2`
+	// section `Per-project  settings & Project-based GOPATH` for details about `GS_GOPATH`
+	"use_gs_gopath": false,
+
+	// Your shell. e.g. on Linux and OS X, if your shell bash:
+	// you may set it to ["/bin/bash", "--login", "-c", "$CMD"]
+	// it's useful to pass the --login argument in order for it run your ~/.bashrc etc.
+	// otherwise environment variables may not be seen by Sublime Text and therefore GoSublime
+	//
+	// If set, commands are passed to it instead of the Python default which for *nix is usually
+	// /bin/sh which in most cases is not what you want
+	//
+	// the special entry "$CMD" is replaced by the actual command
+	"shell": [],
+
+	// whether or not pkg files should be automatically saved when necessary (e.g. when running 9o `replay` or `go test` commands)
+	"autosave": true,
+
+	// Whether or not gscomplete(gocode) is enabled
+	"gscomplete_enabled": true,
+
+	// Whether or not gsfmt is enabled
+	"fmt_enabled": true,
+
+	// whether or not to indent with tabs (alignment is always done using spaces)
+	"fmt_tab_indent": true,
+
+	// the assumed width of the tab character (or number of spaces to indent with)
+	"fmt_tab_width": 8,
+
+	// by default fmt'ing is done by margo using `fmt_tab_intent` and `fmt_tab_width` (above)
+	// you may use a command of your choosing by setting `fmt_cmd`
+	// e.g. ["goimports"]
+	// the command will be passed, to its stdin, the contents of the file
+	// it must output the new file contents
+	"fmt_cmd": ["goimports"],
+
+	// Whether or not gslint is enabled
+	"gslint_enabled": true,
+
+	// filter the kinds of lint checks that are done. supported kinds:
+	//
+	// gs.syntax - parser/syntax errors - it makes no sense to filter this as it will simply
+	//             manifest itself in other checks (which will likely not be done if there are syntax errors)
+	// gs.flag.parse - check for possibly missing calls to flag.Parse()
+	// gs.types - do a typecheck using the go/types package(like the old gotype)
+	//            disabled by default until it's ready(copied from tip)
+	"lint_filter": [
+		"gs.flag.parse",
+		"gs.types"
+	],
+
+	// Whether or not comp lint is enabled (this might conflict with gslint)
+	"comp_lint_enabled": false,
+
+	// The list of commands that comp-lint will run (in the order specified)
+	// each entry contains a map of:
+	//    cmd: a list containing the command and its args
+	//    shell: whether or not use the $shell to run this command
+	//        if you don't need $shell features then don't set this.
+	//    global: whether or not commands like go install should affect the system globally
+	//        by default the environment variable GOBIN is set to ($TEMPDIR/GoSublime/bin
+	//        which in the installation of commands via comp-lint going there instead of into
+	//        one of your GOPATHs.
+	//        setting this to true, you can e.g automate the actual installation of your commands
+	// additionally, for `shell` and `global` if the value is not `true` then it's assumed to be false
+	"comp_lint_commands": [
+		{"cmd": ["go", "install"]}
+	],
+
+	// how long to wait after the last keystroke before the gslint_cmd command is run (in milliseconds)
+	"gslint_timeout": 100,
+
+	// Not Implemented
+	// Whether or not gslint is enabled
+	"lint_enabled": true,
+
+	// Not Implemented
+	// list of linters to run
+	// note: before the linters are run, the builtin gs.syntax linter is run
+	//       * its purpose is to do a basic syntax check on the active file.
+	//       * by design, it cannot be disabled
+	//       * if there is a syntax error, no user-defined linters will be run
+	//
+	// each linter is an object of the form:
+	//
+	// {
+	// 	"ctx": "", // the context in which this linter runs, e.g. "live"
+	// 	           // default: "live", builtin contexts:
+	//             //      live: the linters are being called while you're editing the file
+	//             //      save: the linters are being called after saving.
+	//             //            this can be used to e.g. rebuild or install the pkg
+	//
+	// 	"pat": "", // a regexp pattern that will define the following named variables:
+	// 	           // fn: the filename
+	// 	           // line: the line number (starting from 1)
+	// 	           // column: the column number (starting from 1)
+	// 	           //         (this can be considered optional because the error message is still useful without it)
+	// 	           // message: the error message
+	// 	           //
+	// 	           // the default pat will be defined[1] such that it matches `main.go:1:2 error` resulting in:
+	// 	           //     fn: main.go
+	// 	           //     line: 1
+	// 	           //     column: 2
+	// 	           //     message: error
+	//	           //
+	//	           //  The following regexp is a copy of the one used in MarGo (it might be out-of-sync)
+	//	           //      `(?P<fn>\S+\.go):(?P<line>\d+)?(?:[:](?P<column>\d+))?[:]*(?P<message>.+)`
+	// 	           //
+	// 	           // it will also allow `line` and `column` to be missing. this should be sufficient
+	// 	           // for the output of the go tools (go vet, compilers, etc.)
+	//
+	// 	"env": "", // an object mapping keys to string values that will be added to the default env
+	// 	           // you could, e.g. set {"GOBIN": "/tmp"} in order to avoid installing potentially
+	// 	           // broken commands into your GOPATH*/bin
+	//
+	// 	"kind": "", // a string that identifies the linter, e.g. `go.vet'
+	// 	            // this is useful to be able to identify what kind of error you're seeing,
+	// 	            // but is otherwise optional
+	//
+	// 	"cmd": [], // the command to run, e.g. ["go", "vet"]
+	// }
+	//
+	// the minimal linter is thus: {"cmd": ["go", "vet"]}
+	//
+	// builtin linters:
+	//    {"cmd": ["gs.flag.parse"]}: try to report calls to e.g. flag.Int(),flag.String()
+	//                                for which there is no call to flag.Parse()
+	//
+	//    {"cmd": ["gs.types"]}: this is essentially `gotype`, it will do a full typecheck of the pkg
+	//                           similar to the compilers. it's faster than doing a full `go build`
+	//                           however, it can lead to false-positive errors, especially on cgo
+	//                           and other non-pure-go pkgs
+	"linters": ["go", "vet"],
+
+	// whether or not to include snippets in the auto-completion list
+	"autocomplete_snippets": true,
+
+	// whether or not to include Test*, Benchmark* and Example* functions in the auto-completion list
+	"autocomplete_tests": true,
+
+	// whether or not builtin types and functions should be shown in the auto-completion list
+	"autocomplete_builtins": true,
+
+	// whether or not to show an expanded(closure) version of func types in the auto-completion list
+	// e.g. `type Fun func(i int)`
+	// will result in two entries `Fun` and `Fun {}`
+	// expanding to `Fun` and `func(i) {...}` respectively
+	"autocomplete_closures": true,
+
+	// you may set this to a regexp which will be used to filter entries in the auto-completion list
+	// e.g. "autocomplete_filter_name": "^autogenerated_" will prevent any type or function
+	// whose name begins with "autogenerated_" from appearing in the auto-completion list
+	"autocomplete_filter_name": "",
+
+	// whether or not autocomplete should suggest possible imports when autocomplete fails to
+	// find a match.
+	// note: this feature only comes into effect when autocomplete was triggered after a dot, e.g. `fmt.|`
+	"autocomplete_suggest_imports": true,
+
+	// whether or not to show function call tip in the status bar
+	// the same can be achieved ctrl+dot,ctrl+space using an output panel
+	"calltips": true,
+
+	// whether or not to use named imports when the basename of the import path doesn't match the pkg name
+	// e.g. gosubli.me/go-foo would be imported as:
+	//     import (
+	//         foo "gosubli.me/go-foo"
+	//     )
+	"use_named_imports": false,
+
+	// whether or not MarGo may automatically run `go install` for packages that are missing
+	// when you `import`, or `autocomplete` them
+	"autoinst": true,
+
+	// commands to run on (post) save - list of objects of the form {"cmd": "...", "args": {...}}
+	// Any TextCommand may be run. Supported GS commands include:
+	//     gs_comp_lint - compile the pkg and report any errors
+	"on_save": [],
+
+	// as an alternative to Sublime Text's snippet system you may add snippets to GoSublime's
+	// code-completion by adding them to your user settings in the same format as bellow.
+	//
+	// "snippets": [
+	//     {
+	//         "match": {"global": true}, // these snippets will only be presented in the global scope
+	//         "snippets": [
+	//             {"text": "init", "title": "func init()", "value": "func init() {\n\t$1\n}"}
+	//         ]
+	//     },
+	//     {
+	//         "match": {"local": true}, // these snippets will only be present in a function scope
+	//         "snippets": [
+	//             {"text": "print", "title": "print(...)", "value": "print($1)"},
+	//             {"text": "println", "title": "println(...)", "value": "println($1)"}
+	//         ]
+	//     }
+	// ]
+	//
+	// you maybe add field markers ($1, $2, etc) to the `value` string to dictate where the cursor is place
+	// once a completion is expanded and where it's placed once you press tab afterwards.
+	// duplicate markers e.g f("...", $1, $1) will result in multiple cursors, one for each duplication.
+	"snippets": [],
+
+	"default_snippets": [
+		{
+			"match": {"global": false, "pkgname": ""},
+			"snippets": [
+				{"text": "package ${default_pkgname}", "title": "", "value": "package ${default_pkgname}\n\n$1\n"}
+			]
+		},
+		{
+			"match": {"global": true, "pkgname": "^main$"},
+			"snippets": [
+				{"text": "func main", "title": "func main {...}", "value": "func main() {\n\t$0\n}\n"}
+			]
+		},
+		{
+			"match": {"global": true, "pkgname": "."},
+			"snippets": [
+				{"text": "import", "title": "import (...)", "value": "import (\n\t\"$1\"\n)"},
+				{"text": "func", "title": "func {...}", "value": "func ${1:name}($2)$3 {\n\t$0\n}"},
+				{"text": "var", "title": "var (...)", "value": "var (\n\t$1\n)"},
+				{"text": "const", "title": "const (...)", "value": "const (\n\t$1\n)"},
+				{"text": "init", "title": "func init()", "value": "func init() {\n\t$1\n}"},
+				{
+					"text": "func http handler",
+					"title": "func(rw, req)",
+					"value": "func ${1:name}(rw http.ResponseWriter, req *http.Request) {\n\t$0\n}"
+				}
+			]
+		},
+		{
+			"match": {"global": true, "pkgname": ".", "has_types": true},
+			"snippets": [
+				{
+					"text": "func (*${typename})",
+					"title": "func (...) {...}",
+					"value": "func (${1:${typename_abbr}} ${2:*}${typename}) ${3:name}($4)$5 {\n\t$0\n}"
+				}
+			]
+		},
+		{
+			"match": {"local": true},
+			"snippets": [
+				{"text": "func", "title": "func{...}()", "value": "func($1) {\n\t$0\n}($2)"},
+				{"text": "var", "title": "var [name] [type]", "value": "var ${1:name} ${2:type}"}
+			]
+		}
+	],
+
+	// whether or not 9o should ask Sublime Text to show(scroll to) the end of a command's output
+	// by default it will attempt to show the beginning
+	"9o_show_end": false,
+
+	// if set, 9o will run in single-instance mode instead of per-pkg
+	// the name can be any string, so you can e.g. set it per-project and maintain project-specific
+	// command history
+	"9o_instance": "",
+
+	// if set 9o will use the specified color scheme.
+	// the path must relative to `Packages` e.g. `Packages/My/9o Specific.tmTheme`
+	// `""` essentially means no color_scheme (like the Sublime Text console)
+	// `"default"` leaves it as-is, i.e. matching the color_scheme that's being used for your other views
+	"9o_color_scheme": "default",
+
+	// a mapping of names to string commands e.g. `{"ci": "git ci $_args"}`
+	// the environment variable `$_args` will be the raw, un-parsed argument passed to the command such that,
+	// in the command `ci a.go    b.go`, `$_args` will be `a.go    b.go`
+	// and the alias above expands to `git ci a.go    b.go`
+	//
+	// aliases are resolved recursively so they can be re-used, however recursive aliases are not supported.
+	// e.g. if you define an alias `"gs-git": "git --git-dir=... $_args"`,
+	// it will be used in the alias `"gs-ci": "gs-git commit $_args"`
+	// but an alias `"git": "git $_args"` will fail because it resolves to itself.
+	// you can, however create the alias `"git": "$HOME/git/bin/git"` which allows you to add commands
+	// to 9o without them needing to appear in your $PATH
+	//
+	// examples
+	// {
+	//  	"git": "/usr/bin/git $_args", // call git directly, otherwise it's run through your `shell`
+	//  	"ci": "git commit $_args",
+	//  	"ci.": "ci $_fn", // $_fn points to the abs path of the current file
+	//  	"gro": "sh grep $_args 2>/dev/null", // call grep through your shell and discard stderr
+	// }
+	//
+	"9o_aliases": {},
+
+	// what 9o command to run when (super or )ctrl+dot,ctrl+b us pressed
+	// e.g. ["go", "build"]
+	// the 9o command ^1 recalls the last command you ran manually
+	// see 9o help(ctrl+9 "help") for more details about what commands are supported
+	"build_command": ["^1"],
+
+	"auto_complete_triggers": [ {"selector": "source.go", "characters": "."} ],
+
+	// exclude files with the listed prefixes from the file browsing palette (ctrl+dot,ctrl+m)
+	"fn_exclude_prefixes": [".", "_"],
+
+	// Automatically set the syntax file for the specificed file extensions to `GoSublime: HTML`
+	// `GoSublime: HTML` files are html files with the template delimiters `{{` and `}}` tailored to
+	// Go templates (text/template, html/template)
+	// (`.gohtml` files are automatically set by the syntax definition)
+	"gohtml_extensions": [".html.go"]
+}
