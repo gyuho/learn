@@ -23,6 +23,7 @@
 - [tree](#tree)
 - [slice struct pointer](#slice-struct-pointer)
 - [slice struct range](#slice-struct-range)
+- [function struct pointer](#function-struct-pointer)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
 <br><br><br><br><hr>
@@ -2769,3 +2770,29 @@ func main() {
 [↑ top](#go-function-method-pointer-nil-map-slice)
 <br><br><br><br><hr>
 
+
+#### function struct pointer
+
+```go
+package main
+
+import "fmt"
+
+type aaa struct {
+	Val int
+}
+
+func update(a *aaa) {
+	a.Val = 100
+}
+
+func main() {
+	a := &aaa{}
+	update(a)
+	fmt.Println(a) // &{100}
+}
+
+```
+
+[↑ top](#go-function-method-pointer-nil-map-slice)
+<br><br><br><br><hr>
