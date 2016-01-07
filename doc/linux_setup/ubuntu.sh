@@ -184,8 +184,8 @@ cp sublime_user_keymap.json \
 cp sublime_user_terminal_setting.json \
 	$HOME/.config/sublime-text-3/Packages/Terminal/Terminal.sublime-settings
 
-cp sublime_default_gosublime_setting.json \
-	$HOME/.config/sublime-text-3/Packages/GoSublime/GoSublime.sublime-settings
+cp sublime_user_gosublime_setting.json \
+	$HOME/.config/sublime-text-3/Packages/User/GoSublime.sublime-settings
 
 #############################################################
 printf "\n\n\n\n\ninstalling others...\n\n" && sleep 1s;
