@@ -1,6 +1,6 @@
 {
 	"color_scheme": "Packages/Color Scheme - Default/IDLE.tmTheme",
-	"ignored_packages": [],
+	"ignored_packages": ["Vintage"],
 	"theme": "Material-Theme.sublime-theme",
 	"spell_check": true,
 	"preview_on_click": false,
