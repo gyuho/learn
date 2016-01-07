@@ -119,21 +119,22 @@ alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 alias ready='
 cd $GOPATH/src/github.com/coreos;
 if [ -d "etcd" ]; then
-	cd $GOPATH/src/github.com/coreos/etcd;
+	cd $GOPATH/src/github.com/coreos/etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
 	underscore="_"
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
 	cd $GOPATH/src/github.com/coreos
-	mv etcd $temp_dir
+	mv ./etcd $temp_dir
 	echo "etcd exists... moving..."
 	echo $temp_dir
 else
 	echo "etcd does not exist..."
 fi
 
-cd $GOPATH/src/github.com/coreos;
+rm -rf etcd
+cd $GOPATH/src/github.com/coreos
 git clone https://github.com/gyuho/etcd.git
 cd etcd
 git remote add upstream https://github.com/coreos/etcd.git
@@ -146,21 +147,22 @@ cd ..
 alias readyo='
 cd $GOPATH/src/github.com/coreos;
 if [ -d "etcd" ]; then
-	cd $GOPATH/src/github.com/coreos/etcd;
+	cd $GOPATH/src/github.com/coreos/etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
 	underscore="_"
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
 	cd $GOPATH/src/github.com/coreos
-	mv etcd $temp_dir
+	mv ./etcd $temp_dir
 	echo "etcd exists... moving..."
 	echo $temp_dir
 else
 	echo "etcd does not exist..."
 fi
 
-cd $GOPATH/src/github.com/coreos;
+rm -rf etcd
+cd $GOPATH/src/github.com/coreos
 git clone https://github.com/coreos/etcd.git
 cd etcd
 git pull origin master
