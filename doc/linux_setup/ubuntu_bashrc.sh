@@ -114,9 +114,7 @@ alias gh='cd $HOME/go/src/github.com/gyuho;'
 alias cs='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
-
-
-alias ready='
+alias work='
 if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
 	echo "not exist!"
 
@@ -131,6 +129,7 @@ if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
 	ls
 else
 	echo "exist!"
+
 	prefix="backup_etcd_"
 	underscore="_"
 	date_string=$(date +"%Y%m%d%H%M%S")
