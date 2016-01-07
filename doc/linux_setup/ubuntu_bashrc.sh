@@ -117,57 +117,26 @@ alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 
 alias ready='
-cd /home/gyuho/go/src/github.com/coreos
+prefix="backup_etcd_"
+underscore="_"
+date_string=$(date +"%Y%m%d%H%M%S")
 
-echo "checking..."
-if [ -d "etcd" ]; then
-	echo "exist!"
-	cd /home/gyuho/go/src/github.com/coreos/etcd
-	prefix="etcd"
-	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
-	date_string=$(date +"%Y%m%d%H%M%S")
-	underscore="_"
-	temp_dir=$prefix$underscore$current_branch$underscore$date_string
-	echo "etcd exists... moving..."
-	mv ./etcd $temp_dir
+if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
+	echo "not exist!"
+	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
 else
-	echo "etcd does not exist..."
+	echo "exist!"
+	cd $HOME/go/src/github.com/coreos/etcd
+	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
+	temp_dir=$prefix$underscore$current_branch$underscore$date_string
+	mv $HOME/go/src/github.com/coreos/etcd $HOME/go/src/github.com/coreos/$temp_dir
+	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
 fi
 
-echo "clone started!"
-cd /home/gyuho/go/src/github.com/coreos
-git clone https://github.com/gyuho/etcd.git
-cd etcd
+cd $HOME/go/src/github.com/coreos/etcd	
 git remote add upstream https://github.com/coreos/etcd.git
 git fetch upstream
 git merge upstream/master
-git remote -v
-cd ..
-'
-
-alias readyo='
-cd /home/gyuho/go/src/github.com/coreos
-
-echo "checking..."
-if [ -d "etcd" ]; then
-	echo "exist!"
-	cd /home/gyuho/go/src/github.com/coreos/etcd
-	prefix="etcd"
-	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
-	date_string=$(date +"%Y%m%d%H%M%S")
-	underscore="_"
-	temp_dir=$prefix$underscore$current_branch$underscore$date_string
-	echo "etcd exists... moving..."
-	mv ./etcd $temp_dir
-else
-	echo "etcd does not exist..."
-fi
-
-echo "clone started!"
-cd /home/gyuho/go/src/github.com/coreos
-git clone https://github.com/coreos/etcd.git
-cd etcd
-git pull origin master
 git remote -v
 cd ..
 '
