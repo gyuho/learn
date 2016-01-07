@@ -1,7 +1,7 @@
 {
 	// The command to execute for the terminal, leave blank for the OS default
 	// On OS X the terminal can be set to iTerm.sh to execute iTerm
-	"terminal": "terminator",
+	"terminal": "",
 
 	// A list of default parameters to pass to the terminal, this can be
 	// overridden by passing the "parameters" key with a list value to the args
