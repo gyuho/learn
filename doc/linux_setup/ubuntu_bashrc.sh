@@ -111,30 +111,40 @@ alias gadd='git add -A .;'
 alias gmit='git commit;'
 
 alias clone='
-cd $GOPATH/src/github.com/coreos && \
-temp_dir="etcd_$(date +"%Y%m%d%H%M%S")" && \
-mv etcd $temp_dir && \
-rm -rf etcd && \
-git clone https://github.com/coreos/etcd.git && \
-cd etcd && \
-git pull origin master && \
+cd $GOPATH/src/github.com/coreos;
+if [ -d "etcd" ]; then
+	cd $GOPATH/src/github.com/coreos/etcd;
+	prefix="etcd"
+	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
+	date_string=$(date +"%Y%m%d%H%M%S")
+	underscore="_"
+	temp_dir=$prefix$underscore$current_branch$underscore$date_string
+	cd $GOPATH/src/github.com/coreos
+	mv etcd $temp_dir
+fi
+
+cd $GOPATH/src/github.com/coreos;
+git clone https://github.com/coreos/etcd.git
+cd etcd
+git pull origin master
 git remote -v
+cd ..
 '
 
 alias work='
 cd $GOPATH/src/github.com/coreos;
 if [ -d "etcd" ]; then
 	cd $GOPATH/src/github.com/coreos/etcd;
-	title="etcd"
+	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
 	underscore="_"
-	temp_dir=$title$underscore$current_branch$underscore$date_string
+	temp_dir=$prefix$underscore$current_branch$underscore$date_string
 	cd $GOPATH/src/github.com/coreos
 	mv etcd $temp_dir
-	rm -rf etcd
 fi
 
+cd $GOPATH/src/github.com/coreos;
 git clone https://github.com/gyuho/etcd.git
 cd etcd
 git remote add upstream https://github.com/coreos/etcd.git
