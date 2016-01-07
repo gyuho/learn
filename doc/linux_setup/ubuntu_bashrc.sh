@@ -117,8 +117,11 @@ alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 
 alias ready='
-cd $GOPATH/src/github.com/coreos;
+cd $GOPATH/src/github.com/coreos
+
+echo "checking..."
 if [ -d "etcd" ]; then
+	echo "exist!"
 	cd $GOPATH/src/github.com/coreos/etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
@@ -133,7 +136,7 @@ else
 	echo "etcd does not exist..."
 fi
 
-rm -rf etcd
+echo "clone started!"
 cd $GOPATH/src/github.com/coreos
 git clone https://github.com/gyuho/etcd.git
 cd etcd
@@ -145,8 +148,11 @@ cd ..
 '
 
 alias readyo='
-cd $GOPATH/src/github.com/coreos;
+cd $GOPATH/src/github.com/coreos
+
+echo "checking..."
 if [ -d "etcd" ]; then
+	echo "exist!"
 	cd $GOPATH/src/github.com/coreos/etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
@@ -161,7 +167,7 @@ else
 	echo "etcd does not exist..."
 fi
 
-rm -rf etcd
+echo "clone started!"
 cd $GOPATH/src/github.com/coreos
 git clone https://github.com/coreos/etcd.git
 cd etcd
