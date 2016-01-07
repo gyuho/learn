@@ -178,6 +178,9 @@ terminal : ctrl + shift + t to open terminal
 gosublime
 COMMENT
 
+cp sublime_user_setting.json \	
+	$HOME/.config/sublime-text-3/Packages/User/Preferences.sublime-settings
+
 cp sublime_user_keymap.json \
 	$HOME/.config/sublime-text-3/Packages/User/Default\	\(Linux\).sublime-keymap
 
