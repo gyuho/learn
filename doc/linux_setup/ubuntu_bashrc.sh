@@ -122,7 +122,7 @@ cd $GOPATH/src/github.com/coreos
 echo "checking..."
 if [ -d "etcd" ]; then
 	echo "exist!"
-	cd $GOPATH/src/github.com/coreos/etcd
+	cd ./etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
@@ -153,7 +153,7 @@ cd $GOPATH/src/github.com/coreos
 echo "checking..."
 if [ -d "etcd" ]; then
 	echo "exist!"
-	cd $GOPATH/src/github.com/coreos/etcd
+	cd ./etcd
 	prefix="etcd"
 	current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
 	date_string=$(date +"%Y%m%d%H%M%S")
