@@ -1,5 +1,9 @@
 {
-	"theme": "Material-Theme.sublime-theme",
 	"color_scheme": "Packages/Color Scheme - Default/IDLE.tmTheme",
-	"ignored_packages": []
+	"ignored_packages": [],
+	"theme": "Material-Theme.sublime-theme",
+	"spell_check": true,
+	"preview_on_click": false,
+	"wrap_width": 79,
+	"highlight_modified_tabs": true
 }
