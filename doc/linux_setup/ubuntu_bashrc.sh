@@ -121,6 +121,10 @@ if [ -d "etcd" ]; then
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
 	cd $GOPATH/src/github.com/coreos
 	mv etcd $temp_dir
+	echo "etcd exists... moving..."
+	echo $temp_dir
+else
+	echo "etcd does not exist..."
 fi
 
 cd $GOPATH/src/github.com/coreos;
@@ -142,6 +146,10 @@ if [ -d "etcd" ]; then
 	temp_dir=$prefix$underscore$current_branch$underscore$date_string
 	cd $GOPATH/src/github.com/coreos
 	mv etcd $temp_dir
+	echo "etcd exists... moving..."
+	echo $temp_dir
+else
+	echo "etcd does not exist..."
 fi
 
 cd $GOPATH/src/github.com/coreos;
