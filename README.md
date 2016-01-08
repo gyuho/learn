@@ -147,7 +147,7 @@ This will help my transition to other languages or frameworks if needed.
 - [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
 - [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
 - [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
-- [*Go: hash, crypto*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto)
+- [*Go: hash, crypto, tls*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto_tls)
 - [**_Go: network_**](https://github.com/gyuho/learn/tree/master/doc/go_network)
 - [*Go: sql*](https://github.com/gyuho/learn/tree/master/doc/go_sql)
 - [*Go: boltdb*](https://github.com/gyuho/learn/tree/master/doc/go_boltdb)

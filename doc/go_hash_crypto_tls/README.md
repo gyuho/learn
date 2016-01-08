@@ -1,13 +1,13 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
-# Go: hash, crypto
+# Go: hash, crypto, tls
 
 - [Reference](#reference)
 - [hashing, hash table](#hashing-hash-table)
 - [hash function](#hash-function)
 - [encrypt, decrypt data](#encrypt-decrypt-data)
 
-[↑ top](#go-hash-crypto)
+[↑ top](#go-hash-crypto-tls)
 <br><br><br><br><hr>
 
 
@@ -19,7 +19,7 @@
 - [Crypto tutorial](https://github.com/joearms/crypto_tutorial)
 - [What are Bloom filters?](https://medium.com/the-story/what-are-bloom-filters-1ec2a50c68ff)
 
-[↑ top](#go-hash-crypto)
+[↑ top](#go-hash-crypto-tls)
 <br><br><br><br><hr>
 
 
@@ -40,7 +40,7 @@ table. Ideally, a hash function returns an unique value to every possible key,
 but it is possible that two different keys return the same hashed value: [*hash
 collision*](https://en.wikipedia.org/wiki/Collision_(computer_science)).
 
-[↑ top](#go-hash-crypto)
+[↑ top](#go-hash-crypto-tls)
 <br><br><br><br><hr>
 
 
@@ -100,7 +100,7 @@ hashMd5: 7Qdih1MuhjZehB6Sv8UNjA==
 
 ```
 
-[↑ top](#go-hash-crypto)
+[↑ top](#go-hash-crypto-tls)
 <br><br><br><br><hr>
 
 
@@ -239,5 +239,5 @@ func decryptFromFile(keyPath, key string) ([]byte, error) {
 
 ```
 
-[↑ top](#go-hash-crypto)
+[↑ top](#go-hash-crypto-tls)
 <br><br><br><br><hr>
