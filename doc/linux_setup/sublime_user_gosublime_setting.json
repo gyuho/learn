@@ -19,7 +19,7 @@
 	"on_save": [{
 		"cmd": "gs9o_open",
 		"args": {
-			"run": ["sh", "go build . errors && go test && go vet" ],
+			"run": ["sh", "go build . errors && go vet" ],
 			"focus_view": false
 		}
 	}]
