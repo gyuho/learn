@@ -119,6 +119,7 @@ password. Only with private key is possible to decrypt the message.
 package main
 
 import (
+	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -131,9 +132,25 @@ import (
 )
 
 var (
-	privateKeyPath = "private.key"
+	privateKeyPath = "key.pem"
 	publicKeyPath  = "public.key"
 )
+
+func pemBlockForKey(priv interface{}) *pem.Block {
+	switch k := priv.(type) {
+	case *rsa.PrivateKey:
+		return &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(k)}
+	case *ecdsa.PrivateKey:
+		b, err := x509.MarshalECPrivateKey(k)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to marshal ECDSA private key: %v", err)
+			os.Exit(2)
+		}
+		return &pem.Block{Type: "EC PRIVATE KEY", Bytes: b}
+	default:
+		return nil
+	}
+}
 
 func main() {
 	defer func() {
@@ -159,9 +176,8 @@ func main() {
 	if err := pem.Encode(
 		privateKeyFile,
 		&pem.Block{
-			Type:    "RSA PRIVATE KEY",
-			Headers: map[string]string{"TEST_KEY": "TEST_VALUE"},
-			Bytes:   x509.MarshalPKCS1PrivateKey(privateKey),
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 		},
 	); err != nil {
 		panic(err)

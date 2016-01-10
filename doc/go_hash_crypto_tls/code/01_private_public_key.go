@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	privateKeyPath = "private.pem"
+	privateKeyPath = "key.pem"
 	publicKeyPath  = "public.key"
 )
 
@@ -58,9 +58,8 @@ func main() {
 	if err := pem.Encode(
 		privateKeyFile,
 		&pem.Block{
-			Type:    "RSA PRIVATE KEY",
-			Headers: map[string]string{"TEST_KEY": "TEST_VALUE"},
-			Bytes:   x509.MarshalPKCS1PrivateKey(privateKey),
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 		},
 	); err != nil {
 		panic(err)
