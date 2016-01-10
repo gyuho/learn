@@ -309,9 +309,9 @@ var (
 
 func main() {
 	defer func() {
-		os.Remove(privateKeyPath)
-		os.Remove(publicKeyPath)
-		os.Remove(certPath)
+		// os.Remove(privateKeyPath)
+		// os.Remove(publicKeyPath)
+		// os.Remove(certPath)
 	}()
 
 	// write private key
@@ -326,9 +326,8 @@ func main() {
 	if err := pem.Encode(
 		privateKeyFile,
 		&pem.Block{
-			Type:    "RSA PRIVATE KEY",
-			Headers: map[string]string{"TEST_KEY": "TEST_VALUE"},
-			Bytes:   x509.MarshalPKCS1PrivateKey(privateKey),
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 		},
 	); err != nil {
 		panic(err)
@@ -350,47 +349,32 @@ func main() {
 	publicKeyFile.Close()
 
 	// write cert
-	certTemplate := x509.Certificate{
-		Signature:          []byte("test"),
-		SignatureAlgorithm: x509.SHA512WithRSA,
-
-		PublicKeyAlgorithm: x509.RSA,
-		PublicKey:          convertPublicKey(privateKey),
-
-		Version: 0,
-
-		Issuer: pkix.Name{
-			Country:            []string{"Issuer"},
-			Organization:       []string{"Issuer"},
-			OrganizationalUnit: []string{"Issuer"},
-		},
-
-		Subject: pkix.Name{
-			Country:            []string{"Subject"},
-			Organization:       []string{"Subject"},
-			OrganizationalUnit: []string{"Subject"},
-		},
-
-		NotBefore: time.Now(),
-		NotAfter:  time.Now().Add(time.Minute),
-
-		SubjectKeyId:          []byte("TEST"),
-		BasicConstraintsValid: true,
-		IsCA: true,
-
-		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-	}
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
 		panic(err)
 	}
-	certTemplate.SerialNumber = serialNumber
-	certTemplate.IsCA = true
-	certTemplate.KeyUsage |= x509.KeyUsageCertSign
-	//
+	certTemplate := x509.Certificate{
+		SerialNumber: serialNumber,
+		Subject: pkix.Name{
+			Organization: []string{"Acme Co"},
+		},
+
+		NotBefore: time.Now(),
+		NotAfter:  time.Now().Add(1 * time.Hour),
+
+		SubjectKeyId:          []byte("TEST"),
+		BasicConstraintsValid: true,
+		IsCA:        true,
+		KeyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth},
+
+		DNSNames:       []string{"localhost"},
+		EmailAddresses: []string{"test@test.com"},
+	}
+
 	// func CreateCertificate(rand io.Reader, template, parent *Certificate, pub, priv interface{}) (cert []byte, err error)
-	derBytes, err := x509.CreateCertificate(rand.Reader, &certTemplate, &certTemplate, convertPublicKey(privateKey), privateKey)
+	derBytes, err := x509.CreateCertificate(rand.Reader, &certTemplate, &certTemplate, getPublicKey(privateKey), privateKey)
 	if err != nil {
 		panic(err)
 	}
@@ -401,9 +385,8 @@ func main() {
 	if err := pem.Encode(
 		certKeyFile,
 		&pem.Block{
-			Type:    "CERTIFICATE",
-			Headers: map[string]string{"TEST_KEY": "TEST_VALUE"},
-			Bytes:   derBytes,
+			Type:  "CERTIFICATE",
+			Bytes: derBytes,
 		},
 	); err != nil {
 		panic(err)
@@ -460,13 +443,49 @@ func main() {
 		fmt.Println(f.Name())
 		fmt.Println(string(tbytes))
 	}()
+
+	func() {
+		f, err := openToRead(privateKeyPath)
+		if err != nil {
+			panic(err)
+		}
+		bs, err := ioutil.ReadAll(f)
+		if err != nil {
+			panic(err)
+		}
+		f.Close()
+		block, pemBytes := pem.Decode(bs)
+		privateKey, err := x509.ParsePKCS1PrivateKey(append(block.Bytes, pemBytes...))
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("privateKey")
+		fmt.Println(privateKey)
+	}()
+
+	func() {
+		f, err := openToRead(certPath)
+		if err != nil {
+			panic(err)
+		}
+		bs, err := ioutil.ReadAll(f)
+		if err != nil {
+			panic(err)
+		}
+		f.Close()
+		block, pemBytes := pem.Decode(bs)
+		cert, err := x509.ParseCertificate(append(block.Bytes, pemBytes...))
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("cert")
+		fmt.Println(cert)
+	}()
 }
 
 /*
 private.pem
 -----BEGIN RSA PRIVATE KEY-----
-TEST_KEY: TEST_VALUE
-
 MIICXgIBAAKBgQDVgp1RWPs80m3gAJBrbhCjL21FyXGn9AEnINDg5W5D2aaKnE0D
 26lW6BqR0h1iRI9F60HSMxeCqDDMou4To4/BIHZpePP/X7S+zQJPdeRuB07/0989
 oig/UYkA2fbhKCbpBGKLf15BjW8sOtYzFscFhoByYWZ+w0zFblmNfr3GMwIDAQAB
@@ -487,8 +506,6 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDVgp1RWPs80m3gAJBrbhCjL21FyXGn9AEnINDg5W5D
 
 cert.pem
 -----BEGIN CERTIFICATE-----
-TEST_KEY: TEST_VALUE
-
 MIICSTCCAbKgAwIBAgIQTt/O2lGhYG1VwaCDFj6zGDANBgkqhkiG9w0BAQ0FADA2
 MRAwDgYDVQQGEwdTdWJqZWN0MRAwDgYDVQQKEwdTdWJqZWN0MRAwDgYDVQQLEwdT
 dWJqZWN0MB4XDTE2MDEwOTIzNTgwMFoXDTE2MDEwOTIzNTkwMFowNjEQMA4GA1UE
@@ -507,7 +524,7 @@ XHBkArYcakTskF5A4Q==
 */
 
 // https://golang.org/src/crypto/tls/generate_cert.go
-func convertPublicKey(priv interface{}) interface{} {
+func getPublicKey(priv interface{}) interface{} {
 	switch k := priv.(type) {
 	case *rsa.PrivateKey:
 		return &k.PublicKey
@@ -540,6 +557,122 @@ func openToOverwrite(fpath string) (*os.File, error) {
 ```
 
 ```go
+package main
+
+import (
+	"crypto/tls"
+	"crypto/x509"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"time"
+)
+
+var (
+	privateKeyPath = "private.pem"
+	certPath       = "cert.pem"
+)
+
+const port = ":8080"
+
+func main() {
+	certBytes, err := ioutil.ReadFile(certPath)
+	if err != nil {
+		panic(err)
+	}
+
+	clientCertPool := x509.NewCertPool()
+	if ok := clientCertPool.AppendCertsFromPEM(certBytes); !ok {
+		panic("can't add certificate to certificate pool!")
+	}
+
+	tlsConfigServer := &tls.Config{
+		ClientAuth:               tls.RequireAndVerifyClientCert,
+		ClientCAs:                clientCertPool,
+		PreferServerCipherSuites: true,
+		MinVersion:               tls.VersionTLS12,
+	}
+	tlsConfigServer.BuildNameToCertificate()
+
+	mainRouter := http.NewServeMux()
+	mainRouter.HandleFunc("/", handler)
+	httpServer := &http.Server{
+		Addr:      port,
+		TLSConfig: tlsConfigServer,
+		Handler:   mainRouter,
+	}
+
+	go func() {
+		fmt.Println("Serving https://localhost" + port)
+
+		// func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error
+		if err := httpServer.ListenAndServeTLS(certPath, privateKeyPath); err != nil {
+			panic(err)
+		}
+	}()
+
+	time.Sleep(time.Second)
+
+	func() {
+		fmt.Println("Sending client requests...")
+
+		tlsCert, err := tls.LoadX509KeyPair(certPath, privateKeyPath)
+		if err != nil {
+			panic(err)
+		}
+
+		certBytes, err := ioutil.ReadFile(certPath)
+		if err != nil {
+			panic(err)
+		}
+
+		clientCertPool := x509.NewCertPool()
+		if ok := clientCertPool.AppendCertsFromPEM(certBytes); !ok {
+			panic("can't add certificate to certificate pool!")
+		}
+
+		tlsConfigClient := &tls.Config{
+			Certificates: []tls.Certificate{tlsCert},
+			RootCAs:      clientCertPool,
+		}
+		tlsConfigClient.BuildNameToCertificate()
+
+		httpClient := http.DefaultClient
+		httpClient.Transport = &http.Transport{TLSClientConfig: tlsConfigClient}
+		resp, err := httpClient.Get("https://localhost" + port)
+		if err != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
+
+		rb, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("response:", string(rb))
+	}()
+}
+
+func handler(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "GET":
+		fmt.Fprintln(w, "Hello World!")
+		fmt.Fprintf(w, "req.TLS:        %+v\n", req.TLS)
+		fmt.Fprintf(w, "DNSNames:       %#q\n", req.TLS.PeerCertificates[0].DNSNames)
+		fmt.Fprintf(w, "EmailAddresses: %#q\n", req.TLS.PeerCertificates[0].EmailAddresses)
+	default:
+		http.Error(w, "Method Not Allowed", 405)
+	}
+}
+
+/*
+Serving https://localhost:8080
+Sending client requests...
+response: Hello World!
+req.TLS:        &{Version:771 HandshakeComplete:true DidResume:false CipherSuite:49199 NegotiatedProtocol: NegotiatedProtocolIsMutual:true ServerName:localhost PeerCertificates:[0xc82017e000] VerifiedChains:[[0xc82017e000 0xc8200a4000]] SignedCertificateTimestamps:[] OCSPResponse:[] TLSUnique:[156 55 205 75 79 27 21 192 84 244 36 226]}
+DNSNames:       [`localhost`]
+EmailAddresses: [`test@test.com`]
+*/
 
 ```
 
