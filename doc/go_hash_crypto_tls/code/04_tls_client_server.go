@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	privateKeyPath = "private.pem"
+	privateKeyPath = "key.pem"
 	certPath       = "cert.pem"
 )
 
