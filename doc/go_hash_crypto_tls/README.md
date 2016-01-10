@@ -306,7 +306,6 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
-	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
@@ -318,7 +317,7 @@ import (
 )
 
 var (
-	privateKeyPath = "private.pem"
+	privateKeyPath = "key.pem"
 	publicKeyPath  = "public.key"
 	certPath       = "cert.pem"
 )
@@ -372,14 +371,10 @@ func main() {
 	}
 	certTemplate := x509.Certificate{
 		SerialNumber: serialNumber,
-		Subject: pkix.Name{
-			Organization: []string{"Acme Co"},
-		},
 
 		NotBefore: time.Now(),
-		NotAfter:  time.Now().Add(1 * time.Hour),
+		NotAfter:  time.Now().AddDate(1000, 1, 1),
 
-		SubjectKeyId:          []byte("TEST"),
 		BasicConstraintsValid: true,
 		IsCA:        true,
 		KeyUsage:    x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
@@ -585,7 +580,7 @@ import (
 )
 
 var (
-	privateKeyPath = "private.pem"
+	privateKeyPath = "key.pem"
 	certPath       = "cert.pem"
 )
 
