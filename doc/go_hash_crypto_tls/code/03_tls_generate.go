@@ -24,9 +24,9 @@ var (
 
 func main() {
 	defer func() {
-		os.Remove(privateKeyPath)
-		os.Remove(publicKeyPath)
-		os.Remove(certPath)
+		// os.Remove(privateKeyPath)
+		// os.Remove(publicKeyPath)
+		// os.Remove(certPath)
 	}()
 
 	// write private key
