@@ -149,3 +149,39 @@ else
 	ls
 fi
 '
+
+alias work_bolt='
+if [ ! -d "/home/gyuho/go/src/github.com/boltdb/bolt" ]; then
+  echo "not exist!"
+
+  git clone https://github.com/gyuho/bolt.git $HOME/go/src/github.com/boltdb/bolt
+
+  cd $HOME/go/src/github.com/boltdb/bolt
+  git remote add upstream https://github.com/boltdb/bolt.git
+  git fetch upstream
+  git merge upstream/master
+  git remote -v
+  cd ..
+  ls
+else
+  echo "exist!"
+
+  prefix="backup_bolt_"
+  underscore="_"
+  date_string=$(date +"%Y%m%d%H%M%S")
+  cd $HOME/go/src/github.com/boltdb/bolt
+  current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
+  temp_dir=$prefix$current_branch$underscore$date_string
+  mv $HOME/go/src/github.com/boltdb/bolt $HOME/go/src/github.com/boltdb/$temp_dir
+
+  git clone https://github.com/gyuho/bolt.git $HOME/go/src/github.com/boltdb/bolt
+
+  cd $HOME/go/src/github.com/boltdb/bolt
+  git remote add upstream https://github.com/boltdb/bolt.git
+  git fetch upstream
+  git merge upstream/master
+  git remote -v
+  cd ..
+  ls
+fi
+'
