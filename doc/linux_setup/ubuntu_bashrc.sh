@@ -81,7 +81,6 @@ alias la='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
 
-# export VIM=$HOME/.config/nvim
 alias vi="vim"
 
 alias grep="grep --color=auto"
@@ -110,8 +109,8 @@ alias gmas='git checkout master;'
 alias gadd='git add -A .;'
 alias gmit='git commit;'
 
-alias gh='cd $HOME/go/src/github.com/gyuho;'
-alias cs='cd $HOME/go/src/github.com/coreos;'
+alias cs='cd $HOME/go/src/github.com/gyuho;'
+alias css='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 alias work='
@@ -127,7 +126,9 @@ if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
 	git remote -v
 	cd ..
 	ls
+
 else
+
 	echo "exist!"
 
 	prefix="backup_etcd_"
@@ -163,7 +164,9 @@ if [ ! -d "/home/gyuho/go/src/github.com/boltdb/bolt" ]; then
   git remote -v
   cd ..
   ls
+
 else
+
   echo "exist!"
 
   prefix="backup_bolt_"
