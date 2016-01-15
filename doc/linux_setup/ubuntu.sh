@@ -83,7 +83,7 @@ cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-ma
 
 # install latest go
 cd /usr/local && sudo rm -rf ./go;
-sudo curl -s https://storage.googleapis.com/golang/go1.6beta1.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+sudo curl -s https://storage.googleapis.com/golang/go1.6beta2.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
 
 if grep -q GOPATH "$(echo $HOME)/.bashrc"; then 
 	echo "bashrc already has GOPATH...";
