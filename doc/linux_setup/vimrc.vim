@@ -155,7 +155,7 @@ set t_Co=256
 colorscheme molokai
 " colorscheme darkblue
 
-syntax off
+" syntax off
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
