@@ -15,6 +15,7 @@ Plug 'nsf/gocode', {'rtp': 'vim'}
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
+Plug 'tomasr/molokai'
 call plug#end()
 
 " :PlugInstall
@@ -151,7 +152,8 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 set t_Co=256
-colorscheme darkblue
+colorscheme molokai
+" colorscheme darkblue
 
 syntax off
 
