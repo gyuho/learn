@@ -34,6 +34,7 @@
 - [`sync.Once`](#synconce)
 - [**`goroutine`, closure**](#goroutine-closure)
 - [rate limit](#rate-limit)
+- [select break](#select-break)
 - [Counting problem](#counting-problem)
 - [Count: simulate web requests](#count-simulate-web-requests)
 - [Count: `NaiveCounter`](#count-naivecounter)
@@ -3475,6 +3476,67 @@ func (q *Queue) Push(ts time.Time) bool {
 func (q *Queue) String() string {
 	return fmt.Sprintf("times: %+v / burstSize: %d / rate: %v", q.slice.times, q.burstSize, q.rate)
 }
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### rate limit
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch := make(chan string, 5000)
+
+	ch <- "a"
+	ch <- "a"
+	ch <- "a"
+	ch <- "a"
+	ch <- "a"
+
+	done := make(chan struct{})
+	go func() {
+	here:
+		for {
+			select {
+			case s, ok := <-ch:
+				if !ok {
+					fmt.Println("break 1")
+					break // closed
+				}
+				fmt.Println(s, ok)
+			case <-time.After(time.Second):
+				fmt.Println("break 2")
+				break here
+			}
+		}
+		fmt.Println("break 3")
+		done <- struct{}{}
+	}()
+
+	<-done
+	fmt.Println("done")
+}
+
+/*
+a true
+a true
+a true
+a true
+a true
+break 2
+break 3
+done
+
+*/
 
 ```
 
