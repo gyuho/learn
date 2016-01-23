@@ -3,7 +3,8 @@
 	"ignored_packages": ["Vintage"],
 	"spell_check": true,
 	"preview_on_click": false,
-	"word_wrap": true,
+	// "word_wrap": true,
+	"word_wrap": false,
 	"wrap_width": 79,
 	"highlight_modified_tabs": true
 }
