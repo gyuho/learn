@@ -173,15 +173,6 @@ https://packagecontrol.io/installation
 ctrl + `
 ctrl + shift + p
 install package
-
-terminal : ctrl + shift + t to open terminal
-gosublime
-goimports
-SideBarEnhancements
-Git
-GitGutter-Edge
-Git-Status​Bar
-Material Theme
 COMMENT
 
 cp sublime_user_setting.json \	
