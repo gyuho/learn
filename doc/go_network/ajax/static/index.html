@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Gyu-Ho Lee">
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        var x = 0; // global variable
+        var list = new Array;;
+        setInterval(function() {
+            $.ajax({
+                type: "GET",
+                url: '/metrics',
+                async: true,
+                dataType: "json",
+                success: function(dataObj) {
+                    console.log(x, dataObj);
+                    list.push(dataObj);
+                    console.log(list.length);
+                    x = x + 1;
+                }
+            });
+            console.log("outside:", list);
+        }, 1000);
+    });
+    </script>
+    <title>test</title>
+</head>
+
+<body>
+    ...
+</body>
+
+</html>
