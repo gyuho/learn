@@ -49,6 +49,7 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 
 In progress...
 
+- [etcd v2 vs v3](etcd_v2_vs_v3)
 - [consul vs etcd vs zookeeper](consul_vs_etcd_vs_zookeeper)
 
 [↑ top](#contents)
