@@ -51,6 +51,8 @@
 - [Find duplicates with concurrency](#find-duplicates-with-concurrency)
 - [Concurrency: Merge Sort](#concurrency-merge-sort)
 - [Concurrency: Prime Sieve](#concurrency-prime-sieve)
+- [close channel](#close-channel)
+- [blocking defer](#blocking-defer)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5311,3 +5313,102 @@ func main() {
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
 
+
+#### close channel
+
+```go
+package main
+
+import "fmt"
+
+func channelClose() <-chan int {
+	ch := make(chan int)
+	close(ch)
+	return ch
+}
+
+func channelCloseArg(ch chan int) {
+	close(ch)
+}
+
+func main() {
+	cc := make(chan int, 1)
+	cc <- 1
+	v, open := <-cc
+	fmt.Println(v, open) // 1 true
+
+	close(cc)
+	v, open = <-cc
+	fmt.Println(v, open) // 0 false
+	v, open = <-cc
+	fmt.Println(v, open) // 0 false
+
+	fmt.Println()
+
+	rc := channelClose()
+	v, open = <-rc
+	fmt.Println(v, open) // 0 false
+	v, open = <-rc
+	fmt.Println(v, open) // 0 false
+	v, open = <-rc
+
+	fmt.Println()
+
+	ch := make(chan int)
+	channelCloseArg(ch)
+	v, open = <-ch
+	fmt.Println(v, open) // 0 false
+	v, open = <-ch
+	fmt.Println(v, open) // 0 false
+	v, open = <-ch
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### blocking defer
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func runGoroutine() {
+	go func() {
+		time.Sleep(time.Hour)
+	}()
+}
+
+func runDefer() {
+	defer func() {
+		time.Sleep(time.Hour)
+	}()
+}
+
+func main() {
+	fmt.Println("before runGoroutine #0")
+	runGoroutine()
+	fmt.Println("after runGoroutine #0") // return regardless of goroutine
+
+	fmt.Println("before runDefer #1")
+	runDefer()
+	fmt.Println("after runDefer #1") // does not return until defer is done
+}
+
+/*
+before runGoroutine #0
+after runGoroutine #0
+before runDefer #1
+...
+*/
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
