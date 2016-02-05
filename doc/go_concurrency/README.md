@@ -51,8 +51,8 @@
 - [Find duplicates with concurrency](#find-duplicates-with-concurrency)
 - [Concurrency: Merge Sort](#concurrency-merge-sort)
 - [Concurrency: Prime Sieve](#concurrency-prime-sieve)
-- [close channel](#close-channel)
-- [blocking defer](#blocking-defer)
+- [**close channel**](#close-channel)
+- [**blocking defer**](#blocking-defer)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
