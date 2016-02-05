@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	privateKeyPath = "key.pem"
+	privateKeyPath = "private-key.pem"
 	publicKeyPath  = "public.key"
 )
 
@@ -45,15 +45,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// write private key
 	privateKeyFile, err := openToOverwrite(privateKeyPath)
 	if err != nil {
 		panic(err)
 	}
+
 	// if err := gob.NewEncoder(privateKeyFile).Encode(privateKey); err != nil {
 	// 	panic(err)
 	// }
-	//
+
 	// "PEM" format is a method to encode binary data into text
 	if err := pem.Encode(
 		privateKeyFile,
@@ -67,21 +69,31 @@ func main() {
 	privateKeyFile.Close()
 
 	// write public key
-	publicKeyFile, err := openToOverwrite(publicKeyPath)
+	pbf, err := openToOverwrite(publicKeyPath)
 	if err != nil {
 		panic(err)
 	}
-	// if err := gob.NewEncoder(publicKeyFile).Encode(&privateKey.PublicKey); err != nil {
+
+	// if err := gob.NewEncoder(pbf).Encode(&privateKey.PublicKey); err != nil {
 	// 	panic(err)
 	// }
+
 	publicKey, err := ssh.NewPublicKey(&privateKey.PublicKey)
 	if err != nil {
 		panic(err)
 	}
-	if _, err := publicKeyFile.Write(ssh.MarshalAuthorizedKey(publicKey)); err != nil {
+	if _, err := pbf.Write(ssh.MarshalAuthorizedKey(publicKey)); err != nil {
 		panic(err)
 	}
-	publicKeyFile.Close()
+	pbf.Close()
+
+	pbf, err = openToAppend(publicKeyPath)
+	if err != nil {
+		panic(err)
+	}
+	// add comment
+	pbf.WriteString(" gyuhox@gmail.com")
+	pbf.Close()
 
 	// read private key
 	func() {
@@ -119,27 +131,26 @@ func main() {
 }
 
 /*
-private.key
+private-key.pem
 -----BEGIN RSA PRIVATE KEY-----
-TEST_KEY: TEST_VALUE
-
-MIICXQIBAAKBgQCgMRqaLHKOdf9HPElaav3G8yxVWAeb0eB4Wvy7QDsHgOroJlmg
-+LylCoUCHdd0Ly/rBJH6AGMcDjBh/jEE5YK8kj/wV+UGh7g+3n9I4ez3rNrYiytM
-6c3baTxDYN73RSw6tjjGIzg/tmuUrk6i0eslL83g5INMjKs31LCsoitMsQIDAQAB
-AoGAcyLX+/f2Xm5xDMJH9rTvsg8VzkF3Noeizt6Wx/9ibgI61KC7yvb8n6Lv9pV8
-RgWka0bdpNKiaYfJPqV0lhBf5gX0PImKn4mNiIwS5rMjps8Ymeth+sNXJh8n9OX1
-PYOIVQ5oERqyHQiqG+AJ+rk6tls4NGNFFdN39aJfkuDfgAECQQDD5FYBiAceCkB2
-5J+kaS7ZhbLgOMge9MM/gmn16uJrOxVEOUeUwP74fqu/tuYfotMFNLYmGnpXzavo
-Adt1k6W1AkEA0Vh1etiZvOm4s0fzS18fKI2esIjri8tNx+kLbdrYXm6T7jAEzWel
-SsGUs/PD+7sxWf9Xz9YTduCgpqeSNxnojQJBAJXx0Reo/PG0nTWkuMJLtQ3R9mMF
-c8GmT1HszJjtq1SzTAsF4VHvDPw/Uc4U/T9YDjjc6VRvThipmR2lVkxAsUUCQQCh
-htaGpe/hgpjfxAlmQ4vgF321CsBsCb8HG7qU1cITAtEjfGuILYutJbZeLx0t8569
-qTaRB8XW+LUcQbmgyF3VAkBWCQf3Z7wyPM+1qeXzIa4ZUZcpMOcaQ98TuSQhVVcD
-pZnPsO5Ni1wjKhKWHP3lOXx9N+e9NtCunfjyv5C2SIs3
+MIICXQIBAAKBgQC9XMz3R6pSYgGwxPX91UJlgdd8/VGLmZgk2GVkWLFa+GdcdWdg
+EIC4N2h53K2APbo/0i2KDJtIQX4P4BRDlzxI78oDhfEmssrS5TLPoHTT5dzhQkdn
+JFKKmkpJ1qo/o1rnO4Hv4rTDw0vK0gy/ep5i2OY6oeAyAFc7ENLJDmPk5QIDAQAB
+AoGAKbkQ0EtSE+TUSoabTNp4TrVVLY0DMqcdBsFHVdzU9x5UZ+LWbCw2sGBE/NTK
+xb7UEsvUjN5KOJl1lTniPSJNfcNt8uUybH5D4sW7ea1vYF2BPm8aGqNEGg4WcxvR
+rZs8lfMH9E32MkrTNDSjgCV1/NsmRqddqRcFmfRv6FLXzQECQQDQuEN4BqpwsPc/
+Ox+8aa2qB1+gihVknGO0WIFmUv3asby8B5xDl5w5Pz4qTMibc4+U3mFm+D2zWpcn
+zijE23IZAkEA6EIAY3xljbBRwzcYQp/TCSw8RYqn4p+mFFA4KMZIgSP33z/Da01f
+Hil/5L3AiNOzni2K+5L9uF/Cyure7TNarQJBALpg8I6LlUNQI1jpWOuMirFcKD5Z
+T8UqCbaPme1fiqPxNxHI0fdhuPU9zitDqZd21+4drmien6o66ON4qtsvAnECQQDC
+WwjsN5rb2KJzE9WvWwNEd8nv/7nBwQs/kGmOZW8i8jBol3k2f8aK/PtTNR664T07
+rqzRHQ5IjYn6OFVYdVL5AkB87/GGL9XFfyKP9ZYQygJRrsvN8z9ZF4YfM38CAhgd
+aBSYmk20KkbND74dV8iNqT3mwh9SnkHC6fn5AiZcE6cR
 -----END RSA PRIVATE KEY-----
 
 public.key
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCgMRqaLHKOdf9HPElaav3G8yxVWAeb0eB4Wvy7QDsHgOroJlmg+LylCoUCHdd0Ly/rBJH6AGMcDjBh/jEE5YK8kj/wV+UGh7g+3n9I4ez3rNrYiytM6c3baTxDYN73RSw6tjjGIzg/tmuUrk6i0eslL83g5INMjKs31LCsoitMsQ==
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC9XMz3R6pSYgGwxPX91UJlgdd8/VGLmZgk2GVkWLFa+GdcdWdgEIC4N2h53K2APbo/0i2KDJtIQX4P4BRDlzxI78oDhfEmssrS5TLPoHTT5dzhQkdnJFKKmkpJ1qo/o1rnO4Hv4rTDw0vK0gy/ep5i2OY6oeAyAFc7ENLJDmPk5Q==
+ gyuhox@gmail.com
 
 */
 
@@ -153,6 +164,17 @@ func openToRead(fpath string) (*os.File, error) {
 
 func openToOverwrite(fpath string) (*os.File, error) {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
+	if err != nil {
+		f, err = os.Create(fpath)
+		if err != nil {
+			return f, err
+		}
+	}
+	return f, nil
+}
+
+func openToAppend(fpath string) (*os.File, error) {
+	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_APPEND, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
 		if err != nil {
