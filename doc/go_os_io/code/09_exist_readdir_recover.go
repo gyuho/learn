@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
 )
 
 // exist returns true if the file or directory exists.
@@ -14,17 +13,19 @@ func exist(fpath string) bool {
 	// Does a directory exist
 	st, err := os.Stat(fpath)
 	if err != nil {
-		return false
+		if os.IsNotExist(err) {
+			return false
+		}
 	}
 	if st.IsDir() {
 		return true
 	}
 	if _, err := os.Stat(fpath); err != nil {
-		if strings.Contains(err.Error(), "no such file") {
+		if os.IsNotExist(err) {
 			return false
 		}
 	}
-	return true
+	return false
 }
 
 // existDir returns true if the specified path points to a directory.
@@ -32,7 +33,9 @@ func exist(fpath string) bool {
 func existDir(fpath string) bool {
 	st, err := os.Stat(fpath)
 	if err != nil {
-		return false
+		if os.IsNotExist(err) {
+			return false
+		}
 	}
 	return st.IsDir()
 }
