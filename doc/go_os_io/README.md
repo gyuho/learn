@@ -823,7 +823,6 @@ import (
 
 // exist returns true if the file or directory exists.
 func exist(fpath string) bool {
-	// Does a directory exist
 	st, err := os.Stat(fpath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -838,7 +837,7 @@ func exist(fpath string) bool {
 			return false
 		}
 	}
-	return false
+	return true
 }
 
 // existDir returns true if the specified path points to a directory.
