@@ -91,7 +91,7 @@ alias rm="rm -i "
 alias cpu='cat /proc/cpuinfo | grep "model name" | head -1; sensors;'
 alias disk='df -h;'
 alias memory='free -h;'
-alias htop='htop -d 2'
+# alias htop='htop -d 2'
 
 alias clean_page='echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh;'
 
@@ -147,46 +147,6 @@ else
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
-  git branch
-  git push
-  pwd
-fi
-'
-
-alias work_bolt='
-if [ ! -d "/home/gyuho/go/src/github.com/boltdb/bolt" ]; then
-  echo "not exist!"
-
-  git clone https://github.com/gyuho/bolt.git $HOME/go/src/github.com/boltdb/bolt
-
-  cd $HOME/go/src/github.com/boltdb/bolt
-  git remote add upstream https://github.com/boltdb/bolt.git
-  git fetch upstream
-  git merge upstream/master
-  git remote -v
-  git branch
-  git push
-  pwd
-
-else
-
-  echo "exist!"
-
-  prefix="backup_bolt_"
-  underscore="_"
-  date_string=$(date +"%Y%m%d%H%M%S")
-  cd $HOME/go/src/github.com/boltdb/bolt
-  current_branch=$(git branch | sed -n -e "s/^\* \(.*\)/\1/p")
-  temp_dir=$prefix$current_branch$underscore$date_string
-  mv $HOME/go/src/github.com/boltdb/bolt $HOME/go/src/github.com/boltdb/$temp_dir
-
-  git clone https://github.com/gyuho/bolt.git $HOME/go/src/github.com/boltdb/bolt
-
-  cd $HOME/go/src/github.com/boltdb/bolt
-  git remote add upstream https://github.com/boltdb/bolt.git
-  git fetch upstream
-  git merge upstream/master
-  git remote -v
   git branch
   git push
   pwd
