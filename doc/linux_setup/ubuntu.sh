@@ -100,18 +100,18 @@ printf "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Success
 cd $HOME && go run temp.go && rm -f temp.go && go version;
 
 cd $HOME && \
-go get -v -u github.com/tools/godep && \
-go get -v -u golang.org/x/tools/cmd/... && \
-go get -v -u github.com/golang/lint/golint && \
-go get -v -u github.com/nsf/gocode && \
-go get -v -u github.com/motain/gocheck && \
-go get -v -u github.com/vaughan0/go-ini && \
-go get -v -u github.com/rogpeppe/godef && \
-go get -v -u github.com/kisielk/errcheck && \
-go get -v -u github.com/jstemmer/gotags && \
-go get -v -u github.com/alecthomas/gometalinter && \
-go get -v -u golang.org/x/tools/cmd/benchcmp && \
-go get -v -u golang.org/x/tools/cmd/goimports && \
+go get -v -u -f github.com/tools/godep && \
+go get -v -u -f golang.org/x/tools/cmd/... && \
+go get -v -u -f github.com/golang/lint/golint && \
+go get -v -u -f github.com/nsf/gocode && \
+go get -v -u -f github.com/motain/gocheck && \
+go get -v -u -f github.com/vaughan0/go-ini && \
+go get -v -u -f github.com/rogpeppe/godef && \
+go get -v -u -f github.com/kisielk/errcheck && \
+go get -v -u -f github.com/jstemmer/gotags && \
+go get -v -u -f github.com/alecthomas/gometalinter && \
+go get -v -u -f golang.org/x/tools/cmd/benchcmp && \
+go get -v -u -f golang.org/x/tools/cmd/goimports && \
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh && \
 cd $HOME;
 
@@ -143,26 +143,6 @@ source $HOME/.vimrc;
 :PlugUpgrade
 :GoInstallBinaries
 COMMENT
-
-#############################################################
-printf "\n\n\n\n\ninstalling neovim...\n\n" && sleep 1s;
-
-sudo apt-get -y install libtool autoconf automake cmake g++ pkg-config unzip;
-cd $HOME && rm -rf neovim && git clone https://github.com/neovim/neovim.git;
-cd $HOME/neovim && make && rm -rf build/ && \
-	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" && \
-	make install && \
-	export PATH="$HOME/neovim/bin:$PATH";
-
-sudo mkdir -p $HOME/.config/nvim/autoload;
-sudo chown -R gyuho:gyuho $HOME/.config;
-sudo curl -fLo $HOME/.config/nvim/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-sudo chmod -R +x $HOME/.config/nvim;
-
-cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;
-sudo cp ./nvimrc.vim $HOME/.config/nvim/sysinit.vim;
-source $HOME/.config/nvim/sysinit.vim;
 
 #############################################################
 printf "\n\n\n\n\ninstalling sublime...\n\n" && sleep 1s;

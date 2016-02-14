@@ -4,8 +4,8 @@ case $- in
       *) return;;
 esac
 
-export HISTFILESIZE=20000
-export HISTSIZE=20000
+export HISTFILESIZE=200000
+export HISTSIZE=200000
 shopt -s histappend
 shopt -s cmdhist # Combine multiline commands into one in history
 HISTCONTROL=ignoreboth # don't put duplicate lines or lines starting with space in the history.
@@ -124,8 +124,9 @@ if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
-	cd ..
-	ls
+  git branch
+  git push
+  pwd
 
 else
 
@@ -146,8 +147,9 @@ else
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
-	cd ..
-	ls
+  git branch
+  git push
+  pwd
 fi
 '
 
@@ -162,8 +164,9 @@ if [ ! -d "/home/gyuho/go/src/github.com/boltdb/bolt" ]; then
   git fetch upstream
   git merge upstream/master
   git remote -v
-  cd ..
-  ls
+  git branch
+  git push
+  pwd
 
 else
 
@@ -184,7 +187,8 @@ else
   git fetch upstream
   git merge upstream/master
   git remote -v
-  cd ..
-  ls
+  git branch
+  git push
+  pwd
 fi
 '
