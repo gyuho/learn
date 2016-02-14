@@ -3,13 +3,13 @@ Plug 'Raimondi/delimitMate'
 Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'scrooloose/syntastic'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'nsf/gocode', {'rtp': 'vim'}
 Plug 'ntpeters/vim-better-whitespace'
@@ -151,8 +151,7 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 syntax enable
-set background=dark
-colorscheme solarized
+colorscheme molokai
 
 " syntax off
 " colorscheme darkblue
