@@ -1,10 +1,9 @@
-
 call plug#begin('~/.vim/plugged')
 Plug 'Raimondi/delimitMate'
 Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-Plug 'altercation/solarized'
+Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
@@ -56,6 +55,7 @@ map <Leader>s :bnext<Return>
 map <Leader>d :bd<Return>     " close current buffer
 
 " vim-Go
+filetype plugin on
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
 
@@ -82,7 +82,6 @@ let g:airline_detect_modified=1
 let g:airline_detect_paste=1
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='badwolf'
 let g:airline_powerline_fonts=0
 
 if !exists('g:airline_symbols')
@@ -151,11 +150,12 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
-set t_Co=256
-colorscheme darkblue
+syntax enable
+set background=dark
+colorscheme solarized
 
-" syntax on
-syntax off
+" syntax off
+" colorscheme darkblue
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
