@@ -157,7 +157,8 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 
 syntax enable
 " syntax off
-colorscheme darkblue
+" colorscheme darkblue
+colorscheme default
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
