@@ -16,6 +16,7 @@
 - [sort table](#sort-table)
 - [permute `string`](#permute-string)
 - [permute `bytes`](#permute-bytes)
+- [interface runtime](#interface-runtime)
 
 [↑ top](#go-interface)
 <br><br><br><br><hr>
@@ -1557,6 +1558,41 @@ func randBytes(n int) []byte {
 		remain--
 	}
 	return b
+}
+
+```
+
+
+#### interface runtime
+
+[↑ top](#go-interface)
+<br><br><br><br><hr>
+
+```go
+package main
+
+import "fmt"
+
+type MyInterface interface {
+	Hey() string
+}
+
+type MyType struct {
+	Name string
+}
+
+func (t MyType) Hey() string {
+	return t.Name
+}
+
+func main() {
+	// interface evaluated runtime
+	ex := MyType{Name: "Hello"}
+	m := make(map[string]MyInterface)
+
+	m["id"] = ex
+	fmt.Println(m)
+	// map[id:{Hello}]
 }
 
 ```
