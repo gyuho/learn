@@ -16,6 +16,7 @@ sudo apt-get -y install curl wget && \
 sudo apt-get -y install bash-completion && \
 sudo apt-get -y install terminator && \
 sudo apt-get -y install pcmanfm;
+sudo ntpdate ntp.ubuntu.com;
 
 <<COMMENT
 - Time & Date
