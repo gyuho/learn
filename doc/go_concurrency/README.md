@@ -54,7 +54,8 @@
 - [**close channel**](#close-channel)
 - [**blocking defer**](#blocking-defer)
 - [**buffered channel copy**](#buffered-channel-copy)
-- [**select closed channel**](#select-closed-channel)
+- [**`select` closed channel**](#select-closed-channel)
+- [**`select` default**](#select-default)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5478,7 +5479,7 @@ func (d *Data) Chan() chan string {
 <br><br><br><br><hr>
 
 
-#### select closed channel
+#### `select` closed channel
 
 ```go
 package main
@@ -5629,3 +5630,39 @@ escape2:
 <br><br><br><br><hr>
 
 
+#### `select` default
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	select {
+	case <-time.After(time.Nanosecond):
+		fmt.Println("received from time.Nanosecond")
+	default:
+		fmt.Println("default")
+	}
+	// default
+
+	done := make(chan struct{})
+	close(done)
+	select {
+	case <-time.After(time.Nanosecond):
+		fmt.Println("received from time.Nanosecond")
+	case <-done:
+		fmt.Println("received from done")
+	default:
+		fmt.Println("default")
+	}
+	// received from done
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
