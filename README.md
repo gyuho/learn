@@ -47,11 +47,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 
 - [etcd: distributed key-value store with grpc/http2](https://github.com/gyuho/learn/tree/master/doc/etcd_distributed_key_value_store_with_grpc_http2)
 
-In progress...
-
-- [etcd v2 vs v3](etcd_v2_vs_v3)
-- [consul vs etcd vs zookeeper](consul_vs_etcd_vs_zookeeper)
-
 [↑ top](#contents)
 <br><br>
 
