@@ -728,7 +728,7 @@ from `leader`, it deletes all the subsequent entries**.
 #### raft algorithm: old leader
 
 Old leader might not be dead when there is temporary network partition and they
-elect their own leader. When the old leader get reconnected, it will retry to
+elect their own leader. When the old leader recovers, it will retry to
 commit log entries of its own. `term` is used to detect these stale leaders:
 
 - Every RPC contains the `term` of its sender.
