@@ -1,6 +1,6 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
-# Distributed systems, raft
+# Distributed systems, paxos, raft, etcd
 
 Much of contents are referenced from the original Raft paper. This is a
 personal learning log, and it's repetitive and unorganized.
@@ -22,7 +22,7 @@ personal learning log, and it's repetitive and unorganized.
 - [raft algorithm: log compaction](#raft-algorithm-log-compaction)
 - [raft algorithm: configuration(membership) changes](#raft-algorithm-configurationmembership-changes)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -37,7 +37,7 @@ personal learning log, and it's repetitive and unorganized.
 - [Deconstructing the CAP theorem for CM and DevOps](http://markburgess.org/blog_cap.html)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -217,7 +217,7 @@ Now you have this distributed key-value storage `etcd`. Then what can we do
 with it? [*Kubernetes*](http://kubernetes.io) uses `etcd` to manage a cluster
 of application containers in a distributed system.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -300,7 +300,7 @@ cannot handle infinitely growing logs, *Raft* uses `snapshot` to save the
 state of the entire system on a stable storage, so that logs stored
 up to the `snapshot` point can be discarded.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -363,7 +363,7 @@ up to the `snapshot` point can be discarded.
   as or *revert back to* `follower` state. And requests from such servers are
   rejected.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -391,7 +391,7 @@ up to the `snapshot` point can be discarded.
 	- If a server has applied(executed) a log entry for the given index, no
 	  other server will ever apply different log entries for the same index.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -490,7 +490,7 @@ To guarantee these safety requirements, **Raft has this safety property**:
 In order to guarantee this property, we need more restrictions on `leader
 election` and `log commit`.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -532,7 +532,7 @@ For example,
 ![raft_leader_election_commit_02](img/raft_leader_election_commit_02.png)
 ![raft_leader_election_commit_03](img/raft_leader_election_commit_03.png)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -554,7 +554,7 @@ A `leader` decides a log entry is committed only if:
 
 ![raft_commit](img/raft_commit.png)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -647,7 +647,7 @@ Then:
    index of committed entries*, set `commitIndex` = `min (leaderCommit, index
    of last new entry)`.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -721,7 +721,7 @@ from `leader`, it deletes all the subsequent entries**.
 ![raft_log_matching_extraneous_entries_00](img/raft_log_matching_extraneous_entries_00.png)
 ![raft_log_matching_extraneous_entries_01](img/raft_log_matching_extraneous_entries_01.png)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -743,7 +743,7 @@ Election sends out `RequestVote` RPCs and during election, majority of servers
 updates their `term` through RPCs. Therefore, deposed server cannot commit new
 log entries.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -773,7 +773,7 @@ first *finds the latest `follower` log entry* that matches with
 leader's entry. And *deletes any extraneous entries after that
 index*, in `follower`'s log. This is done by `AppendEntries` RPC.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -794,7 +794,7 @@ Summary of
 >
 > [*§5.5 Follower and candidate crashes*](http://ramcloud.stanford.edu/raft.pdf)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -884,7 +884,7 @@ func stepFollower(r *raft, m pb.Message) {
 
 ```
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -907,7 +907,7 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 ![raft_log_compaction_00](img/raft_log_compaction_00.png)
 ![raft_log_compaction_01](img/raft_log_compaction_01.png)
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
@@ -985,6 +985,5 @@ But what if one wants to replace five-server cluster at once? Raft uses
 - Once join consensus is committed, it begins replicating the log entry for
   final configuration.
 
-[↑ top](#distributed-systems-raft)
+[↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
-
