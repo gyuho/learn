@@ -1001,7 +1001,7 @@ implementation is more complicated than that.
 
 <br>
 [**`revision`**](https://github.com/coreos/etcd/blob/master/storage/revision.go):
-Modification of key-value space, which happens atomically in key-value space.
+modification of key-value space, which happens atomically in key-value space.
 `revision.main` is the main `revision` of changes, and `revision.sub` shares
 the same `revision.main` and also increases atomically. `revision` is defined
 as `struct` and stored in `[]byte` format because `...? (TODO)`:
@@ -1038,7 +1038,7 @@ func bytesToRev(bytes []byte) revision {
 
 <br>
 [**`generation`**](https://github.com/coreos/etcd/blob/master/storage/key_index.go):
-Contains **multiple** `revision`s of **one key**:
+contains **multiple** `revision`s of **one key**:
 
 ```go
 type generation struct {
@@ -1050,7 +1050,7 @@ type generation struct {
 
 <br>
 [**`keyIndex`**](https://github.com/coreos/etcd/blob/master/storage/key_index.go):
-Stores **multiple** `generation`s of **one key**, each of which has **multiple
+stores **multiple** `generation`s of **one key**, each of which has **multiple
 `revision`s**. Each `keyIndex` has at least one key `generation`:
 
 ```go
@@ -1126,7 +1126,7 @@ func (ki *keyIndex) restore(created, modified revision, ver int64) {
 
 <br><br>
 [**`treeIndex`**](https://github.com/coreos/etcd/blob/master/storage/index.go):
-Stores *key* and *`revision`* in `BTree`, where each node is `keyIndex` object:
+stores *key* and *`revision`* in `BTree`, where each node is `keyIndex` object:
 
 ```go
 func (ti *treeIndex) Put(key []byte, rev revision) {
@@ -1146,7 +1146,7 @@ func (ti *treeIndex) Put(key []byte, rev revision) {
 ```
 
 <br>
-[**`backend`**](https://github.com/coreos/etcd/tree/master/storage/backend): wraps `boltdb` as
+[**`backend`**](https://github.com/coreos/etcd/tree/master/storage/backend): embeds `boltdb` as
 backend storage. It writes data to a transaction and periodically commits the batches of data
 to disk:
 
@@ -1227,8 +1227,10 @@ type snapshot struct {
 
 <br>
 [**`store`**](https://github.com/coreos/etcd/blob/master/storage/kvstore.go):
-Embeds `backend`, `index`(`treeIndex` satisfies this interface), and schedules the periodic
-compaction:
+embeds `backend`, `index`(`treeIndex` satisfies this interface), and schedules the periodic
+compaction. Note that `(*store).put(key, value []byte)` writes `(key, revision)` into
+in-memory BTree `index treeIndex`, and `(revision, storagepb.KeyValue)` to `(*store).batchTx`.
+And the `storagepb.KeyValue` gets added to `(*store).changes` to notify watchers:
 
 ```go
 type store struct {
@@ -1251,11 +1253,77 @@ type store struct {
 
   stopc chan struct{}
 }
+
+func (s *store) put(key, value []byte, leaseID lease.LeaseID) {
+  rev := s.currentRev.main + 1
+  c := rev
+  oldLease := lease.NoLease
+
+  // if the key exists before, use its previous created and
+  // get its previous leaseID
+  grev, created, ver, err := s.kvindex.Get(key, rev)
+  if err == nil {
+    c = created.main
+    ibytes := newRevBytes()
+    revToBytes(grev, ibytes)
+    _, vs := s.tx.UnsafeRange(keyBucketName, ibytes, nil, 0)
+    var kv storagepb.KeyValue
+    if err = kv.Unmarshal(vs[0]); err != nil {
+      log.Fatalf("storage: cannot unmarshal value: %v", err)
+    }
+    oldLease = lease.LeaseID(kv.Lease)
+  }
+
+  ibytes := newRevBytes()
+  revToBytes(revision{main: rev, sub: s.currentRev.sub}, ibytes)
+
+  ver = ver + 1
+  kv := storagepb.KeyValue{
+    Key:            key,
+    Value:          value,
+    CreateRevision: c,
+    ModRevision:    rev,
+    Version:        ver,
+    Lease:          int64(leaseID),
+  }
+
+  d, err := kv.Marshal()
+  if err != nil {
+    log.Fatalf("storage: cannot marshal event: %v", err)
+  }
+
+  s.tx.UnsafePut(keyBucketName, ibytes, d)
+  s.kvindex.Put(key, revision{main: rev, sub: s.currentRev.sub})
+  s.changes = append(s.changes, kv)
+  s.currentRev.sub += 1
+
+  if oldLease != lease.NoLease {
+    if s.le == nil {
+      panic("no lessor to detach lease")
+    }
+
+    err = s.le.Detach(oldLease, []lease.LeaseItem{{Key: string(key)}})
+    if err != nil {
+      panic("unexpected error from lease detach")
+    }
+  }
+
+  if leaseID != lease.NoLease {
+    if s.le == nil {
+      panic("no lessor to attach lease")
+    }
+
+    err = s.le.Attach(leaseID, []lease.LeaseItem{{Key: string(key)}})
+    if err != nil {
+      panic("unexpected error from lease Attach")
+    }
+  }
+}
 ```
 
 <br>
 [**`watchableStore`**](https://github.com/coreos/etcd/blob/master/storage/watchable_store.go):
-Embeds `store` in addition to `watcher` implementation:
+embeds `store` in addition to `watcher` implementation:
 
 ```go
 type watchable interface {
