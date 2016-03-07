@@ -1,26 +1,27 @@
 [*back to contents*](https://github.com/gyuho/learn#contents)<br>
 
-# Distributed systems, paxos, raft, etcd
+# Distributed systems, Paxos, Raft, etcd
 
-Much of contents are referenced from the original Raft paper. This is a
-personal learning log, and it's repetitive and unorganized.
+**DISCLAIMER**: This is a personal learning log. It's very repetitive
+and unorganized.
 
 - [Reference](#reference)
-- [distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
-- [raft algorithm: introduction](#raft-algorithm-introduction)
-- [raft algorithm: terminology](#raft-algorithm-terminology)
-- [raft algorithm: properties](#raft-algorithm-properties)
-- [raft algorithm: leader election](#raft-algorithm-leader-election)
-- [restrictions on `leader election`](#restrictions-on-leader-election)
-- [restrictions on `log commit`](#restrictions-on-log-commit)
-- [raft algorithm: log replication](#raft-algorithm-log-replication)
-- [raft algorithm: log consistency](#raft-algorithm-log-consistency)
-- [raft algorithm: old leader](#raft-algorithm-old-leader)
-- [raft algorithm: safety](#raft-algorithm-safety)
-- [raft algorithm: follower and candidate crashes](#raft-algorithm-follower-and-candidate-crashes)
-- [raft algorithm: client interaction](#raft-algorithm-client-interaction)
-- [raft algorithm: log compaction](#raft-algorithm-log-compaction)
-- [raft algorithm: configuration(membership) changes](#raft-algorithm-configurationmembership-changes)
+- [Distributed systems, consensus algorithm](#distributed-systems-consensus-algorithm)
+- [Raft: introduction](#raft-introduction)
+- [Raft: terminology](#raft-terminology)
+- [Raft: properties](#raft-properties)
+- [Raft: leader election](#raft-leader-election)
+- [Raft: restrictions on `leader election`](#raft-restrictions-on-leader-election)
+- [Raft: restrictions on `log commit`](#raft-restrictions-on-log-commit)
+- [Raft: log replication](#raft-log-replication)
+- [Raft: log consistency](#raft-log-consistency)
+- [Raft: old leader](#raft-old-leader)
+- [Raft: safety](#raft-safety)
+- [Raft: follower and candidate crashes](#raft-follower-and-candidate-crashes)
+- [Raft: client interaction](#raft-client-interaction)
+- [Raft: log compaction](#raft-log-compaction)
+- [Raft: configuration(membership) changes](#raft-configurationmembership-changes)
+- [`etcd`: storage](#etcd-storage)
 
 [↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
@@ -30,18 +31,19 @@ personal learning log, and it's repetitive and unorganized.
 
 - [*Raft by Diego Ongaro and John Ousterhout*](https://ramcloud.stanford.edu/~ongaro/userstudy/)
 - [`ongardie/dissertation`](https://github.com/ongardie/dissertation)
-- [`coreos/etcd`](https://github.com/coreos/etcd)
-- [raft.github.io](https://raft.github.io/)
+- [`etcd`](https://github.com/coreos/etcd)
 - [Linearizability versus Serializability](http://www.bailis.org/blog/linearizability-versus-serializability/)
 - [Consensus (computer science)](https://en.wikipedia.org/wiki/Consensus_(computer_science))
 - [Deconstructing the CAP theorem for CM and DevOps](http://markburgess.org/blog_cap.html)
 - [Raft Protocol Overview by Consul](https://www.consul.io/docs/internals/consensus.html)
+- [aphyr.com/posts](https://aphyr.com/posts)
+- [CAP FAQ](https://github.com/henryr/cap-faq)
 
 [↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
 
 
-#### distributed systems, consensus algorithm
+#### Distributed systems, consensus algorithm
 
 > In distributed computing, a problem is divided into many tasks, each of which
 > is solved by one or more computers, which communicate with each other by
@@ -94,13 +96,14 @@ paper §2):
 <br>
 An ultimate **consensus algorithm** should achieve:
 
-- **_consistency_**.
-- **_availability_**.
-- **_partition tolerance_**.
+- **_Consistency_**.
+- **_Availability_**.
+- **_Partition tolerance_**.
 
 [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) states that
 it is impossible that a distributed computer system simultaneously satisfies
-them all. 
+them all. For example, [**_etcd_**](https://github.com/coreos/etcd) guarantees
+*Consistency* and *Partition tolerance*, with **(High) Availability**.
 
 <br><br>
 One of the most important properties of distributed computing is
@@ -181,8 +184,8 @@ response as in linearizability*). And it is still considered *consistent*:
 > Many caches also behave like sequentially consistent systems. If I write a
 > tweet on Twitter, or post to Facebook, it **takes time to percolate through
 > layers of caching systems**. **Different users will see my message at
-> different times–but each user will see my operations in order**. Once seen,
-> a post shouldn’t disappear. **If I write multiple comments, they’ll become
+> different times--but each user will see my operations in order**. Once seen,
+> a post shouldn't disappear. **If I write multiple comments, they'll become
 > visible sequentially, not out of order**.
 >
 > [*Sequential consistency*](https://aphyr.com/posts/313-strong-consistency-models)
@@ -221,7 +224,7 @@ of application containers in a distributed system.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: introduction
+#### Raft: introduction
 
 To make your program reliable, you would:
 - execute program in a collection of machines (distributed system).
@@ -260,7 +263,7 @@ votes, it becomes `leader`, then accepting new log entries from clients. Then
 [*Consul*](https://www.consul.io/docs/internals/consensus.html) provides
 multiple data centers to partition data into a disjoint peer set. And
 [*etcd*](https://github.com/coreos/etcd/blob/master/raft/multinode.go)
-implements `multinode`.
+implements `multi-node`.
 
 <br>
 Basic Raft algorithm requires only two types of RPCs
@@ -304,7 +307,7 @@ up to the `snapshot` point can be discarded.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: terminology
+#### Raft: terminology
 
 - **`state machine`**: Any program or application that *takes input* and
   *returns output*.
@@ -367,7 +370,7 @@ up to the `snapshot` point can be discarded.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: properties
+#### Raft: properties
 
 - Election Safety (§5.2)
 	- At most one leader can be elected for the given term.
@@ -395,7 +398,7 @@ up to the `snapshot` point can be discarded.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: leader election
+#### Raft: leader election
 
 *Raft* inter-node communication is done by remote procedure calls
 (RPCs). The basic Raft algorithm requires only two types of RPCs
@@ -494,7 +497,7 @@ election` and `log commit`.
 <br><br><br><br><hr>
 
 
-#### restrictions on `leader election`
+#### Raft: restrictions on `leader election`
 
 So we want to elect the **best leader**. Best leader is the one that **holds
 all of the committed log entries**.
@@ -536,7 +539,7 @@ For example,
 <br><br><br><br><hr>
 
 
-#### restrictions on `log commit`
+#### Raft: estrictions on `log commit`
 
 Below `leader` tries to decide if an entry is committed in its *current* or
 *earlier* term:
@@ -558,7 +561,7 @@ A `leader` decides a log entry is committed only if:
 <br><br><br><br><hr>
 
 
-#### raft algorithm: log replication
+#### Raft: log replication
 
 *Raft* inter-server communication is done by remote procedure calls
 (RPCs). The basic Raft algorithm requires only two types of RPCs
@@ -651,7 +654,7 @@ Then:
 <br><br><br><br><hr>
 
 
-#### raft algorithm: log consistency
+#### Raft: log consistency
 
 ![raft_log_consistency_00](img/raft_log_consistency_00.png)
 <br>
@@ -725,7 +728,7 @@ from `leader`, it deletes all the subsequent entries**.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: old leader
+#### Raft: old leader
 
 Old leader might not be dead when there is temporary network partition and they
 elect their own leader. When the old leader recovers, it will retry to
@@ -747,7 +750,7 @@ log entries.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: safety
+#### Raft: safety
 
 Summary of
 [§5.4 Safety](http://ramcloud.stanford.edu/raft.pdf):
@@ -777,7 +780,7 @@ index*, in `follower`'s log. This is done by `AppendEntries` RPC.
 <br><br><br><br><hr>
 
 
-#### raft algorithm: follower and candidate crashes
+#### Raft: follower and candidate crashes
 
 Summary of
 [§5.5 Follower and candidate crashes](http://ramcloud.stanford.edu/raft.pdf):
@@ -798,7 +801,7 @@ Summary of
 <br><br><br><br><hr>
 
 
-#### raft algorithm: client interaction
+#### Raft: client interaction
 
 Summary of
 [§8 Client interaction](http://ramcloud.stanford.edu/raft.pdf):
@@ -888,7 +891,7 @@ func stepFollower(r *raft, m pb.Message) {
 <br><br><br><br><hr>
 
 
-#### raft algorithm: log compaction
+#### Raft: log compaction
 
 Summary of
 [§7 Log compaction](http://ramcloud.stanford.edu/raft.pdf):
@@ -911,7 +914,7 @@ up to the `snapshot` point can be discarded. Here's how `snapshot` works in
 <br><br><br><br><hr>
 
 
-#### raft algorithm: configuration(membership) changes
+#### Raft: configuration(membership) changes
 
 Configuration changes need to happen when:
 
@@ -984,6 +987,329 @@ But what if one wants to replace five-server cluster at once? Raft uses
   immediately applied upon receipt whether it is committed or not.
 - Once join consensus is committed, it begins replicating the log entry for
   final configuration.
+
+[↑ top](#distributed-systems-paxos-raft-etcd)
+<br><br><br><br><hr>
+
+
+#### `etcd`: storage
+
+`etcd` is **key-value store**. Then how does it store actual data? It needs to
+write both on memory and disks, using [`boltdb`](https://github.com/boltdb/bolt).
+Then does it just process logs in memory and dump to disk using `boltdb`? Actual
+implementation is more complicated than that.
+
+<br>
+[**`revision`**](https://github.com/coreos/etcd/blob/master/storage/revision.go):
+Modification of key-value space, which happens atomically in key-value space.
+`revision.main` is the main `revision` of changes, and `revision.sub` shares
+the same `revision.main` and also increases atomically. `revision` is defined
+as `struct` and stored in `[]byte` format because `...? (TODO)`:
+
+```go
+type revision struct {
+  main int64
+  sub  int64
+}
+
+func newRevBytes() []byte {
+  return make([]byte, revBytesLen, markedRevBytesLen)
+}
+
+func revToBytes(rev revision, bytes []byte) {
+  binary.BigEndian.PutUint64(bytes, uint64(rev.main))
+  bytes[8] = '_'
+  binary.BigEndian.PutUint64(bytes[9:], uint64(rev.sub))
+}
+
+func bytesToRev(bytes []byte) revision {
+  return revision{
+    main: int64(binary.BigEndian.Uint64(bytes[0:8])),
+    sub:  int64(binary.BigEndian.Uint64(bytes[9:])),
+  }
+}
+```
+
+<br>
+**`created revision`**: `revision` at first `Put` of the key.
+
+<br>
+**`modified revision`**: `revision` at last `Put` of the key.
+
+<br>
+[**`generation`**](https://github.com/coreos/etcd/blob/master/storage/key_index.go):
+Contains **multiple** `revision`s of **one key**:
+
+```go
+type generation struct {
+  ver     int64
+  created revision
+  revs    []revision
+}
+```
+
+<br>
+[**`keyIndex`**](https://github.com/coreos/etcd/blob/master/storage/key_index.go):
+Stores **multiple** `generation`s of **one key**, each of which has **multiple
+`revision`s**. Each `keyIndex` has at least one key `generation`:
+
+```go
+type keyIndex struct {
+  key         []byte
+  modified    revision
+  generations []generation
+}
+```
+
+<br>
+`etcd` updates the `keyIndex` of `key []byte` by passing `revision`.
+`(keyIndex).put(revision)` updates its `modified` and the last element of `generations`:
+
+```go
+// put puts a revision to the keyIndex.
+func (ki *keyIndex) put(main int64, sub int64) {
+  rev := revision{main: main, sub: sub}
+
+  if !rev.GreaterThan(ki.modified) {
+    log.Panicf("store.keyindex: put with unexpected smaller revision [%v / %v]", rev, ki.modified)
+  }
+  if len(ki.generations) == 0 {
+    ki.generations = append(ki.generations, generation{})
+  }
+  g := &ki.generations[len(ki.generations)-1]
+  if len(g.revs) == 0 { // create a new key
+    keysGauge.Inc()
+    g.created = rev
+  }
+  g.revs = append(g.revs, rev)
+  g.ver++
+  ki.modified = rev
+}
+```
+
+<br>
+`(keyIndex).tombstone(tombstoneRevision)` calls `(keyIndex).put(tombstoneRevision)`
+appends an empty `generation` to the current `keyIndex.generations`. `tombstone` is
+empty `generation` and used as a marker/boundary:
+
+```go
+func (ki *keyIndex) tombstone(main int64, sub int64) error {
+  if ki.isEmpty() {
+    log.Panicf("store.keyindex: unexpected tombstone on empty keyIndex %s", string(ki.key))
+  }
+  if ki.generations[len(ki.generations)-1].isEmpty() {
+    return ErrRevisionNotFound
+  }
+  ki.put(main, sub)
+  ki.generations = append(ki.generations, generation{})
+  keysGauge.Dec()
+  return nil
+}
+```
+
+<br>
+`(keyIndex).restore(created, modified revision, ver int64)` restores revisions from
+disk storage by re-appending `revision`s and `ver`to `keyIndex.generations`:
+
+```go
+func (ki *keyIndex) restore(created, modified revision, ver int64) {
+  if len(ki.generations) != 0 {
+    log.Panicf("store.keyindex: cannot restore non-empty keyIndex")
+  }
+
+  ki.modified = modified
+  g := generation{created: created, ver: ver, revs: []revision{modified}}
+  ki.generations = append(ki.generations, g)
+  keysGauge.Inc()
+}
+```
+
+<br><br>
+[**`treeIndex`**](https://github.com/coreos/etcd/blob/master/storage/index.go):
+Stores *key* and *`revision`* in `BTree`, where each node is `keyIndex` object:
+
+```go
+func (ti *treeIndex) Put(key []byte, rev revision) {
+  keyi := &keyIndex{key: key}
+
+  ti.Lock()
+  defer ti.Unlock()
+  item := ti.tree.Get(keyi)
+  if item == nil {
+    keyi.put(rev.main, rev.sub)
+    ti.tree.ReplaceOrInsert(keyi)
+    return
+  }
+  okeyi := item.(*keyIndex)
+  okeyi.put(rev.main, rev.sub)
+}
+```
+
+<br>
+[**`backend`**](https://github.com/coreos/etcd/tree/master/storage/backend): wraps `boltdb` as
+backend storage. It writes data to a transaction and periodically commits the batches of data
+to disk:
+
+```go
+func newBackend(path string, d time.Duration, limit int) *backend {
+  db, err := bolt.Open(path, 0600, boltOpenOptions)
+  if err != nil {
+    log.Panicf("backend: cannot open database at %s (%v)", path, err)
+  }
+
+  b := &backend{
+    db: db,
+
+    batchInterval: d,
+    batchLimit:    limit,
+
+    stopc: make(chan struct{}),
+    donec: make(chan struct{}),
+  }
+  b.batchTx = newBatchTx(b)
+  go b.run()
+  return b
+}
+
+type Backend interface {
+  BatchTx() BatchTx
+  Snapshot() Snapshot
+  Hash() (uint32, error)
+  Size() int64
+  Defrag() error
+  ForceCommit()
+  Close() error
+}
+
+type backend struct {
+  mu sync.RWMutex
+  db *bolt.DB
+
+  batchInterval time.Duration
+  batchLimit    int
+  batchTx       *batchTx
+  size          int64
+
+  commits int64
+
+  stopc chan struct{}
+  donec chan struct{}
+}
+
+type BatchTx interface {
+  Lock()
+  Unlock()
+  UnsafeCreateBucket(name []byte)
+  UnsafePut(bucketName []byte, key []byte, value []byte)
+  UnsafeRange(bucketName []byte, key, endKey []byte, limit int64) (keys [][]byte, vals [][]byte)
+  UnsafeDelete(bucketName []byte, key []byte)
+  Commit()
+  CommitAndStop()
+}
+
+type batchTx struct {
+  sync.Mutex
+  tx      *bolt.Tx
+  backend *backend
+  pending int
+}
+
+type Snapshot interface {
+  Size() int64
+  WriteTo(w io.Writer) (n int64, err error)
+  Close() error
+}
+
+type snapshot struct {
+  *bolt.Tx
+}
+```
+
+<br>
+[**`store`**](https://github.com/coreos/etcd/blob/master/storage/kvstore.go):
+Embeds `backend`, `index`(`treeIndex` satisfies this interface), and schedules the periodic
+compaction:
+
+```go
+type store struct {
+  mu sync.Mutex // guards the following
+
+  b       backend.Backend
+  kvindex index
+
+  le lease.Lessor
+
+  currentRev revision
+  // the main revision of the last compaction
+  compactMainRev int64
+
+  tx    backend.BatchTx
+  txnID int64 // tracks the current txnID to verify txn operations
+
+  changes   []storagepb.KeyValue
+  fifoSched schedule.Scheduler
+
+  stopc chan struct{}
+}
+```
+
+<br>
+[**`watchableStore`**](https://github.com/coreos/etcd/blob/master/storage/watchable_store.go):
+Embeds `store` in addition to `watcher` implementation:
+
+```go
+type watchable interface {
+  watch(key, end []byte, startRev int64, id WatchID, ch chan<- WatchResponse) (*watcher, cancelFunc)
+  progress(w *watcher)
+  rev() int64
+}
+
+type watchableStore struct {
+  mu sync.Mutex
+
+  *store
+
+  // contains all unsynced watchers that needs to sync with events that have happened
+  unsynced watcherGroup
+
+  // contains all synced watchers that are in sync with the progress of the store.
+  // The key of the map is the key that the watcher watches on.
+  synced watcherGroup
+
+  stopc chan struct{}
+  wg    sync.WaitGroup
+}
+```
+
+<br>
+[**`consistentWatchableStore`**](https://github.com/coreos/etcd/blob/master/storage/consistent_watchable_store.go):
+Embeds `watchableStore` to get the consistent index of current executing entry:
+
+```go
+// ConsistentIndexGetter is an interface that wraps the Get method.
+// Consistent index is the offset of an entry in a consistent replicated log.
+type ConsistentIndexGetter interface {
+  // ConsistentIndex returns the consistent index of current executing entry.
+  ConsistentIndex() uint64
+}
+
+type consistentWatchableStore struct {
+  *watchableStore
+  // The field is used to get the consistent index of current
+  // executing entry.
+  // When the store finishes executing current entry, it will
+  // put the index got from ConsistentIndexGetter into the
+  // underlying backend. This helps to recover consistent index
+  // when restoring.
+  ig ConsistentIndexGetter
+
+  skip bool // indicate whether or not to skip an operation
+}
+
+func New(b backend.Backend, le lease.Lessor, ig ConsistentIndexGetter) ConsistentWatchableKV {
+  return newConsistentWatchableStore(b, le, ig)
+}
+```
 
 [↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>

@@ -241,7 +241,7 @@ You have one machine to run your program. What if that one machine fails?
 The whole system goes down. You want to have multiple, distributed machines
 always available, so that even if one fails, others can keep running.
 
-- [**_Distributed systems, paxos, raft, etcd_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_paxos_raft_etcd)
+- [**_Distributed systems, Paxos, Raft, etcd_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_paxos_raft_etcd)
 
 [↑ top](#contents)
 <br><br>

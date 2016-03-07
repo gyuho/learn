@@ -34,7 +34,7 @@
 - [`sync.Once`](#synconce)
 - [**`goroutine`, closure**](#goroutine-closure)
 - [rate limit](#rate-limit)
-- [select break](#select-break)
+- [`select`, `continue`, `break`](#select-continue-break)
 - [Counting problem](#counting-problem)
 - [Count: simulate web requests](#count-simulate-web-requests)
 - [Count: `NaiveCounter`](#count-naivecounter)
@@ -3488,7 +3488,7 @@ func (q *Queue) String() string {
 <br><br><br><br><hr>
 
 
-#### rate limit
+#### `select`, `continue`, `break`
 
 ```go
 package main
@@ -3499,6 +3499,21 @@ import (
 )
 
 func main() {
+	d1, d2 := time.Millisecond, time.Second
+	for {
+		select {
+		case <-time.After(d1):
+			d1 = time.Hour
+			fmt.Println("d1 = time.Hour")
+			continue // continue to the for-loop
+		case <-time.After(d2):
+			break // break and go to the lines below select
+		}
+		d2 = time.Nanosecond
+		fmt.Println("d2 = time.Nanosecond")
+		break // otherwise infinite for-loop
+	}
+
 	ch := make(chan string, 5000)
 
 	ch <- "a"
