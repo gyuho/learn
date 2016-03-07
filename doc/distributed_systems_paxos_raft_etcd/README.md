@@ -22,6 +22,7 @@ and unorganized.
 - [Raft: log compaction](#raft-log-compaction)
 - [Raft: configuration(membership) changes](#raft-configurationmembership-changes)
 - [`etcd`: storage](#etcd-storage)
+- [`etcd`: server](#etcd-server)
 
 [↑ top](#distributed-systems-paxos-raft-etcd)
 <br><br><br><br><hr>
@@ -1376,6 +1377,77 @@ type consistentWatchableStore struct {
 
 func New(b backend.Backend, le lease.Lessor, ig ConsistentIndexGetter) ConsistentWatchableKV {
   return newConsistentWatchableStore(b, le, ig)
+}
+```
+
+[↑ top](#distributed-systems-paxos-raft-etcd)
+<br><br><br><br><hr>
+
+
+#### `etcd`: server
+
+- `etcdserverpb` defines the protocol buffers for data in RPC calls,
+and its `Marshall` and `Unmarshall` functions.
+- `api/v3rpc` defines, registers `gRPC` servers to `etcdserver.EtcdServer`.
+
+```go
+func Server(s *etcdserver.EtcdServer, tls *transport.TLSInfo) (*grpc.Server, error) {
+  var opts []grpc.ServerOption
+  if tls != nil {
+    creds, err := credentials.NewServerTLSFromFile(tls.CertFile, tls.KeyFile)
+    if err != nil {
+      return nil, err
+    }
+    opts = append(opts, grpc.Creds(creds))
+  }
+
+  grpcServer := grpc.NewServer(opts...)
+  pb.RegisterKVServer(grpcServer, NewKVServer(s))
+  pb.RegisterWatchServer(grpcServer, NewWatchServer(s))
+  pb.RegisterLeaseServer(grpcServer, NewLeaseServer(s))
+  pb.RegisterClusterServer(grpcServer, NewClusterServer(s))
+  pb.RegisterAuthServer(grpcServer, NewAuthServer(s))
+  return grpcServer, nil
+}
+```
+
+- `etcdmain` calls this `grpcServer, err := v3rpc.Server(s, tls)`
+- And those `gRPC` servers process client requests.
+   - These requests go to `api/v3rpc` first, and `api/v3rpc` directly calls
+   methods in `etcdserver`, such as `etcdserver.RaftKV`, `storage.Watchable`, etc.
+
+```go
+type kvServer struct {
+  clusterID int64
+  memberID  int64
+  raftTimer etcdserver.RaftTimer
+
+  kv etcdserver.RaftKV
+}
+
+func (s *kvServer) Put(ctx context.Context, r *pb.PutRequest) (*pb.PutResponse, error) {
+  if err := checkPutRequest(r); err != nil {
+    return nil, err
+  }
+
+  resp, err := s.kv.Put(ctx, r)
+  if err != nil {
+    return nil, togRPCError(err)
+  }
+
+  if resp.Header == nil {
+    plog.Panic("unexpected nil resp.Header")
+  }
+  s.fillInHeader(resp.Header)
+  return resp, err
+}
+
+func (s *EtcdServer) Put(ctx context.Context, r *pb.PutRequest) (*pb.PutResponse, error) {
+  result, err := s.processInternalRaftRequest(ctx, pb.InternalRaftRequest{Put: r})
+  if err != nil {
+    return nil, err
+  }
+  return result.resp.(*pb.PutResponse), result.err
 }
 ```
 
