@@ -1089,8 +1089,8 @@ func (ki *keyIndex) put(main int64, sub int64) {
 
 <br>
 `(keyIndex).tombstone(tombstoneRevision)` calls `(keyIndex).put(tombstoneRevision)`
-appends an empty `generation` to the current `keyIndex.generations`. `tombstone` is
-empty `generation` and used as a marker/boundary:
+and append an empty `generation` to the current `keyIndex.generations`. `tombstone`
+is an empty `generation` and used as a marker/boundary:
 
 ```go
 func (ki *keyIndex) tombstone(main int64, sub int64) error {
