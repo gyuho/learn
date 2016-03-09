@@ -1386,7 +1386,7 @@ func New(b backend.Backend, le lease.Lessor, ig ConsistentIndexGetter) Consisten
 
 #### `etcd`: server
 
-- `etcdserverpb` defines the protocol buffers for data in RPC calls,
+- `etcdserverpb` defines protocol buffers for data exchange between machines,
 and its `Marshall` and `Unmarshall` functions.
 - `api/v3rpc` defines, registers `gRPC` servers to `etcdserver.EtcdServer`.
 
