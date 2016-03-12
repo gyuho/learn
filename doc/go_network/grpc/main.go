@@ -19,6 +19,7 @@ func (t *transporterServer) Transfer(ctx context.Context, r *Request) (*Response
 	fmt.Printf("transporterServer.Transfer has received Request: %+v\n", r)
 
 	t.received = fmt.Sprintf("Data: %v at %v", r.Data, time.Now())
+	// return &Response{Result: t.received}, fmt.Errorf("error from Transfer")
 	return &Response{Result: t.received}, nil
 }
 
@@ -59,7 +60,7 @@ func client() {
 	cli := NewTransporterClient(conn)
 	resp, err := cli.Transfer(context.Background(), &Request{Data: "hello"})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("client.Transfer error %v\n", err)
 	}
 	fmt.Printf("client.Transfer Response: %+v\n", resp)
 }
