@@ -8,18 +8,12 @@ option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
-service Sender {
-  rpc Send(Request) returns (Response) {}
+service Transporter {
+  rpc Transfer(Request) returns (Response) {}
 }
 
 message Request {
-  enum Operation {
-	Start = 0;
-	Stop = 1;
-  }
-
-  Operation operation = 1;
-  string id = 2;
+  string data = 1;
 }
 
 message Response {

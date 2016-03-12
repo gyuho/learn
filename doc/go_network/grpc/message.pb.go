@@ -31,105 +31,89 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type Request_Operation int32
-
-const (
-	Request_Start Request_Operation = 0
-	Request_Stop  Request_Operation = 1
-)
-
-var Request_Operation_name = map[int32]string{
-	0: "Start",
-	1: "Stop",
-}
-var Request_Operation_value = map[string]int32{
-	"Start": 0,
-	"Stop":  1,
-}
-
-func (x Request_Operation) String() string {
-	return proto.EnumName(Request_Operation_name, int32(x))
-}
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
 
 type Request struct {
-	Operation Request_Operation `protobuf:"varint,1,opt,name=operation,proto3,enum=main.Request_Operation" json:"operation,omitempty"`
-	Id        string            `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	Data string `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 }
 
-func (m *Request) Reset()         { *m = Request{} }
-func (m *Request) String() string { return proto.CompactTextString(m) }
-func (*Request) ProtoMessage()    {}
+func (m *Request) Reset()                    { *m = Request{} }
+func (m *Request) String() string            { return proto.CompactTextString(m) }
+func (*Request) ProtoMessage()               {}
+func (*Request) Descriptor() ([]byte, []int) { return fileDescriptorMessage, []int{0} }
 
 type Response struct {
 	Result string `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 }
 
-func (m *Response) Reset()         { *m = Response{} }
-func (m *Response) String() string { return proto.CompactTextString(m) }
-func (*Response) ProtoMessage()    {}
+func (m *Response) Reset()                    { *m = Response{} }
+func (m *Response) String() string            { return proto.CompactTextString(m) }
+func (*Response) ProtoMessage()               {}
+func (*Response) Descriptor() ([]byte, []int) { return fileDescriptorMessage, []int{1} }
 
 func init() {
 	proto.RegisterType((*Request)(nil), "main.Request")
 	proto.RegisterType((*Response)(nil), "main.Response")
-	proto.RegisterEnum("main.Request_Operation", Request_Operation_name, Request_Operation_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
 var _ grpc.ClientConn
 
-// Client API for Sender service
+// Client API for Transporter service
 
-type SenderClient interface {
-	Send(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+type TransporterClient interface {
+	Transfer(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
-type senderClient struct {
+type transporterClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewSenderClient(cc *grpc.ClientConn) SenderClient {
-	return &senderClient{cc}
+func NewTransporterClient(cc *grpc.ClientConn) TransporterClient {
+	return &transporterClient{cc}
 }
 
-func (c *senderClient) Send(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (c *transporterClient) Transfer(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	err := grpc.Invoke(ctx, "/main.Sender/Send", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/main.Transporter/Transfer", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Server API for Sender service
+// Server API for Transporter service
 
-type SenderServer interface {
-	Send(context.Context, *Request) (*Response, error)
+type TransporterServer interface {
+	Transfer(context.Context, *Request) (*Response, error)
 }
 
-func RegisterSenderServer(s *grpc.Server, srv SenderServer) {
-	s.RegisterService(&_Sender_serviceDesc, srv)
+func RegisterTransporterServer(s *grpc.Server, srv TransporterServer) {
+	s.RegisterService(&_Transporter_serviceDesc, srv)
 }
 
-func _Sender_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+func _Transporter_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
 	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
-	out, err := srv.(SenderServer).Send(ctx, in)
+	out, err := srv.(TransporterServer).Transfer(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var _Sender_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "main.Sender",
-	HandlerType: (*SenderServer)(nil),
+var _Transporter_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "main.Transporter",
+	HandlerType: (*TransporterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Send",
-			Handler:    _Sender_Send_Handler,
+			MethodName: "Transfer",
+			Handler:    _Transporter_Transfer_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{},
@@ -150,16 +134,11 @@ func (m *Request) MarshalTo(data []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Operation != 0 {
-		data[i] = 0x8
+	if len(m.Data) > 0 {
+		data[i] = 0xa
 		i++
-		i = encodeVarintMessage(data, i, uint64(m.Operation))
-	}
-	if len(m.Id) > 0 {
-		data[i] = 0x12
-		i++
-		i = encodeVarintMessage(data, i, uint64(len(m.Id)))
-		i += copy(data[i:], m.Id)
+		i = encodeVarintMessage(data, i, uint64(len(m.Data)))
+		i += copy(data[i:], m.Data)
 	}
 	return i, nil
 }
@@ -218,10 +197,7 @@ func encodeVarintMessage(data []byte, offset int, v uint64) int {
 func (m *Request) Size() (n int) {
 	var l int
 	_ = l
-	if m.Operation != 0 {
-		n += 1 + sovMessage(uint64(m.Operation))
-	}
-	l = len(m.Id)
+	l = len(m.Data)
 	if l > 0 {
 		n += 1 + l + sovMessage(uint64(l))
 	}
@@ -281,27 +257,8 @@ func (m *Request) Unmarshal(data []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Operation", wireType)
-			}
-			m.Operation = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowMessage
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[iNdEx]
-				iNdEx++
-				m.Operation |= (Request_Operation(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -326,7 +283,7 @@ func (m *Request) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Id = string(data[iNdEx:postIndex])
+			m.Data = string(data[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -532,3 +489,19 @@ var (
 	ErrInvalidLengthMessage = fmt.Errorf("proto: negative length found during unmarshaling")
 	ErrIntOverflowMessage   = fmt.Errorf("proto: integer overflow")
 )
+
+var fileDescriptorMessage = []byte{
+	// 192 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0xcd, 0x4d, 0x2d, 0x2e,
+	0x4e, 0x4c, 0x4f, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xc9, 0x4d, 0xcc, 0xcc, 0x93,
+	0xd2, 0x4d, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x4f, 0xcf, 0x4f, 0xcf,
+	0xd7, 0x07, 0x4b, 0x26, 0x95, 0xa6, 0x81, 0x79, 0x60, 0x0e, 0x98, 0x05, 0xd1, 0xa4, 0x24, 0xcb,
+	0xc5, 0x1e, 0x94, 0x5a, 0x58, 0x9a, 0x5a, 0x5c, 0x22, 0x24, 0xc4, 0xc5, 0x92, 0x92, 0x58, 0x92,
+	0x28, 0xc1, 0xa8, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0x66, 0x2b, 0x29, 0x71, 0x71, 0x04, 0xa5, 0x16,
+	0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x89, 0x71, 0xb1, 0x15, 0xa5, 0x16, 0x97, 0xe6, 0x94, 0x40,
+	0x55, 0x40, 0x79, 0x46, 0x56, 0x5c, 0xdc, 0x21, 0x45, 0x89, 0x79, 0x40, 0x55, 0x45, 0x25, 0xa9,
+	0x45, 0x42, 0xda, 0x5c, 0x1c, 0x60, 0x6e, 0x1a, 0x90, 0xcd, 0xab, 0x07, 0x72, 0x93, 0x1e, 0xd4,
+	0x06, 0x29, 0x3e, 0x18, 0x17, 0x62, 0xa2, 0x12, 0x83, 0x93, 0xc8, 0x89, 0x87, 0x72, 0x0c, 0x27,
+	0x1e, 0xc9, 0x31, 0x5e, 0x00, 0xe2, 0x07, 0x40, 0x3c, 0xe3, 0xb1, 0x1c, 0x43, 0x12, 0x1b, 0xd8,
+	0x6d, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0d, 0x1d, 0x77, 0xb2, 0xe1, 0x00, 0x00, 0x00,
+}

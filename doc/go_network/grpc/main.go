@@ -11,53 +11,70 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Data struct {
-	Operation string
+type transporterServer struct { // satisfy TransporterServer
+	received string
 }
 
-func (d *Data) Send(ctx context.Context, r *Request) (*Response, error) {
-	d.Operation = fmt.Sprintf("Operation: %v | ID: %v | %v", r.Operation, r.Id, time.Now())
-	return &Response{
-		Result: d.Operation,
-	}, nil
+func (t *transporterServer) Transfer(ctx context.Context, r *Request) (*Response, error) {
+	fmt.Printf("transporterServer.Transfer has received Request: %+v\n", r)
+
+	t.received = fmt.Sprintf("Data: %v at %v", r.Data, time.Now())
+	return &Response{Result: t.received}, nil
 }
 
 var (
 	port     = ":2378"
 	endpoint = "localhost" + port
-	gs       = grpc.NewServer()
-	data     = &Data{}
 )
 
-func main() {
-	log.Println("net.Listen:", endpoint)
+func server() {
+	fmt.Println("gRPC server has started at", endpoint)
+
+	var (
+		grpcServer = grpc.NewServer()
+		sender     = &transporterServer{}
+	)
 	ln, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatal(err)
 	}
-	RegisterSenderServer(gs, data)
+	RegisterTransporterServer(grpcServer, sender)
+
 	go func() {
-		if err := gs.Serve(ln); err != nil {
+		if err := grpcServer.Serve(ln); err != nil {
 			log.Fatal(err)
 		}
 	}()
+}
 
-	log.Println("grpc.Dial:", endpoint)
+func client() {
+	fmt.Println("gRPC client has started at", endpoint)
+
 	conn, err := grpc.Dial(endpoint, grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
 
-	cli := NewSenderClient(conn)
-	req := &Request{Operation: Request_Start, Id: "hello"}
-	log.Println("cli.Send:", req)
-	resp, err := cli.Send(context.Background(), req)
+	cli := NewTransporterClient(conn)
+	resp, err := cli.Transfer(context.Background(), &Request{Data: "hello"})
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println()
-	fmt.Printf("resp: %+v\n", resp)
-	fmt.Printf("data: %+v\n", data)
+	fmt.Printf("client.Transfer Response: %+v\n", resp)
 }
+
+func main() {
+	server()
+
+	time.Sleep(3 * time.Second)
+
+	client()
+}
+
+/*
+gRPC server has started at localhost:2378
+gRPC client has started at localhost:2378
+transporterServer.Transfer has received Request: data:"hello"
+client.Transfer Response: result:"Data: hello at 2016-03-12 02:35:25.977548786 -0800 PST"
+*/
