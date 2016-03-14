@@ -85,8 +85,14 @@ cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master && \
 cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash;
 
 # install latest go
-cd /usr/local && sudo rm -rf ./go;
-sudo curl -s https://storage.googleapis.com/golang/go1.6beta2.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz;
+GO_VERSION="1.5.3" && cd /usr/local && sudo rm -rf ./go && sudo curl -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz && cd $HOME;
+echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc
+PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin"
+echo "export PATH=$(echo $PATH_VAR)" >> $HOME/.bashrc
+export GOPATH=$(echo $HOME)/go
+PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin"
+export PATH=$(echo $PATH_VAR)
+go version
 
 if grep -q GOPATH "$(echo $HOME)/.bashrc"; then 
 	echo "bashrc already has GOPATH...";
