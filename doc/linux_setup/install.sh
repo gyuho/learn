@@ -131,14 +131,11 @@ go get -v -u -f github.com/alecthomas/gometalinter && \
 go get -v -u -f golang.org/x/tools/cmd/benchcmp && \
 go get -v -u -f golang.org/x/tools/cmd/goimports && \
 go get -v -u -f golang.org/x/tools/cmd/vet && \
-go get -v -u -f golang.org/x/tools/cmd/oracle && \
 go get -v -u -f honnef.co/go/simple/cmd/gosimple && \
 go get -v -u -f honnef.co/go/unused/cmd/unused && \
 go get -v -u -f github.com/gyuho/psn && \
-go get -v -u -f github.com/gyuho/gomp && \
-go get -v -u -f github.com/coreos/dbtester && \
-go get -v -u -f github.com/coreos/etcd-play && \
-go get -v -u -f github.com/coreos/etcd
+go get -v -u -f github.com/gyuho/gomp
+cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
 
 mkdir -p $HOME/go/src/github.com/gyuho
 rm -rf $HOME/go/src/github.com/gyuho/learn
@@ -149,8 +146,12 @@ mkdir -p $HOME/go/src/github.com/coreos
 rm -rf $HOME/go/src/github.com/coreos/etcd
 cd $HOME/go/src/github.com/coreos
 git clone git@github.com:coreos/etcd.git
+cd $HOME/go/src/github.com/coreos/etcd/cmd
+godep restore
 
-cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
+cd $HOME/go/src/github.com/coreos
+git clone git@github.com:coreos/dbtester.git
+git clone git@github.com:coreos/etcd-play.git
 
 ##########################################################
 
