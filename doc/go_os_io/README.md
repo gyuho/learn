@@ -1882,12 +1882,7 @@ func toCSV(header []string, rows [][]string, fpath string) error {
 	}
 
 	wr.Flush()
-
-	if err := wr.Error(); err != nil {
-		return err
-	}
-
-	return nil
+	return wr.Error()
 }
 
 func fromCSV(fpath string) ([][]string, error) {
@@ -1915,6 +1910,7 @@ func fromCSV(fpath string) ([][]string, error) {
 
 	return rows, nil
 }
+
 ```
 
 [↑ top](#go-os-io)
