@@ -2,25 +2,26 @@ package main
 
 import (
 	"encoding/csv"
+	"log"
 	"os"
 )
 
 func main() {
 	fpath := "test.csv"
-	if err := toCSV([][]string{{"A", "B", "C"}, {"D", "E", "F"}}, fpath); err != nil {
+	if err := toCSV([]string{"col1", "col2", "col3"}, [][]string{{"A", "B", "C"}, {"D", "E", "F"}}, fpath); err != nil {
 		panic(err)
 	}
 	rows, err := fromCSV(fpath)
 	if err != nil {
 		panic(err)
 	}
-	if len(rows) != 2 {
-		panic(err)
+	if len(rows) != 3 {
+		log.Fatal("must be 3 rows")
 	}
 	os.Remove(fpath)
 }
 
-func toCSV(rows [][]string, fpath string) error {
+func toCSV(header []string, rows [][]string, fpath string) error {
 	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
 	if err != nil {
 		f, err = os.Create(fpath)
@@ -33,11 +34,19 @@ func toCSV(rows [][]string, fpath string) error {
 	// func NewWriter(w io.Writer) *Writer
 	wr := csv.NewWriter(f)
 
+	if err := wr.Write(header); err != nil {
+		return err
+	}
+
 	if err := wr.WriteAll(rows); err != nil {
 		return err
 	}
 
 	wr.Flush()
+
+	if err := wr.Error(); err != nil {
+		return err
+	}
 
 	return nil
 }
