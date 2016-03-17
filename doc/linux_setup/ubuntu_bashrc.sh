@@ -101,7 +101,6 @@ alias shutdown='sudo telinit 0;'
 alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
-alias update='sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean'
 alias clean='echo -e \\033c;'
 
 alias gbra='git branch;'
@@ -114,13 +113,14 @@ alias css='cd $HOME/go/src/github.com/coreos;'
 alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
 
 alias work='
-if [ ! -d "/home/gyuho/go/src/github.com/coreos/etcd" ]; then
+ETCD_PATH=$HOME/go/src/github.com/coreos/etcd
+if [ ! -d $ETCD_PATH ]; then
 	echo "not exist!"
 
-	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
+	git clone git@github.com:gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
 
 	cd $HOME/go/src/github.com/coreos/etcd
-	git remote add upstream https://github.com/coreos/etcd.git
+	git remote add upstream git@github.com:coreos/etcd.git
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
@@ -140,10 +140,10 @@ else
 	temp_dir=$prefix$current_branch$underscore$date_string
 	mv $HOME/go/src/github.com/coreos/etcd $HOME/go/src/github.com/coreos/$temp_dir
 
-	git clone https://github.com/gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
+	git clone git@github.com:gyuho/etcd.git $HOME/go/src/github.com/coreos/etcd
 
 	cd $HOME/go/src/github.com/coreos/etcd
-	git remote add upstream https://github.com/coreos/etcd.git
+	git remote add upstream git@github.com:coreos/etcd.git
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
