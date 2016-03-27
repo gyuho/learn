@@ -26,7 +26,7 @@
   Sedgewick*](https://www.cs.princeton.edu/~rs/)
 - [*LLRB implementation*](https://github.com/petar/GoLLRB) by [*Petar
   Maymounkov*](http://www.maymounkov.org/)
-- [**_LLRB implementation_**](https://github.com/gyuho/goraph/tree/master/llrb)
+- [**_LLRB implementation_**](https://github.com/gyuho/llrb)
   by *me*
 
 [↑ top](#go-red-black-tree)
