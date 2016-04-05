@@ -146,15 +146,10 @@ COMMENT
 
 ##########################################################
 
-mkdir -p $HOME/go/src/github.com/google/protobuf
-cd $HOME/go/src/github.com/google && rm -rf protobuf
-git clone git@github.com:google/protobuf.git
-cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh
-cd $HOME/go/src/github.com/google/protobuf && ./configure
-cd $HOME/go/src/github.com/google/protobuf && sudo make
-cd $HOME/go/src/github.com/google/protobuf && sudo make check
-cd $HOME/go/src/github.com/google/protobuf && sudo make install
-sudo ldconfig
+PROTOC_VERSION=3.0.0-beta-2
+curl -sf -o /tmp/protoc.zip https://github.com/google/protobuf/releases/download/v$PROTOC_VERSION/protoc-$PROTOC_VERSION-linux-x86_64.zip
+unzip /tmp/protoc.zip -d /usr/bin/
+rm -f /tmp/protoc.zip
 protoc --version
 
 ##########################################################
