@@ -7,15 +7,15 @@ nano /etc/sudoers
 gyuho ALL=(ALL) NOPASSWD: ALL
 COMMENT
 
-sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean && \
-sudo apt-get -y install build-essential && \
-sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean;
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y autoremove
+sudo apt-get -y autoclean
+sudo apt-get -y install build-essential
 
-sudo apt-get -y install git  && \
-sudo apt-get -y install curl wget && \
-sudo apt-get -y install bash-completion && \
-sudo apt-get -y install terminator && \
-sudo apt-get -y install pcmanfm;
+sudo apt-get -y install git
+sudo apt-get -y install curl wget
+sudo apt-get -y install bash-completion
 
 sudo apt-get -y install ntpdate;
 sudo ntpdate ntp.ubuntu.com;
@@ -34,7 +34,7 @@ COMMENT
 #############################################################
 printf "\n\n\n\n\ninstalling git...\n\n" && sleep 1s;
 
-sudo apt-get -y install git;
+sudo apt-get -y install git
 
 echo "[user]
   email = gyuhox@gmail.com
@@ -44,21 +44,13 @@ echo "[user]
   diff = auto
   status = auto
   branch = auto
-  ui = auto" > $HOME/.gitconfig;
+  ui = auto" > $HOME/.gitconfig
 
-git config --global user.name "Gyu-Ho Lee";
-git config --global user.email "gyuhox@gmail.com";
-git config --global core.editor "vim";
+git config --global user.name "Gyu-Ho Lee"
+git config --global user.email "gyuhox@gmail.com"
+git config --global core.editor "vim"
 
-cd $HOME && \
-mkdir -p $HOME/go/src && \
-mkdir -p $HOME/go/src/github.com && \
-mkdir -p $HOME/go/src/github.com/coreos && \
-mkdir -p $HOME/go/src/github.com/gyuho && \
-mkdir -p $HOME/go/src/golang.org;
 
-cd $HOME/go/src/github.com/gyuho && git clone https://github.com/gyuho/learn.git;
-cd $HOME/go/src/github.com/coreos && git clone https://github.com/coreos/etcd.git;
 
 #############################################################
 printf "\n\n\n\n\ninstalling go(golang)...\n\n" && sleep 1s;
