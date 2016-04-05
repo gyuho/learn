@@ -29,7 +29,8 @@ sudo apt-get -y --force-yes --allow-unauthenticated install sur5r-keyring
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes install i3
 
-sudo apt-get -y --force-yes install i3
+sudo apt-get -y --force-yes install lubuntu-desktop lxde
+
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
 sudo apt-get -y --force-yes autoremove
