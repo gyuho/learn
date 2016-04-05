@@ -124,9 +124,9 @@ if [ ! -d $ETCD_PATH ]; then
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
-  git branch
-  git push
-  pwd
+	git branch
+	git push
+	pwd
 
 else
 
@@ -147,8 +147,8 @@ else
 	git fetch upstream
 	git merge upstream/master
 	git remote -v
-  git branch
-  git push
-  pwd
+	git branch
+	git push
+	pwd
 fi
 '
