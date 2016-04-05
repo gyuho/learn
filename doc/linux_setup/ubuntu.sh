@@ -54,6 +54,12 @@ git config --global core.editor "vim"
 
 ##########################################################
 
+cd $HOME && sudo rm -rf go1.4 && \		
+cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp && \		
+sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | sudo tar -v -C $HOME/go1.4_temp -xz && \		
+cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 .. && \		
+cd $HOME && sudo rm -rf $HOME/go1.4_temp;		
+
 GO_VERSION="1.6" && cd /usr/local && sudo rm -rf ./go && sudo curl -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz && cd $HOME;
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin"
 export GOPATH=$(echo $HOME)/go
