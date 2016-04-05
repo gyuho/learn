@@ -146,8 +146,9 @@ COMMENT
 
 ##########################################################
 
-cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google
-cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git
+mkdir -p $HOME/go/src/github.com/google/protobuf
+cd $HOME/go/src/github.com/google && rm -rf protobuf
+git clone git@github.com:google/protobuf.git
 cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh
 cd $HOME/go/src/github.com/google/protobuf && ./configure
 cd $HOME/go/src/github.com/google/protobuf && make
