@@ -119,6 +119,9 @@ go get -v -u -f golang.org/x/tools/cmd/oracle
 
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
 
+go get -v -u -f honnef.co/go/simple/cmd/gosimple
+go get -v -u -f honnef.co/go/unused/cmd/unused
+
 go get -v -u -f github.com/gyuho/psn && \
 go get -v -u -f github.com/gyuho/gomp && \
 go get -v -u -f github.com/coreos/dbtester && \
