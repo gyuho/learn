@@ -54,6 +54,12 @@ git config --global core.editor "vim"
 
 ##########################################################
 
+mkdir -p $HOME/go/src/github.com/gyuho
+mkdir -p $HOME/go/src/github.com/gyuho
+##########################################################
+
+##########################################################
+
 cd $HOME && sudo rm -rf go1.4		
 cd $HOME && sudo rm -rf go1.4_temp && mkdir -p $HOME/go1.4_temp		
 sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | sudo tar -v -C $HOME/go1.4_temp -xz		
