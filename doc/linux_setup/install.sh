@@ -94,6 +94,7 @@ mkdir -p $HOME/go/src/github.com/gyuho
 cd $HOME/go/src/github.com/gyuho
 git clone git@github.com:gyuho/learn.git
 mkdir -p $HOME/go/src/github.com/coreos
+git clone git@github.com:coreos/etcd.git
 
 go get -v -u -f github.com/tools/godep && \
 go get -v -u -f github.com/golang/lint/golint && \
