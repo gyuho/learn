@@ -17,11 +17,8 @@ sudo apt-get -y --force-yes upgrade
 
 sudo apt-get -y --force-yes install build-essential 
 sudo apt-get -y --force-yes install git
-sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion
-sudo apt-get -y --force-yes install unzip gzip tar tree htop openssh
-sudo apt-get -y --force-yes install dh-autoreconf
-sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena
-sudo apt-get -y --force-yes install terminator
+sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion unzip gzip tar tree htop dh-autoreconf
+sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena terminator
 
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
