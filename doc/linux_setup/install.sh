@@ -12,21 +12,21 @@ COMMENT
 ##########################################################
 # Ubuntu
 
-sudo apt-get -y --force-yes update
-sudo apt-get -y --force-yes upgrade
+sudo apt-get -y --allow update
+sudo apt-get -y --allow upgrade
 
-sudo apt-get -y --force-yes install build-essential 
-sudo apt-get -y --force-yes install git
-sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion
-sudo apt-get -y --force-yes install unzip gzip tar tree htop openssh
-sudo apt-get -y --force-yes install dh-autoreconf
-sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena
-sudo apt-get -y --force-yes install terminator
+sudo apt-get -y --allow install build-essential 
+sudo apt-get -y --allow install git
+sudo apt-get -y --allow install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion
+sudo apt-get -y --allow install unzip gzip tar tree htop openssh
+sudo apt-get -y --allow install dh-autoreconf
+sudo apt-get -y --allow install vim vim-nox vim-gtk vim-gnome vim-athena
+sudo apt-get -y --allow install terminator
 
-sudo apt-get -y --force-yes update
-sudo apt-get -y --force-yes upgrade
-sudo apt-get -y --force-yes autoremove
-sudo apt-get -y --force-yes autoclean
+sudo apt-get -y --allow update
+sudo apt-get -y --allow upgrade
+sudo apt-get -y --allow autoremove
+sudo apt-get -y --allow autoclean
 
 sudo service ntp stop
 sudo ntpdate time.nist.gov
