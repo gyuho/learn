@@ -21,17 +21,7 @@ sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzi
 sudo apt-get -y --force-yes install unzip gzip tar tree htop openssh
 sudo apt-get -y --force-yes install dh-autoreconf
 sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena
-
-sudo apt-get -y --force-yes install tmux
-
-echo "deb http://debian.sur5r.net/i3/ $(lsb_release -c -s) universe" >> /etc/apt/sources.list
-sudo apt-get -y --force-yes update
-sudo apt-get -y --force-yes --allow-unauthenticated install sur5r-keyring
-sudo apt-get -y --force-yes update
-sudo apt-get -y --force-yes install i3
-
-sudo apt-get -y --force-yes remove unity unity-asset-pool unity-control-center unity-control-center-signon unity-gtk-module-common unity-lens* unity-services unity-settings-daemon unity-webapps* unity-voice-service
-sudo apt-get -y --force-yes install lubuntu-desktop lxde
+sudo apt-get -y --force-yes install terminator
 
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
