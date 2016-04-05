@@ -10,27 +10,35 @@ COMMENT
 ##########################################################
 
 ##########################################################
-
+# Debian
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
+
 sudo apt-get -y --force-yes install build-essential
 sudo apt-get -y --force-yes install git
 sudo apt-get -y --force-yes install gcc
-sudo apt-get -y --force-yes install bash curl git tar iptables iproute2 unzip
-sudo apt-get -y --force-yes install bash-completion
-sudo apt-get -y --force-yes install unzip gzip tar
-sudo apt-get -y --force-yes install tree htop
-sudo apt-get -y --force-yes install openssh
+sudo apt-get -y --force-yes install bash curl git tar iptables iproute2 unzip ntpdate bash-completion
+sudo apt-get -y --force-yes install unzip gzip tar tree htop openssh
+sudo apt-get -y --force-yes install dh-autoreconf
+sudo apt-get -y --force-yes install tmux
+sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena
+
+echo "deb http://debian.sur5r.net/i3/ $(lsb_release -c -s) universe" >> /etc/apt/sources.list
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes --allow-unauthenticated install sur5r-keyring
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install i3
+
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
 sudo apt-get -y --force-yes autoremove
 sudo apt-get -y --force-yes autoclean
-echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh
 
-sudo apt-get -y --force-yes install ntpdate
 sudo service ntp stop
 sudo ntpdate time.nist.gov
 sudo service ntp start
+
+echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh
 
 ##########################################################
 
@@ -96,7 +104,6 @@ cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-ma
 ##########################################################
 
 go get -v -u -f github.com/tools/godep && \
-go get -v -u -f golang.org/x/tools/cmd/... && \
 go get -v -u -f github.com/golang/lint/golint && \
 go get -v -u -f github.com/nsf/gocode && \
 go get -v -u -f github.com/motain/gocheck && \
@@ -106,19 +113,21 @@ go get -v -u -f github.com/kisielk/errcheck && \
 go get -v -u -f github.com/jstemmer/gotags && \
 go get -v -u -f github.com/alecthomas/gometalinter && \
 go get -v -u -f golang.org/x/tools/cmd/benchcmp && \
-go get -v -u -f golang.org/x/tools/cmd/goimports
+go get -v -u -f golang.org/x/tools/cmd/goimports && \
+go get -v -u -f golang.org/x/tools/cmd/vet && \
+go get -v -u -f golang.org/x/tools/cmd/oracle
 
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
 
-##########################################################
+go get -v -d -f github.com/gyuho/psn && \
+go get -v -d -f github.com/gyuho/gomp && \
+go get -v -d -f github.com/coreos/dbtester && \
+go get -v -d -f github.com/coreos/etcd-play && \
+go get -v -d -f github.com/coreos/etcd
 
 ##########################################################
 
-sudo apt-get -y install vim && \
-sudo apt-get -y install vim-nox && \
-sudo apt-get -y install vim-gtk && \
-sudo apt-get -y install vim-gnome && \
-sudo apt-get -y install vim-athena
+##########################################################
 
 sudo chown -R gyuho:gyuho $HOME/.vim
 sudo mkdir -p $HOME/.vim/ftdetect
@@ -139,14 +148,13 @@ COMMENT
 
 ##########################################################
 
-sudo apt-get -y install dh-autoreconf
-
 cd $HOME/go/src/github.com && rm -rf google/protobuf && mkdir google
 cd $HOME/go/src/github.com/google && git clone https://github.com/google/protobuf.git
 cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh
 cd $HOME/go/src/github.com/google/protobuf && ./configure
 cd $HOME/go/src/github.com/google/protobuf && make
-cd $HOME/go/src/github.com/google/protobuf && make check;
+cd $HOME/go/src/github.com/google/protobuf && make check
 cd $HOME/go/src/github.com/google/protobuf && make install
+protoc --version
 
 ##########################################################
