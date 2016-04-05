@@ -170,7 +170,5 @@ function! Multiple_cursors_after()
     echo 'Enabled autocomplete'
 endfunction
 
-" https://github.com/jfrazelle/.vim/blob/master/vimrc
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
-
