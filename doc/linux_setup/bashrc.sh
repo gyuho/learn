@@ -110,7 +110,7 @@ alias gmit='git commit;'
 
 alias cs='cd $HOME/go/src/github.com/gyuho;'
 alias css='cd $HOME/go/src/github.com/coreos;'
-alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc;'
+alias learn='cd $HOME/go/src/github.com/gyuho/learn/doc/linux_setup;'
 
 alias work='
 ETCD_PATH=$HOME/go/src/github.com/coreos/etcd
