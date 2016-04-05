@@ -119,11 +119,11 @@ go get -v -u -f golang.org/x/tools/cmd/oracle
 
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
 
-go get -v -d -f github.com/gyuho/psn && \
-go get -v -d -f github.com/gyuho/gomp && \
-go get -v -d -f github.com/coreos/dbtester && \
-go get -v -d -f github.com/coreos/etcd-play && \
-go get -v -d -f github.com/coreos/etcd
+go get -v -u -f github.com/gyuho/psn && \
+go get -v -u -f github.com/gyuho/gomp && \
+go get -v -u -f github.com/coreos/dbtester && \
+go get -v -u -f github.com/coreos/etcd-play && \
+go get -v -u -f github.com/coreos/etcd
 
 ##########################################################
 
