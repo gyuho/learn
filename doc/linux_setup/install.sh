@@ -10,7 +10,8 @@ COMMENT
 ##########################################################
 
 ##########################################################
-# Debian
+# Ubuntu
+
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
 
@@ -29,6 +30,7 @@ sudo apt-get -y --force-yes --allow-unauthenticated install sur5r-keyring
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes install i3
 
+sudo apt-get -y --force-yes remove unity unity-asset-pool unity-control-center unity-control-center-signon unity-gtk-module-common unity-lens* unity-services unity-settings-daemon unity-webapps* unity-voice-service
 sudo apt-get -y --force-yes install lubuntu-desktop lxde
 
 sudo apt-get -y --force-yes update
@@ -59,15 +61,6 @@ echo "[user]
 git config --global user.name "Gyu-Ho Lee"
 git config --global user.email "gyuhox@gmail.com"
 git config --global core.editor "vim"
-
-##########################################################
-
-##########################################################
-
-mkdir -p $HOME/go/src/github.com/gyuho
-cd $HOME/go/src/github.com/gyuho
-git clone git@github.com:gyuho/learn.git
-mkdir -p $HOME/go/src/github.com/coreos
 
 ##########################################################
 
@@ -105,6 +98,11 @@ cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-ma
 
 ##########################################################
 
+mkdir -p $HOME/go/src/github.com/gyuho
+cd $HOME/go/src/github.com/gyuho
+git clone git@github.com:gyuho/learn.git
+mkdir -p $HOME/go/src/github.com/coreos
+
 go get -v -u -f github.com/tools/godep && \
 go get -v -u -f github.com/golang/lint/golint && \
 go get -v -u -f github.com/nsf/gocode && \
@@ -117,12 +115,11 @@ go get -v -u -f github.com/alecthomas/gometalinter && \
 go get -v -u -f golang.org/x/tools/cmd/benchcmp && \
 go get -v -u -f golang.org/x/tools/cmd/goimports && \
 go get -v -u -f golang.org/x/tools/cmd/vet && \
-go get -v -u -f golang.org/x/tools/cmd/oracle
+go get -v -u -f golang.org/x/tools/cmd/oracle && \
+go get -v -u -f honnef.co/go/simple/cmd/gosimple && \
+go get -v -u -f honnef.co/go/unused/cmd/unused
 
 cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
-
-go get -v -u -f honnef.co/go/simple/cmd/gosimple
-go get -v -u -f honnef.co/go/unused/cmd/unused
 
 go get -v -u -f github.com/gyuho/psn && \
 go get -v -u -f github.com/gyuho/gomp && \
