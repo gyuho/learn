@@ -17,7 +17,7 @@ sudo apt-get -y --force-yes upgrade
 
 sudo apt-get -y --force-yes install build-essential 
 sudo apt-get -y --force-yes install git
-sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion unzip gzip tar tree htop dh-autoreconf
+sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion unzip gzip tar tree htop dh-autoreconf xclip
 sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena terminator
 
 sudo apt-get -y --force-yes update
@@ -48,6 +48,11 @@ echo "[user]
 git config --global user.name "Gyu-Ho Lee"
 git config --global user.email "gyuhox@gmail.com"
 git config --global core.editor "vim"
+
+ssh-keygen -t rsa -b 4096 -C "gyuhox@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add $HOME/.ssh/id_rsa
+xclip -sel clip < $HOME/.ssh/id_rsa.pub
 
 ##########################################################
 
