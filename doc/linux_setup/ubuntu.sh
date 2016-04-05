@@ -55,7 +55,10 @@ git config --global core.editor "vim"
 ##########################################################
 
 mkdir -p $HOME/go/src/github.com/gyuho
-mkdir -p $HOME/go/src/github.com/gyuho
+cd $HOME/go/src/github.com/gyuho
+git clone git@github.com:gyuho/learn.git
+mkdir -p $HOME/go/src/github.com/coreos
+
 ##########################################################
 
 ##########################################################
