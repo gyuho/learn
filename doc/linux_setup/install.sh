@@ -151,9 +151,9 @@ cd $HOME/go/src/github.com/google && rm -rf protobuf
 git clone git@github.com:google/protobuf.git
 cd $HOME/go/src/github.com/google/protobuf && ./autogen.sh
 cd $HOME/go/src/github.com/google/protobuf && ./configure
-cd $HOME/go/src/github.com/google/protobuf && make
-cd $HOME/go/src/github.com/google/protobuf && make check
-cd $HOME/go/src/github.com/google/protobuf && make install
+cd $HOME/go/src/github.com/google/protobuf && sudo make
+cd $HOME/go/src/github.com/google/protobuf && sudo make check
+cd $HOME/go/src/github.com/google/protobuf && sudo make install
 sudo ldconfig
 protoc --version
 
