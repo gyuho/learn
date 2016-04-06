@@ -43,6 +43,16 @@ sudo apt-get -y --force-yes install yubikey-neo-manager
 
 ##########################################################
 
+export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+gcloud init
+
+##########################################################
+
+##########################################################
+
 echo "[user]
   email = gyuhox@gmail.com
   name = Gyu-Ho Lee
