@@ -36,6 +36,13 @@ echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh
 
 ##########################################################
 
+sudo add-apt-repository ppa:yubico/stable
+sudo apt-get -y --force-yes install yubikey-neo-manager
+
+##########################################################
+
+##########################################################
+
 echo "[user]
   email = gyuhox@gmail.com
   name = Gyu-Ho Lee
