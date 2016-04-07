@@ -20,7 +20,8 @@ sudo apt-get -y --force-yes install git mercurial meld
 sudo apt-get -y --force-yes install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion unzip gzip tar tree htop
 sudo apt-get -y --force-yes install dh-autoreconf xclip autoconf automake libtool
 sudo apt-get -y --force-yes install vim vim-nox vim-gtk vim-gnome vim-athena terminator
-
+sudo apt-get -y --force-yes install libpcap-dev libaspell-dev libhunspell-dev
+    
 sudo apt-get -y --force-yes update
 sudo apt-get -y --force-yes upgrade
 sudo apt-get -y --force-yes autoremove
