@@ -170,3 +170,14 @@ rm -f /tmp/protoc.zip
 protoc --version
 
 ##########################################################
+
+##########################################################
+
+# https://coreos.com/blog/getting-started-with-rkt-1.0.html
+rm -rf $HOME/rkt
+RKT_VERSION=1.3.0
+sudo curl -sf -o /tmp/rkt.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
+sudo tar -xzf /tmp/rkt.tar.gz -C /tmp/
+sudo mv /tmp/rkt $HOME/rkt
+
+##########################################################
