@@ -102,8 +102,10 @@ fi
 # echo "export PATH=$(echo $PATH_VAR)" >> $HOME/.bashrc
 # echo "export GOPATH=$(echo $HOME)/go" >> $HOME/.bashrc
 
-cd $HOME && rm -rf ./go-master && mkdir -p $HOME/go-master && \
-cd $HOME/go-master && git clone https://go.googlesource.com/go && cd $HOME/go-master/go/src && ./all.bash
+cd $HOME && rm -rf $HOME/go-master
+git clone https://go.googlesource.com/go $HOME/go-master
+cd $HOME/go-master/src && ./make.bash
+cd $HOME && $HOME/go-master/bin/go version
 
 ##########################################################
 
