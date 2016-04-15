@@ -19,20 +19,9 @@ sudo apt-get -y --allow-unauthenticated install build-essential
 sudo apt-get -y --allow-unauthenticated install git mercurial meld
 sudo apt-get -y --allow-unauthenticated install gcc bash curl git tar iptables iproute2 unzip ntpdate bash-completion unzip gzip tar tree htop
 sudo apt-get -y --allow-unauthenticated install dh-autoreconf xclip autoconf automake libtool
+sudo apt-get -y --allow-unauthenticated install vim vim-nox vim-gtk vim-gnome vim-athena ncurses-dev
 sudo apt-get -y --allow-unauthenticated install terminator
 sudo apt-get -y --allow-unauthenticated install libpcap-dev libaspell-dev libhunspell-dev
-
-sudo apt-get -y remove vim vim-runtime gvim
-sudo apt-get -y build-dep vim vim-nox vim-gtk vim-gnome vim-athena
-sudo apt-get -y install ncurses-dev
-cd $HOME/
-rm -rf $HOME/vim/
-git clone https://github.com/vim/vim.git
-cd $HOME/vim/src
-
-./configure --with-features=huge
-make
-sudo make install
 
 sudo apt-get -y --allow-unauthenticated update
 sudo apt-get -y --allow-unauthenticated upgrade
