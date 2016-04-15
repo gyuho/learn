@@ -3,7 +3,6 @@ Plug 'Raimondi/delimitMate'
 Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
@@ -161,7 +160,7 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 " colorscheme darkblue
 syntax enable
 set background=dark
-colorscheme solarized
+colorscheme darkblue
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
