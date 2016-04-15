@@ -10,10 +10,9 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'scrooloose/syntastic'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-commentary'
+Plug 'majutsushi/tagbar'
 Plug 'nsf/gocode', {'rtp': 'vim'}
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
 call plug#end()
 
 " :PlugInstall
@@ -97,12 +96,14 @@ let g:airline_symbols.space = "\ua0"
 " NERDTree
 " map <F2> :NERDTreeToggle<cr>
 " map <F3> <C-w><C-w>
+"
 map <ESC>2 :NERDTreeToggle<cr>
 map <ESC>3 <C-w><C-w>
+map <ESC>4 :TagbarToggle<CR>
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
-set wrap
-set tw=79
+" set wrap
+" set tw=79
 set formatoptions+=t
 set tabstop=4     " a tab is four spaces
 set backspace=indent,eol,start
@@ -172,3 +173,32 @@ endfunction
 
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
+
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
