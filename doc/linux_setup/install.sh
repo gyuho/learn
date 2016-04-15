@@ -226,3 +226,15 @@ printf "\n\n"
 
 ##########################################################
 
+##########################################################
+
+sudo apt-get -y --allow-unauthenticated install qt5-default
+cd $HOME
+rm -rf $HOME/protoc-gen-doc/
+git clone https://github.com/estan/protoc-gen-doc.git $HOME/protoc-gen-doc
+cd $HOME/protoc-gen-doc/
+qmake
+make
+sudo cp $HOME/protoc-gen-doc/protoc-gen-doc /usr/local/bin/protoc-gen-doc
+
+##########################################################
