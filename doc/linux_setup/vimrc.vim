@@ -3,6 +3,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'Shougo/neocomplete'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
+Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
@@ -156,10 +157,11 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
-" syntax enable
-syntax off
-colorscheme darkblue
-" colorscheme default
+" syntax off
+" colorscheme darkblue
+syntax enable
+set background=dark
+colorscheme solarized
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
