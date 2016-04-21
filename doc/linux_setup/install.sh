@@ -84,7 +84,7 @@ sudo curl -s https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz | su
 cd $HOME/go1.4_temp && sudo mv ./go ./go1.4 && sudo mv ./go1.4 ..
 cd $HOME && sudo rm -rf $HOME/go1.4_temp
 
-GO_VERSION="1.6" && cd /usr/local && sudo rm -rf ./go && sudo curl -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz && cd $HOME;
+GO_VERSION="1.6.2" && cd /usr/local && sudo rm -rf ./go && sudo curl -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | sudo tar -v -C /usr/local/ -xz && cd $HOME;
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin"
 export GOPATH=$(echo $HOME)/go
 PATH_VAR=$PATH":/usr/local/go/bin:$(echo $HOME)/go/bin"
@@ -223,18 +223,5 @@ printf "\n\n"
 sudo docker ps
 sudo docker images
 printf "\n\n"
-
-##########################################################
-
-##########################################################
-
-sudo apt-get -y --allow-unauthenticated install qt5-default
-cd $HOME
-rm -rf $HOME/protoc-gen-doc/
-git clone https://github.com/estan/protoc-gen-doc.git $HOME/protoc-gen-doc
-cd $HOME/protoc-gen-doc/
-qmake
-make
-sudo cp $HOME/protoc-gen-doc/protoc-gen-doc /usr/local/bin/protoc-gen-doc
 
 ##########################################################
