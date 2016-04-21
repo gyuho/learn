@@ -39,7 +39,7 @@ echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh
 ##########################################################
 
 sudo add-apt-repository ppa:yubico/stable
-sudo apt-get -y --force-yes install yubikey-neo-manager
+sudo apt-get -y --allow-unauthenticated install yubikey-neo-manager scdaemon
 
 ##########################################################
 
