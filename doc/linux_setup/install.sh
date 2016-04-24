@@ -10,7 +10,6 @@ COMMENT
 ##########################################################
 
 ##########################################################
-# Ubuntu
 
 sudo apt-get -y --allow-unauthenticated update
 sudo apt-get -y --allow-unauthenticated upgrade
@@ -50,6 +49,7 @@ echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee 
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk
 gcloud init
+gsutil config
 
 ##########################################################
 
@@ -112,14 +112,6 @@ cd $HOME && $HOME/go-master/bin/go version
 
 ##########################################################
 
-mkdir -p $HOME/go/src/github.com/gyuho
-cd $HOME/go/src/github.com/gyuho
-git clone git@github.com:gyuho/learn.git
-
-mkdir -p $HOME/go/src/github.com/coreos
-cd $HOME/go/src/github.com/coreos
-git clone git@github.com:coreos/etcd.git
-
 go get -v -u -f github.com/tools/godep && \
 go get -v -u -f github.com/golang/lint/golint && \
 go get -v -u -f github.com/nsf/gocode && \
@@ -134,15 +126,24 @@ go get -v -u -f golang.org/x/tools/cmd/goimports && \
 go get -v -u -f golang.org/x/tools/cmd/vet && \
 go get -v -u -f golang.org/x/tools/cmd/oracle && \
 go get -v -u -f honnef.co/go/simple/cmd/gosimple && \
-go get -v -u -f honnef.co/go/unused/cmd/unused
-
-cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
-
+go get -v -u -f honnef.co/go/unused/cmd/unused && \
 go get -v -u -f github.com/gyuho/psn && \
 go get -v -u -f github.com/gyuho/gomp && \
 go get -v -u -f github.com/coreos/dbtester && \
 go get -v -u -f github.com/coreos/etcd-play && \
 go get -v -u -f github.com/coreos/etcd
+
+mkdir -p $HOME/go/src/github.com/gyuho
+rm -rf $HOME/go/src/github.com/gyuho/learn
+cd $HOME/go/src/github.com/gyuho
+git clone git@github.com:gyuho/learn.git
+
+mkdir -p $HOME/go/src/github.com/coreos
+rm -rf $HOME/go/src/github.com/coreos/etcd
+cd $HOME/go/src/github.com/coreos
+git clone git@github.com:coreos/etcd.git
+
+cd $GOPATH/src/github.com/nsf/gocode/vim && sudo ./update.sh
 
 ##########################################################
 
@@ -189,7 +190,13 @@ protoc --version
 ##########################################################
 
 # https://coreos.com/blog/getting-started-with-rkt-1.0.html
-RKT_VERSION=1.3.0
+RKT_VERSION=1.0.0
+rm -rf $HOME/rkt-v$RKT_VERSION
+sudo curl -sf -o /tmp/rkt-v$RKT_VERSION.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
+sudo tar -xzf /tmp/rkt-v$RKT_VERSION.tar.gz -C /tmp/
+sudo mv /tmp/rkt-v$RKT_VERSION $HOME/rkt-v$RKT_VERSION
+
+RKT_VERSION=1.4.0
 rm -rf $HOME/rkt-v$RKT_VERSION
 sudo curl -sf -o /tmp/rkt-v$RKT_VERSION.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
 sudo tar -xzf /tmp/rkt-v$RKT_VERSION.tar.gz -C /tmp/
@@ -215,7 +222,6 @@ sudo apt-get -y install linux-image-extra-$(uname -r)
 
 sudo apt-get -y install docker-engine
 sudo service docker start
-
 sudo docker version
 
 sleep 3s
