@@ -181,8 +181,7 @@ go get -v -u -f github.com/jstemmer/gotags
 
 wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip
 unzip protoc-3.0.0-beta-2-linux-x86_64.zip
-sudo cp ./protoc $GOPATH/protoc
-rm -f /tmp/protoc.zip
+cp ./protoc $GOPATH/protoc
 protoc --version
 
 ##########################################################
