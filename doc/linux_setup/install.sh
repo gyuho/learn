@@ -22,7 +22,7 @@ sudo apt-get -y --allow-unauthenticated install vim vim-nox vim-gtk vim-gnome vi
 sudo apt-get -y --allow-unauthenticated install terminator pcmanfm xclip
 sudo apt-get -y --allow-unauthenticated install libpcap-dev libaspell-dev libhunspell-dev
 sudo apt-get remove --purge nodejs npm
-sudo apt-get -y --allow-unauthenticated install nodejs
+sudo apt-get -y --allow-unauthenticated install nodejs npm nodejs-legacy
 sudo apt-get -y --allow-unauthenticated install build-essential
 
 sudo apt-get -y --allow-unauthenticated update
