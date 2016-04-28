@@ -585,7 +585,7 @@ func zLibToBytes(fpath string) ([]byte, error) {
 
 #### encoding, decoding `json`
 
-Try [this](http://play.golang.org/p/ExM45DD_X2):
+Try [this](https://play.golang.org/p/-vnad3oev1):
 
 ```go
 package main
@@ -595,6 +595,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 )
 
@@ -642,6 +643,21 @@ func equalPair(s0, s1 string) bool {
 }
 
 func main() {
+	type Data struct {
+		Name   string
+		Number int
+	}
+	dt := Data{}
+	dec := json.NewDecoder(strings.NewReader(`{"Name": "a", "Number": 1}`))
+	for {
+		if err := dec.Decode(&dt); err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatal(err)
+		}
+	}
+	fmt.Printf("%+v\n", dt) // {Name:a Number:1}
+
 	p0 := makePair("test_id", "http://localhost:8080")
 	fmt.Printf("makePair: %+v\n", p0)
 	// makePair: {ProxyID:test_id Endpoint:http://localhost:8080}
