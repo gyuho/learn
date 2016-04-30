@@ -27,7 +27,6 @@ sudo apt-get -y --allow-unauthenticated install terminator pcmanfm xclip
 sudo apt-get -y --allow-unauthenticated install libpcap-dev libaspell-dev libhunspell-dev
 sudo apt-get remove --purge nodejs npm
 sudo apt-get -y --allow-unauthenticated install nodejs npm nodejs-legacy
-sudo apt-get -y --allow-unauthenticated install build-essential
 
 sudo apt-get -y --allow-unauthenticated update
 sudo apt-get -y --allow-unauthenticated upgrade
@@ -45,6 +44,8 @@ echo "echo 1 > /proc/sys/vm/drop_caches" | sudo sh
 ##########################################################
 
 sudo add-apt-repository ppa:yubico/stable
+sudo apt-get -y --allow-unauthenticated update
+sudo apt-get -y --allow-unauthenticated upgrade
 sudo apt-get -y --allow-unauthenticated install yubikey-neo-manager scdaemon
 
 ##########################################################
@@ -54,7 +55,7 @@ sudo apt-get -y --allow-unauthenticated install yubikey-neo-manager scdaemon
 export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
 echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-get update && sudo apt-get install google-cloud-sdk
+sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y install google-cloud-sdk
 gcloud init
 gsutil config
 
@@ -71,7 +72,6 @@ echo "[user]
   status = auto
   branch = auto
   ui = auto" > $HOME/.gitconfig
-
 git config --global user.name "Gyu-Ho Lee"
 git config --global user.email "gyuhox@gmail.com"
 git config --global core.editor "vim"
