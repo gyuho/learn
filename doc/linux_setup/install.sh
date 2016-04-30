@@ -188,7 +188,7 @@ go get -v -u -f github.com/jstemmer/gotags
 
 wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip
 unzip protoc-3.0.0-beta-2-linux-x86_64.zip
-cp ./protoc $GOPATH/protoc
+cp ./protoc $GOPATH/bin/protoc
 protoc --version
 
 ##########################################################
@@ -217,7 +217,7 @@ sudo apt-get -y upgrade
 sudo apt-get -y install apt-transport-https ca-certificates
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
-echo "deb https://apt.dockerproject.org/repo ubuntu-wily main" > a.temp
+echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > a.temp
 sudo mv a.temp /etc/apt/sources.list.d/docker.list
 
 sudo apt-get -y update
