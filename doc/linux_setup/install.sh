@@ -11,6 +11,10 @@ COMMENT
 
 ##########################################################
 
+sudo apt-add-repository ppa:system76-dev/stable
+sudo apt-get -y update
+sudo apt-get -y install system76-driver
+
 sudo apt-get -y --allow-unauthenticated update
 sudo apt-get -y --allow-unauthenticated upgrade
 
