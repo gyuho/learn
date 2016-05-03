@@ -70,6 +70,7 @@ export GOROOT_BOOTSTRAP=$HOME/go1.4
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/games:/usr/local/games:/usr/local/go/bin:$HOME/go/bin
 
 # http://ezprompt.net/
+# export PS1="$ "
 export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\n"
 
 export VISUAL=vim

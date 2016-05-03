@@ -237,3 +237,15 @@ sudo docker images
 printf "\n\n"
 
 ##########################################################
+
+sudo add-apt-repository ppa:kazam-team/unstable-series
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install kazam python3-cairo python3-xlib
+
+sudo add-apt-repository ppa:mc3man/trusty-media
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install ffmpeg
+
+##########################################################
