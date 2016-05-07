@@ -151,6 +151,9 @@ godep restore
 
 cd $HOME/go/src/github.com/coreos
 git clone git@github.com:coreos/dbtester.git
+cd $HOME/go/src/github.com/coreos/dbtester
+godep restore
+
 git clone git@github.com:coreos/etcd-play.git
 
 ##########################################################
