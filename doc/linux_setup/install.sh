@@ -199,13 +199,6 @@ protoc --version
 
 ##########################################################
 
-# https://coreos.com/blog/getting-started-with-rkt-1.0.html
-RKT_VERSION=1.0.0
-rm -rf $HOME/rkt-v$RKT_VERSION
-sudo curl -sf -o /tmp/rkt-v$RKT_VERSION.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
-sudo tar -xzf /tmp/rkt-v$RKT_VERSION.tar.gz -C /tmp/
-sudo mv /tmp/rkt-v$RKT_VERSION $HOME/rkt-v$RKT_VERSION
-
 RKT_VERSION=1.5.0
 rm -rf $HOME/rkt-v$RKT_VERSION
 sudo curl -sf -o /tmp/rkt-v$RKT_VERSION.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
@@ -234,11 +227,8 @@ sudo apt-get -y install docker-engine
 sudo service docker start
 sudo docker version
 
-sleep 3s
-printf "\n\n"
 sudo docker ps
 sudo docker images
-printf "\n\n"
 
 ##########################################################
 
@@ -253,3 +243,4 @@ sudo apt-get -y upgrade
 sudo apt-get -y install ffmpeg
 
 ##########################################################
+
