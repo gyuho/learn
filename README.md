@@ -34,7 +34,6 @@ or [`pull request`](https://github.com/gyuho/learn/pulls).
 - [Computer systems](#computer-systems)
 - [Security systems](#security-systems)
 - [Database systems](#database-systems)
-- [Distributed systems](#distributed-systems)
 - [Linguistics, natural language processing](#linguistics-natural-language-processing)
 - [Mathematics, statistics](#mathematics-statistics)
 - [Data structures and algorithms](#data-structures-and-algorithms)
@@ -230,18 +229,6 @@ analysis applications.
 - [*mysql, postgresql, redshift*](https://github.com/gyuho/learn/tree/master/doc/mysql_postgresql_redshift)
 - [*Python: sql*](https://github.com/gyuho/learn/tree/master/doc/python_sql)
 - [*Python: redis*](https://github.com/gyuho/learn/tree/master/doc/python_redis)
-
-[↑ top](#contents)
-<br><br>
-
-
-## Distributed systems
-
-You have one machine to run your program. What if that one machine fails? 
-The whole system goes down. You want to have multiple, distributed machines
-always available, so that even if one fails, others can keep running.
-
-- [**_Distributed systems, Paxos, Raft, etcd_**](https://github.com/gyuho/learn/tree/master/doc/distributed_systems_paxos_raft_etcd)
 
 [↑ top](#contents)
 <br><br>
