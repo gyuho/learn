@@ -56,6 +56,7 @@
 - [**buffered channel copy**](#buffered-channel-copy)
 - [**`select` closed channel**](#select-closed-channel)
 - [**`select` default**](#select-default)
+- [**`sync.Cond`**](#select-default)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5676,6 +5677,116 @@ func main() {
 	}
 	// received from done
 }
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### `sync.Cond`
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type data struct {
+	cond  *sync.Cond
+	lines []string
+}
+
+var nums = []int{0, 1, 2}
+
+func main() {
+	d := data{
+		cond:  &sync.Cond{L: &sync.Mutex{}},
+		lines: make([]string, 0),
+	}
+
+	for i := range nums {
+		go func(i int) {
+			d.cond.L.Lock()
+			d.lines = append(d.lines, fmt.Sprintf("%d: Hello World!", i))
+			d.cond.L.Unlock()
+
+			d.cond.Signal()
+		}(i)
+	}
+
+	for {
+		d.cond.L.Lock()
+		if len(d.lines) != len(nums) {
+			d.cond.Wait()
+		} else {
+			d.cond.L.Unlock()
+			break
+		}
+		d.cond.L.Unlock()
+	}
+
+	fmt.Println(d.lines)
+	// [2: Hello World! 0: Hello World! 1: Hello World!]
+}
+
+```
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	cond := &sync.Cond{L: &sync.Mutex{}}
+	sig := make(chan struct{})
+
+	for i := 0; i < 3; i++ {
+		go func(i int) {
+			cond.L.Lock()
+			sig <- struct{}{}
+			fmt.Println("Wait begin:", i)
+			cond.Wait()
+			fmt.Println("Wait end:", i)
+			cond.L.Unlock()
+		}(i)
+	}
+	for range []int{0, 1, 2} {
+		<-sig
+	}
+
+	// for i := 0; i < 3; i++ {
+	// 	cond.L.Lock()
+	// 	fmt.Println("Signal")
+	// 	cond.Signal()
+	// 	cond.L.Unlock()
+	// }
+
+	cond.L.Lock()
+	fmt.Println("Broadcast")
+	cond.Broadcast()
+	cond.L.Unlock()
+
+	fmt.Println("Sleep")
+	time.Sleep(time.Second)
+}
+
+/*
+Wait begin: 2
+Wait begin: 1
+Wait begin: 0
+Broadcast
+Sleep
+Wait end: 2
+Wait end: 1
+Wait end: 0
+*/
 
 ```
 
