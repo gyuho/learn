@@ -1,5 +1,0 @@
-// Place your key bindings in this file to overwrite the defaults
-// /home/gyuho/.config/Code/User
-[
-    { "key": "ctrl+shift+o", "command": "workbench.action.files.openFolder" }
-]

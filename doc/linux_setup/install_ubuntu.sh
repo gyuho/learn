@@ -199,7 +199,7 @@ protoc --version
 
 ##########################################################
 
-RKT_VERSION=1.5.0
+RKT_VERSION=1.6.0
 rm -rf $HOME/rkt-v$RKT_VERSION
 sudo curl -sf -o /tmp/rkt-v$RKT_VERSION.tar.gz -L https://github.com/coreos/rkt/releases/download/v$RKT_VERSION/rkt-v$RKT_VERSION.tar.gz
 sudo tar -xzf /tmp/rkt-v$RKT_VERSION.tar.gz -C /tmp/
