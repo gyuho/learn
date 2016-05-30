@@ -17,7 +17,7 @@
 - [permute `string`](#permute-string)
 - [permute `bytes`](#permute-bytes)
 - [interface runtime](#interface-runtime)
-- [interface `*os.File`](#interface-*osfile)
+- [interface `*os.File`](#interface-osfile)
 
 [↑ top](#go-interface)
 <br><br><br><br><hr>
