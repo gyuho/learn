@@ -59,6 +59,7 @@
 - [**`sync.Cond`**](#select-default)
 - [blocking `sync.Mutex`](#blocking-syncmutex)
 - [empty buffered channel](#empty-buffered-channel)
+- [close two channels](#close-two-channels)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5866,6 +5867,45 @@ func main() {
 
 	fmt.Println(<-ch) // hello
 	<-donec
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### close two channels
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	closed, donec := make(chan struct{}), make(chan struct{})
+	go func() {
+		select {
+		case <-time.After(3 * time.Second):
+			fmt.Println("close(closed) took too long")
+		case <-closed:
+		}
+		close(donec)
+	}()
+
+	close(closed)
+
+	select {
+	case <-time.After(3 * time.Second):
+		fmt.Println("close(donec) took too long")
+	case <-donec:
+	}
+
+	fmt.Println("DONE!")
+	// DONE!
 }
 
 ```
