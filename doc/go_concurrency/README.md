@@ -58,6 +58,7 @@
 - [**`select` default**](#select-default)
 - [**`sync.Cond`**](#select-default)
 - [blocking `sync.Mutex`](#blocking-syncmutex)
+
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
 
