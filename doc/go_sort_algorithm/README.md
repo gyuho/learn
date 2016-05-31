@@ -14,6 +14,7 @@
 - [selection sort](#selection-sort)
 - [counting sort](#counting-sort)
 - [radix sort](#radix-sort)
+- [sort search](#sort-search)
 
 [↑ top](#go-sort-algorithm)
 <br><br><br><br><hr>
@@ -779,6 +780,28 @@ func max(nums []int) int {
 		}
 	}
 	return max
+}
+
+```
+
+[↑ top](#go-sort-algorithm)
+<br><br><br><br><hr>
+
+
+#### sort search
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+	names := []string{"a", "b", "c", "hello", "d", "e"}
+	idx := sort.Search(len(names), func(i int) bool { return names[i] == "hello" })
+	fmt.Println(idx, names[idx]) // 3 hello
 }
 
 ```
