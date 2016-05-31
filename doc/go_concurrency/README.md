@@ -58,6 +58,7 @@
 - [**`select` default**](#select-default)
 - [**`sync.Cond`**](#select-default)
 - [blocking `sync.Mutex`](#blocking-syncmutex)
+- [empty buffered channel](#empty-buffered-channel)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5837,6 +5838,35 @@ goroutine got the Lock!
 goroutine just released the Lock!
 DONE
 */
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### empty buffered channel
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch := make(chan string, 1)
+	donec := make(chan struct{})
+	go func() {
+		time.Sleep(time.Second)
+		ch <- "hello"
+		close(donec)
+	}()
+
+	fmt.Println(<-ch) // hello
+	<-donec
+}
 
 ```
 
