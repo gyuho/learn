@@ -9,6 +9,7 @@ func main() {
 	{
 		// given a slice data sorted in ascending order
 		names := []string{"a", "b", "c", "d", "e"}
+		fmt.Println("IsSorted:", sort.IsSorted(sort.StringSlice(names)))
 
 		idx := sort.Search(
 			len(names),
@@ -24,16 +25,18 @@ func main() {
 		}
 	}
 	/*
-	   searching at 2
-	   searching at 4
-	   searching at 3
-	   3 d
+		IsSorted: true
+		searching at 2
+		searching at 4
+		searching at 3
+		3 d
 	*/
 
 	{
 		// Searching data sorted in descending order would use
 		// the <= operator instead of the >= operator.
 		names := []string{"e", "d", "c", "b", "a"}
+		fmt.Println("IsSorted:", sort.IsSorted(sort.Reverse(sort.StringSlice(names))))
 
 		idx := sort.Search(
 			len(names),
@@ -49,6 +52,7 @@ func main() {
 		}
 	}
 	/*
+		IsSorted: true
 		searching at 2
 		searching at 1
 		searching at 0
