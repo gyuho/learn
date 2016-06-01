@@ -33,6 +33,7 @@
 - [implement `ssh`](#implement-ssh)
 - [`scp` from a local file, directory](#scp-from-a-local-file-directory)
 - [`scp` from a remote file](#scp-from-a-remote-file)
+- [rate limit](#rate-limit)
 
 [↑ top](#go-network)
 <br><br><br><br><hr>
@@ -3205,6 +3206,38 @@ func scpFromRemoteFile(
 		return err
 	}
 	return nil
+}
+
+```
+
+[↑ top](#go-network)
+<br><br><br><br><hr>
+
+
+#### rate limit
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"golang.org/x/net/context"
+	"golang.org/x/time/rate"
+)
+
+func main() {
+	st := time.Now()
+	i := 0
+	limiter := rate.NewLimiter(rate.Every(time.Second), 100)
+	ctx, cancel := context.WithTimeout(context.TODO(), 2*time.Second)
+	for limiter.Wait(ctx) == nil {
+		i++
+	}
+	cancel()
+	fmt.Println(i, "DONE. Took", time.Since(st))
+	// 101 DONE. Took 1.00013873s
 }
 
 ```
