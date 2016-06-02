@@ -61,6 +61,7 @@
 - [empty buffered channel](#empty-buffered-channel)
 - [close two channels](#close-two-channels)
 - [atomic, defer](#atomic-defer)
+- [channel capacity](#channel-capacity)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5934,6 +5935,31 @@ func main() {
 
 	fmt.Println(atomic.LoadInt32(&proposeCounter)) // 1
 	time.Sleep(time.Second)
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### channel capacity
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	ch := make(chan int, 1)
+	fmt.Println(len(ch), cap(ch)) // 0 1
+	ch <- 1
+	fmt.Println(len(ch), cap(ch)) // 1 1
+	if len(ch) == cap(ch) {
+		fmt.Println("channel is full")
+	} // channel is full
+	fmt.Println(<-ch)
+	fmt.Println(len(ch), cap(ch)) // 0 1
 }
 
 ```
