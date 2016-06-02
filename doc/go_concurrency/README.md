@@ -60,6 +60,7 @@
 - [blocking `sync.Mutex`](#blocking-syncmutex)
 - [empty buffered channel](#empty-buffered-channel)
 - [close two channels](#close-two-channels)
+- [atomic, defer](#atomic-defer)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -5906,6 +5907,33 @@ func main() {
 
 	fmt.Println("DONE!")
 	// DONE!
+}
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### atomic, defer
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+	"time"
+)
+
+var proposeCounter int32
+
+func main() {
+	atomic.AddInt32(&proposeCounter, 1)
+	defer atomic.AddInt32(&proposeCounter, -1)
+
+	fmt.Println(atomic.LoadInt32(&proposeCounter)) // 1
+	time.Sleep(time.Second)
 }
 
 ```
