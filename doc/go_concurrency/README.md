@@ -1902,7 +1902,7 @@ func head(
 
 #### **receive `nil` from channel**
 
-Try this [code](http://play.golang.org/p/m4P8knWILd). Note that
+Try this [code](https://play.golang.org/p/FrOvBjwQ4I). Note that
 even if it send `nil` to a channel, it receives:
 
 ```go
@@ -1914,18 +1914,36 @@ import (
 )
 
 func main() {
-	errChan := make(chan error)
-	go func() {
-		errChan <- nil
-	}()
-	select {
-	case v := <-errChan:
-		fmt.Println("even if nil, it still receives", v)
-	case <-time.After(time.Second):
-		fmt.Println("time-out!")
+	{
+		errChan := make(chan error)
+		go func() {
+			errChan <- nil
+		}()
+		select {
+		case v := <-errChan:
+			fmt.Println("even if nil, it still receives", v)
+		case <-time.After(time.Second):
+			fmt.Println("time-out!")
+		}
+		// even if nil, it still receives <nil>
 	}
-	// even if nil, it still receives <nil>
+
+	{
+		errChan := make(chan error)
+		errChan = nil
+		go func() {
+			errChan <- nil
+		}()
+		select {
+		case v := <-errChan:
+			fmt.Println("even if nil, it still receives", v)
+		case <-time.After(time.Second):
+			fmt.Println("time-out!")
+		}
+		// time-out!
+	}
 }
+
 ```
 
 [↑ top](#go-concurrency)
