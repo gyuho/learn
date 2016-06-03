@@ -102,8 +102,8 @@ map <ESC>3 <C-w><C-w>
 map <ESC>4 :TagbarToggle<CR>
 
 "http://nvie.com/posts/how-i-boosted-my-vim/
-" set wrap
-" set tw=79
+set wrap
+set tw=79
 set formatoptions+=t
 set tabstop=4     " a tab is four spaces
 set backspace=indent,eol,start
