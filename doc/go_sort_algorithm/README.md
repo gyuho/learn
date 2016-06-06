@@ -800,6 +800,35 @@ import (
 )
 
 func main() {
+	fmt.Println(`numbers[i] >= -1 (ascending)`)
+	{
+		// given a slice data sorted in ascending order
+		numbers := []int{-2, -1, 0, 1, 2}
+		fmt.Println("IsSorted:", sort.IsSorted(sort.IntSlice(numbers)))
+
+		idx := sort.Search(
+			len(numbers),
+			func(i int) bool {
+				fmt.Println("searching at", i)
+				return numbers[i] >= -1
+			})
+
+		if idx < len(numbers) {
+			fmt.Println(idx, numbers[idx])
+		} else {
+			fmt.Println("-1 is not found:", idx)
+		}
+	}
+	/*
+	   numbers[i] >= -1 (ascending)
+	   IsSorted: true
+	   searching at 2
+	   searching at 1
+	   searching at 0
+	   1 -1
+	*/
+
+	println()
 	fmt.Println(`names[i] == "d" (ascending)`)
 	{
 		// given a slice data sorted in ascending order
