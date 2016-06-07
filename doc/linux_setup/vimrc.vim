@@ -156,11 +156,11 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
-syntax off
-colorscheme darkblue
-" syntax enable
+" syntax off
+" colorscheme darkblue
 " set background=dark
-" colorscheme default
+syntax enable
+colorscheme default
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
