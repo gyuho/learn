@@ -76,16 +76,14 @@ export PS1="\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]: \[\e[31m\]\w\[\e[m\] \\$\
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
-alias l='ls -lh'
 alias ls="ls --color=auto -F"
-alias la='ls -lah'
+alias lss='ls -lah'
 alias lsp='lsof -P -i -n'
 alias ..='cd ..'
 
 alias vi="vim"
 
 alias grep="grep --color=auto"
-alias mkdir="mkdir -p"
 alias hh="history | grep "
 alias rm="rm -i "
 
@@ -103,6 +101,7 @@ alias gotest='go test -v ./...; go test -v -race ./...;'
 alias c11='g++ -std=c++11'
 
 alias clean='echo -e \\033c;'
+alias clean_go='rm -rf $GOPATH/pkg'
 
 alias gbra='git branch;'
 alias gmas='git checkout master;'

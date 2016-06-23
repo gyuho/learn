@@ -48,9 +48,12 @@ nmap <Leader><Leader> V
 map j gj
 map k gk
 
-map <Leader>a :bprev<Return>  " move buffer
+" move buffer
+map <Leader>a :bprev<Return>
 map <Leader>s :bnext<Return>
-map <Leader>d :bd<Return>     " close current buffer
+
+" close current buffer
+map <Leader>d :bd<Return>
 
 " vim-Go
 filetype plugin on
@@ -122,6 +125,7 @@ set smarttab      " insert tabs on the start of a line according to
 
 set incsearch     " show search matches as you type
 set hlsearch      " highlight all search matches
+
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
@@ -156,11 +160,13 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
-" syntax off
-" colorscheme darkblue
+syntax off
+" colorscheme blue
+colorscheme evening
+
+" syntax enable
+" colorscheme default
 " set background=dark
-syntax enable
-colorscheme default
 
 function! Multiple_cursors_before()
     exe 'NeoCompleteLock'
