@@ -161,8 +161,8 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
 syntax off
-" colorscheme blue
-colorscheme evening
+colorscheme default
+" colorscheme evening
 
 " syntax enable
 " colorscheme default
