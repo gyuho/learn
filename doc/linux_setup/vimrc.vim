@@ -160,9 +160,8 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 " F5 to toggle spell check
 map <F5> :setlocal spell! spelllang=en_us<CR>
 
-syntax off
+" syntax off
 colorscheme default
-" colorscheme evening
 
 " syntax enable
 " colorscheme default
