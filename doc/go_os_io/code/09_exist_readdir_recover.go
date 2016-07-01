@@ -10,21 +10,8 @@ import (
 
 // exist returns true if the file or directory exists.
 func exist(fpath string) bool {
-	st, err := os.Stat(fpath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	if st.IsDir() {
-		return true
-	}
-	if _, err := os.Stat(fpath); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	return true
+	_, err := os.Stat(name)
+	return err == nil
 }
 
 // existDir returns true if the specified path points to a directory.
@@ -41,17 +28,19 @@ func existDir(fpath string) bool {
 
 // readDir lists files in a directory.
 func readDir(fpath string) ([]string, error) {
-	dir, err := os.Open(fpath)
+	d, err := os.Open(dir)
 	if err != nil {
 		return nil, err
 	}
-	defer dir.Close()
-	names, err := dir.Readdirnames(-1)
+	defer d.Close()
+
+	ns, err := d.Readdirnames(-1)
 	if err != nil {
 		return nil, err
 	}
-	sort.Strings(names)
-	return names, nil
+	sort.Strings(ns)
+
+	return ns, nil
 }
 
 func main() {

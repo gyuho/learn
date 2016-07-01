@@ -824,21 +824,8 @@ import (
 
 // exist returns true if the file or directory exists.
 func exist(fpath string) bool {
-	st, err := os.Stat(fpath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	if st.IsDir() {
-		return true
-	}
-	if _, err := os.Stat(fpath); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	return true
+	_, err := os.Stat(name)
+	return err == nil
 }
 
 // existDir returns true if the specified path points to a directory.
@@ -855,17 +842,19 @@ func existDir(fpath string) bool {
 
 // readDir lists files in a directory.
 func readDir(fpath string) ([]string, error) {
-	dir, err := os.Open(fpath)
+	d, err := os.Open(dir)
 	if err != nil {
 		return nil, err
 	}
-	defer dir.Close()
-	names, err := dir.Readdirnames(-1)
+	defer d.Close()
+
+	ns, err := d.Readdirnames(-1)
 	if err != nil {
 		return nil, err
 	}
-	sort.Strings(names)
-	return names, nil
+	sort.Strings(ns)
+
+	return ns, nil
 }
 
 func main() {
@@ -979,42 +968,34 @@ import (
 	"os"
 )
 
-// openToRead reads a file.
-// Make sure to close the file.
+const (
+	// privateFileMode grants owner to read/write a file.
+	privateFileMode = 0600
+
+	// privateDirMode grants owner to make/remove files inside the directory.
+	privateDirMode = 0700
+)
+
 func openToRead(fpath string) (*os.File, error) {
-	f, err := os.OpenFile(fpath, os.O_RDONLY, 0444)
+	f, err := os.OpenFile(fpath, os.O_RDONLY, privateFileMode)
 	if err != nil {
-		return f, err
+		return nil, err
 	}
 	return f, nil
 }
 
-// openToOverwrite creates or opens a file for overwriting.
-// Make sure to close the file.
 func openToOverwrite(fpath string) (*os.File, error) {
-	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC, 0777)
+	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_TRUNC|os.O_CREATE, privateFileMode)
 	if err != nil {
-		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
-		f, err = os.Create(fpath)
-		if err != nil {
-			return f, err
-		}
+		return nil, err
 	}
 	return f, nil
 }
 
-// openToAppend creates a file if it does not exist.
-// Otherwise it opens a file.
-// Records that are written are to be appended.
-// Make sure to close the file.
 func openToAppend(fpath string) (*os.File, error) {
-	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_APPEND, 0777)
+	f, err := os.OpenFile(fpath, os.O_RDWR|os.O_APPEND|os.O_CREATE, privateFileMode)
 	if err != nil {
-		// OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
-		f, err = os.Create(fpath)
-		if err != nil {
-			return f, err
-		}
+		return nil, err
 	}
 	return f, nil
 }
