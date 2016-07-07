@@ -29,14 +29,11 @@ func main() {
 		go func(i int) {
 			defer wg.Done()
 
-			go func() {
-				for limiter.Wait(ctx) == nil {
-					mu.Lock()
-					num++
-					mu.Unlock()
-				}
-			}()
-			// <-donec
+			for limiter.Wait(ctx) == nil {
+				mu.Lock()
+				num++
+				mu.Unlock()
+			}
 		}(i)
 	}
 
