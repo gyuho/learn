@@ -29,7 +29,11 @@ func main() {
 		go func(i int) {
 			defer wg.Done()
 
-			for limiter.Wait(ctx) == nil {
+			for {
+				if err := limiter.Wait(ctx); err == context.Canceled {
+					break
+				}
+
 				mu.Lock()
 				num++
 				mu.Unlock()
