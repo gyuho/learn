@@ -26,19 +26,19 @@ func main() {
 	limiter := rate.NewLimiter(rate.Every(time.Second), qps)
 
 	for i := 0; i < N; i++ {
-		go func(i int) {
+		go func() {
 			defer wg.Done()
 
 			for {
 				if err := limiter.Wait(ctx); err == context.Canceled {
-					break
+					return
 				}
 
 				mu.Lock()
 				num++
 				mu.Unlock()
 			}
-		}(i)
+		}()
 	}
 
 	time.Sleep(time.Second)
