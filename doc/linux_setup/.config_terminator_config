@@ -1,0 +1,34 @@
+[global_config]
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  handle_size = 1
+  inactive_color_offset = 1.0
+  suppress_multiple_term_dialog = True
+  title_font = Ubuntu Mono 14
+  title_use_system_font = False
+[keybindings]
+  close_term = <Primary><Shift>w
+  close_window = <Primary><Shift>q
+  copy = <Primary>c
+  full_screen = <Primary><Alt>m
+  paste = <Primary>v
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#ffffff"
+    background_darkness = 0.8
+    background_image = None
+    cursor_blink = False
+    font = Ubuntu Mono 17
+    foreground_color = "#000000"
+    palette = "#000000:#aa0000:#00aa00:#aa5500:#0000aa:#aa00aa:#00aaaa:#aaaaaa:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#ffffff"
+    scrollback_infinite = True
+    use_system_font = False
