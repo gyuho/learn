@@ -10,66 +10,53 @@ func main() {
 	stream2 := make(chan string, 5000)
 
 	go func() {
-		for i := 0; i < 5; i++ {
+		for i := 0; i < 3; i++ {
 			stream1 <- fmt.Sprintf("%d", i)
 			time.Sleep(time.Second)
 		}
-		// close(stream1)
+		close(stream1)
 	}()
 	go func() {
 		for i := 0; i < 5; i++ {
 			stream2 <- fmt.Sprintf("%d", i)
 			time.Sleep(time.Microsecond)
 		}
-		// close(stream2)
+		close(stream2)
 	}()
 
-escape1:
+escape:
 	for {
 		select {
-		case s := <-stream1:
+		case s, ok := <-stream1:
+			if !ok {
+				fmt.Println("stream1 closed")
+				break escape // when the channel is closed
+				// without escape, infinite loop
+			}
 			fmt.Println("stream1:", s)
 
-		case s := <-stream2:
+		case s, ok := <-stream2:
+			if !ok {
+				fmt.Println("stream2 closed")
+				break escape // when the channel is closed
+			}
 			fmt.Println("stream2:", s)
 
-		case <-time.After(500 * time.Millisecond):
-			fmt.Println("escape1")
-			break escape1
-		}
-	}
-
-	fmt.Println()
-	fmt.Println("first done")
-
-escape2:
-	for {
-		select {
-		case s := <-stream1:
-			fmt.Println("stream1:", s)
-
-		case s := <-stream2:
-			fmt.Println("stream2:", s)
-
-		case <-time.After(5 * time.Second):
-			fmt.Println("escape2")
-			break escape2
+		case <-time.After(time.Second):
+			// drain channel until it takes longer than 1 second
+			fmt.Println("escaping")
+			break escape
 		}
 	}
 	/*
+		stream1 couldn't finish!
+
 		stream1: 0
 		stream2: 0
 		stream2: 1
 		stream2: 2
 		stream2: 3
 		stream2: 4
-		escape1
-
-		first done
-		stream1: 1
-		stream1: 2
-		stream1: 3
-		stream1: 4
-		escape2
+		stream2 closed
 	*/
 }
