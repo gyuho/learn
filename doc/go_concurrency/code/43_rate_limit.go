@@ -101,13 +101,11 @@ func (s *stresser) run(ctx context.Context) {
 
 func (s *stresser) StopAndWait() {
 	s.mu.Lock()
-	fmt.Println("StopAndWait: canceled!")
 	s.cancel()
-	s.wg.Wait()
-	fmt.Println("StopAndWait: stopped!")
+	fmt.Println("StopAndWait: canceled!")
+	wg := s.wg
 	s.mu.Unlock()
 
-	// cancel, wg := s.cancel, s.wg
-	// cancel()
-	// wg.Wait()
+	wg.Wait()
+	fmt.Println("StopAndWait: stopped!")
 }
