@@ -94,7 +94,7 @@ func (s *stresser) run(ctx context.Context) {
 	defer s.wg.Done()
 
 	for {
-		if err := s.rateLimiter.Wait(ctx); err == context.Canceled {
+		if err := s.rateLimiter.Wait(ctx); err == context.Canceled || ctx.Err() == context.Canceled {
 			return
 		}
 
