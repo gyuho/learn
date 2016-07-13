@@ -11,47 +11,49 @@ import (
 
 func main() {
 	st := &stresser{
-		qps: 50000,
-		N:   300,
+		qps: 100000,
+		N:   100,
 	}
 
 	go st.Start()
 	time.Sleep(time.Second)
-	fmt.Println("After Start:       st.success", st.success)
 	st.StopAndWait()
-	fmt.Println("After StopAndWait: st.success", st.success)
+	fmt.Println("st.success", st.success)
 
-	fmt.Println()
+	println()
 	go st.Start()
+	time.Sleep(time.Second)
+	st.StopAndWait()
+	fmt.Println("st.success", st.success)
 
-	func() {
-		st.StopAndWait()
-		defer func() {
-			go st.Start()
-		}()
-	}()
-
-	time.Sleep(2 * time.Second)
-
-	fmt.Println()
+	println()
+	go st.Start()
+	time.Sleep(time.Second)
 	st.StopAndWait()
 	fmt.Println("st.success", st.success)
 }
 
 /*
-After Start:       st.success 50001
-StopAndWait: canceled!
-Start finished with {}
-StopAndWait: stopped!
-After StopAndWait: st.success 50001
+s.cancel() 1
+s.cancel() 2
+Start finished with context canceled
+wg.Wait() 1
+wg.Wait() 2
+st.success 100001
 
-StopAndWait: canceled!
-StopAndWait: stopped!
+s.cancel() 1
+s.cancel() 2
+wg.Wait() 1
+Start finished with context canceled
+wg.Wait() 2
+st.success 200002
 
-StopAndWait: canceled!
-Start finished with {}
-StopAndWait: stopped!
-st.success 100018
+s.cancel() 1
+s.cancel() 2
+wg.Wait() 1
+Start finished with context canceled
+wg.Wait() 2
+st.success 300003
 */
 
 type stresser struct {
@@ -63,7 +65,8 @@ type stresser struct {
 	rateLimiter *rate.Limiter
 	cancel      func()
 
-	success int
+	canceled bool
+	success  int
 }
 
 func (s *stresser) Start() {
@@ -76,13 +79,15 @@ func (s *stresser) Start() {
 	s.wg = wg
 	s.rateLimiter = rate.NewLimiter(rate.Every(time.Second), s.qps)
 	s.cancel = cancel
+	s.canceled = false
 	s.mu.Unlock()
 
 	for i := 0; i < s.N; i++ {
 		go s.run(ctx)
 	}
 
-	fmt.Println("Start finished with", <-ctx.Done())
+	<-ctx.Done()
+	fmt.Println("Start finished with", ctx.Err())
 }
 
 func (s *stresser) run(ctx context.Context) {
@@ -94,6 +99,13 @@ func (s *stresser) run(ctx context.Context) {
 		}
 
 		s.mu.Lock()
+		canceled := s.canceled
+		s.mu.Unlock()
+		if canceled {
+			panic("canceled but got context...")
+		}
+
+		s.mu.Lock()
 		s.success++
 		s.mu.Unlock()
 	}
@@ -101,11 +113,14 @@ func (s *stresser) run(ctx context.Context) {
 
 func (s *stresser) StopAndWait() {
 	s.mu.Lock()
+	fmt.Println("s.cancel() 1")
 	s.cancel()
-	fmt.Println("StopAndWait: canceled!")
+	fmt.Println("s.cancel() 2")
+	s.canceled = true
 	wg := s.wg
 	s.mu.Unlock()
 
+	fmt.Println("wg.Wait() 1")
 	wg.Wait()
-	fmt.Println("StopAndWait: stopped!")
+	fmt.Println("wg.Wait() 2")
 }
