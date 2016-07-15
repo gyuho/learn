@@ -12,6 +12,7 @@ func main() {
 	var req WatchRequest
 	if err := jsonpb.UnmarshalString(input, &req); err != nil {
 		log.Fatal(err)
+		// unknown field "create_request" in main.WatchRequest
 	}
 	fmt.Printf("success with %+v\n", req.RequestUnion)
 }

@@ -11,7 +11,6 @@ It is generated from these files:
 It has these top-level messages:
 	WatchRequest
 	WatchCreateRequest
-	WatchCancelRequest
 */
 package main
 
@@ -30,35 +29,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type WatchCreateRequest_FilterType int32
-
-const (
-	// filter out put event.
-	WatchCreateRequest_NOPUT WatchCreateRequest_FilterType = 0
-	// filter out delete event.
-	WatchCreateRequest_NODELETE WatchCreateRequest_FilterType = 1
-)
-
-var WatchCreateRequest_FilterType_name = map[int32]string{
-	0: "NOPUT",
-	1: "NODELETE",
-}
-var WatchCreateRequest_FilterType_value = map[string]int32{
-	"NOPUT":    0,
-	"NODELETE": 1,
-}
-
-func (x WatchCreateRequest_FilterType) String() string {
-	return proto.EnumName(WatchCreateRequest_FilterType_name, int32(x))
-}
-func (WatchCreateRequest_FilterType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor0, []int{1, 0}
-}
-
 type WatchRequest struct {
 	// Types that are valid to be assigned to RequestUnion:
 	//	*WatchRequest_CreateRequest
-	//	*WatchRequest_CancelRequest
 	RequestUnion isWatchRequest_RequestUnion `protobuf_oneof:"request_union"`
 }
 
@@ -74,12 +47,8 @@ type isWatchRequest_RequestUnion interface {
 type WatchRequest_CreateRequest struct {
 	CreateRequest *WatchCreateRequest `protobuf:"bytes,1,opt,name=create_request,json=createRequest,oneof"`
 }
-type WatchRequest_CancelRequest struct {
-	CancelRequest *WatchCancelRequest `protobuf:"bytes,2,opt,name=cancel_request,json=cancelRequest,oneof"`
-}
 
 func (*WatchRequest_CreateRequest) isWatchRequest_RequestUnion() {}
-func (*WatchRequest_CancelRequest) isWatchRequest_RequestUnion() {}
 
 func (m *WatchRequest) GetRequestUnion() isWatchRequest_RequestUnion {
 	if m != nil {
@@ -95,18 +64,10 @@ func (m *WatchRequest) GetCreateRequest() *WatchCreateRequest {
 	return nil
 }
 
-func (m *WatchRequest) GetCancelRequest() *WatchCancelRequest {
-	if x, ok := m.GetRequestUnion().(*WatchRequest_CancelRequest); ok {
-		return x.CancelRequest
-	}
-	return nil
-}
-
 // XXX_OneofFuncs is for the internal use of the proto package.
 func (*WatchRequest) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
 	return _WatchRequest_OneofMarshaler, _WatchRequest_OneofUnmarshaler, _WatchRequest_OneofSizer, []interface{}{
 		(*WatchRequest_CreateRequest)(nil),
-		(*WatchRequest_CancelRequest)(nil),
 	}
 }
 
@@ -117,11 +78,6 @@ func _WatchRequest_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
 	case *WatchRequest_CreateRequest:
 		b.EncodeVarint(1<<3 | proto.WireBytes)
 		if err := b.EncodeMessage(x.CreateRequest); err != nil {
-			return err
-		}
-	case *WatchRequest_CancelRequest:
-		b.EncodeVarint(2<<3 | proto.WireBytes)
-		if err := b.EncodeMessage(x.CancelRequest); err != nil {
 			return err
 		}
 	case nil:
@@ -142,14 +98,6 @@ func _WatchRequest_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.B
 		err := b.DecodeMessage(msg)
 		m.RequestUnion = &WatchRequest_CreateRequest{msg}
 		return true, err
-	case 2: // request_union.cancel_request
-		if wire != proto.WireBytes {
-			return true, proto.ErrInternalBadWireType
-		}
-		msg := new(WatchCancelRequest)
-		err := b.DecodeMessage(msg)
-		m.RequestUnion = &WatchRequest_CancelRequest{msg}
-		return true, err
 	default:
 		return false, nil
 	}
@@ -164,11 +112,6 @@ func _WatchRequest_OneofSizer(msg proto.Message) (n int) {
 		n += proto.SizeVarint(1<<3 | proto.WireBytes)
 		n += proto.SizeVarint(uint64(s))
 		n += s
-	case *WatchRequest_CancelRequest:
-		s := proto.Size(x.CancelRequest)
-		n += proto.SizeVarint(2<<3 | proto.WireBytes)
-		n += proto.SizeVarint(uint64(s))
-		n += s
 	case nil:
 	default:
 		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
@@ -177,24 +120,7 @@ func _WatchRequest_OneofSizer(msg proto.Message) (n int) {
 }
 
 type WatchCreateRequest struct {
-	// key is the key to register for watching.
 	Key []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	// range_end is the end of the range [key, range_end) to watch. If range_end is not given,
-	// only the key argument is watched. If range_end is equal to '\0', all keys greater than
-	// or equal to the key argument are watched.
-	RangeEnd []byte `protobuf:"bytes,2,opt,name=range_end,json=rangeEnd,proto3" json:"range_end,omitempty"`
-	// start_revision is an optional revision to watch from (inclusive). No start_revision is "now".
-	StartRevision int64 `protobuf:"varint,3,opt,name=start_revision,json=startRevision" json:"start_revision,omitempty"`
-	// progress_notify is set so that the etcd server will periodically send a WatchResponse with
-	// no events to the new watcher if there are no recent events. It is useful when clients
-	// wish to recover a disconnected watcher starting from a recent known revision.
-	// The etcd server may decide how often it will send notifications based on current load.
-	ProgressNotify bool `protobuf:"varint,4,opt,name=progress_notify,json=progressNotify" json:"progress_notify,omitempty"`
-	// filters filter the events at server side before it sends back to the watcher.
-	Filters []WatchCreateRequest_FilterType `protobuf:"varint,5,rep,name=filters,enum=main.WatchCreateRequest_FilterType" json:"filters,omitempty"`
-	// If prev_kv is set, created watcher gets the previous KV before the event happens.
-	// If the previous KV is already compacted, nothing will be returned.
-	PrevKv bool `protobuf:"varint,6,opt,name=prev_kv,json=prevKv" json:"prev_kv,omitempty"`
 }
 
 func (m *WatchCreateRequest) Reset()                    { *m = WatchCreateRequest{} }
@@ -202,46 +128,22 @@ func (m *WatchCreateRequest) String() string            { return proto.CompactTe
 func (*WatchCreateRequest) ProtoMessage()               {}
 func (*WatchCreateRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-type WatchCancelRequest struct {
-	// watch_id is the watcher id to cancel so that no more events are transmitted.
-	WatchId int64 `protobuf:"varint,1,opt,name=watch_id,json=watchId" json:"watch_id,omitempty"`
-}
-
-func (m *WatchCancelRequest) Reset()                    { *m = WatchCancelRequest{} }
-func (m *WatchCancelRequest) String() string            { return proto.CompactTextString(m) }
-func (*WatchCancelRequest) ProtoMessage()               {}
-func (*WatchCancelRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
 func init() {
 	proto.RegisterType((*WatchRequest)(nil), "main.WatchRequest")
 	proto.RegisterType((*WatchCreateRequest)(nil), "main.WatchCreateRequest")
-	proto.RegisterType((*WatchCancelRequest)(nil), "main.WatchCancelRequest")
-	proto.RegisterEnum("main.WatchCreateRequest_FilterType", WatchCreateRequest_FilterType_name, WatchCreateRequest_FilterType_value)
 }
 
 func init() { proto.RegisterFile("rpc.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 332 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x74, 0x91, 0xcd, 0x4e, 0xb3, 0x40,
-	0x14, 0x86, 0x4b, 0xe9, 0x0f, 0x3d, 0x1f, 0xa5, 0xcd, 0x6c, 0x3e, 0x8c, 0x1b, 0x82, 0x69, 0x64,
-	0x85, 0x49, 0x5d, 0xbb, 0xf0, 0x07, 0xa3, 0xd1, 0xb4, 0x66, 0x52, 0xe3, 0x72, 0x82, 0x30, 0xad,
-	0x93, 0xd6, 0x01, 0x87, 0x29, 0xa6, 0xb7, 0xe1, 0x3d, 0x78, 0x9f, 0x86, 0x63, 0xab, 0x24, 0x8d,
-	0x3b, 0xce, 0x93, 0xe7, 0xbc, 0x87, 0xbc, 0x03, 0x3d, 0x95, 0x27, 0x61, 0xae, 0x32, 0x9d, 0x91,
-	0xd6, 0x6b, 0x2c, 0xa4, 0xff, 0x69, 0x80, 0xfd, 0x14, 0xeb, 0xe4, 0x85, 0xf2, 0xb7, 0x35, 0x2f,
-	0x34, 0x39, 0x07, 0x27, 0x51, 0x3c, 0xd6, 0x9c, 0xa9, 0x6f, 0xe2, 0x1a, 0x9e, 0x11, 0xfc, 0x1b,
-	0xbb, 0x61, 0xe5, 0x87, 0xe8, 0x5e, 0xa2, 0xb0, 0xdd, 0xb8, 0x69, 0xd0, 0x7e, 0x52, 0x07, 0x18,
-	0x11, 0xcb, 0x84, 0xaf, 0x7e, 0x22, 0x9a, 0xfb, 0x11, 0x28, 0xd4, 0x23, 0xea, 0xe0, 0x62, 0x00,
-	0xfd, 0xed, 0x2e, 0x5b, 0x4b, 0x91, 0x49, 0xff, 0xa3, 0x09, 0x64, 0xff, 0x36, 0x19, 0x82, 0xb9,
-	0xe4, 0x1b, 0xfc, 0x45, 0x9b, 0x56, 0x9f, 0xe4, 0x10, 0x7a, 0x2a, 0x96, 0x0b, 0xce, 0xb8, 0x4c,
-	0xf1, 0xae, 0x4d, 0x2d, 0x04, 0x91, 0x4c, 0xc9, 0x08, 0x9c, 0x42, 0xc7, 0x4a, 0x33, 0xc5, 0x4b,
-	0x51, 0x88, 0x4c, 0xba, 0xa6, 0x67, 0x04, 0x26, 0xed, 0x23, 0xa5, 0x5b, 0x48, 0x8e, 0x61, 0x90,
-	0xab, 0x6c, 0xa1, 0x78, 0x51, 0x30, 0x99, 0x69, 0x31, 0xdf, 0xb8, 0x2d, 0xcf, 0x08, 0x2c, 0xea,
-	0xec, 0xf0, 0x04, 0x29, 0x39, 0x83, 0xee, 0x5c, 0xac, 0x34, 0x57, 0x85, 0xdb, 0xf6, 0xcc, 0xc0,
-	0x19, 0x1f, 0xfd, 0xd5, 0x52, 0x78, 0x8d, 0xde, 0x6c, 0x93, 0x73, 0xba, 0xdb, 0x21, 0xff, 0xa1,
-	0x9b, 0x2b, 0x5e, 0xb2, 0x65, 0xe9, 0x76, 0x30, 0xbf, 0x53, 0x8d, 0x77, 0xa5, 0x3f, 0x02, 0xf8,
-	0xf5, 0x49, 0x0f, 0xda, 0x93, 0xe9, 0xc3, 0xe3, 0x6c, 0xd8, 0x20, 0x36, 0x58, 0x93, 0xe9, 0x55,
-	0x74, 0x1f, 0xcd, 0xa2, 0xa1, 0xe1, 0x9f, 0xec, 0x3a, 0xa9, 0x77, 0x47, 0x0e, 0xc0, 0x7a, 0xaf,
-	0x28, 0x13, 0x29, 0x16, 0x63, 0xd2, 0x2e, 0xce, 0xb7, 0xe9, 0x73, 0x07, 0x9f, 0xfe, 0xf4, 0x2b,
-	0x00, 0x00, 0xff, 0xff, 0x75, 0xb9, 0xa2, 0xdd, 0x07, 0x02, 0x00, 0x00,
+	// 133 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2c, 0x2a, 0x48, 0xd6,
+	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xc9, 0x4d, 0xcc, 0xcc, 0x53, 0x4a, 0xe2, 0xe2, 0x09,
+	0x4f, 0x2c, 0x49, 0xce, 0x08, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x72, 0xe4, 0xe2, 0x4b,
+	0x2e, 0x4a, 0x4d, 0x2c, 0x49, 0x8d, 0x2f, 0x82, 0x88, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x1b,
+	0x49, 0xe8, 0x81, 0x94, 0xeb, 0x81, 0xd5, 0x3a, 0x83, 0x15, 0x40, 0x75, 0x78, 0x30, 0x04, 0xf1,
+	0x26, 0x23, 0x0b, 0x38, 0xf1, 0x73, 0xf1, 0x42, 0xf5, 0xc6, 0x97, 0xe6, 0x65, 0xe6, 0xe7, 0x29,
+	0xa9, 0x71, 0x09, 0x61, 0xea, 0x13, 0x12, 0xe0, 0x62, 0xce, 0x4e, 0xad, 0x04, 0x1b, 0xcf, 0x13,
+	0x04, 0x62, 0x26, 0xb1, 0x81, 0x1d, 0x66, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x07, 0x06, 0x64,
+	0xdf, 0xa5, 0x00, 0x00, 0x00,
 }

@@ -10,8 +10,8 @@ fi
 echo "Installing golang/protobuf..."
 GOLANG_PROTO_ROOT="$GOPATH/src/github.com/golang/protobuf"
 rm -rf $GOLANG_PROTO_ROOT
-go get -v -u github.com/golang/protobuf/{proto,protoc-gen-go} 
-go get -v -u golang.org/x/tools/cmd/goimports
+go get -v github.com/golang/protobuf/{proto,protoc-gen-go} 
+go get -v golang.org/x/tools/cmd/goimports
 pushd "${GOLANG_PROTO_ROOT}"
 	git reset --hard HEAD
 	make install
@@ -21,5 +21,4 @@ printf "Generating proto\n"
 protoc --go_out=plugins=grpc:. \
 	*.proto;
 
-go get -v -u github.com/golang/protobuf/jsonpb
-
+go get -v github.com/golang/protobuf/jsonpb

@@ -14,4 +14,5 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("success with %+v\n", req.RequestUnion)
+	// success with &{CreateRequest:key:"foo" }
 }

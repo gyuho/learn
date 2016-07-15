@@ -4,41 +4,9 @@ package main;
 message WatchRequest {
   oneof request_union {
     WatchCreateRequest create_request = 1;
-    WatchCancelRequest cancel_request = 2;
   }
 }
 
 message WatchCreateRequest {
-  // key is the key to register for watching.
   bytes key = 1;
-  // range_end is the end of the range [key, range_end) to watch. If range_end is not given,
-  // only the key argument is watched. If range_end is equal to '\0', all keys greater than
-  // or equal to the key argument are watched.
-  bytes range_end = 2;
-  // start_revision is an optional revision to watch from (inclusive). No start_revision is "now".
-  int64 start_revision = 3;
-  // progress_notify is set so that the etcd server will periodically send a WatchResponse with
-  // no events to the new watcher if there are no recent events. It is useful when clients
-  // wish to recover a disconnected watcher starting from a recent known revision.
-  // The etcd server may decide how often it will send notifications based on current load.
-  bool progress_notify = 4;
-
-  enum FilterType {
-  // filter out put event.
-  NOPUT = 0;
-  // filter out delete event.
-  NODELETE = 1;
-  }
-  // filters filter the events at server side before it sends back to the watcher.
-  repeated FilterType filters = 5;
-
-  // If prev_kv is set, created watcher gets the previous KV before the event happens.
-  // If the previous KV is already compacted, nothing will be returned.
-  bool prev_kv = 6;
 }
-
-message WatchCancelRequest {
-  // watch_id is the watcher id to cancel so that no more events are transmitted.
-  int64 watch_id = 1;
-}
-
