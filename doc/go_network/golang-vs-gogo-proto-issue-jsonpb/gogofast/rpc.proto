@@ -1,0 +1,15 @@
+syntax = "proto3";
+package main;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+enum Type {
+  READ = 0;
+  WRITE = 1;
+  READWRITE = 2;
+}
+
+message WatchCreateRequest {
+  bytes key = 1;
+  Type  type = 2;
+}

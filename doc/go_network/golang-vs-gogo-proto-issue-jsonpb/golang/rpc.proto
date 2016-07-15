@@ -1,0 +1,13 @@
+syntax = "proto3";
+package main;
+
+enum Type {
+  READ = 0;
+  WRITE = 1;
+  READWRITE = 2;
+}
+
+message WatchCreateRequest {
+  bytes key = 1;
+  Type  type = 2;
+}
