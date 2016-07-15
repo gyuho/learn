@@ -1,10 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"golang.org/x/net/context"
 	"golang.org/x/time/rate"
 )
 
