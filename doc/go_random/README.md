@@ -263,7 +263,7 @@ func (wt weightTable) Len() int           { return len(wt.entries) }
 func (wt weightTable) Swap(i, j int)      { wt.entries[i], wt.entries[j] = wt.entries[j], wt.entries[i] }
 func (wt weightTable) Less(i, j int) bool { return wt.entries[i].weight < wt.entries[j].weight }
 
-func createWeightTable(entries []weightEntry) weightTable {
+func createWeightTable(entries []weightEntry) *weightTable {
 	wt := weightTable{entries: entries}
 	sort.Sort(wt)
 	var cw float32
@@ -271,10 +271,10 @@ func createWeightTable(entries []weightEntry) weightTable {
 		cw += entry.weight
 		wt.distributions = append(wt.distributions, cw)
 	}
-	return wt
+	return &wt
 }
 
-func (wt weightTable) choose() weightEntry {
+func (wt *weightTable) choose() weightEntry {
 	entryN := len(wt.entries)
 	lastWeight := wt.entries[len(wt.entries)-1].weight
 	idx := sort.Search(entryN, func(i int) bool {
