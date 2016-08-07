@@ -78,6 +78,7 @@ func (s *stresser) Start() {
 	s.mu.Lock()
 	s.wg = wg
 	s.rateLimiter = rate.NewLimiter(rate.Every(time.Second), s.qps)
+	// s.rateLimiter = rate.NewLimiter(rate.Limit(s.qps), s.qps)
 	s.cancel = cancel
 	s.canceled = false
 	s.mu.Unlock()
