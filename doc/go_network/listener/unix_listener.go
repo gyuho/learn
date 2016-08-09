@@ -6,17 +6,22 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 )
 
-const basePort = 20000
+/*
+starting listening from 127.0.0.1:20000.27885.sock
+finished writeWithDial
+#0: conn.Read: "\x00\x00\x00\x00\x00"
+#1: conn.Read: "A\x00\x00\x00\x00"
+#2: conn.Read: "AA\x00\x00\x00"
+#3: conn.Read: "AAA\x00\x00"
+#4: conn.Read: "AAAA\x00"
+*/
 
 func main() {
-	addr := fmt.Sprintf("127.0.0.1:%d.%d.sock", basePort, os.Getpid())
-	fmt.Println("starting listening", addr)
-
-	filterFunc := func(c net.Conn) bool {
-		return strings.Contains(c.LocalAddr().String(), "127.0.0.1")
-	}
+	addr := fmt.Sprintf("127.0.0.1:20000.%d.sock", os.Getpid())
+	filterFunc := func(c net.Conn) bool { return strings.Contains(c.LocalAddr().String(), "127.0.0.1") }
 	ln, err := NewUnixListenerWithFilter(addr, filterFunc)
 	if err != nil {
 		panic(err)
@@ -24,11 +29,9 @@ func main() {
 	defer ln.Close()
 
 	donec := make(chan struct{})
+	go writeWithDial("unix", addr, donec)
 
-	// write goroutine
-	go writeWithDial(addr, donec)
-
-	// listen
+	fmt.Println("starting listening from", ln.Addr())
 	for i := 0; i < 5; i++ {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -47,15 +50,7 @@ func main() {
 	<-donec
 }
 
-/*
-starting listening 127.0.0.1:20000.18391.sock
-writeWithDial done!
-#0: conn.Read: "\x00\x00\x00\x00\x00"
-#1: conn.Read: "A\x00\x00\x00\x00"
-#2: conn.Read: "AA\x00\x00\x00"
-#3: conn.Read: "AAA\x00\x00"
-#4: conn.Read: "AAAA\x00"
-*/
+type unixListener struct{ net.Listener }
 
 type unixListenerWithFilter struct {
 	ln         net.Listener
@@ -75,10 +70,10 @@ func NewUnixListenerWithFilter(addr string, filterFunc func(net.Conn) bool) (net
 
 func (ul *unixListenerWithFilter) Accept() (net.Conn, error) {
 	conn, err := ul.ln.Accept()
-	if ul.filterFunc(conn) {
-		return conn, err
+	if !ul.filterFunc(conn) {
+		conn.(*net.UnixConn).SetDeadline(time.Now())
 	}
-	return nil, nil
+	return conn, err
 }
 
 func (ul *unixListenerWithFilter) Close() error {
@@ -92,11 +87,11 @@ func (ul *unixListenerWithFilter) Addr() net.Addr {
 	return ul.ln.Addr()
 }
 
-func writeWithDial(addr string, donec chan struct{}) {
+func writeWithDial(proto, addr string, donec chan struct{}) {
 	defer close(donec)
 
 	for i := 0; i < 5; i++ {
-		conn, err := net.Dial("unix", addr)
+		conn, err := net.Dial(proto, addr)
 		if err != nil {
 			panic(err)
 		}
@@ -113,5 +108,5 @@ func writeWithDial(addr string, donec chan struct{}) {
 		}
 	}
 
-	fmt.Println("writeWithDial done!")
+	fmt.Println("finished writeWithDial")
 }
