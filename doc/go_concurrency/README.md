@@ -62,6 +62,7 @@
 - [close two channels](#close-two-channels)
 - [atomic, defer](#atomic-defer)
 - [channel capacity](#channel-capacity)
+- [select continue](#select-continue)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -6387,6 +6388,42 @@ func main() {
 	fmt.Println(<-ch)
 	fmt.Println(len(ch), cap(ch)) // 0 1
 }
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### select continue
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	donec := make(chan struct{})
+	for i := range []int{1, 2, 3} {
+		fmt.Println(i)
+		if i == 1 {
+			close(donec)
+		}
+		select {
+		case <-donec:
+			continue
+		default:
+		}
+		fmt.Println("hey")
+	}
+}
+
+/*
+0
+hey
+1
+2
+*/
 
 ```
 
