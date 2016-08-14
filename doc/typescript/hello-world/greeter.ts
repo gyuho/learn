@@ -1,12 +1,12 @@
-function greeter1(person) {
+function greeter(person) {
     return "Hello World! Hello, " + person;
 }
-var user1 = "Gyu-Ho Lee 1";
-document.body.innerHTML = greeter1(user1);
+var user = "Gyu-Ho Lee";
+document.getElementsByClassName('greeter')[0].innerHTML = greeter(user);
 
 // typed with TypeScript
 function greeterTyped(person: string) {
-    return "Hello World 2! Hello, " + person;
+    return "Hello World! Hello, " + person;
 }
 var userTyped = "Gyu-Ho Lee";
 document.getElementsByClassName('greeterTyped')[0].innerHTML = greeterTyped(userTyped);
