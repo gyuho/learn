@@ -63,6 +63,7 @@
 - [atomic, defer](#atomic-defer)
 - [channel capacity](#channel-capacity)
 - [select continue](#select-continue)
+- [select nil chan](#select-nil-chan)
 
 [↑ top](#go-concurrency)
 <br><br><br><br><hr>
@@ -6424,6 +6425,29 @@ hey
 1
 2
 */
+
+```
+
+[↑ top](#go-concurrency)
+<br><br><br><br><hr>
+
+
+#### select nil chan
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var c chan struct{}
+	select {
+	case <-c:
+		panic(1)
+	default:
+		fmt.Println(c == nil) // true
+	}
+}
 
 ```
 
