@@ -12,6 +12,7 @@ var userTyped = "Gyu-Ho Lee";
 document.getElementsByClassName('greeterTyped')[0].innerHTML = greeterTyped(userTyped);
 
 // interface with TypeScript
+// Any type that contains firstName and lastName fields satisfy this interface.
 interface Person {
     firstName: string;
     lastName: string;
