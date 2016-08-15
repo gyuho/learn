@@ -23,7 +23,7 @@
 - [tree](#tree)
 - [slice struct pointer](#slice-struct-pointer)
 - [slice struct range](#slice-struct-range)
-- [function struct pointer](#function-struct-pointer)
+- [**function struct pointer**](#function-struct-pointer)
 - [slice return copy](#slice-return-copy)
 
 [↑ top](#go-function-method-pointer-nil-map-slice)
@@ -2787,10 +2787,25 @@ func update(a *aaa) {
 	a.Val = 100
 }
 
+func updateNil(a *aaa) {
+	a = nil // only updates pointer value
+}
+
+func updateNilVal(a *aaa) {
+	*a = aaa{}
+}
+
 func main() {
 	a := &aaa{}
 	update(a)
 	fmt.Println(a) // &{100}
+
+	updateNil(a)
+	fmt.Println(a) // &{100}
+
+	a = &aaa{Val: 200}
+	updateNilVal(a)
+	fmt.Println(a) // &{0}
 }
 
 ```
