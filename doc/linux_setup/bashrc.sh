@@ -151,4 +151,12 @@ else
 	git push
 	pwd
 fi
+
+git config --global core.excludesFile $HOME/go/src/github.com/coreos/etcd/.vscode/*
+echo """
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+""" > $HOME/go/src/github.com/coreos/etcd/.vscode/.gitignore
 '
