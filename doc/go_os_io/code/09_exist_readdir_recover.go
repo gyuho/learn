@@ -27,7 +27,7 @@ func existDir(fpath string) bool {
 }
 
 // readDir lists files in a directory.
-func readDir(fpath string) ([]string, error) {
+func readDir(dir string) ([]string, error) {
 	d, err := os.Open(dir)
 	if err != nil {
 		return nil, err
