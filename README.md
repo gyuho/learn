@@ -1,9 +1,3 @@
-##### Hot links
-
-- [*linux setup*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
-
-<br>
-
 I am an endless, active learner. I embrace challenges beyond my current abilities
 to broaden my knowledge the most. I want to know a little about a lot,
 and a lot about little: my favorites are C++ and Go.
