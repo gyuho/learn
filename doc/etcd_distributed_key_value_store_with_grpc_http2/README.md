@@ -1,6 +1,7 @@
 Originally published at https://blog.gopheracademy.com/advent-2015/etcd-distributed-key-value-store-with-grpc-http2/
 
 <br>
+
 ## What is etcd?
 
 <img alt="etcd"
