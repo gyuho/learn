@@ -4,3 +4,12 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Learn"
+
+[output.html]
+mathjax-support = true
+git-repository-url = "https://github.com/gyuho/learn"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/gyuho/learn/edit/main/{path}"
+
+[output.html.playground]
+editable = true
