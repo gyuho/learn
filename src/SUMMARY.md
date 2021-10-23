@@ -1,5 +1,4 @@
 # Summary
 
-Hello world!
-
-- [Chapter 1](./chapter_1.md)
+- [Introduction](README.md)
+- [About me 👋](about-me.md)
