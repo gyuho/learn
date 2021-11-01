@@ -571,4 +571,4 @@ Unlike Bitcoin that batches several thousands of transactions per block, Avalanc
 - [Avalanche Consensus](https://docs.avax.network/learn/platform-overview/avalanche-consensus)
 - [Determinant/phd-dissertation](https://github.com/Determinant/phd-dissertation)
 
-[↑ top](#nakamotobitcoin-vs-snowavalanche-consensus-draft)
+[↑ top](#nakamotobitcoin-vs-snowavalanche-consensus)
