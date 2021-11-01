@@ -19,6 +19,4 @@
     - [etcd vs. Avalanche: storage (TODO)](./etcd-vs-avalanche-storage.md)
 - [Run Avalanche, the hard way](./run-avalanche-the-hard-way.md)
     - [Run Avalanche on local machine](./run-avalanche-on-local-machine.md)
-    - [Run Avalanche on local machine with Docker](./run-avalanche-on-local-machine-with-docker.md)
-    - [Run Avalanche on local machine with Docker and kind (Kubernetes)](./run-avalanche-on-local-machine-with-docker-and-kind-kubernetes.md)
     - [Run Avalanche on cloud with Kubernetes](./run-avalanche-on-cloud-with-kubernetes.md)

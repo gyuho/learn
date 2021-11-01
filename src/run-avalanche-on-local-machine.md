@@ -2,7 +2,7 @@
 
 *Last update: November 1, 2021*
 
-*Next: [Run Avalanche on local machine with Docker](./run-avalanche-on-local-machine-with-docker.md)*
+*Next: [Run Avalanche on cloud with Kubernetes](./run-avalanche-on-cloud-with-kubernetes.md)*
 
 - [What is Avalanche"?](#what-is-avalanche)
 - [What is "Run Avalanche"?](#what-is-run-avalanche)
@@ -13,6 +13,8 @@
         - [Generate TLS certificates](#generate-tls-certificates)
         - [Run nodes](#run-nodes)
     - [Verify nodes are connected](#verify-nodes-are-connected)
+- [Test transaction](#test-transaction)
+- [Reference](#reference)
 
 ### What is "Avalanche"?
 
@@ -185,6 +187,8 @@ rm -rf /tmp/avalanchego-db \
 ```
 
 ```bash
+kill -9 $(lsof -t -i:9650)
+kill -9 $(lsof -t -i:9651)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
 --log-level=verbo \
@@ -202,6 +206,8 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ```
 
 ```bash
+kill -9 $(lsof -t -i:9652)
+kill -9 $(lsof -t -i:9653)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
 --log-level=verbo \
@@ -220,6 +226,8 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ```
 
 ```bash
+kill -9 $(lsof -t -i:9654)
+kill -9 $(lsof -t -i:9655)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
 --log-level=verbo \
@@ -238,6 +246,8 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ```
 
 ```bash
+kill -9 $(lsof -t -i:9656)
+kill -9 $(lsof -t -i:9657)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
 --log-level=verbo \
@@ -256,6 +266,8 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ```
 
 ```bash
+kill -9 $(lsof -t -i:9658)
+kill -9 $(lsof -t -i:9659)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
 --log-level=verbo \
@@ -297,7 +309,9 @@ curl -X POST --data '{
 127.0.0.1:9658/ext/info
 ```
 
-Now that we created the local test network, check out ["fund a local test network"](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
+### Test transaction
+
+Now that we created the network, let's ["fund the local test network"](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
 
 ### Reference
 
