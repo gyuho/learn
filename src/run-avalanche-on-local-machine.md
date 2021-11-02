@@ -107,8 +107,8 @@ First, let's go over some common configuration to the `avalanchego` binary. For 
 - *`db-dir`*: Path to database directory.
 - *`staking-enabled`*: Every Avalanche node must stake `AVAX` tokens to validate. Such proof-of-stake makes it infeasibly expensive for a malicious actor to gain enough influence over the network and compromise the network (e.g., sybil attack). Set `true` to enable staking. If enabled, TLS network is required. If disabled, sybil control is not enforced. See [Staking](https://docs.avax.network/learn/platform-overview/staking) for more.
 - *`staking-port`*: Port of the consensus server.
-- *`staking-tls-cert-file`*: Path to the TLS private key for staking.
 - *`staking-tls-key-file`*: Path to the TLS certificate for staking.
+- *`staking-tls-cert-file`*: Path to the TLS private key for staking.
 - *`bootstrap-ips`*: Comma separated list of bootstrap peer IPs to connect to. Empty by default. If empty, the value defaults to sample beacons in the network. If not empty, it overwrites the sample beacon IPs. The default beacon nodes are hardcoded in [`genesis/beacons.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.3/genesis/beacons.go).
 - *`bootstrap-ids`*: Comma separated list of bootstrap peer IDs to connect to. Empty by default. If empty, the value defaults to sample beacons in the network. If not empty, it overwrites the sample beacon IDs.
 
@@ -119,64 +119,12 @@ Since each node runs on the local network, we will set *`--network-id=local`* an
 [staking/tls.go](https://github.com/ava-labs/avalanchego/blob/v1.6.3/staking/tls.go#L107-L122) auto-generates the certs if the cert and key paths do not exist.
 
 ```bash
-rm -rf /tmp/avalanchego-certs \
-&& mkdir -p /tmp/avalanchego-certs
-```
+# https://github.com/gyuho/avax-tester
+avax-tester certs create --dir-path "/tmp/avalanchego-certs"
 
-For the node 1:
-
-```bash
-openssl req -x509 -nodes -newkey rsa:4096 -sha256 -days 3650 \
--subj "/C=US/ST=New York/L=Brooklyn/O=Ava Labs/OU=AvalancheGo" \
--keyout /tmp/avalanchego-certs/s1-key.pem \
--out /tmp/avalanchego-certs/s1.pem
-```
-
-To verify:
-
-```bash
 openssl x509 \
 -in /tmp/avalanchego-certs/s1.pem \
 -text -noout
-
-echo "hello" > /tmp/plain.txt
-
-openssl x509 \
--in /tmp/avalanchego-certs/s1.pem \
--noout -pubkey > /tmp/avalanchego-certs/s1.pub
-
-openssl rsautl \
--encrypt \
--in /tmp/plain.txt \
--pubin -inkey /tmp/avalanchego-certs/s1.pub \
--out /tmp/cipher.txt
-
-cat /tmp/cipher.txt
-rm -f /tmp/plain.txt /tmp/cipher.txt
-```
-
-For other nodes:
-
-```bash
-openssl req -x509 -nodes -newkey rsa:4096 -sha256 -days 3650 \
--subj "/C=US/ST=New York/L=Brooklyn/O=Ava Labs/OU=AvalancheGo" \
--keyout /tmp/avalanchego-certs/s2-key.pem \
--out /tmp/avalanchego-certs/s2.pem
-
-openssl req -x509 -nodes -newkey rsa:4096 -sha256 -days 3650 \
--subj "/C=US/ST=New York/L=Brooklyn/O=Ava Labs/OU=AvalancheGo" \
--keyout /tmp/avalanchego-certs/s3-key.pem \
--out /tmp/avalanchego-certs/s3.pem
-
-openssl req -x509 -nodes -newkey rsa:4096 -sha256 -days 3650 \
--subj "/C=US/ST=New York/L=Brooklyn/O=Ava Labs/OU=AvalancheGo" \
--keyout /tmp/avalanchego-certs/s4-key.pem \
--out /tmp/avalanchego-certs/s4.pem
-
-openssl req -x509 -nodes -newkey rsa:4096 -sha256 -days 3650 \
--subj "/C=US/ST=New York/L=Brooklyn/O=Ava Labs/OU=AvalancheGo" \
--keyout /tmp/avalanchego-certs/s5-key.pem \
--out /tmp/avalanchego-certs/s5.pem
 ```
 
 ##### Run nodes
@@ -187,11 +135,13 @@ rm -rf /tmp/avalanchego-db \
 ```
 
 ```bash
+# to log verbose
+# --log-level=verbo
+
 kill -9 $(lsof -t -i:9650)
 kill -9 $(lsof -t -i:9651)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9650 \
@@ -201,8 +151,12 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --staking-port=9651 \
 --staking-enabled=true \
 --bootstrap-ips= \
---staking-tls-cert-file=/tmp/avalanchego-certs/s1.pem \
---staking-tls-key-file=/tmp/avalanchego-certs/s1-key.pem
+--staking-tls-key-file=$(pwd)/staking/local/staker1.key \
+--staking-tls-cert-file=$(pwd)/staking/local/staker1.crt
+
+# TODO: not working...
+# --staking-tls-key-file=/tmp/avalanchego-certs/s1-key.pem \
+# --staking-tls-cert-file=/tmp/avalanchego-certs/s1.pem
 ```
 
 ```bash
@@ -210,7 +164,6 @@ kill -9 $(lsof -t -i:9652)
 kill -9 $(lsof -t -i:9653)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9652 \
@@ -221,8 +174,12 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --staking-enabled=true \
 --bootstrap-ips=127.0.0.1:9651 \
 --bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-cert-file=/tmp/avalanchego-certs/s2.pem \
---staking-tls-key-file=/tmp/avalanchego-certs/s2-key.pem
+--staking-tls-key-file=$(pwd)/staking/local/staker2.key \
+--staking-tls-cert-file=$(pwd)/staking/local/staker2.crt
+
+# TODO: not working...
+# --staking-tls-key-file=/tmp/avalanchego-certs/s2-key.pem \
+# --staking-tls-cert-file=/tmp/avalanchego-certs/s2.pem
 ```
 
 ```bash
@@ -230,7 +187,6 @@ kill -9 $(lsof -t -i:9654)
 kill -9 $(lsof -t -i:9655)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9654 \
@@ -241,8 +197,12 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --staking-enabled=true \
 --bootstrap-ips=127.0.0.1:9651 \
 --bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-cert-file=/tmp/avalanchego-certs/s3.pem \
---staking-tls-key-file=/tmp/avalanchego-certs/s3-key.pem
+--staking-tls-key-file=$(pwd)/staking/local/staker3.key \
+--staking-tls-cert-file=$(pwd)/staking/local/staker3.crt
+
+# TODO: not working
+# --staking-tls-key-file=/tmp/avalanchego-certs/s3-key.pem \
+# --staking-tls-cert-file=/tmp/avalanchego-certs/s3.pem
 ```
 
 ```bash
@@ -250,7 +210,6 @@ kill -9 $(lsof -t -i:9656)
 kill -9 $(lsof -t -i:9657)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9656 \
@@ -261,8 +220,12 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --staking-enabled=true \
 --bootstrap-ips=127.0.0.1:9651 \
 --bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-cert-file=/tmp/avalanchego-certs/s4.pem \
---staking-tls-key-file=/tmp/avalanchego-certs/s4-key.pem
+--staking-tls-key-file=$(pwd)/staking/local/staker4.key \
+--staking-tls-cert-file=$(pwd)/staking/local/staker4.crt
+
+# TODO: not working
+# --staking-tls-key-file=/tmp/avalanchego-certs/s4-key.pem \
+# --staking-tls-cert-file=/tmp/avalanchego-certs/s4.pem
 ```
 
 ```bash
@@ -270,7 +233,6 @@ kill -9 $(lsof -t -i:9658)
 kill -9 $(lsof -t -i:9659)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9658 \
@@ -281,8 +243,12 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --staking-enabled=true \
 --bootstrap-ips=127.0.0.1:9651 \
 --bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-cert-file=/tmp/avalanchego-certs/s5.pem \
---staking-tls-key-file=/tmp/avalanchego-certs/s5-key.pem
+--staking-tls-cert-file=$(pwd)/staking/local/staker5.crt \
+--staking-tls-key-file=$(pwd)/staking/local/staker5.key
+
+# TODO: not working...
+# --staking-tls-key-file=/tmp/avalanchego-certs/s5-key.pem \
+# --staking-tls-cert-file=/tmp/avalanchego-certs/s5.pem
 ```
 
 #### Verify nodes are connected
