@@ -116,15 +116,56 @@ Since each node runs on the local network, we will set *`--network-id=local`* an
 
 ##### Generate TLS certificates
 
-[staking/tls.go](https://github.com/ava-labs/avalanchego/blob/v1.6.3/staking/tls.go#L107-L122) auto-generates the certs if the cert and key paths do not exist.
+To auto-generate the certs, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester):
 
 ```bash
-# https://github.com/gyuho/avax-tester
-avax-tester certs create --dir-path "/tmp/avalanchego-certs"
+avax-tester certs create \
+--nodes 5 \
+--dir-path ${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local
 
 openssl x509 \
--in /tmp/avalanchego-certs/s1.pem \
+-in ${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.crt \
 -text -noout
+```
+
+```
+overwriting 5 cert files
+
+----------
+[01] certificate
+--staking-tls-key-file=.../staker1.key \
+--staking-tls-cert-file=.../staker1.crt
+
+----------
+[02] certificate
+--staking-tls-key-file=.../staker2.key \
+--staking-tls-cert-file=.../staker2.crt \
+--bootstrap-ids=NodeID-HpRe...
+```
+
+`avax-tester certs` wraps the following avalanchego code [staking/tls.go](https://github.com/ava-labs/avalanchego/blob/v1.6.3/staking/tls.go#L107-L122):
+
+```go
+key, err := rsa.GenerateKey(rand.Reader, 4096)
+
+certTemplate := &x509.Certificate{
+	SerialNumber:          big.NewInt(0),
+	NotBefore:             time.Date(2000, time.January, 0, 0, 0, 0, 0, time.UTC),
+	NotAfter:              time.Now().AddDate(100, 0, 0),
+	KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageDataEncipherment,
+	BasicConstraintsValid: true,
+}
+certBytes, err := x509.CreateCertificate(rand.Reader, certTemplate, certTemplate, &key.PublicKey, key)
+
+var certBuff bytes.Buffer
+err := pem.Encode(&certBuff, &pem.Block{Type: "CERTIFICATE", Bytes: certBytes})
+
+privBytes, err := x509.MarshalPKCS8PrivateKey(key)
+
+var keyBuff bytes.Buffer
+err := pem.Encode(&keyBuff, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes})
+
+return certBuff.Bytes(), keyBuff.Bytes(), nil
 ```
 
 ##### Run nodes
@@ -135,28 +176,22 @@ rm -rf /tmp/avalanchego-db \
 ```
 
 ```bash
-# to log verbose
-# --log-level=verbo
-
 kill -9 $(lsof -t -i:9650)
 kill -9 $(lsof -t -i:9651)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
+--log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9650 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
 --db-dir=/tmp/avalanchego-db/s1 \
---staking-port=9651 \
 --staking-enabled=true \
+--staking-port=9651 \
 --bootstrap-ips= \
---staking-tls-key-file=$(pwd)/staking/local/staker1.key \
---staking-tls-cert-file=$(pwd)/staking/local/staker1.crt
-
-# TODO: not working...
-# --staking-tls-key-file=/tmp/avalanchego-certs/s1-key.pem \
-# --staking-tls-cert-file=/tmp/avalanchego-certs/s1.pem
+--staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.key \
+--staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.crt
 ```
 
 ```bash
@@ -164,22 +199,19 @@ kill -9 $(lsof -t -i:9652)
 kill -9 $(lsof -t -i:9653)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
+--log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9652 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
 --db-dir=/tmp/avalanchego-db/s2 \
---staking-port=9653 \
 --staking-enabled=true \
+--staking-port=9653 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-key-file=$(pwd)/staking/local/staker2.key \
---staking-tls-cert-file=$(pwd)/staking/local/staker2.crt
-
-# TODO: not working...
-# --staking-tls-key-file=/tmp/avalanchego-certs/s2-key.pem \
-# --staking-tls-cert-file=/tmp/avalanchego-certs/s2.pem
+--bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
+--staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker2.key \
+--staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker2.crt
 ```
 
 ```bash
@@ -187,22 +219,19 @@ kill -9 $(lsof -t -i:9654)
 kill -9 $(lsof -t -i:9655)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
+--log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9654 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
 --db-dir=/tmp/avalanchego-db/s3 \
---staking-port=9655 \
 --staking-enabled=true \
+--staking-port=9655 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-key-file=$(pwd)/staking/local/staker3.key \
---staking-tls-cert-file=$(pwd)/staking/local/staker3.crt
-
-# TODO: not working
-# --staking-tls-key-file=/tmp/avalanchego-certs/s3-key.pem \
-# --staking-tls-cert-file=/tmp/avalanchego-certs/s3.pem
+--bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
+--staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker3.key \
+--staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker3.crt
 ```
 
 ```bash
@@ -210,22 +239,19 @@ kill -9 $(lsof -t -i:9656)
 kill -9 $(lsof -t -i:9657)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
+--log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9656 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
 --db-dir=/tmp/avalanchego-db/s4 \
---staking-port=9657 \
 --staking-enabled=true \
+--staking-port=9657 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-key-file=$(pwd)/staking/local/staker4.key \
---staking-tls-cert-file=$(pwd)/staking/local/staker4.crt
-
-# TODO: not working
-# --staking-tls-key-file=/tmp/avalanchego-certs/s4-key.pem \
-# --staking-tls-cert-file=/tmp/avalanchego-certs/s4.pem
+--bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
+--staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker4.key \
+--staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker4.crt
 ```
 
 ```bash
@@ -233,22 +259,19 @@ kill -9 $(lsof -t -i:9658)
 kill -9 $(lsof -t -i:9659)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
+--log-level=verbo \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9658 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
 --db-dir=/tmp/avalanchego-db/s5 \
---staking-port=9659 \
 --staking-enabled=true \
+--staking-port=9659 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg \
---staking-tls-cert-file=$(pwd)/staking/local/staker5.crt \
---staking-tls-key-file=$(pwd)/staking/local/staker5.key
-
-# TODO: not working...
-# --staking-tls-key-file=/tmp/avalanchego-certs/s5-key.pem \
-# --staking-tls-cert-file=/tmp/avalanchego-certs/s5.pem
+--bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
+--staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker5.key \
+--staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker5.crt
 ```
 
 #### Verify nodes are connected
