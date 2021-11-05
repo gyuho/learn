@@ -1,6 +1,6 @@
 # Run Avalanche on local machine
 
-*Last update: November 1, 2021*
+*Last update: November 5, 2021*
 
 *Next: [Run Avalanche on cloud with Kubernetes](./run-avalanche-on-cloud-with-kubernetes.md)*
 
@@ -13,7 +13,8 @@
         - [Run a single node](#run-a-single-node)
         - [Run multiple nodes](#run-multiple-nodes)
     - [Verify nodes are connected](#verify-nodes-are-connected)
-- [Test transaction and wallet](#test-transaction-and-wallet)
+- [Test transaction via wallet UI](#test-transaction-via-wallet-ui)
+- [Test transaction via client API calls](#test-transaction-via-client-api-calls)
 - [Reference](#reference)
 
 ### What is "Avalanche"?
@@ -125,9 +126,7 @@ Any node can join the network (e.g., `mainnet`) with staking disabled via `--sta
 ```bash
 rm -rf /tmp/avalanchego-db \
 && mkdir -p /tmp/avalanchego-db
-```
 
-```bash
 kill -9 $(lsof -t -i:9650)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
@@ -143,7 +142,7 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 
 ##### Run multiple nodes
 
-To auto-generate the certificates and commands, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local` imports [`staking/tls.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/staking/tls.go#L107-L122) to generate certificates and node IDs.
+To auto-generate the certificates and commands, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local create` imports [`staking/tls.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/staking/tls.go#L107-L122) to generate certificates and node IDs.
 
 ```go
 key, err := rsa.GenerateKey(rand.Reader, 4096)
@@ -327,7 +326,24 @@ curl -X POST --data '{
 127.0.0.1:9650/ext/info
 ```
 
-### Test transaction and wallet
+### Test transaction via wallet UI
+
+```bash
+rm -rf /tmp/avalanchego-db \
+&& mkdir -p /tmp/avalanchego-db
+
+kill -9 $(lsof -t -i:9650)
+cd ${HOME}/go/src/github.com/ava-labs/avalanchego
+./build/avalanchego \
+--log-level=verbo \
+--network-id=local \
+--public-ip=127.0.0.1 \
+--http-port=9650 \
+--snow-sample-size=1 \
+--snow-quorum-size=1 \
+--db-dir=/tmp/avalanchego-db \
+--staking-enabled=false
+```
 
 Now that we created the network, let's [fund the local test network](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
 
@@ -372,6 +388,279 @@ PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 **Step 8.** Make sure the second wallet receives the funds from the first.
 
 ![avax-wallet-11.png](run-avalanche-on-local-machine/img/avax-wallet-11.png)
+
+### Test transaction via client API calls
+
+```bash
+rm -rf /tmp/avalanchego-db \
+&& mkdir -p /tmp/avalanchego-db
+
+kill -9 $(lsof -t -i:9650)
+cd ${HOME}/go/src/github.com/ava-labs/avalanchego
+./build/avalanchego \
+--log-level=verbo \
+--network-id=local \
+--public-ip=127.0.0.1 \
+--http-port=9650 \
+--snow-sample-size=1 \
+--snow-quorum-size=1 \
+--db-dir=/tmp/avalanchego-db \
+--staking-enabled=false
+```
+
+Now that we created the network, let's [issue API calls to the local network](https://docs.avax.network/build/avalanchego-apis/issuing-api-calls).
+
+**Step 1.** Create a user in the local keystore.
+
+```bash
+curl --location --request POST '127.0.0.1:9650/ext/keystore' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"keystore.createUser",
+    "params" :{
+        "username":"testusername123",
+        "password":"insecurestring789"
+    }
+}'
+```
+
+**Step 2.** Import the pre-funded private key to the chains and create addresses:
+
+```
+PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+```
+
+```bash
+# X-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/X' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"avm.importKey",
+    "params" :{
+        "username": "testusername123",
+        "password": "insecurestring789",
+        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
+    }
+}'
+
+# C-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "method": "avax.importKey",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789",
+        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
+    },
+    "jsonrpc": "2.0",
+    "id": 1
+}'
+
+# P-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"platform.importKey",
+    "params" :{
+        "username":"testusername123",
+        "password":"insecurestring789",
+        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
+    }
+}'
+```
+
+**Step 3.** Get the list of addresses for the pre-funded key:
+
+```bash
+# X-chain
+curl -X POST --data '{
+    "jsonrpc": "2.0",
+    "method": "avm.listAddresses",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789"
+    },
+    "id": 1
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# 
+
+# P-chain
+curl -X POST --data '{
+    "jsonrpc": "2.0",
+    "method": "platform.listAddresses",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789"
+    },
+    "id": 1
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/P
+# 
+
+# C-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "method": "avax.importKey",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789",
+        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
+    },
+    "jsonrpc": "2.0",
+    "id": 1
+}'
+# 
+```
+
+**Step 4.** Get the balance of the pre-funded wallet:
+
+```bash
+# X-chain
+curl -X POST --data '{
+  "jsonrpc":"2.0",
+  "id"     : 1,
+  "method" :"avm.getBalance",
+  "params" :{
+      "address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u",
+      "assetID": "AVAX"
+  }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+
+# P-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"platform.getBalance",
+    "params" :{
+      "address":"P-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"
+    }
+}'
+
+# C-chain
+curl --location --request POST 'localhost:9650/ext/bc/C/rpc' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "jsonrpc": "2.0",
+    "method": "eth_getBalance",
+    "params": [
+        "0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC",
+        "latest"
+    ],
+    "id": 1
+}'
+```
+
+**Step 5.** Create another address in X-chain for transfer:
+
+```bash
+# X-chain create address
+curl -X POST --data '{
+    "jsonrpc": "2.0",
+    "method": "avm.createAddress",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789"
+    },
+    "id": 1
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+
+# X-chain addresses
+curl -X POST --data '{
+    "jsonrpc": "2.0",
+    "method": "avm.listAddresses",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789"
+    },
+    "id": 1
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+```
+
+**Step 6.** Check the balance and transfer from one to another:
+
+```bash
+# X-chain, pre-funded account, transferrer
+curl -X POST --data '{
+  "jsonrpc":"2.0",
+  "id"     : 1,
+  "method" :"avm.getBalance",
+  "params" :{
+      "address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u",
+      "assetID": "AVAX"
+  }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+
+# X-chain, new account, transferee
+curl -X POST --data '{
+  "jsonrpc":"2.0",
+  "id"     : 1,
+  "method" :"avm.getBalance",
+  "params" :{
+      "address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u",
+      "assetID": "AVAX"
+  }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+
+# send money
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"wallet.send",
+    "params" :{
+        "assetID"   : "AVAX",
+        "amount"    : 10000,
+        "to"        : "X-avax1yzt57wd8me6xmy3t42lz8m5lg6yruy79m6whsf",
+        "memo"      : "hi!",
+        "from"      : ["X-avax1s65kep4smpr9cnf6uh9cuuud4ndm2z4jguj3gp"],
+        "username":"testusername123",
+        "password":"insecurestring789"
+    }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X/wallet
+```
+
+**Step 7.** Check the status of the transaction and confirm that the asset has been transferred:
+
+```bash
+# check the transaction status
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"avm.getTxStatus",
+    "params" :{
+        "txID":"2QouvFWUbjuySRxeX5xMbNCuAaKWfbk5FeEa2JmoF85RKLk2dD"
+    }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+
+# X-chain, new account, transferee
+curl -X POST --data '{
+  "jsonrpc":"2.0",
+  "id"     : 1,
+  "method" :"avm.getBalance",
+  "params" :{
+      "address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u",
+      "assetID": "AVAX"
+  }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+```
+
+All these can be automated with [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local send` imports the test private key and initiates a test transaction.
+
+```bash
+avax-tester local transfer \
+--nodes 5 \
+--db-dir-path /tmp/avax-tester-db \
+--certs-dir-path /tmp/avax-tester-certs \
+--cmd-output-path ./avax-tester.bash
+```
 
 ### Reference
 
