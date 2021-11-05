@@ -329,7 +329,7 @@ curl -X POST --data '{
 
 ### Test transaction and wallet
 
-Now that we created the network, let's ["fund the local test network"](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
+Now that we created the network, let's [fund the local test network](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
 
 ### Reference
 
