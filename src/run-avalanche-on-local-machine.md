@@ -10,8 +10,8 @@
     - [Install](#install)
     - [Set up a local test network](#set-up-a-local-test-network)
         - [Understanding basic configuration](#understanding-basic-configuration)
-        - [Generate TLS certificates](#generate-tls-certificates)
-        - [Run nodes](#run-nodes)
+        - [Run a single node](#run-a-single-node)
+        - [Run multiple nodes](#run-multiple-nodes)
     - [Verify nodes are connected](#verify-nodes-are-connected)
 - [Test transaction](#test-transaction)
 - [Reference](#reference)
@@ -99,51 +99,51 @@ First, let's go over some common configuration to the `avalanchego` binary. For 
 # ...
 ```
 
+*See [`config/keys.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/config/keys.go) for all configurations.*
+
 - *`network-id`*: Network ID this node will connect to. The default is to connect to the `mainnet`. Set it to `local` for cluster test network. For example, the network ID is used for checking the version compatibility.
 - *`public-ip`*: Public IP of this node for peer-to-peer communication. If empty, the node tries to discover the node IP with [NAT traversal](https://en.wikipedia.org/wiki/NAT_traversal). `public-ip` value is ignored if `dynamic-public-ip` is non-empty (e.g., `opendns`).
 - *`http-port`*: Port of the HTTP server. [AvalancheGo API](https://docs.avax.network/build/avalanchego-apis) calls are made to this `[node-ip]:[http-port]`. For instance, `/ext/health` endpoint responds with `200` if the node is healthy.
 - *`snow-sample-size`*: As in Snowball, the node samples \\(k\\) peers to query. Once the querying node collects \\(k\\) responses, the node calculates the color ratio to check against a threshold and decide on the agreement.
 - *`snow-quorum-size`*: Alpha \\(α\\) in Snowman protocol. The threshold, sufficiently large fraction of the sample (quorum). If more than \\(α\\) (quorum) respond positively to the querying node, the protocol sets the chit value of the querying node for the respective transaction \\(T\\) to 1 -- "strongly preferred".
-- *`db-dir`*: Path to database directory.
-- *`staking-enabled`*: Every Avalanche node must stake `AVAX` tokens to validate. Such proof-of-stake makes it infeasibly expensive for a malicious actor to gain enough influence over the network and compromise the network (e.g., sybil attack). Set `true` to enable staking. If enabled, TLS network is required. If disabled, sybil control is not enforced. See [Staking](https://docs.avax.network/learn/platform-overview/staking) for more.
+- *`db-dir`*: Directory path for database backend.
+- *`staking-enabled`*: Every Avalanche node must stake `AVAX` tokens to validate. Such proof-of-stake makes it infeasibly expensive for a malicious actor to gain enough influence over the network and compromise the network (e.g., Sybil attack). Set `true` to enable staking. If enabled, TLS network is required. If disabled, Sybil attack control is not enforced -- see [staking](https://docs.avax.network/learn/platform-overview/staking) for more.
 - *`staking-port`*: Port of the consensus server.
-- *`staking-tls-key-file`*: Path to the TLS certificate for staking.
-- *`staking-tls-cert-file`*: Path to the TLS private key for staking.
-- *`bootstrap-ips`*: Comma separated list of bootstrap peer IPs to connect to. Empty by default. If empty, the value defaults to sample beacons in the network. If not empty, it overwrites the sample beacon IPs. The default beacon nodes are hardcoded in [`genesis/beacons.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.3/genesis/beacons.go).
+- *`staking-tls-key-file`*: File path to the TLS certificate for staking.
+- *`staking-tls-cert-file`*: File path to the TLS private key for staking.
+- *`bootstrap-ips`*: Comma separated list of bootstrap peer IPs to connect to. Empty by default. If empty, the value defaults to sample beacons in the network. If not empty, it overwrites the sample beacon IPs. The default beacon nodes are hardcoded in [`genesis/beacons.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/genesis/beacons.go).
 - *`bootstrap-ids`*: Comma separated list of bootstrap peer IDs to connect to. Empty by default. If empty, the value defaults to sample beacons in the network. If not empty, it overwrites the sample beacon IDs.
 
 Since each node runs on the local network, we will set *`--network-id=local`* and use the standard IPv4 loopback address *`--public-ip=127.0.0.1`*. And we need to assign each node a unique port for *`--http-port=`* for API endpoints, because otherwise the port will conflict with other nodes on the host. If the cluster size is only 5, the sample and quorum size of 2 will be sufficient for consensus: *`--snow-sample-size=2`* and *`--snow-quorum-size=2`*. We will enable staking with *`--staking-enabled=true`* to simulate proof-of-stake mechanisms as in practice. We will set *`--bootstrap-ips`* to the first node with `[node-ip]:[staking-port]`. In practice, we set it to empty, so that the node can connect to the pre-defined beacon nodes in the network.
 
-##### Generate TLS certificates
+> *What if one disables staking via `--staking-enabled=false`?*
 
-To auto-generate the certs, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester):
+Any node can join the network (e.g., `mainnet`) with staking disabled via `--staking-enabled=false`, which requires no TLS network but does not enforce Sybil attack controls. TODO
+
+##### Run a single node
 
 ```bash
-avax-tester certs create \
---nodes 5 \
---dir-path ${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local
-
-openssl x509 \
--in ${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.crt \
--text -noout
+rm -rf /tmp/avalanchego-db \
+&& mkdir -p /tmp/avalanchego-db
 ```
 
+```bash
+kill -9 $(lsof -t -i:9650)
+cd ${HOME}/go/src/github.com/ava-labs/avalanchego
+./build/avalanchego \
+--log-level=verbo \
+--network-id=local \
+--public-ip=127.0.0.1 \
+--http-port=9650 \
+--snow-sample-size=1 \
+--snow-quorum-size=1 \
+--db-dir=/tmp/avalanchego-db \
+--staking-enabled=false
 ```
-overwriting 5 cert files
 
-----------
-[01] certificate
---staking-tls-key-file=.../staker1.key \
---staking-tls-cert-file=.../staker1.crt
+##### Run multiple nodes
 
-----------
-[02] certificate
---staking-tls-key-file=.../staker2.key \
---staking-tls-cert-file=.../staker2.crt \
---bootstrap-ids=NodeID-HpRe...
-```
-
-`avax-tester certs` wraps the following avalanchego code [staking/tls.go](https://github.com/ava-labs/avalanchego/blob/v1.6.3/staking/tls.go#L107-L122):
+To auto-generate the certificates and commands, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local` imports [`staking/tls.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/staking/tls.go#L107-L122) to generate certificates and node IDs.
 
 ```go
 key, err := rsa.GenerateKey(rand.Reader, 4096)
@@ -168,110 +168,148 @@ err := pem.Encode(&keyBuff, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes})
 return certBuff.Bytes(), keyBuff.Bytes(), nil
 ```
 
-##### Run nodes
+This command will output a set of commands to run 5-node Avalanche cluster on your local network:
 
 ```bash
-rm -rf /tmp/avalanchego-db \
-&& mkdir -p /tmp/avalanchego-db
+if [[ ! -d ${HOME}/go/src/github.com/gyuho/avax-tester ]]
+then
+  echo "cloning gyuho/avax-tester"
+  mkdir -p ${HOME}/go/src/github.com/gyuho
+  rm -rf ${HOME}/go/src/github.com/gyuho/avax-tester
+  cd ${HOME}/go/src/github.com/gyuho
+  git clone git@github.com:gyuho/avax-tester.git
+  cd ${HOME}/go/src/github.com/gyuho/avax-tester
+else
+  echo "syncing gyuho/avax-tester"
+  cd ${HOME}/go/src/github.com/gyuho/avax-tester
+  git fetch --all
+  git checkout main
+  git pull origin main
+fi
+
+cd ${HOME}/go/src/github.com/gyuho/avax-tester
+go install -v ./cmd/avax-tester
 ```
 
 ```bash
+avax-tester local create \
+--nodes 5 \
+--db-dir-path /tmp/avax-tester-db \
+--certs-dir-path /tmp/avax-tester-certs \
+--cmd-output-path ./avax-tester.bash
+```
+
+Sample outputs:
+
+```bash
+# [01]
+# commands for s1, NodeID-MRtV2tLo9LnArKa69aS3QfKS2LLxVejBS
 kill -9 $(lsof -t -i:9650)
 kill -9 $(lsof -t -i:9651)
+openssl x509 -in /tmp/avax-tester-certs/s1.crt -text -noout
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
+--log-level=info \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9650 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
---db-dir=/tmp/avalanchego-db/s1 \
+--db-dir=/tmp/avax-tester-db/s1 \
 --staking-enabled=true \
 --staking-port=9651 \
 --bootstrap-ips= \
---staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.key \
---staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker1.crt
-```
+--bootstrap-ids= \
+--staking-tls-key-file=/tmp/avax-tester-certs/s1.key \
+--staking-tls-cert-file=/tmp/avax-tester-certs/s1.crt
 
-```bash
+
+# [02]
+# commands for s2, NodeID-BGfz6oGtRWUaNSUDWbK8bYLrzyWoeUpmj
 kill -9 $(lsof -t -i:9652)
 kill -9 $(lsof -t -i:9653)
+openssl x509 -in /tmp/avax-tester-certs/s2.crt -text -noout
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
+--log-level=info \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9652 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
---db-dir=/tmp/avalanchego-db/s2 \
+--db-dir=/tmp/avax-tester-db/s2 \
 --staking-enabled=true \
 --staking-port=9653 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
---staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker2.key \
---staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker2.crt
-```
+--bootstrap-ids=NodeID-MRtV2tLo9LnArKa69aS3QfKS2LLxVejBS \
+--staking-tls-key-file=/tmp/avax-tester-certs/s2.key \
+--staking-tls-cert-file=/tmp/avax-tester-certs/s2.crt
 
-```bash
+
+# [03]
+# commands for s3, NodeID-M6pVLu6Xsnxh7VBFcwApHPN48BbtdyGrW
 kill -9 $(lsof -t -i:9654)
 kill -9 $(lsof -t -i:9655)
+openssl x509 -in /tmp/avax-tester-certs/s3.crt -text -noout
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
+--log-level=info \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9654 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
---db-dir=/tmp/avalanchego-db/s3 \
+--db-dir=/tmp/avax-tester-db/s3 \
 --staking-enabled=true \
 --staking-port=9655 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
---staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker3.key \
---staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker3.crt
-```
+--bootstrap-ids=NodeID-MRtV2tLo9LnArKa69aS3QfKS2LLxVejBS \
+--staking-tls-key-file=/tmp/avax-tester-certs/s3.key \
+--staking-tls-cert-file=/tmp/avax-tester-certs/s3.crt
 
-```bash
+
+# [04]
+# commands for s4, NodeID-ATSf3xGyWeMwGK5LkS7CWTm2KzSQ3rFTW
 kill -9 $(lsof -t -i:9656)
 kill -9 $(lsof -t -i:9657)
+openssl x509 -in /tmp/avax-tester-certs/s4.crt -text -noout
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
+--log-level=info \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9656 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
---db-dir=/tmp/avalanchego-db/s4 \
+--db-dir=/tmp/avax-tester-db/s4 \
 --staking-enabled=true \
 --staking-port=9657 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
---staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker4.key \
---staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker4.crt
-```
+--bootstrap-ids=NodeID-MRtV2tLo9LnArKa69aS3QfKS2LLxVejBS \
+--staking-tls-key-file=/tmp/avax-tester-certs/s4.key \
+--staking-tls-cert-file=/tmp/avax-tester-certs/s4.crt
 
-```bash
+
+# [05]
+# commands for s5, NodeID-6XoUxcWDn1U9fnuDMgf9FqNPvBvbRYDmj
 kill -9 $(lsof -t -i:9658)
 kill -9 $(lsof -t -i:9659)
+openssl x509 -in /tmp/avax-tester-certs/s5.crt -text -noout
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 ./build/avalanchego \
---log-level=verbo \
+--log-level=info \
 --network-id=local \
 --public-ip=127.0.0.1 \
 --http-port=9658 \
 --snow-sample-size=2 \
 --snow-quorum-size=2 \
---db-dir=/tmp/avalanchego-db/s5 \
+--db-dir=/tmp/avax-tester-db/s5 \
 --staking-enabled=true \
 --staking-port=9659 \
 --bootstrap-ips=127.0.0.1:9651 \
---bootstrap-ids=NodeID-3Vq1MV9NFexjwnvjKctvmySWspmFpL9pN \
---staking-tls-key-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker5.key \
---staking-tls-cert-file=${HOME}/go/src/github.com/ava-labs/avalanchego/staking/local/staker5.crt
+--bootstrap-ids=NodeID-MRtV2tLo9LnArKa69aS3QfKS2LLxVejBS \
+--staking-tls-key-file=/tmp/avax-tester-certs/s5.key \
+--staking-tls-cert-file=/tmp/avax-tester-certs/s5.crt
 ```
 
 #### Verify nodes are connected
@@ -279,6 +317,7 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 To verify nodes are connected via HTTP endpoints:
 
 ```bash
+# use this to test API
 curl -X POST --data '{
     "jsonrpc":"2.0",
     "id"     :1,
