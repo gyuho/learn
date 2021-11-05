@@ -446,20 +446,7 @@ curl --location --request POST '127.0.0.1:9650/ext/bc/X' \
         "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
     }
 }'
-
-# C-chain
-curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "method": "avax.importKey",
-    "params": {
-        "username":"testusername123",
-        "password":"insecurestring789",
-        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
-    },
-    "jsonrpc": "2.0",
-    "id": 1
-}'
+# {"jsonrpc":"2.0","result":{"address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"},"id":1}
 
 # P-chain
 curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
@@ -474,6 +461,22 @@ curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
         "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
     }
 }'
+# {"jsonrpc":"2.0","result":{"address":"P-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"},"id":1}
+
+# C-chain
+curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "method": "avax.importKey",
+    "params": {
+        "username":"testusername123",
+        "password":"insecurestring789",
+        "privateKey":"PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN"
+    },
+    "jsonrpc": "2.0",
+    "id": 1
+}'
+# {"jsonrpc":"2.0","result":{"address":"0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC"},"id":1}
 ```
 
 **Step 3.** Get the list of addresses for the pre-funded key:
@@ -489,7 +492,7 @@ curl -X POST --data '{
     },
     "id": 1
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
-# 
+# {"jsonrpc":"2.0","result":{"addresses":["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"]},"id":1}
 
 # P-chain
 curl -X POST --data '{
@@ -501,7 +504,7 @@ curl -X POST --data '{
     },
     "id": 1
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/P
-# 
+# {"jsonrpc":"2.0","result":{"addresses":["P-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"]},"id":1}
 
 # C-chain
 curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
@@ -516,7 +519,7 @@ curl --location --request POST '127.0.0.1:9650/ext/bc/C/avax' \
     "jsonrpc": "2.0",
     "id": 1
 }'
-# 
+# {"jsonrpc":"2.0","result":{"address":"0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC"},"id":1}
 ```
 
 **Step 4.** Get the balance of the pre-funded wallet:
@@ -532,6 +535,7 @@ curl -X POST --data '{
       "assetID": "AVAX"
   }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"balance":"300000000000000000","utxoIDs":[{"txID":"2fombhL7aGPwj3KH4bfrmJwW6PVnMobf9Y2fn9GwxiAAJyFDbe","outputIndex":1}]},"id":1}
 
 # P-chain
 curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
@@ -544,6 +548,7 @@ curl --location --request POST '127.0.0.1:9650/ext/bc/P' \
       "address":"P-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"
     }
 }'
+# {"jsonrpc":"2.0","result":{"balance":"30000000000000000","unlocked":"30000000000000000","lockedStakeable":"0","lockedNotStakeable":"0","utxoIDs":[{"txID":"11111111111111111111111111111111LpoYY","outputIndex":1},{"txID":"11111111111111111111111111111111LpoYY","outputIndex":0}]},"id":1}
 
 # C-chain
 curl --location --request POST 'localhost:9650/ext/bc/C/rpc' \
@@ -557,6 +562,7 @@ curl --location --request POST 'localhost:9650/ext/bc/C/rpc' \
     ],
     "id": 1
 }'
+# {"jsonrpc":"2.0","id":1,"result":"0x295be96e64066972000000"}
 ```
 
 **Step 5.** Create another address in X-chain for transfer:
@@ -572,6 +578,7 @@ curl -X POST --data '{
     },
     "id": 1
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"address":"X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76"},"id":1}
 
 # X-chain addresses
 curl -X POST --data '{
@@ -583,6 +590,7 @@ curl -X POST --data '{
     },
     "id": 1
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"addresses":["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u","X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76"]},"id":1}
 ```
 
 **Step 6.** Check the balance and transfer from one to another:
@@ -598,6 +606,7 @@ curl -X POST --data '{
       "assetID": "AVAX"
   }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"balance":"300000000000000000","utxoIDs":[{"txID":"2fombhL7aGPwj3KH4bfrmJwW6PVnMobf9Y2fn9GwxiAAJyFDbe","outputIndex":1}]},"id":1}
 
 # X-chain, new account, transferee
 curl -X POST --data '{
@@ -605,11 +614,14 @@ curl -X POST --data '{
   "id"     : 1,
   "method" :"avm.getBalance",
   "params" :{
-      "address":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u",
+      "address":"X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76",
       "assetID": "AVAX"
   }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"balance":"0","utxoIDs":[]},"id":1}
+```
 
+```bash
 # send money
 curl -X POST --data '{
     "jsonrpc":"2.0",
@@ -618,13 +630,14 @@ curl -X POST --data '{
     "params" :{
         "assetID"   : "AVAX",
         "amount"    : 10000,
-        "to"        : "X-avax1yzt57wd8me6xmy3t42lz8m5lg6yruy79m6whsf",
+        "to"        : "X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76",
         "memo"      : "hi!",
-        "from"      : ["X-avax1s65kep4smpr9cnf6uh9cuuud4ndm2z4jguj3gp"],
+        "from"      : ["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"],
         "username":"testusername123",
         "password":"insecurestring789"
     }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X/wallet
+# {"jsonrpc":"2.0","result":{"txID":"27jD3pyGDoz25pE1rujGqHLUYXfGAXGhVMLkSz7aNPE56f5Xhd","changeAddr":"X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"},"id":1}
 ```
 
 **Step 7.** Check the status of the transaction and confirm that the asset has been transferred:
@@ -636,9 +649,10 @@ curl -X POST --data '{
     "id"     :1,
     "method" :"avm.getTxStatus",
     "params" :{
-        "txID":"2QouvFWUbjuySRxeX5xMbNCuAaKWfbk5FeEa2JmoF85RKLk2dD"
+        "txID":"27jD3pyGDoz25pE1rujGqHLUYXfGAXGhVMLkSz7aNPE56f5Xhd"
     }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"status":"Accepted"},"id":1}
 
 # X-chain, new account, transferee
 curl -X POST --data '{
@@ -650,6 +664,19 @@ curl -X POST --data '{
       "assetID": "AVAX"
   }
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"balance":"299999999998990000","utxoIDs":[{"txID":"27jD3pyGDoz25pE1rujGqHLUYXfGAXGhVMLkSz7aNPE56f5Xhd","outputIndex":1}]},"id":1}
+
+# X-chain, new account, transferee
+curl -X POST --data '{
+  "jsonrpc":"2.0",
+  "id"     : 1,
+  "method" :"avm.getBalance",
+  "params" :{
+      "address":"X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76",
+      "assetID": "AVAX"
+  }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"balance":"10000","utxoIDs":[{"txID":"27jD3pyGDoz25pE1rujGqHLUYXfGAXGhVMLkSz7aNPE56f5Xhd","outputIndex":0}]},"id":1}
 ```
 
 All these can be automated with [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local send` imports the test private key and initiates a test transaction.
