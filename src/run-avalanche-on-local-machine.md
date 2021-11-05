@@ -331,6 +331,48 @@ curl -X POST --data '{
 
 Now that we created the network, let's [fund the local test network](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network).
 
+**Step 1.** Go to [wallet.avax.network](https://wallet.avax.network) and click "Access Wallet".
+
+![avax-wallet-01.png](run-avalanche-on-local-machine/img/avax-wallet-01.png)
+
+![avax-wallet-02.png](run-avalanche-on-local-machine/img/avax-wallet-02.png)
+
+**Step 2.** Use the [pre-funded private key](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network) to access funds on the X-Chain, C-Chain and P-Chain on the local test network:
+
+```
+PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+```
+
+![avax-wallet-03.png](run-avalanche-on-local-machine/img/avax-wallet-03.png)
+
+**Step 3.** Once you have access to the wallet, add the custom network -- set `URL` to `http://localhost:9650`:
+
+![avax-wallet-04.png](run-avalanche-on-local-machine/img/avax-wallet-04.png)
+
+**Step 4.** Select the local network to connect to the local AvalancheGo process and the funds:
+
+![avax-wallet-05.png](run-avalanche-on-local-machine/img/avax-wallet-05.png)
+
+**Step 5.** Create another wallet for the local test network.
+
+![avax-wallet-06.png](run-avalanche-on-local-machine/img/avax-wallet-06.png)
+
+![avax-wallet-07.png](run-avalanche-on-local-machine/img/avax-wallet-07.png)
+
+![avax-wallet-08.png](run-avalanche-on-local-machine/img/avax-wallet-08.png)
+
+**Step 6.** Once you have access to the other wallet, copy the X-chain wallet address.
+
+![avax-wallet-09.png](run-avalanche-on-local-machine/img/avax-wallet-09.png)
+
+**Step 7.** Try sending tokens from the first wallet to the second.
+
+![avax-wallet-10.png](run-avalanche-on-local-machine/img/avax-wallet-10.png)
+
+**Step 8.** Make sure the second wallet receives the funds from the first.
+
+![avax-wallet-11.png](run-avalanche-on-local-machine/img/avax-wallet-11.png)
+
 ### Reference
 
 - [Avalanche documentation](https://docs.avax.network/)
