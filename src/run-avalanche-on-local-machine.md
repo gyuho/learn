@@ -124,8 +124,8 @@ Any node can join the network (e.g., `mainnet`) with staking disabled via `--sta
 ##### Run a single node
 
 ```bash
-rm -rf /tmp/avalanchego-db \
-&& mkdir -p /tmp/avalanchego-db
+rm -rf /tmp/avax-tester-db \
+&& mkdir -p /tmp/avax-tester-db
 
 kill -9 $(lsof -t -i:9650)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
@@ -136,7 +136,7 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --http-port=9650 \
 --snow-sample-size=1 \
 --snow-quorum-size=1 \
---db-dir=/tmp/avalanchego-db \
+--db-dir=/tmp/avax-tester-db \
 --staking-enabled=false
 ```
 
@@ -329,8 +329,8 @@ curl -X POST --data '{
 ### Test transaction via wallet UI
 
 ```bash
-rm -rf /tmp/avalanchego-db \
-&& mkdir -p /tmp/avalanchego-db
+rm -rf /tmp/avax-tester-db \
+&& mkdir -p /tmp/avax-tester-db
 
 kill -9 $(lsof -t -i:9650)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
@@ -341,7 +341,7 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --http-port=9650 \
 --snow-sample-size=1 \
 --snow-quorum-size=1 \
---db-dir=/tmp/avalanchego-db \
+--db-dir=/tmp/avax-tester-db \
 --staking-enabled=false
 ```
 
@@ -392,8 +392,8 @@ PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 ### Test transaction via client API calls
 
 ```bash
-rm -rf /tmp/avalanchego-db \
-&& mkdir -p /tmp/avalanchego-db
+rm -rf /tmp/avax-tester-db \
+&& mkdir -p /tmp/avax-tester-db
 
 kill -9 $(lsof -t -i:9650)
 cd ${HOME}/go/src/github.com/ava-labs/avalanchego
@@ -404,7 +404,7 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 --http-port=9650 \
 --snow-sample-size=1 \
 --snow-quorum-size=1 \
---db-dir=/tmp/avalanchego-db \
+--db-dir=/tmp/avax-tester-db \
 --staking-enabled=false
 ```
 
@@ -681,12 +681,41 @@ curl -X POST --data '{
 
 All these can be automated with [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local send` imports the test private key and initiates a test transaction.
 
+For a single node:
+
 ```bash
+rm -rf /tmp/avax-tester-db \
+&& mkdir -p /tmp/avax-tester-db
+
+kill -9 $(lsof -t -i:9650)
+cd ${HOME}/go/src/github.com/ava-labs/avalanchego
+./build/avalanchego \
+--log-level=verbo \
+--network-id=local \
+--public-ip=127.0.0.1 \
+--http-port=9650 \
+--snow-sample-size=1 \
+--snow-quorum-size=1 \
+--db-dir=/tmp/avax-tester-db \
+--staking-enabled=false
+
 avax-tester local transfer \
+--api-hosts http://127.0.0.1:9650
+```
+
+For 2-node cluster:
+
+```bash
+avax-tester local create \
 --nodes 5 \
 --db-dir-path /tmp/avax-tester-db \
 --certs-dir-path /tmp/avax-tester-certs \
 --cmd-output-path ./avax-tester.bash
+```
+
+```bash
+avax-tester local transfer \
+--api-hosts http://127.0.0.1:9650,http://127.0.0.1:9652
 ```
 
 ### Reference
