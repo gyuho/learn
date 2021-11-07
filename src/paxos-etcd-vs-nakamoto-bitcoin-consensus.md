@@ -100,7 +100,7 @@ Sybill attack is a scenario when a dishonest group controls as many nodes as req
 
 Bitcoin defines a network-wide "target" number to control the mining difficulty that decides the average number of blocks that can be created per hour -- if blocks are generated too fast, the difficulty increases. The checksum of the block header must be less than or equal to the "target" number in order to be added to the blockchain. Bitcoin uses [SHA-256](https://en.wikipedia.org/wiki/SHA-2) to double-hash the block header -- `SHA256(SHA256(BLOCK_HEADER))`. If the 256-bit number from the hash function is greater than the "target" number, the miner retries the different input. This is where the "nonce" comes in. "nonce" is a 32-bit number embedded in the block header (4-byte field): "nonce" starts from 0, and the miner increments "nonce" by 1 for each hash function call.
 
-The cryptographically strong sha256 hash algorithm outputs a completely different value for different inputs -- *see the code below*. Which means, the process requires enumerating the "nonce" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity ([coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). Such incentive encourages more decentralization and nodes to stay honest: The more decentralized the networks are, the harder to assemble the CPU power more than all the honest nodes.
+The cryptographically strong sha256 hash algorithm outputs a completely different value for different inputs -- *see the code below*. Which means, the process requires enumerating the "nonce" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity (i.e., [coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). Such incentive encourages more decentralization and nodes to stay honest: The more decentralized the networks are, the harder to assemble the CPU power more than all the honest nodes.
 
 ```rust,edition2018
 use data_encoding::HEXUPPER;
@@ -239,7 +239,7 @@ func (w *WAL) saveEntry(e *raftpb.Entry) error {
 
 ##### Unit of consensus
 
-Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature in order to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one, rather than initiating a new consensus for each transaction.
+Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction.
 
 ##### Data structure
 

@@ -2,7 +2,7 @@
 
 🚧👷🚧 *Actively working on it...* 🚧👷🚧
 
-*Last update: October 27, 2021*
+*Last update: Nov 6, 2021*
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
@@ -69,13 +69,13 @@ The total UTXO sets in a blockchain represent the set that every transaction con
 
 Proof-of-Work (PoW) requires miners to consume electricity to compute the desired hash. The increasing hash difficulty leads to more energy consumption and increases the need to upgrade the mining rigs. Such substantial cost is deterrant to decentralizaton of mining pools -- only five Bitcoin mining pools control over 50% of hashrate (see [hashrate distribution](https://blockchain.info/pools)). Apart from this, PoW generally suffers from a low throughput and other scalability issues.
 
-Unlike PoW, Proof-of-Stake (PoS) participant is only required to own and lock a certain amount of the corresponding crypto-currency, referred to as "stake". The stake acts as a guarantee that the holder will behave as per the protocol rules in the block creation process. PoS is more energy efficient as there is no need to solve a compute-intensive cryptographic puzzle, thus less susceptible to the centralization of mining pools.
+Unlike PoW, Proof-of-Stake (PoS) participant is only required to own and lock a certain amount of the corresponding currency, referred to as "stake". The stake acts as a guarantee that the holder will behave as per the protocol rules in the block creation process. PoS is more energy efficient as there is no need to solve a compute-intensive cryptographic puzzle, thus less susceptible to the centralization of mining pools.
 
 Unlike PoW that only selects the node that finds the desired hash, PoS can select any stakeholder for block creation, as per the protocol rules.
 
 ### Agreement in Nakamoto
 
-The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature in order to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one, rather than initiating a new consensus for each transaction. Then the node starts the mining process to extend the chain, by enumerating the "nonces" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity ([coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). And the node broadcasts the newly mined block to all of its peers, with each peer forwarding the block to every one of its neighbors flooding the whole network (gossip).
+The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction. Then the node starts the mining process to extend the chain by enumerating the "nonces" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity (i.e., [coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). And the node broadcasts the newly mined block to all of its peers, with each peer forwarding the block to every one of its neighbors flooding the whole network (gossip).
 
 ### Agreement in Snow
 
@@ -83,7 +83,7 @@ By construction, a Bitcoin node is always active, and the network consumes twice
 
 The protocol is best illustrated with this [2-minute video](https://youtu.be/Sfb8G54AM_4) by [Emin Gün Sirer](https://twitter.com/el33th4xor).
 
-To develop the initial intuition about the protocol, let's imagine a room full of people trying to agree on what to drink for dinner: "coffee" or "wine". Some may prefer coffee at first, while others may choose wine. The goal is to build consensus on the single value (drink). Each person starts out with no preference (uncolored state), and asks a random subset of its neighbors in the room for their drink preference (e.g., ask only 10 out of 1,000 people). The rule is each person adopts the preference of the majority (defined as \\(≥ α\\), state of imbalance) -- "looks like more people are leaning toward coffee, so I prefer coffee for now." When everyone repeats the process, more and more people converge into the same preference. After enough rounds, the protocol reaches agreement on the single value that everyone prefers. The "preference" in the protocol represents the binary decision between two colors, although the protocol can be generalized to support multi-value consensus.
+To develop the initial intuition about the protocol, let's imagine a room full of people trying to agree on what to drink for dinner: "coffee" or "wine". Some prefer coffee at first, while others choose wine. The goal is to build consensus on the single value (drink). Each person starts out with no preference (uncolored state), and asks a random subset of its neighbors in the room for their drink preference (e.g., ask only 10 out of 1,000 people). The rule is each person adopts the preference of the majority (defined as \\(≥ α\\), state of imbalance) -- "looks like more people are leaning toward coffee, so I prefer coffee for now." When everyone repeats the process, more and more people converge into the same preference. After enough rounds, the protocol reaches agreement on the single value that everyone prefers. The "preference" in the protocol represents the binary decision between two colors, although the protocol can be generalized to support multi-value consensus.
 
 #### Key guarantees
 
@@ -488,7 +488,7 @@ TODO
 
 ##### Unit of consensus
 
-The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature in order to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one, rather than initiating a new consensus for each transaction.
+The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction.
 
 Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus.
 
