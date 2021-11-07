@@ -1,12 +1,12 @@
 # Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus
 
-🚧👷🚧 *Actively working on it...* 🚧👷🚧
+🚧❄️☃️❄️🚧 *Actively working on it...* 🚧❄️☃️❄️🚧
 
 *Last update: Nov 6, 2021*
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
-*Next: TODO*
+*Next: [etcd vs. Avalanche: storage](./etcd-vs-avalanche-storage.md)*
 
 - [What is consensus?](#what-is-consensus)
 - [What is Nakamoto consensus?](#what-is-nakamoto-consensus)
@@ -53,21 +53,21 @@ Applications may crash, [server hardwares fail](https://conferences.sigcomm.org/
 
 Introduced by *Satoshi Nakamoto, [Bitcoin: A Peer-to-Peer Electronic Cash System (2008)](https://bitcoin.org/bitcoin.pdf)*, the Nakamoto algorithm solves the agreement problem in the face of Byzantine faults, where malicious nodes may pass incorrect messages.
 
-Nakamoto consensus powers Bitcoin to achieve a distributed consensus on the chain without relying on any trusted third party. Bitcoin is a permissionless Blockchain, allowing anyone to create blocks through transactions among participating nodes. The chain state and transaction logs are transparent and accessible to any anonymous participant. Bitcoin being public introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism. The focus is on the byzantine fault tolerance, [Sybil attack](https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf) protection, and DoS (Denial of Service) resistance.
+Nakamoto consensus powers [Bitcoin](https://bitcoin.org) to achieve a distributed consensus on the chain without relying on any trusted third party. Bitcoin is a permissionless Blockchain, allowing anyone to create blocks through transactions among participating nodes. The chain state and transaction logs are transparent and accessible to any anonymous participant. Bitcoin being public introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism. The focus is on the byzantine fault tolerance, [Sybil attack](https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf) protection, and DoS (Denial of Service) resistance.
 
 ### What is Snow consensus?
 
-Introduced by *Team Rocket, [Scalable and Probabilistic Leaderless BFT Consensus through Metastability (2020)](https://files.avalabs.org/papers/consensus.pdf)*, the Snow algorithm similarly solves the agreement problem in the face of Byzantine nodes. Snow consensus powers Avalanche to achieve a distributed consensus on the chain without relying on any trusted third party. Unlike Nakamoto that relies on Proof-of-Work (PoW) to prevent Sybil attack and also to build agreement among participants, Snow relies on Proof-of-Stake (PoS), thus green, quiescent, and efficient.
+Introduced by *Team Rocket, [Scalable and Probabilistic Leaderless BFT Consensus through Metastability (2020)](https://files.avalabs.org/papers/consensus.pdf)*, the Snow algorithm similarly solves the agreement problem in the face of Byzantine nodes. Snow consensus powers [Avalanche](https://avax.network) to achieve a distributed consensus on the chain without relying on any trusted third party. Unlike Nakamoto that relies on Proof-of-Work (PoW) to prevent Sybil attack and also to build agreement among participants, Snow relies on Proof-of-Stake (PoS), thus green, quiescent, and efficient.
 
 ### Unspent transaction output (UTXO)
 
 Both Bitcoin and Avalanche use the [unspent transaction output (UTXO) model](https://en.wikipedia.org/wiki/Unspent_transaction_output) to record the state of individual coin transfers between wallets (much like physical coins), instead of tracking the balance of each account (e.g., Ethereum). A UTXO represents an output of a transaction that has not been spent and thus can be used as an input to a new transaction -- only the unspent output can be used for the next transaction to prevent double-spending. Each UTXO is a chain of ownership where the current owner signs the transaction to transfer the UTXO ownership to the public key of the new owner (receiver).
 
-The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency. When a transaction occurs, the transaction input (e.g., A sends B 2.5 BTC) is to be removed from the UTXO set, and its transaction output (e.g., B receives 2.5 BTC) creates new UTXOs to the UTXO set. Such UTXO model enables client-side aggregation, reducing the network computation requirements, and makes it easier to parallelize the transactions.
+The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency. When a transaction occurs, the transaction input (e.g., A sends 2.5 BTC to B) is to be destroyed from the UTXO set, and its output (e.g., B receives 2.5 BTC from A) creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reducing the computation requirements in the network, making it easier to parallelize transactions.
 
 ### Proof-of-Stake (PoS)
 
-Proof-of-Work (PoW) requires miners to consume electricity to compute the desired hash. The increasing hash difficulty leads to more energy consumption and increases the need to upgrade the mining rigs. Such substantial cost is deterrant to decentralizaton of mining pools -- only five Bitcoin mining pools control over 50% of hashrate (see [hashrate distribution](https://blockchain.info/pools)). Apart from this, PoW generally suffers from a low throughput and other scalability issues.
+Proof-of-Work (PoW) requires miners to consume electricity to compute the desired hash. The increasing hash difficulty leads to more energy consumption and demands more powerful mining rigs. Such substantial cost is deterrant to decentralizaton of mining pools -- only five Bitcoin mining pools control over 50% of hashrate (see [hashrate distribution](https://blockchain.info/pools)). Apart from this, PoW generally suffers from a low throughput and other scalability issues.
 
 Unlike PoW, Proof-of-Stake (PoS) participant is only required to own and lock a certain amount of the corresponding currency, referred to as "stake". The stake acts as a guarantee that the holder will behave as per the protocol rules in the block creation process. PoS is more energy efficient as there is no need to solve a compute-intensive cryptographic puzzle, thus less susceptible to the centralization of mining pools.
 
@@ -75,24 +75,34 @@ Unlike PoW that only selects the node that finds the desired hash, PoS can selec
 
 ### Agreement in Nakamoto
 
-The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction. Then the node starts the mining process to extend the chain by enumerating the "nonces" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity (i.e., [coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). And the node broadcasts the newly mined block to all of its peers, with each peer forwarding the block to every one of its neighbors flooding the whole network (gossip).
+The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction. Then the node starts the mining process to extend the chain by enumerating the "nonces" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing power. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity (i.e., [coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). And the node broadcasts the newly mined block to its peers, with each peer forwarding the block to every one of its neighbors eventually flooding the whole network (gossip).
 
 ### Agreement in Snow
 
-By construction, a Bitcoin node is always active, and the network consumes twice as much electricity as Denmark (see [data](https://www.cia.gov/the-world-factbook/countries/denmark/#energy)). The node builds the block template whether its mempool has any transaction or not. The miner runs through different "nonce" values until the resulting hash is below the current "target". That is, the Nakamoto protocol requires constant participation of miners even when there is no decision to be made. Unlike Nakamoto, Snow protocol is quiescent when there is no decision to be made. Similar to Nakamoto, Snow protocol trades off a determinstic safety guarantee for a probabilistic one. The key difference is the use of PoS and subsampled voting mechanism, thus more scalable.
+By construction, a Bitcoin node is always active, and the network consumes twice as much electricity as Denmark (see [data](https://www.cia.gov/the-world-factbook/countries/denmark/#energy)). The node builds the block template whether its mempool has any transaction or not. The miner runs through different "nonce" values until the resulting hash is below the current "target". That is, the Nakamoto protocol requires constant participation of miners even when there is no decision to be made. Unlike Nakamoto, Snow protocol is quiescent when there is no decision to be made. Similar to Nakamoto, Snow protocol trades off a determinstic safety guarantee for a probabilistic one. The key difference is the use of PoS and sub-sample voting mechanism, which makes Avalanche more scalable.
 
 The protocol is best illustrated with this [2-minute video](https://youtu.be/Sfb8G54AM_4) by [Emin Gün Sirer](https://twitter.com/el33th4xor).
 
-To develop the initial intuition about the protocol, let's imagine a room full of people trying to agree on what to drink for dinner: "coffee" or "wine". Some prefer coffee at first, while others choose wine. The goal is to build consensus on the single value (drink). Each person starts out with no preference (uncolored state), and asks a random subset of its neighbors in the room for their drink preference (e.g., ask only 10 out of 1,000 people). The rule is each person adopts the preference of the majority (defined as \\(≥ α\\), state of imbalance) -- "looks like more people are leaning toward coffee, so I prefer coffee for now." When everyone repeats the process, more and more people converge into the same preference. After enough rounds, the protocol reaches agreement on the single value that everyone prefers. The "preference" in the protocol represents the binary decision between two colors, although the protocol can be generalized to support multi-value consensus.
+To develop the initial intuition about the protocol, let's imagine a room full of people trying to agree on what to drink for dinner: "coffee" or "wine". Some prefer "coffee" at first, with others choosing "wine". The goal is to build consensus on the single value -- *a kind of drink*. Each person starts out with no preference (uncolored state), and asks a random subset of its neighbors in the room for their drink preference (e.g., ask only 10 out of 1,000 people). The rule is each person adopts the preference of the majority (defined as \\(≥ α\\) or quorum) -- "looks like more people are leaning toward coffee, so I prefer coffee now." When everyone repeats the process, more and more people converge onto the same preference. After enough rounds, the protocol reaches agreement on the single value that everyone prefers. The "preference" in the protocol represents the binary decision between two colors, although the protocol can be generalized to support multi-value consensus.
 
 #### Key guarantees
 
-[Impossibility of Distributed Consensus with One Faulty Process by  Fischer, Lynch and Paterson (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf) proved that even one faulty process makes it impossible for remote processes to reach agreement in "asynchronous" network: For any consensus protocol, there exists a path of non-termination (against liveness) -- agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thus making progress. In practice, one can weaken those problems to achieve both safety (agreement) and liveness (termination):
+[Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf) proved that even one faulty process makes it impossible for remote processes to reach agreement in "asynchronous" network: For any consensus protocol, there exists a path of non-termination (against liveness) -- agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thus making progress.
 
-- **Assume synchrony**: A synchronous consensus protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1982)](https://lamport.azurewebsites.net/pubs/byz.pdf). Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, thus achieving termination (liveness) guarantees.
-- **Probabilistic termination**: To work around the impossibility of deterministic termination, an asynchronous probabilistic consensus protocol opts for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus). The path of non-termination (infinite undecision) can have an exponentially small probability.
+> No completely asynchronous consensus protocol can tolerate even a single unannounced process death. We do not consider Byzantine failures, and we assume that the message system is reliable -- it delivers all messages correctly and exactly once. Nevertheless, even with these assumptions, the stopping of a single process at an inopportuine time can cause any distributed commit protocol to fail to reach agreement. Thus, this important problem has no robust solution without further assumptions about the computing environment or still greater restrictions on the kind of failures to be tolerated!
+>
+> Crucial to our proof is that processing is completely asynchronous; that is, we make no assumptions about the relative speeds of processes or about the delay time in delivering a message. We also assume that processes do not have access to synchronized clocks, so algorithms based on time-outs, for example, cannot be used. Finally, we do not postulate the ability to detect the death of a process, so it is impossible for one process to tell whether another has died (stopped entirely) or is just running very slowly.
+>
+> *Michael Fischer, Nancy Lynch and Michael Paterson, [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)*
 
-Paxos assumes asynchronous network but does not suffer such safety and livenss issues, as the proposal is only made to a known set of correct participants. However, Snow protocol operates via subsampling, susceptible to adversary that may not transmit messages and thus stuck waiting for a response. To ensure liveness, a node implements timeouts for the wait (synchronous) and probabilistic termination. The Snow protocol defines the following key guarantees:
+In practice, one can weaken such problems to achieve both safety (agreement) and liveness (termination), as follows:
+
+- **Assume synchrony**: The protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1982)](https://lamport.azurewebsites.net/pubs/byz.pdf). Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, thus achieving termination (liveness) guarantees.
+- **Probabilistic termination**: To work around the impossibility of deterministic termination, the protocol can opt for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus). Thereby the path of non-termination (infinite undecision) can have an exponentially small probability.
+
+Paxos assumes asynchronous network but does not suffer such safety and livenss issues, as the proposal is only made to a known set of correct participants. However, Snow protocol operates via subsampling, susceptible to adversary that may not transmit messages and thus stuck waiting for a response. To ensure liveness, a node implements timeouts for the wait  and probabilistic termination. Therefore, Snow protocols are synchronous to guarantee the liveness. Likewise, Nakamoto consensus is synchronous, because PoW difficulty depends on the maximum network delay -- see [Analysis of the Blockchain Protocol in Asynchronous Networks (2016)](https://eprint.iacr.org/2016/454.pdf).
+
+The Snow protocol defines the following key guarantees:
 
 - **P1. Safety (agreement).** Two correct nodes may make conflicting decisions on a transaction but with negligible probability \\(≤ ε\\).
 - **P2. Livenss (termination, upper bound).** The decision is made with a strictly positive probability within \\(t_{max}\\) rounds, where \\(O(log n) < t_{max} < ∞\\).
@@ -100,13 +110,15 @@ Paxos assumes asynchronous network but does not suffer such safety and livenss i
 
 #### Snow family protocols
 
-Snow is a family of binary BFT protocols based on a non-BFT protocol *Slush* (not safe against Byzantine faults), which incrementally buils up to *Snowflake* and *Snowball* BFT protocols in the Snow family.
+Snow is a family of binary BFT protocols based on a non-BFT protocol *Slush*, which incrementally builds up to *Snowflake* and *Snowball* BFT protocols in the Snow family.
+
+![figure-1-snow-family.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-1-snow-family.png)
 
 ##### Slush: introducing metastability
 
-Slush is the foundation of Snow family consensus and introduces metastability in decision making process. Slush is a single-decree (choosing a single value) consensus protocol and is not tolerant against Byzantine faults, but can be extended to following BFT protocols.
+Slush is the foundation of Snow family consensus and introduces metastability in decision making process. Slush is a single-decree (choosing a single value) consensus protocol and is not tolerant against Byzantine faults (non-BFT), but can be extended to following BFT protocols (Snowflake and Snowball).
 
-The goal is the nodes agree on the single value (binary color). A Slush node starts as an uncolored state. When it receives a transaction from a client (e.g., wallet), the uncolored node changes its own color as in the transaction and initiates a query to its neighbors. The node only queries a sub-sampled set of peers -- the network sample size \\(k\\) is uniformly at random, or parameterized. Upon receiving the query, an uncolored node adopts the same color as the query sender, responds back with that color, and then initiates its own query to its neighbors. The already colored node simply responds with its current color. Once the querying node collects \\(k\\) responses, the node calculates the color ratio to check against a threshold and decide on the agreement. Let's define alpha \\(α\\) to be the threshold, sufficiently large fraction of the sample (quorum), where \\(α > \lfloor k/2 \rfloor\\) and can be parameterized by the protocol. If the ratio is \\(≥ α\\) for the different color than the querying node, the node flips the color, and initiates the subsequent rounds of queries with a different set of samples (up to \\(m\\) rounds) -- every successful query that yields \\(≥ α\\) responses updates the color of the node (state of imbalance). The node decides the current color at round \\(m\\) -- selects the tip.
+The goal is the nodes agree on the single value -- binary decison on the color. A Slush node starts as an uncolored state. When it receives a transaction from a client (e.g., wallet), the uncolored node changes its own color as in the transaction and initiates a query to its neighbors. The node only queries a sub-sampled set of peers -- the network sample size \\(k\\) is uniformly at random, and can be parameterized (see [`avalanchego --snow-sample-size`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/config/config.go#L117) flag). Upon receiving the query, an uncolored node adopts the same color as the query sender, responds back with the color, and then initiates its own query to its neighbors. The already colored node simply responds with its current color. Once the querying node collects \\(k\\) responses, the node calculates the color ratio to check against the threshold and decide on the agreement. Let's define alpha \\(α\\) to be the threshold, sufficiently large fraction of the sample (quorum), where \\(α > \lfloor k/2 \rfloor\\) and can be parameterized by the protocol (see [`avalanchego --snow-quorum-size`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/config/config.go#L118) flag). If the ratio is \\(≥ α\\) for the different color than the querying node, the node flips the color, and initiates the subsequent rounds of queries with a different set of samples (up to \\(m\\) rounds) -- every successful query that yields \\(≥ α\\) responses updates the color of the node. The node decides the current color at round \\(m\\) -- selects the tip.
 
 ```python
 def respond_to_query(v, col_new):
@@ -152,7 +164,7 @@ def slush_loop(u, col_init in {R, B, ⊥}):
 
 > *Then what is "metastability"?*
 
-[Metastability](https://en.wikipedia.org/wiki/Metastability) is a condition of a system that spontaneously leaves a state of higher energy for the least energetic state after a sequence of transitions. Metastability is a precariously stable state that can be easily disturbed. For example, Bowling pins are metastable, either wobbling for a moment or tipping over completely. The snow slide (also called [avalanche](https://en.wikipedia.org/wiki/Avalanche)) shows similar metastability: the large piles of snow on the steep slope stay still in dry conditions (low energy), but the entire mountainside of snow may suddenly slide in presence of a skier or a loud noise (high energy). The minor disturbance causes the metastable system to fall to a state of lower energy.
+[Metastability](https://en.wikipedia.org/wiki/Metastability) is a condition of a system that spontaneously leaves a state of higher energy for the least energetic state after a sequence of transitions. Metastability is a precarious state that can be easily disturbed. For example, bowling pins are metastable, either wobbling for a moment or tipping over completely. The snow slide (also called [avalanche](https://en.wikipedia.org/wiki/Avalanche)) shows similar metastability: the large piles of snow on the steep slope stay still in dry conditions (low energy), but the entire mountainside of snow may suddenly slide in presence of a skier or a loud noise (high energy). The minor disturbance can cause the metastable system to fall to a state of lower energy.
 
 Similarly, for each Slush round, the protocol converts the bivalent state (e.g., 50/50 color split) into a state of full imbalance (e.g., all nodes are colored identically if \\(m\\) is high enough) -- "escape the metastable state". In other words, the sequence of random sampling perturbs the conflicting states among the nodes, causing one to gain more edge over time in order to amplify the imbalance.
 
@@ -160,7 +172,7 @@ Similarly, for each Slush round, the protocol converts the bivalent state (e.g.,
 
 Even when honest Slush nodes develop the preference for one color, an adversary node can still attempt to flip the preference, therefore halting the decision process in the network. This is where Snowflake comes in, the first BFT protocol in Snow family -- Snowflake is Byzantine fault tolerant.
 
-Snowflake supplements Slush with a counter to track the "conviction" of the local node in its current color. The conviction counter increments upon every successful query that samples \\(k\\) out of \\(N\\) nodes and results in \\(≥ α\\) responses for the same color as the node. That is, the conviction count represents how many *consecutive* samples of the network from the node have all yielded the same color. And the node accepts and decides the current color when its counter reaches \\(β\\).
+Snowflake supplements Slush with a counter to track the "conviction" of the local node in its current color. The conviction counter increments upon every successful query that samples \\(k\\) out of \\(N\\) nodes and results in \\(≥ α\\) responses for the same color as the node. That is, the conviction count \\(β\\) represents how many *consecutive* samples of the network from the node have all yielded the same color. And the node accepts and decides the current color when its counter reaches \\(β\\).
 
 The alpha \\(α\\) represents a sufficiently large portion of the participants as in Slush -- quorum. And let's define the beta \\(β\\) to be another security threshold for the conviction counter -- decision threshold. \\(α\\) and \\(β\\) are safety threshold. As the protocol increases \\(α\\) and \\(β\\), the safety increases but liveness decreases.
 
@@ -206,13 +218,13 @@ def snowflake_loop(u, col_init in {R, B, ⊥}):
         # only increment conviction counter
         # iff queries yield ≥ α
         # for the same color as node
-        alpha_threshold = False
+        quorum_reached = False
         for c in {R, B}:
             # every successful query that yields ≥α responses
             # updates the color of the node
             if count[c] >= α:
                 # found a color of sufficiently large ratio
-                alpha_threshold = True
+                quorum_reached = True
 
                 # only increment counter
                 # if it were the same color as node
@@ -224,13 +236,14 @@ def snowflake_loop(u, col_init in {R, B, ⊥}):
                     conviction++
 
                 # meets the security threshold β
+                # threshold for the conviction counter
                 if conviction >= β:
                     accept_and_decide(c)
                     decided = True
 
         # no color fraction is sufficiently large
         # thus undecided
-        if not alpha_threshold:
+        if not quorum_reached:
             conviction = 0
 ```
 
@@ -238,13 +251,15 @@ def snowflake_loop(u, col_init in {R, B, ⊥}):
 
 The protocol iteratively chooses a small sample to query the preference of neighbors, and updates the color of the querying node based on vote results. The "update color" part is the core of the consensus algorithm that needs to work in the presence of Byzantine nodes which will prevent the network from reaching consensus.
 
-For safety guarantees, let's define epsilon \\(ε\\) to be the threshold on the probability of conflicting transactions. When the protocol is properly parameterized for a given threshold of Byzantine nodes \\(f/n\\) and a desired \\(ε\\)-guarantee, the Byzantine node will lose its ability to keep the network in a bivalent state (conflicting state). The correct nodes will sway towards one color and eventually commit past the irreversible state -- the nodes will not switch to the other color, no matter what malicious actors do, thus Byzantine fault tolerant.
+For safety guarantees, let's define epsilon \\(ε\\) to be the threshold on the probability of conflicting transactions. When the protocol is properly parameterized for Byzantine node ratios and desired \\(ε\\)-guarantees, the Byzantine node will lose its ability to keep the network in a bivalent state (conflicting state). The correct nodes will sway towards one color and eventually commit past the irreversible state -- the nodes will not switch to the other color, no matter what malicious actors do, which makes it Byzantine fault tolerant.
 
-The key tradeoff is: Since conflicting transactions only come from malicious actors and its probability \\(ε\\) is sufficiently small, the protocol does not need to guarantee liveness or finality for such transactions. The protocol can parameterize a higher threshold for Byzantine node ratio \\(f/n\\) (e.g., 80% nodes are allowed to be adversary) to sacrifice liveness (termination) for safety, as it requires more rounds for convergence. And likewise, lower \\(f/n\\) threshold to sacrifice safety for liveness.
+The key tradeoff is: Since conflicting transactions only come from malicious actors and its probability \\(ε\\) is sufficiently small, the protocol does not need to guarantee liveness or finality for such transactions. In other words, the time for finality approaches \\(\infty\\) as \\(f\\) approaches \\(n/2\\).
+
+The protocol can parameterize a higher Byzantine node ratio \\(f/n\\) (e.g., 80% nodes are allowed to be adversary) to sacrifice liveness (termination) for safety, as it requires more rounds for convergence. And likewise, lower \\(f/n\\) threshold to sacrifice safety for liveness, as it requires less rounds for agreement.
 
 ##### Snowflake → Snowball: adding confidence
 
-The "conviction" count in Snowflake is an ephemeral state. The counter resets for each color flip, which may prevent decision making. This is where Snowball comes in.
+Snowflake conviction count \\(β\\) represents how many consecutive samples of the network from the node have all yielded the same color. However, "conviction" count is an ephemeral state, which resets for each color flip and thus may prevent decision making. This is where Snowball comes in.
 
 Snowball extends Snowflake with "confidence" to account for the total accrued confidence when updating its preference (color): For each query, the node increments its confidence counter for the corresponding color, and switches its color when the confidence counter of the new color exceeds the one of its current color. The confidence counter represents how many successful and consecutive queries that have yielded \\(≥ α\\) responses per each color. In other words, "confidence" tracks the historical "conviction" counts for both colors, so that the querying node can switch to the one with higher "confidence".
 
@@ -264,16 +279,17 @@ def snowball_loop(u, col_init in {R, B, ⊥}):
     prev_col = col_init
     curr_col = col_init
 
+    # "confidence" represents
+    # how many successful, consecutive queries
+    # that yields ≥α responses
+    # (α as per Slush, quorum)
+    confidence[R] = 0
+    confidence[B] = 0
+
     # "conviction" represents
     # how many consecutive samples yield the same color
     # "consecutive successes"
     conviction = 0
-
-    # "confidence" represents α as per Slush
-    # represents how many successful, consecutive queries
-    # that yields ≥α responses
-    confidence[R] = 0
-    confidence[B] = 0
 
     # repeated sampling and queries
     # until the color is decided
@@ -296,13 +312,13 @@ def snowball_loop(u, col_init in {R, B, ⊥}):
         # only increment conviction counter
         # iff queries yield ≥ α
         # for the same color as node
-        alpha_threshold = False
+        quorum_reached = False
         for c in {R, B}:
             # every successful query that yields ≥α responses
             # updates the color of the node
             if count[c] >= α:
                 # found a color of sufficiently large ratio
-                alpha_threshold = True
+                quorum_reached = True
                 # successful query that yields ≥α
                 confidence[c]++
 
@@ -321,21 +337,28 @@ def snowball_loop(u, col_init in {R, B, ⊥}):
                     conviction++
 
                 # meets the security threshold β
+                # threshold for the conviction counter
                 if conviction >= β:
                     accept_and_decide(c)
                     decided = True
 
         # no color fraction is sufficiently large
         # thus undecided
-        if not alpha_threshold:
+        if not quorum_reached:
             conviction = 0
 ```
 
-See [Snow BFT demo by Ted Yin](https://tedyin.com/archive/snow-bft-demo/#/snow).
+See [Snow BFT demo by Ted Yin, Ava Labs co-founder](https://tedyin.com/archive/snow-bft-demo/#/snow).
 
 ##### Snowball → Avalanche: DAG X-chain
 
-Using Snowball consensus, Avalanche implements a payment system that support Bitcoin-like transactions. Unlike Bitcoin, Avalanche node only maintains \\(k\\) connections. Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. The safety (agreement) and liveness (termination) are guaranteed for virtuous transactions (from honest nodes), but the liveness is not guaranteed for rogue transactions (from Byzantine clients) which create conflicts among participants. The key observation is the standard replication from traditional consensus protocols may not be necessary for a payment system, and the focus is on the prevention of double-spending and conflict resolution. Which makes room for weakened liveness: It's ok when malicious spenders get stuck in the transaction forever. Snowball can eventually make progress, taking advantage of binary decomposition and DAG transitive properties against multi-color attacks, whereas Avalanche may not make progress in the presence of multi-conflict transactions. The [Avalanche paper](https://files.avalabs.org/papers/consensus.pdf) demonstrates this is a sensible tradeoff, sufficient for building complex payment systems.
+> *Then how does Snowball of sub-sample voting achieve agreement to build an immutable ordered sequence of transactions in a fully permissionless settings?*
+
+Snowball protocol can simply be described in a page of pseudo-code. However, the real-world payment system requires more features and optimizations. This is where Avalanche comes in, to address all major pieces moving from theory to practice.
+
+TODO
+
+The safety (agreement) and liveness (termination) are guaranteed for virtuous transactions (from honest nodes), but the liveness is not guaranteed for rogue transactions (from Byzantine clients) which create conflicts among participants. The key observation is the standard replication from traditional consensus protocols may not be necessary for a payment system, and the focus is on the prevention of double-spending and conflict resolution. Which makes room for weakened liveness: It's ok when malicious spenders get stuck in the transaction forever. Snowball can eventually make progress, taking advantage of binary decomposition and DAG transitive properties against multi-color attacks, whereas Avalanche may not make progress in the presence of multi-conflict transactions. The [Avalanche paper](https://files.avalabs.org/papers/consensus.pdf) demonstrates this is a sensible tradeoff, sufficient for building complex payment systems.
 
 Avalanche employs multiple single-decree [Snowball](#snowflake--snowball-adding-confidence) instances to build a dynamic, append-only directed acyclic graph ([DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph)) of all known transactions -- each Snowball instance is a vertex in a graph. Avalanche DAG defines one single sink, "genesis" vertex, with an out-degree of zero. DAG provides more efficiency, because a single vote on a DAG vertex implicitly endorses all transactions that lead to the genesis vertex. And it also provides better security, because similar to Bitcoin blockchain, the DAG interconects transactions, thus difficult to revert past commit.
 
@@ -343,15 +366,15 @@ Unlike other cryptocurrencies such as [IOTA Tangle (2018)](https://assets.ctfass
 
 Newly initiated transaction(s) connect to one or more parent transaction(s), forming a vertex and edges on the DAG (see ["select parents"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L638-L643) and ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L655-L660)). The child transaction is not required to have any application-specific or funding dependency on the parent. Instead, it defines "ancestry" to be all transactions reachable via parent edges (ancestor set), and "progeny" to be all child transactions and their offspring. When a transaction \\(T\\) is queried, all transactions reachable from \\(T\\) are implicitly part of the query: If a transaction \\(T\\) is final from a node's perspective, the node can assume the entire ancestry of the transaction \\(T\\) are also final. Likewise, if a transaction \\(T\\) is rejected due to double-spend, its progeny can also be rejected.
 
-![figure-1-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-1-avalanche-transaction-ancestry-progeny.png)
+![figure-2-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-2-avalanche-transaction-ancestry-progeny.png)
 
 In Avalanche, transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node can prefer only one transaction in the conflict set.
 
 Each transaction \\(T\\) belongs to its own conflict set \\(P_{T}\\), and one vertex may have multiple transactions (see ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L655-L660)). Two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drops the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L550-L570)).
 
-> So far, we explain: When a client creates an Avalanche transaction, it names one or more parents, where each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions and an instance of Snowball consensus -- unit of consensus.
+> *So far, we explain: When a client creates an Avalanche transaction, it names one or more parents, where each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions and an instance of Snowball consensus -- unit of consensus.*
 
-> When the unit of consensus is a set of transactions in a vertex, how does protocol detect the conflict? How does the protocol represent such as a binary option in Snowball? What if there is no conflict? How exactly does Avalanche use "DAG" to resolve transaction conflicts?
+> *When the unit of consensus is a set of transactions in a vertex, how does protocol detect the conflict? How does the protocol represent such as a binary option in Snowball? What if there is no conflict? How exactly does Avalanche use "DAG" to resolve transaction conflicts?*
 
 Unlike Bitcoin that waits for next block creation to exclude double-spending transactions, Avalanche instantiates a Snowball instance for each conflict set, taking advantage of DAG. Similar to Snowball, Avalanche iteratively chooses a small sample to query the preference and updates the color of the querying node based on vote results. The receiving node responds positively to the query, if and only if the transaction \\(T\\) and its ancestry are currently the preferred option in the respective conflict sets. Once the querying node collects positive responses beyond its threshold \\(α\\) (quorum), the transaction collects a "chit". Then the node builds "confidence" with the total number of chits in the progeny of the transaction.
 
@@ -361,7 +384,7 @@ For virtuous (honest) transactions, the transaction is accepted, when it is the 
 
 Below illustrates the Avalanche protocol main loop which is executed by each node. In each iteration, the node selects a transaction that has not been queried. As in Snowball, the node samples \\(k\\) peers to query. If more than \\(α\\) (quorum) respond positively to the querying node, the protocol sets the chit value of the querying node for the respective transaction \\(T\\) to 1 -- "strongly preferred". The receiving node responds positively to the query, if and only if the transaction \\(T\\) and its ancestry are currently the preferred option in the respective conflict sets. Then the protocol builds "confidence" with the total number of chits in the progeny of the transaction. Using this "confidence" state, the querying node updates the preferred transaction of each conflict set of ancestry transactions. And this transaction \\(T\\) is added to the set \\(Q\\) so it will never be queried again by the node. The protocol may batch multiple transactions for querying but still maintains the confidence values for each individual transaction. The protocol accepts a transaction if there is no other transaction in the conflict set and its confidence value is \\(>β\\). Similary, vertex is marked as accepted if all transactions in the vertex and its parent are accepted (transitively accept).
 
-![figure-2-avalanche-dag-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-2-avalanche-dag-conflict.png)
+![figure-3-avalanche-dag-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-3-avalanche-dag-conflict.png)
 
 ```python
 def init():
@@ -488,9 +511,9 @@ TODO
 
 ##### Unit of consensus
 
-The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction.
+The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
 
-Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus.
+Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus.
 
 TODO
 
@@ -567,7 +590,7 @@ Unlike Bitcoin that batches several thousands of transactions per block, Avalanc
 ### Reference
 
 - [bitcoin.org](https://bitcoin.org/en/how-it-works)
-- [Avalanche](https://www.avax.network/)
+- [Avalanche](https://avax.network)
 - [Avalanche Consensus](https://docs.avax.network/learn/platform-overview/avalanche-consensus)
 - [Determinant/phd-dissertation](https://github.com/Determinant/phd-dissertation)
 

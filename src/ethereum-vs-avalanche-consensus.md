@@ -1,4 +1,4 @@
-# Ethereum vs. Avalanche: consensus (TODO)
+# Ethereum vs. Avalanche: consensus
 
 🚧👷🚧 *Still working on it...* 🚧👷🚧
 

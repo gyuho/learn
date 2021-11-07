@@ -239,7 +239,7 @@ func (w *WAL) saveEntry(e *raftpb.Entry) error {
 
 ##### Unit of consensus
 
-Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those transactions into one unit for consensus, rather than initiating a new consensus for each transaction.
+Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
 
 ##### Data structure
 
