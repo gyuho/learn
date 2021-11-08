@@ -630,9 +630,9 @@ curl -X POST --data '{
     "params" :{
         "assetID"   : "AVAX",
         "amount"    : 10000,
+        "from"      : ["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"],
         "to"        : "X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76",
         "memo"      : "hi!",
-        "from"      : ["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"],
         "username":"testusername123",
         "password":"insecurestring789"
     }

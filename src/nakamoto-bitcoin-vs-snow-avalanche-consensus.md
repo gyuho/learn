@@ -21,6 +21,7 @@
     - [Slush → Snowflake: BFT](#slush--snowflake-bft)
     - [Snowflake → Snowball: adding confidence](#snowflake--snowball-adding-confidence)
     - [Snowball → Avalanche: DAG X-chain](#snowball--avalanche-dag-x-chain)
+      - [How Avalanche DAG works?](#how-avalanche-dag-works)
     - [Avalanche → Snowman: linear P/C-chain](#avalanche--snowman-linear-pc-chain)
     - [Frosty](#frosty)
   - [Avalanche platform](#avalanche-platform)
@@ -354,23 +355,94 @@ See [Snow BFT demo by Ted Yin, Ava Labs co-founder](https://tedyin.com/archive/s
 
 > *Then how does Snowball of sub-sample voting achieve agreement to build an immutable ordered sequence of transactions in a fully permissionless settings?*
 
-Snowball protocol can simply be described in a page of pseudo-code. However, the real-world payment system requires more features and optimizations. This is where Avalanche comes in, to address all major pieces moving from theory to practice.
+Raft is to Paxos, as Avalanche is to Snowball: Snowball protocol can simply be described in a page of pseudo-code. However, the real-world payment system requires more features and optimizations. This is where Avalanche comes in, to address all major pieces moving from theory to practice.
 
-TODO
+The key observation is the standard replication from traditional consensus protocols may not be necessary for a payment system, and the focus is on the prevention of double-spending and conflict resolution. The safety (agreement) and liveness (termination) are guaranteed for virtuous transactions (from honest nodes), but the liveness is not guaranteed for rogue transactions (from Byzantine clients) which create conflicts among participants. Which makes room for weakened liveness: It's ok when malicious spenders get stuck in the transaction forever. That is, the time for finality approaches \\(\infty\\) as \\(f\\) approaches \\(n/2\\). But, malicious actors have no safety impact on virtuous transactions.
 
-The safety (agreement) and liveness (termination) are guaranteed for virtuous transactions (from honest nodes), but the liveness is not guaranteed for rogue transactions (from Byzantine clients) which create conflicts among participants. The key observation is the standard replication from traditional consensus protocols may not be necessary for a payment system, and the focus is on the prevention of double-spending and conflict resolution. Which makes room for weakened liveness: It's ok when malicious spenders get stuck in the transaction forever. Snowball can eventually make progress, taking advantage of binary decomposition and DAG transitive properties against multi-color attacks, whereas Avalanche may not make progress in the presence of multi-conflict transactions. The [Avalanche paper](https://files.avalabs.org/papers/consensus.pdf) demonstrates this is a sensible tradeoff, sufficient for building complex payment systems.
+Snowball can eventually make progress using binary decomposition, whereas Avalanche may not make progress in the presence of multi-conflict transactions. The [Avalanche paper](https://files.avalabs.org/papers/consensus.pdf) demonstrates this is a sensible tradeoff, sufficient for building complex payment systems.
 
-Avalanche employs multiple single-decree [Snowball](#snowflake--snowball-adding-confidence) instances to build a dynamic, append-only directed acyclic graph ([DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph)) of all known transactions -- each Snowball instance is a vertex in a graph. Avalanche DAG defines one single sink, "genesis" vertex, with an out-degree of zero. DAG provides more efficiency, because a single vote on a DAG vertex implicitly endorses all transactions that lead to the genesis vertex. And it also provides better security, because similar to Bitcoin blockchain, the DAG interconects transactions, thus difficult to revert past commit.
+Chain is to Bitcoin, as [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) is to Avalanche: Avalanche consists of multiple single-decree [Snowball](#snowflake--snowball-adding-confidence) instances to build a dynamic, append-only directed acyclic graph (DAG) of all known transactions -- each Snowball instance is a vertex in a graph. Avalanche DAG defines one single sink, "genesis" vertex, with an out-degree of zero. DAG provides more efficiency, because a single vote on a DAG vertex implicitly endorses all transactions that lead to the genesis vertex. And it also provides better security, because similar to Bitcoin blockchain, the DAG interconects transactions, thus difficult to revert past commit.
 
-Unlike other cryptocurrencies such as [IOTA Tangle (2018)](https://assets.ctfassets.net/r1dr6vzfxhev/2t4uxvsIqk0EUau6g2sw0g/45eae33637ca92f85dd9f4a3a218e1ec/iota1_4_3.pdf) that use graph vertices directly as votes, Avalanche only uses DAG to batch queries in the underlying Snowball instances: The protocol may batch multiple transactions for querying but still maintains the confidence values for each individual transaction. The challenge in maintaining the DAG is to choose among conflicting transactions (e.g., double-spends the same UTXO), which forms a conflict set on the DAG, only one of which can be accepted. Compared to Snowball that repeats sampled queries and counters to track the confidence built in conflicting transactions (colors), Avalanche instantiates a Snowball instance for each conflict set, taking advantage of the DAG structure.
+Avalanche may batch multiple transactions for querying the underlying Snowball instances, but still maintains the confidence values for each individual transaction. The challenge in maintaining the DAG is to choose among conflicting transactions (e.g., double-spending the same UTXO), which forms a conflict set on the DAG, only one of which can be accepted. Compared to Snowball that repeats sampled queries and counters to track the confidence built in conflicting transactions (colors), Avalanche instantiates a Snowball instance for each conflict set, to take advantage of the DAG structure.
 
-Newly initiated transaction(s) connect to one or more parent transaction(s), forming a vertex and edges on the DAG (see ["select parents"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L638-L643) and ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L655-L660)). The child transaction is not required to have any application-specific or funding dependency on the parent. Instead, it defines "ancestry" to be all transactions reachable via parent edges (ancestor set), and "progeny" to be all child transactions and their offspring. When a transaction \\(T\\) is queried, all transactions reachable from \\(T\\) are implicitly part of the query: If a transaction \\(T\\) is final from a node's perspective, the node can assume the entire ancestry of the transaction \\(T\\) are also final. Likewise, if a transaction \\(T\\) is rejected due to double-spend, its progeny can also be rejected.
+###### How Avalanche DAG works?
 
-![figure-2-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-2-avalanche-transaction-ancestry-progeny.png)
+> *Again how does Avalanche of sub-sample voting and DAG achieve agreement to build an immutable ordered sequence of transactions in a fully permissionless settings?*
+
+"Sub-sample voting" and "DAG" are already confusing terms to begin with, let alone connecting the Snowball algorithm with agreement problems. In order to understand the whole picture, I will explain Avalanche consensus as implemented in [AvalancheGo](https://github.com/ava-labs/avalanchego) code base.
+
+The client request begins when a wallet sends a transaction to transfer an asset from one address to the other, as follows:
+
+```bash
+# API call to avalanchego node
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"wallet.send",
+    "params" :{
+        "assetID"   : "AVAX",
+        "amount"    : 10000,
+        "from"      : ["X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u00z96u"],
+        "to"        : "X-local1xuaxdx8w8qkz9zn6dznzdrn97ulj2fega77q76",
+        "memo"      : "hi!",
+        "username":"testusername123",
+        "password":"insecurestring789"
+    }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X/wallet
+
+# check the transaction status
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"avm.getTxStatus",
+    "params" :{
+        "txID":"27jD3pyGDoz25pE1rujGqHLUYXfGAXGhVMLkSz7aNPE56f5Xhd"
+    }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X
+# {"jsonrpc":"2.0","result":{"status":"Accepted"},"id":1}
+```
+
+*Code path 1 (HTTP RPC server handler).* `/ext/bc/X/wallet` handler is implemented in [`vms/avm/wallet_service.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/avm/wallet_service.go) and registered in [`vms/avm/vm.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/avm/vm.go#L295-L296) to receive the `wallet.send` request from the wallet.
+
+```go
+// vms/avm/vm.go
+walletServer := rpc.NewServer()
+walletServer.RegisterService(&vm.walletService, "wallet")
+map[string]*common.HTTPHandler{
+	"":        {Handler: rpcServer},
+	"/wallet": {Handler: walletServer},
+}
+```
+
+*Code path 2 (wallet service handler).* On receiving the request, the wallet service [`Send` handler](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/avm/wallet_service.go#L101-L111) sanitizes the inputs, creates a transaction object with a set of UTXO outputs, signs the transaction object with the sender's public key, issues the transaction to the queue, and responds with the issued transaction ID.
+
+```go
+// vms/avm/wallet_service.go, "SendMultiple"
+tx := Tx{UnsignedTx: &BaseTx{BaseTx: avax.BaseTx{
+    NetworkID:    w.vm.ctx.NetworkID,
+    BlockchainID: w.vm.ctx.ChainID,
+    Outs:         outs,
+    Ins:          ins,
+    Memo:         memoBytes,
+}}}
+tx.SignSECP256K1Fx(w.vm.codec, keys)
+txID, err := w.issue(tx.Bytes())
+```
+
+Note that multiple transactions can be batched into one unit of transaction -- see [`avax.BaseTx`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/components/avax/base_tx.go#L24-L31). And the set of transactions may be batched up to 30 with 1-second wait time -- see [`avm.VM.issueTx`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/avm/vm.go#L619-L627). The transaction send request is asynchronous API, in which the user is expected to poll the transaction status with [`GetTxStatus`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/vms/avm/service.go#L140-L154) API.
+
+*Code path 3 (transaction network router).* Once the set of transactions are flushed out of `avax.VM`, the router dispatcher sends those transactions to the consensus engine -- see [`chains/manager.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/chains/manager.go#L503-L612) and [`snow/networking/router/handler.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/networking/router/handler.go#L172-L198).
+
+*Code path 4 (engine message handler).* On receiving the consensus message from the router, the consensus engine PullQuery and Chits. TBD
 
 In Avalanche, transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node can prefer only one transaction in the conflict set.
 
-Each transaction \\(T\\) belongs to its own conflict set \\(P_{T}\\), and one vertex may have multiple transactions (see ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L655-L660)). Two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drops the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L550-L570)).
+Newly initiated transaction(s) connect to one or more parent transaction(s), forming a vertex and edges on the DAG (see ["select parents"](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L638-L643) and ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L655-L660)). The child transaction is not required to have any application-specific or funding dependency on the parent. Instead, it defines "ancestry" to be all transactions reachable via parent edges (ancestor set), and "progeny" to be all child transactions and their offspring. When a transaction \\(T\\) is queried, all transactions reachable from \\(T\\) are implicitly part of the query: If a transaction \\(T\\) is final from a node's perspective, the node can assume the entire ancestry of the transaction \\(T\\) are also final. Likewise, if a transaction \\(T\\) is rejected due to double-spend, its progeny can also be rejected.
+
+![figure-2-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-2-avalanche-transaction-ancestry-progeny.png)
+
+
+Each transaction \\(T\\) belongs to its own conflict set \\(P_{T}\\), and one vertex may have multiple transactions (see ["build vertex"](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L655-L660)). Two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drops the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570)).
 
 > *So far, we explain: When a client creates an Avalanche transaction, it names one or more parents, where each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions and an instance of Snowball consensus -- unit of consensus.*
 
@@ -539,7 +611,7 @@ Two competing Bitcoin miners may create two blocks with different sets of transa
 
 In Avalanche, transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node prefer only one transaction in the conflict set.
 
-In Avalanche, two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.3/snow/engine/avalanche/transitive.go#L550-L570)).
+In Avalanche, two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570)).
 
 TODO
 
