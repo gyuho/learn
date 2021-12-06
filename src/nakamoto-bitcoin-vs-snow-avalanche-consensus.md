@@ -707,9 +707,7 @@ func (t *Transitive) issueBatch(txs []snowstorm.Tx) error {
 
 > *When the unit of consensus is a set of transactions in a vertex, how does protocol detect the conflict? How does the protocol represent such as a binary option in Snowball? What if there is no conflict? How exactly does Avalanche use "DAG" to resolve transaction conflicts?*
 
-When a client creates an Avalanche transaction, it names one or more parents. Each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions and an instance of Snowball consensus -- *unit of consensus*.
-
-TBD
+Let's recap: When a client creates an Avalanche transaction, it names one or more parents from the current "virtuous frontier". Each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions, each of which is an instance of Snowball consensus. That is, a vertex is a unit of consensus, while the conflicts are voted at the transaction level. *[`snowstorm.directedTx`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/consensus/snowstorm/directed.go#L34-L51)* records the state of an Snowball instance for each transaction. When `Topological.RecordPoll` calls `Directed.RecordPoll` with the voting results for each transaction in the vertex, `Directed.RecordPoll` processes them to either accept or redirect edges. If the voting for a transaction satisfies the threshold alpha \\(α\\), it increments the confidence value of the transaction (via `snowball.RecordSuccessfulPoll`). If the transaction `directedTx` is finalized based on beta thresholds, the transaction is accepted. And the vertex is accepted if all underlying transactions and its parent vertices have been accepted.
 
 #### Who initiates the block (data)?
 
