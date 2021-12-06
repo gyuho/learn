@@ -564,17 +564,17 @@ For X-chain, `avm.VM` implements the virtual machine interface `vertex.DAGVM`. `
 
 *[`uniqueVertex.Height`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/state/unique_vertex.go#L231-L239)* -- Returns the current height of the vertex. The height is chosen with the maximum height value among its parents (and plus 1) -- see [`BuildVtx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche/state#Serializer.BuildVtx).
 
-*[`Transitive.issueBatch`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/transitive.go#L639-L667)* -- Puts a batch of pending transactions into a new vertex and issues the new vertex to the consensus. It sub-samples the "strongly virtuous" frontier and uses them as parents to the new vertex, and calls `issue` on the new vertex.
+*[`Transitive.issueBatch`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/transitive.go#L639-L667)* -- Puts a batch of pending transactions into a new vertex and issues the new vertex to the consensus. It samples the "strongly virtuous" frontier and uses them as parents to the new vertex, and calls `issue` on the new vertex.
 
-*[`Transitive.issue`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/transitive.go#L482-L553) via [`issuer`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/issuer.go)* -- Issues a vertex to the consensus, sends `message.PushQuery` to randomly sub-sampled validators with the newly issued vertex object (via `issuer`), and sends `message.PullQuery` to randomly sub-sampled validators with one randomly selected vertex in the "strongly preferred" frontier, at most `avalanchego --snow-concurrent-repolls` rounds.
+*[`Transitive.issue`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/transitive.go#L482-L553) via [`issuer`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/issuer.go)* -- Issues a vertex to the consensus, sends `message.PushQuery` to random validators with the newly issued vertex object (via `issuer`), and sends `message.PullQuery` to random validators with one vertex in the "strongly preferred" frontier (via `issueRepoll`), at most `avalanchego --snow-concurrent-repolls` rounds.
 
-*[`Transitive.PushQuery`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.PushQuery)* -- Handles incoming `message.PushQuery` to receive a newly issued vertex object from the other validator. On receiving `message.PushQuery`, the node parses the vertex object, issues the vertex with its parents, and calls `Transitive.PullQuery`.
+*[`Transitive.PushQuery`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.PushQuery)* -- Handles incoming `message.PushQuery` to receive a newly issued vertex object from the other validator. On receiving `message.PushQuery`, (1) the node parses the vertex object, (2) fetches the vertex object via `message.Get` if not found locally, (3) issues the vertex with its parents, and (4) calls `Transitive.PullQuery`.
 
-*[`Transitive.PullQuery`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.PullQuery)* -- Handles incoming `message.PullQuery` that requests for one "strongly preferred" vertex from the other validator. On receiving `message.PullQuery`, the node issues the vertex with its parents, responds with `message.Chits` to send its "strongly preferred" frontier (via `convincer`), and issues the pending transactions to the consensus. Then when does a node send `message.PullQuery`? Each poll randomly samples validators to send `message.PullQuery` to query one "strongly preferred" vertex.
+*[`Transitive.PullQuery`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.PullQuery)* -- Handles incoming `message.PullQuery` that requests for one "strongly preferred" vertex from the other validator. On receiving `message.PullQuery`, (1) the node fetches the vertex object via `message.Get` if not found locally, (2) issues the vertex with its parents, (3) responds with `message.Chits` to send its "strongly preferred" frontier (via `convincer`), and (4) issues the pending transactions to the consensus. Then when does a node send `message.PullQuery`? Each poll randomly samples validators to send `message.PullQuery` to query one "strongly preferred" vertex.
 
-*[`Transitive.Chits`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Chits)* -- Handles incoming `message.Chits` that includes the preferred vertices of the sender. Then when does a node send `message.Chits`? [`convincer`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/convincer.go) creates and sends `message.Chits` with its "strongly preferred" frontier to a validator, in response to `message.PullQuery`.
+*[`Transitive.Chits`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Chits)* -- Handles incoming `message.Chits` that includes the preferred vertices of the sender. On receiving `message.Chits`, the engine issues and fetches the preferred frontier and its ancestry, and creates `voter` to vote for the preferences and call `RecordPoll`. Then when does a node send `message.Chits`? [`convincer`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/convincer.go) creates and sends `message.Chits` with its "strongly preferred" frontier to a validator, in response to `message.PullQuery`.
 
-*[`Transitive.Put`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Put)* -- Handles `message.Put` to receive a single vertex object from the other validator. On receiving `message.Put`, the node parses the vertex object and issues the vertex, its parents, and pending transactions to the consensus. Then when does a node send `message.Put`? The node sends `message.Put` in response to `message.Get`.
+*[`Transitive.Put`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Put)* -- Handles `message.Put` to receive a single vertex object from the other validator. On receiving `message.Put`, (1) the node parses the vertex object, (2) fetches the vertex object via `message.Get` if not found locally, and (3) issues the vertex, its parents, and pending transactions to the consensus. Then when does a node send `message.Put`? The node sends `message.Put` in response to `message.Get`.
 
 *[`Transitive.Get`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Get)* -- Handles incoming `message.Get` that requests for a container (vertex for Avalanche or block for Snowman). Then when does a node send `message.Get`? Whenever a node does not have the vertex object locally, it sends `message.Get` to the other validator -- see [`sendRequest`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/transitive.go#L669-L679).
 
@@ -586,9 +586,7 @@ For X-chain, `avm.VM` implements the virtual machine interface `vertex.DAGVM`. `
 
 *[`Transitive.Gossip`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Gossip)* -- Handles `message.GossipRequest` from the local node itself, to send one vertex in its accepted frontier to randomly sampled peers -- see [`selectPeersForGossip`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/network/network.go#L394-L417). The "accepted frontier" means a list of accepted vertices with no accepted children -- see [`Edge`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche/vertex#Storage). Then when does a node send `message.GossipRequest`? `ChainRouter.Initialize` creates a periodic gossiper with the frequency set via `avalanchego --consensus-gossip-frequency`.
 
-Let's recap: Once initiated, the Avalanche X-chain transaction is processed via: (1) `avm` wallet RPC service for issuing and batching transactions, (2) `snow` `networking` router for dispatching messages in sequence to the consensus engine, (3) `snow` `engine` for building a vertex from pending transactions, (4) `snow` `consensus` for building consensus, in order.
-
-![figure-6-avalanche-agreement-paths-x-chain.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-avalanche-agreement-paths-x-chain.png)
+Let's recap: Once initiated, the Avalanche X-chain transaction is processed via: (1) `avm` wallet RPC service for issuing and batching transactions, (2) `snow` `networking` router for dispatching messages to the consensus engine in sequence, (3) `snow` `engine` for building a vertex from pending transactions, (4) `snow` `consensus` for building consensus, in order.
 
 The client request begins when a wallet sends a transaction to transfer an asset from one address to the other, as follows:
 
@@ -610,7 +608,7 @@ curl -X POST --data '{
 }' -H 'content-type:application/json;' 127.0.0.1:9650/ext/bc/X/wallet
 ```
 
-*Step 1 -- `avm` wallet RPC service for issuing and batching transactions.* The send request via `/ext/bc/X/wallet` is routed to [`avm.WalletService.Send`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#WalletService.Send) that sanitizes the inputs and creates a transaction object with a set of UTXO outputs. Internally, multiple transactions are bundled into one base transaction of UTXO inputs and outputs -- see [`avax.BaseTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/components/avax#BaseTx). Once the transaction is signed, the wallet service handler schedules the transaction in the queue, and finally responds with the issued transaction ID -- see [`avm.VM.IssueTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#VM.IssueTx). Note that the transaction send is an asynchronous API, so the user is expected to poll the transaction status with [`GetTxStatus`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#Service.GetTxStatus) API.
+*Step 1 -- `avm` wallet RPC service for issuing and batching transactions.* The send request via `/ext/bc/X/wallet` is routed to [`avm.WalletService.Send`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#WalletService.Send) that sanitizes the inputs and creates a transaction object. Once the transaction is signed, the wallet service handler schedules the transaction in the queue, and finally responds with the issued transaction ID -- see [`avm.VM.IssueTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#VM.IssueTx). Note that the transaction send is an asynchronous API, so the user is expected to poll the transaction status with [`GetTxStatus`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#Service.GetTxStatus) API.
 
 ```go
 // vms/avm/vm.go
@@ -653,19 +651,30 @@ func (vm *VM) FlushTxs() {
         ...
 ```
 
-*Step 2 -- `snow` `networking` router for dispatching messages in sequence to the consensus engine.* The batched transactions are flushed out of `avm.VM`, notifying Avalanche networking router of its pending transactions by signaling the message channel. [`snow/networking/router.Handler`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/chains/manager.go#L513-L623) shares the message channel to communicate with the `avm.VM`. When notified of the pending transactions, the networking router internally generates `message.Notify` and appends it to the `unprocessedMsgs` queue -- see [`router.Handler.dispatchInternal`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L443-L457).
+*Step 2 -- `snow` `networking` router for dispatching messages to the consensus engine in sequence.* The batched transactions are flushed out of `avm.VM`, notifying Avalanche networking router of its pending transactions by signaling the message channel. [`snow/networking/router.Handler`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/chains/manager.go#L513-L623) shares the message channel to communicate with the `avm.VM`. When notified of the pending transactions, the networking router internally generates `message.Notify` and appends it to the `unprocessedMsgs` queue -- see [`router.Handler.dispatchInternal`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L443-L457).
 
 ```go
 // snow/networking/router/handler.go
+func (h *Handler) Dispatch() {
+	go h.dispatchInternal()
+	for {
+		msg := h.unprocessedMsgs.Pop()
+		err := h.handleMsg(msg)
+		...
+	}
+}
+
 func (h *Handler) dispatchInternal() {
-    case msg := <-h.msgFromVMChan:
-        // message.Notify
-        inMsg := h.mc.InternalVMMessage(h.ctx.NodeID, uint32(msg))
-        // add to "h.unprocessedMsgs"
-        h.Push(inMsg)
+	for {
+		select {
+		case msg := <-h.msgFromVMChan:
+			// message.Notify
+			inMsg := h.mc.InternalVMMessage(h.ctx.NodeID, uint32(msg))
+			// add to "h.unprocessedMsgs"
+			h.Push(inMsg)
 ```
 
-The unprocessed messages in the `Handler.unprocessedMsgs` queue are then passed to [`router.Handler.handleMsg`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L167-L188) in sequence by [`router.Handler.Dispatch`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L102-L143). For instance, `message.Notify` will call [`Transitive.Notify`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Notify) in order to notify the Avalanche consensus engine of the existence of the pending transactions in `avm`.
+The unprocessed messages in the `Handler.unprocessedMsgs` queue are then passed to [`router.Handler.handleMsg`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L167-L188) in sequence by [`router.Handler.Dispatch`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/networking/router/handler.go#L102-L143). On receiving `message.Notify`, [`Transitive.Notify`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/engine/avalanche#Transitive.Notify) fetches the pending transactions to issue to the consensus.
 
 ```go
 // snow/engine/avalanche/transitive.go
@@ -681,17 +690,16 @@ func (t *Transitive) Notify(msg common.Message) error {
 ```go
 // snow/engine/avalanche/transitive.go
 func (t *Transitive) issueBatch(txs []snowstorm.Tx) error {
+    virtuousIDs := t.Consensus.Virtuous()...
+    ...
     vtx, err := t.Manager.BuildVtx(parentIDs, txs)
     ...
     return t.issue(vtx)
-}
 ```
 
-*Step 4 -- `snow` `consensus` for building consensus.* Once the vertex is created and passed to the `Transitive.issue` method, the engine calls `Update` method on the vertex object after the engine computes all the dependencies between transactions. The [`issuer.Update`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/issuer.go#L43-L120) method is where the engine initiates the consensus using the Snowball algorithm.
+*Step 4 -- `snow` `consensus` for building consensus.* Once the vertex is created and passed to the `Transitive.issue` method, the engine computes the dependencies between transactions and initiates the consensus via [`issuer`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/engine/avalanche/issuer.go): (1) `issuer.Update` validates the transactions in the vertex. (2) Once validated, the vertex is added to `Topological` via `Topological.Add`. (3) When the vertex is added, all undecided transactions in the vertex are added to `Directed` via `Directed.Add`. (4) When the transaction is added to `Directed`, the transaction is added to the conflict set (e.g., virtuous and preferences). (5) After all transactions in the vertex are added to `Directed`, `Topological` calls `Topological.update` on the vertex. (6) `Topological.update` updates the frontiers of the vertex and its parents. (7) After calling `Topological.Add` on the vertex, `issuer` sends `message.PushQuery` to random validators with the newly issued vertex object. (8) On receiving `message.PushQuery`, each node parses the vertex object, issues the vertex with its parents, and calls `Transitive.PullQuery`. (9) On receiving `message.PullQuery`, the node issues the vertex with its parents, and responds with `message.Chits` to send its "strongly preferred" frontier (via `convincer`). (10) After sending `message.PushQuery`, `issuer` sends `message.PullQuery` to random validators with one "strongly preferred" vertex ID (via `Transitive.repoll`, at most `avalanchego --snow-concurrent-repolls` rounds).
 
-`issuer.Update` first validates all the transactions in the vertex. Once validated, the vertex is added to the `Topological` instance. When the vertex is added to `Topological` via `Add` method, all undecided transactions in the vertex are added to the `Directed` instance. When a transaction is added to `Directed` via `Add` method, the transaction is added to the conflict set.
-
-When the vertex is issued to the conflict graph via `issuer.Update`, it samples \\(k\\) validators among its preferred frontier and sends `message.PushQuery` to such nodes. On receiving `message.PushQuery` from the querying node, the Avalanche engine validates the vertex and requests for the issuance of its ancestry. The querying node repeats the next rounds with `message.PullQuery`, at most `avalanchego --snow-concurrent-repolls` rounds. On receiving `message.Push/PullQuery` from the querying node, the queried node's Avalanche engine responds with `message.Chits` to communicate its current preference.
+![figure-6-avalanche-agreement-paths-x-chain.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-avalanche-agreement-paths-x-chain.png)
 
 > *When the unit of consensus is a set of transactions in a vertex, how does protocol detect the conflict? How does the protocol represent such as a binary option in Snowball? What if there is no conflict? How exactly does Avalanche use "DAG" to resolve transaction conflicts?*
 
