@@ -54,6 +54,7 @@
 ```
 
 <br>
+
 Here's how it works:
 
 ![kruskal_00](img/kruskal_00.png)
@@ -65,6 +66,7 @@ Here's how it works:
 ![kruskal_06](img/kruskal_06.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go
@@ -817,6 +819,7 @@ func NewGraphFromJSON(rd io.Reader, graphID string) (Graph, error) {
 ```
 
 <br>
+
 Here's how it works:
 
 ![prim_00](img/prim_00.png)
@@ -832,6 +835,7 @@ Here's how it works:
 ![prim_10](img/prim_10.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go

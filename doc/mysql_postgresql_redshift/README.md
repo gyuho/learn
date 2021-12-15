@@ -328,6 +328,7 @@ LIMIT 1
 ## Insert, Upsert
 
 <br>
+
 #### MySQL
 
 ```sql
@@ -380,6 +381,7 @@ DROP TABLE myschema.example_table;
 ```
 
 <br>
+
 #### PostgreSQL, Redshift
 
 ```sql
@@ -469,6 +471,7 @@ DROP TABLE myschema.example_table;
 ## Import from csv
 
 <br>
+
 #### MySQL
 
 ```sql
@@ -483,6 +486,7 @@ IGNORE 1 LINES
 ```
 
 <br>
+
 #### PostgreSQL
 
 ```sql
@@ -501,6 +505,7 @@ psql --host MY_HOST \
 ```
 
 <br>
+
 #### Redshift
 
 ```sql

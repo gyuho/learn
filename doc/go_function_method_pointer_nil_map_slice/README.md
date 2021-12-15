@@ -215,6 +215,7 @@ type Element struct {
 - How does Go handle *pointer*s?
 
 <br>
+
 [**Pointer**](https://en.wikipedia.org/wiki/Pointer_%28computer_programming%29)
 is a value that refers to another value in memory (it’s an address value). When
 you **reference** a variable, you get the **location** of the value in memory.
@@ -702,6 +703,7 @@ func makeslice(t *slicetype, len64 int64, cap64 int64) sliceStruct {
 ```
 
 <br>
+
 And take a look at this [code](http://play.golang.org/p/g8y8_BGVKo) and
 [code](http://play.golang.org/p/T9nqUmp624):
 
@@ -1227,6 +1229,7 @@ func main() {
 ```
 
 <br>
+
 Basically Go map is a [**hash
 table**](https://en.wikipedia.org/wiki/Hash_table), like
 [this code](http://play.golang.org/p/3V2zvcZZ9J):
@@ -1696,6 +1699,7 @@ More detailed discussion can be found
 
 <br>
 <br>
+
 And when you have `map` of `map`, make sure to assign to **non-nil** map. If
 you try to set a *key* from a nil map, it will panic as
 [follows](http://play.golang.org/p/vIb5wBj30e):
@@ -1896,6 +1900,7 @@ func main() {
 ```
 
 <br>
+
 `map` is **non-deterministic** when you update and delete with `for range`
 at the same time. More details are explained here:
 
@@ -1915,6 +1920,7 @@ at the same time. More details are explained here:
 > [*Go FAQ*](http://golang.org/doc/faq#atomic_maps)
 
 <br>
+
 And about `for` loop:
 
 > The iteration order over maps is not specified and is not guaranteed to be

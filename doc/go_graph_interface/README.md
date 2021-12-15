@@ -34,6 +34,7 @@ or *size* of a graph. `|E|` is the number of edges.
 ![graph](img/graph.png)
 
 <br>
+
 - `G` is [**sparse**](http://stackoverflow.com/questions/12599143/what-is-the-distinction-between-sparse-and-dense-graphs)
   when `|E|` is close to the minimum `|E|`.
 - `G` is [**dense**](https://en.wikipedia.org/wiki/Dense_graph)
@@ -42,6 +43,7 @@ or *size* of a graph. `|E|` is the number of edges.
 ![graph_sparse_dense](img/graph_sparse_dense.png)
 
 <br>
+
 Tree is also a graph. `G` is a **tree** iff:
 - `|E| = |V| - 1`.
 - `G` is acyclic.
@@ -50,6 +52,7 @@ Tree is also a graph. `G` is a **tree** iff:
 - `G` has only one path between a pair of vertices.
 
 <br>
+
 Graphs can be represented in many different ways:
 - [**Adjacency list**](https://en.wikipedia.org/wiki/Adjacency_list),
   with a list of vertices, where each describes its neighboring vertices.
@@ -62,6 +65,7 @@ Graphs can be represented in many different ways:
 ![graph_adjacency_matrix](img/graph_adjacency_matrix.png)
 
 <br>
+
 [My initial implementation](https://github.com/gyuho/goraph/pull/49)
 used Go `struct`:
 
@@ -106,6 +110,7 @@ type Edge struct {
 ```
 
 <br>
+
 There's nothing wrong about using `struct`, especially when you already
 know types of data you would use. But it's not as generic as package
 [`container/heap`](http://golang.org/pkg/container/heap/).
@@ -122,6 +127,7 @@ type Interface interface {
 ```
 
 <br>
+
 `interface` might not be a good idea, but let's see how it goes:
 
 **Graph**:
@@ -137,6 +143,7 @@ type Interface interface {
 - Get the child vertices of an argument vertex.
 
 <br>
+
 And here's Go implementation of graphs:
 
 ```go
@@ -703,6 +710,7 @@ It is a simple way of describing graphs that both humans and computer
 programs can use. `DOT` files typically have `.gv` (or `.dot`) extensions.
 
 <br>
+
 `sudo apt-get -y install graphviz` and save this file:
 
 ```go
@@ -715,6 +723,7 @@ graph MyGraph {
 ```
 
 <br>
+
 And compile:
 
 ```
@@ -723,15 +732,18 @@ dot -Tpdf sample.dot -o sample.pdf;
 ``` 
 
 <br>
+
 Output:
 
 ![sample](dot/sample.png)
 
 <br>
 <br>
+
 Here's are more examples:
 
 <br>
+
 ###### undirected graph
 
 ```go
@@ -748,6 +760,7 @@ graph graphname {
 
 
 <br>
+
 ###### directed graph
 
 ```go
@@ -766,6 +779,7 @@ digraph graphname {
 
 <br>
 <br>
+
 ###### attributes
 
 ```go
@@ -790,6 +804,7 @@ graph graphname {
 
 <br>
 <br>
+
 ###### label
 
 ```go

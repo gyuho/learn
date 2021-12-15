@@ -55,6 +55,7 @@ int main()
 ```
 
 <br>
+
 According to [FAQ](https://isocpp.org/wiki/faq/newbie#main-returns-int)
 , `return 0;` is not needed:
 

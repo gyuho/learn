@@ -216,6 +216,7 @@ print "\""  # "
 ```
 
 <br><br>
+
 *Then how is Go different than Python when handling text data?*
 <br><br>
 

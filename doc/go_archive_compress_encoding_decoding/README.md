@@ -696,6 +696,7 @@ func main() {
 ```
 
 <br>
+
 And try [this](http://play.golang.org/p/StdJGW-T4_):
 
 ```go

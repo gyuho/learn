@@ -37,6 +37,7 @@ Keep this in mind. This is *important* when we calculate the *time complexities*
 of data structures.
 
 <br>
+
 There are *two* kinds of **_heap_**:
 
 - **Max**-*heap*: **parent node is always greater than** or **equal to
@@ -69,6 +70,7 @@ property **`A[Parent(i)] ≥ A[i]`**:
 ![max_heapify_01](img/max_heapify_01.png)
 
 <br>
+
 **`Min-Heapify`** to maintain *min-heap* property **`A[Parent(i)] ≤ A[i]`**:
 
 ![min_heapify_00](img/min_heapify_00.png)

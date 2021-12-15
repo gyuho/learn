@@ -31,6 +31,7 @@
 |  `O(1)`   |    .    | constant time |
 
 <br>
+
 For example:
 
 ```
@@ -75,14 +76,17 @@ with a [**non-deterministic Turing machine**](https://en.wikipedia.org/wiki/Non-
 All tractable decision problems belong to `NP` class.
 
 <br>
+
 `P` refers to a polynomial time solution of a problem.
 
 <br>
+
 `NP-complete` problems are the hardest of `NP` problems:
 - Either *every* `NP-complete` problem is tractable
 - or no `NP-complete` problem is tractable.
 
 <br>
+
 `NP-hard` problems are at least as hard as every problem in `NP`.
 No polynomial-time algorithm is found for any `NP-hard` problems.
 

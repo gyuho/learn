@@ -178,16 +178,19 @@ list_** is useful when you do lots of *insertions* and *removals*:
 whatever item you try to find.
 
 <br>
+
 **_Slice_** is like:
 
 ![slice](img/slice.png)
 
 <br>
+
 **_Linked lists_** are like:
 
 ![linked_list](img/linked_list.png)
 
 <br>
+
 Go [**`container/list`**](http://golang.org/pkg/container/list/)
 implements the **doubly linked list**. To simplify its implementation, Go
 `list` is implemented as if it were a *ring*. The **_root node (`Element`)_**
@@ -1393,6 +1396,7 @@ func BenchmarkContainerListFind(b *testing.B) {
 ```
 
 <br>
+
 And results are:
 
 ```

@@ -133,6 +133,7 @@ Go **struct** controls the layout of **data**, while Go **interface**:
 - is to specify the behavior of an object.
 
 <br>
+
 > Interfaces in Go provide a way to specify the behavior of an object: if
 > **something can do this, then it can be used here**.
 >
@@ -140,6 +141,7 @@ Go **struct** controls the layout of **data**, while Go **interface**:
 > Go_**](https://golang.org/doc/effective_go.html#interfaces_and_types)
 
 <br>
+
 For instance,
 [`time.Time`](https://go.googlesource.com/go/+/master/src/time/time.go) is
 **_`struct`_** because it contains **data** of your local time:
@@ -153,6 +155,7 @@ type Time struct {
 ```
 
 <br>
+
 [**`sort.Interface`**](http://golang.org/pkg/sort/#Interface)
 is **_`interface`_** to specify **_behaviors_** or **_requirements_** for
 [*`sort`*](http://golang.org/pkg/sort/):
@@ -166,6 +169,7 @@ type Interface interface {
 ```
 
 <br>
+
 **_`struct`_** is a **type** to **contain data with a set of fields for its
 values**. **_`interface`_** is also a **type** to **represent a behavior with a
 set of methods**. **_`interface`_** is a set of **constraints on types with
@@ -227,6 +231,7 @@ Again:
 - *`interface`* is also a type and represents a behavior with a set of methods. 
 
 <br>
+
 **In practice**, **_interface is mostly used as an argument for a function._** 
 For instance, [**_sort.Sort_**](http://golang.org/pkg/sort/#Sort) **function** takes 
 the **_`sort.Interface`_** as an argument:
@@ -247,6 +252,7 @@ func Sort(data Interface) {
 ```
 
 <br>
+
 *interface* is a set of constraints. Then how possible to pass *`interface`* 
 as an argument?
 
@@ -274,6 +280,7 @@ sort.Sort(byLength(words))
 
 
 <br>
+
 Here's another [example](http://play.golang.org/p/ZMHCZI98Sw) to use
 **_`sort.Interface`_**. And you can use this for any data types as long as your 
 type satisfies the **_`sort.Interface`_**:
@@ -332,6 +339,7 @@ func main() {
 ```
 
 <br>
+
 To summarize, `struct` is for data. `interface` is for a set of constrains on
 types. Any type that implements such methods satisfies the `interface`.
 Go passes `interface` as an argument to a function. Then one can just
@@ -413,6 +421,7 @@ type Writer interface {
 ```
 
 <br>
+
 **Any type that implements** a **_`Read`_**(or **_`Write`_**) method with the same
 signature is said to implement [*`io.Reader`*](http://golang.org/pkg/io/#Reader) 
 or [*`io.Writer`*](http://golang.org/pkg/io/#Writer) interface, and the
@@ -432,6 +441,7 @@ be used as an **argument to**
 
 
 <br>
+
 For example, [*`os.File`*](https://go.googlesource.com/go/+/master/src/os/file.go)
 implements *`Read`* method as
 [follows](https://github.com/golang/go/blob/master/src/os/file.go#L91):
@@ -456,6 +466,7 @@ func (f *File) Read(b []byte) (n int, err error) {
 ```
 
 <br>
+
 Since the [*`os.File`*](https://go.googlesource.com/go/+/master/src/os/file.go)
 implements *Read* method, it can be used as an argument to
 [**_`bufio.NewScanner`_**](http://golang.org/pkg/bufio/#NewScanner). And the
@@ -496,6 +507,7 @@ func main() {
 ```
 
 <br>
+
 Here are types that satisfy **_`io.Reader`_** interface by implementing **_`Read`_** method:
 
 - `bufio.Reader`, `os.File`, `os.Stdin`, `os.Stdout`, `os.Stderr`, `bytes.Buffer`,
@@ -542,6 +554,7 @@ func main() {
 
 <br>
 <br>
+
 [`ioutil.ReadAll`](http://golang.org/pkg/io/ioutil/#ReadAll) takes `io.Reader` as an argument:
 
 ```go
@@ -550,6 +563,7 @@ func ReadAll(r io.Reader) ([]byte, error)
 
 <br>
 <br>
+
 [`http.Response`](http://golang.org/pkg/net/http/#Response) struct 
 embeds `io.ReadCloser` interface.:
 
@@ -562,6 +576,7 @@ type Response struct {
 
 <br>
 <br>
+
 [`io.ReadCloser`](http://golang.org/pkg/io/#ReadCloser) interface embeds `io.Reader` interface:
 
 ```go
@@ -581,6 +596,7 @@ ioutil.ReadAll(resp.Body)
 
 
 <br>
+
 Then does `http.Response.Body` type implement `Read` method? *No.*
 `http.Response.Body` is used as `io.Reader` interface argument.
 Then you might think `http.Response.Body` type should implement 
@@ -730,6 +746,7 @@ own. This has a huge impact on program design and encourages to write
 compatible code.
 
 <br>
+
 > One important category of type is interface types, which represent fixed sets
 > of methods. **An interface variable can store any concrete (non-interface)
 > value as long as that value implements the `interface`’s methods.**
@@ -737,10 +754,12 @@ compatible code.
 > [**_Laws of Reflection by Rob Pike_**](http://blog.golang.org/laws-of-reflection)
 
 <br>
+
 - *`struct`* is a type and contains data with a set of fields.
 - *`interface`* is also a type and represents a behavior with a set of methods. 
 
 <br>
+
 To summarize, `struct` is for data. `interface` is for a set of constrains on
 types. Any type that implements such methods satisfies the `interface`.
 Go passes `interface` as an argument to a function. Then one can just
@@ -748,6 +767,7 @@ build a generic function that takes an `interface`, such as `sort.Sort`,
 and accept any type as long as it satisfies the `interface`.
 
 <br>
+
 *Russ Cox* explains in his [blog](http://research.swtch.com/interfaces):
 
 - `interface` value has one pointer to information about the type stored in the interface
@@ -771,6 +791,7 @@ type Interface interface {
 ![interface](img/interface.png)
 
 <br>
+
 Since `interface` itself contains the pointer to data,
 you do not need to pass `interface` pointer, as [here](http://play.golang.org/p/rdr8R8NhvA):
 
@@ -823,12 +844,14 @@ func main() {
 
 
 <br>
+
 For more detail:
 
 - [**_Interface pointer_** (*Golang Nuts*)](https://groups.google.com/forum/#!topic/golang-nuts/DwFGXLYgatY)
 - [When should I use a pointer to an interface?](https://golang.org/doc/faq#pointer_to_interface)
 
 <br>
+
 Go internally has `itable` to store the mapping between concrete type's methods
 and `interface` type's methods. The interface runtime computes the itable *only
 once* and caches it. For more detail, please read:
@@ -940,6 +963,7 @@ func newNode() node {
 ```
 
 <br>
+
 A similar example:
 
 ```go

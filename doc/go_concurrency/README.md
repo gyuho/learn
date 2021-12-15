@@ -121,6 +121,7 @@ automatically.
 
 
 <br>
+
 **_Independently Executing Procedure + Coordination = Concurrency_**
 <br>
 
@@ -219,6 +220,7 @@ while **process** **_run in separate memory_** spaces.
 > Microsoft_**](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917%28v=vs.85%29.aspx)
 
 <br>
+
 When you say *8-core machine*, the `core` represents the actual physical
 processors. *8-core machine* has 8 independent processing units (*cores* or
 *CPU*s). Not to be confused with processor, a `process` is a computer program
@@ -233,6 +235,7 @@ handle one `thread` at a time, but one CPU with
 can handle two `threads` simultaneously.
 
 <br>
+
 > [Threads] are conceptually the same as processes, but share the same memory space.
 >
 > As threads share address space, they are lighter than processes so are faster
@@ -303,6 +306,7 @@ with OS threads.
 
 
 <br>
+
 Note that when the **_main_** function returns, the **program exists**.
 goroutines that were running in background get **garbage-collected**, like
 [here](http://play.golang.org/p/bODiFAAfTP):
@@ -769,6 +773,7 @@ func main() {
 ```
 
 <br>
+
 **_Channel_** can **_communicate_** and **_signal_** **between goroutines**, as
 [here](http://play.golang.org/p/92pWGP9tnU):
 
@@ -1154,12 +1159,14 @@ Without buffer(unbuffered), every single `send` will block until another gorouti
 Unbuffered channel has a pending receiver that would receive the value as soon as the sender sends a value.
 
 <br>
+
 Buffered channel is asynchronous, sending or receiving does not need to wait(block): it won’t wait for other goroutines to finish.
 - `sender` and `receiver` do not block, as long as the buffers are not full.
 - You can **send** values to buffered `receiver` channel as long as buffers are not full yet.
 - You can **receive** values from buffered `sender` channel as long as buffers are not full yet.
 
 <br>
+
 Therefore, **receiving from a buffered channel** can be non-deterministic
 because it does not block whether the values are ready to be received or not.
 Try this [code](http://play.golang.org/p/hrVdVWxnCD):
@@ -1616,6 +1623,7 @@ func main() {
 ```
 
 <br>
+
 Note that **received values from a channel are in order**:
 
 > For channels, the iteration values produced are the **successive** values sent on
@@ -1713,6 +1721,7 @@ func main() {
 ```
 
 <br>
+
 [**`select`**](https://golang.org/ref/spec#Select_statements) chooses the one that is **firstly ready** to
 [*send*](https://golang.org/ref/spec#Send_statements) or
 [*receive*](https://golang.org/ref/spec#Receive_operator):
@@ -1836,6 +1845,7 @@ func main() {
 ```
 
 <br>
+
 Another example:
 
 ```go
@@ -2498,9 +2508,11 @@ This is what Go means by:
 > communicating._**
 
 <br>
+
 With **channel**, you do not need low-level `sync.Mutex` for synchronization.
 
 <br>
+
 **_Thread_** is a lightweight process since it executes within the context of one
 process. Both threads and processes are independent units of execution.
 **Threads** under the **same process** **_run in one shared memory_** space,
@@ -2511,6 +2523,7 @@ you need to **synchronize access to memory between threads** (not across process
 with `Mutex`.
 
 <br>
+
 [*Why goroutines, instead of threads?*](https://golang.org/doc/faq#goroutines) explains:
 
 > Goroutines are part of making concurrency easy to use. The idea,
@@ -2535,6 +2548,7 @@ with `Mutex`.
 > much smaller number**.
 
 <br>
+
 **goroutines** are multiplexed onto multiple OS threads.
 When a goroutine blocks on a thread, Go run-time moves other goroutines to a
 different, available thread, so they won't be blocked. **goroutine** is cheaper
@@ -2549,6 +2563,7 @@ Therefore, Go uses relatively fewer OS threads per Go process.
 
 <br>
 <br>
+
 To summarize:
 - **goroutines**: non-blocking, light-weight thread.
 - **channel**: let the **channel** handle the synchronization for you.
@@ -2569,6 +2584,7 @@ conditions.
 
 
 <br>
+
 Now you can refactor this code above, using **channel** instead of
 `sync.Mutex` (full code can be found here
 https://github.com/gyuho/learn/tree/master/doc/go_concurrency/code/surbl):
@@ -2765,6 +2781,7 @@ func hosten(dom string) string {
 ```
 
 <br>
+
 With **channel**:
 
 ```go
@@ -4074,6 +4091,7 @@ func RunCountHandler(b *testing.B, isDebug bool, counter Counter, delta float64)
 ```
 
 <br>
+
 Counting operation takes only about nanoseconds while `http` request
 takes much milliseconds. Benchmarking by mocking web server won't be able to isolate
 the performance of `counting` as below, except that `channel` method is slower because
@@ -4728,6 +4746,7 @@ func main() {
 7. `ChannelCounter_NoBuffer`
 
 <br>
+
 `Get`, in the descending order of time per operation:
 
 1. `NaiveCounter` but should be ignored. Not thread-safe
@@ -4739,6 +4758,7 @@ func main() {
 7. `ChannelCounter_NoBuffer`
 
 <br>
+
 And `channel` is slower than `sync.Mutex` because it allocates more memory.
 
 [↑ top](#go-concurrency)
@@ -5585,6 +5605,7 @@ func merge(s1, s2 []int) []int {
 ```
 
 <br>
+
 Theoretically, this concurrent code *should sort faster* since it's
 **parallel**. However, benchmark results show the opposite:
 

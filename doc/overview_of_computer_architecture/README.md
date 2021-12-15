@@ -96,12 +96,14 @@ Here's the abstraction provided by an operating system:
 ![process](img/process.png)
 
 <br>
+
 A `process` is an abstraction of a running program in an operating system.
 Traditional program use processor, main memory, I/O devices exclusively.
 But with modern CPUs, a single processor can run multiple processes
 concurrently having the processor switch among multiple processes.
 
 <br>
+
 A single `process` can consist of multiple execution units, *`threads`*.
 Each `thread` runs in the context of the process.
 
@@ -134,6 +136,7 @@ while **process** **_run in separate memory_** spaces.
 > Microsoft_**](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681917%28v=vs.85%29.aspx)
 
 <br>
+
 When you say *8-core machine*, the `core` represents the actual physical
 processors. *8-core machine* has 8 independent processing units (*cores* or
 *CPU*s). Not to be confused with processor, a `process` is a computer program
@@ -258,6 +261,7 @@ its arguments.
 	- Heap variables are global in scope, accessed anywhere in your program.
 
 <br>
+
 My machine setting as of today is `Linux 64-bit`:
 
 ```bash
@@ -275,6 +279,7 @@ Linux x86_64
 ```
 
 <br>
+
 > x86-64 (also known as x64, x86_64 and **_`AMD64`_**) is the 64-bit
 > version of the x86 instruction set.
 >
@@ -282,6 +287,7 @@ Linux x86_64
 
 <br>
 <br>
+
 Then which way does the stack grow on `x86`?
 <br>
 

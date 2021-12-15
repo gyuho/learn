@@ -108,6 +108,7 @@ _start:
 ```
 
 <br>
+
 And then to build:
 ```
 nasm -f elf64 -o hello.o hello.asm;
@@ -118,6 +119,7 @@ that contains `object code`, mostly in machine code, and information
 for linkers. 
 
 <br>
+
 And then to link:
 ```
 ld -o hello hello.o;
@@ -126,6 +128,7 @@ ld -o hello hello.o;
 by the compiler and combines it into a single executable file.
 
 <br>
+
 And then to execute:
 ```
 ./hello
@@ -149,6 +152,7 @@ section .data   ; data section stores constants
 ```
 
 <br>
+
 And:
 
 ```asm
@@ -156,6 +160,7 @@ section .text   ; text section contains code
 ```
 
 <br>
+
 And:
 
 ```asm
@@ -168,6 +173,7 @@ And `_start` marks the beginning of exported symbols.
 
 
 <br>
+
 And:
 
 ```asm
@@ -182,6 +188,7 @@ And:
 
 
 <br>
+
 [This](http://www.nasm.us/doc/nasmdo11.html) explains following are
 **registers** in 64-bit mode. Note that registers in assembly language
 are not case-sensitive:
@@ -189,6 +196,7 @@ are not case-sensitive:
 - `RAX`, `RCX`, `RDX`, `RBX`, `RSP`, `RBP`, `RSI`, `RDI`, `R8-R15`
 
 <br>
+
 And **_`register`_** is:
 
 > In computer architecture, a processor **register** is a small amount of **storage**
@@ -210,6 +218,7 @@ And **_`register`_** is:
 > [*Processor register*](https://en.wikipedia.org/wiki/Processor_register) *by Wikipedia*
 
 <br>
+
 So:
 
 - `move rax, 1` copies 1 into `rax` register.
@@ -230,6 +239,7 @@ It calls the operating system to do the write.
 
 
 <br>
+
 And:
 
 ```asm
@@ -253,6 +263,7 @@ ssize_t write(int fd, const void *buf, size_t nbytes);
 
 
 <br>
+
 And:
 
 ```asm

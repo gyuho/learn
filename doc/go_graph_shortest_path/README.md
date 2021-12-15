@@ -73,6 +73,7 @@
 ```
 
 <br>
+
 Here's how it works:
 
 ![dijkstra_00](img/dijkstra_00.png)
@@ -91,6 +92,7 @@ Here's how it works:
 ![dijkstra_13](img/dijkstra_13.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go
@@ -867,6 +869,7 @@ func NewGraphFromJSON(rd io.Reader, graphID string) (Graph, error) {
 ```
 
 <br>
+
 Here's how it works:
 
 ![bellman_ford_00](img/bellman_ford_00.png)
@@ -876,6 +879,7 @@ Here's how it works:
 ![bellman_ford_04](img/bellman_ford_04.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go
