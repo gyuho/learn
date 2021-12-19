@@ -180,6 +180,7 @@ return certBuff.Bytes(), keyBuff.Bytes(), nil
 
 ```go
 // to generate the node ID
+// ref. https://pkg.go.dev/github.com/ava-labs/avalanchego/node#Node.Initialize
 import (
     "github.com/ava-labs/avalanchego/ids"
     "github.com/ava-labs/avalanchego/utils/constants"
