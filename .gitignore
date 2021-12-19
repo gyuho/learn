@@ -1,2 +1,5 @@
 book
 .DS_Store
+
+src/avalanche-deep-dive.md
+src/test.md

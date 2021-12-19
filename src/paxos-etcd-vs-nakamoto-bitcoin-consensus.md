@@ -1,6 +1,6 @@
 # Paxos(etcd) vs. Nakamoto(Bitcoin): consensus
 
-*Last update: October 27, 2021*
+*Last update: March 12, 2022*
 
 *Next: [Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus](./nakamoto-bitcoin-vs-snow-avalanche-consensus.md)*
 
@@ -43,9 +43,9 @@ Applications may crash, [server hardwares fail](https://conferences.sigcomm.org/
 
 Introduced by *Leslie Lamport, [The Part-Time Parliament (1988)](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)*, the Paxos algorithm enables a group of processes to agree on a value and proposal number. And if the value is chosen, then processes should be able to learn the chosen value.
 
-Multi-Paxos is the de-facto solution for building a replicated state machine (RSM) that executes the same set of commands in the same order, on multiple participants. Single-decree Paxos is the \\(i^{th}\\) instance that decides the \\(i^{th}\\) command in the log. That is, Multi-Paxos operates as a sequence of proposals, each of which may or may not be accepted by a majority of the participants. The proposal sequence number is used to impose a strict order on the commands.
+Multi-Paxos is the de-facto solution for building a replicated state machine (RSM) that executes the same set of commands in the same order, on multiple participants: Single-decree Paxos is the \\(i^{th}\\) instance that decides the \\(i^{th}\\) command in the log. Multi-Paxos operates as a sequence of proposals, each of which may or may not be accepted by a majority of the participants. The proposal sequence number is used to impose a strict order on the commands.
 
-[Raft](https://raft.github.io) is a consensus algorithm built on top of Multi-Paxos, and [etcd](https://github.com/etcd-io/etcd) uses Raft to build a distributed key-value store (e.g., [Kubernetes](https://kubernetes.io/) uses etcd for cluster metadata).
+[Raft](https://raft.github.io) is a consensus algorithm built on top of Multi-Paxos -- [etcd](https://github.com/etcd-io/etcd) uses *Raft* to build a distributed key-value store (e.g., [Kubernetes](https://kubernetes.io/) uses etcd for cluster metadata).
 
 ### What is Nakamoto consensus?
 
@@ -55,15 +55,17 @@ Nakamoto consensus powers Bitcoin to achieve a distributed consensus on the chai
 
 ### Unspent transaction output (UTXO)
 
-Bitcoin uses the [unspent transaction output (UTXO) model](https://en.wikipedia.org/wiki/Unspent_transaction_output) to record the state of individual coin transfers between wallets (much like physical coins), instead of tracking the balance of each account (e.g., Ethereum). A UTXO represents an output of a transaction that has not been spent and thus can be used as an input to a new transaction -- only the unspent output can be used for the next transaction to prevent double-spending. Each UTXO is a chain of ownership where the current owner (sender) signs the transaction that transfers the UTXO ownership to the public key of the new owner (receiver).
+Bitcoin uses the [unspent transaction output (UTXO) model](https://en.wikipedia.org/wiki/Unspent_transaction_output) to record the state of individual coin transfers between wallets (much like physical coins). Rather than tracking the balance of each account (as in Ethereum), a UTXO represents a transaction output that has not been spent and thus can be used as an input to a new transaction. Only the unspent output can be used for the next transaction to prevent double-spending. Each UTXO is a chain of ownership where the current owner (currency/asset sender) signs the transaction to transfer the UTXO ownership to the public key of the new owner (receiver).
 
-The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency. When a transaction occurs, the transaction input (e.g., send 2.5 BTC from A to B) is to be destroyed from the UTXO set, and the respective output (e.g., receive 2.5 BTC from A to B) creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reducing the computation requirements in the network, making it easier to parallelize transactions.
+When a transaction occurs, the transaction input (e.g., "A has 100 BTC, and A sends 10 BTC to B") is to be destroyed from the UTXO set, and the respective outputs (e.g., "A balance changes to 90 BTC, and B receives 10 BTC from A") creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reduces the computation requirements in the network, and makes it easier to parallelize transactions.
+
+The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency.
 
 ### Agreement in Paxos
 
 Paxos assumes each process operates at arbitrary speeds and may fail or restart at any time. Messages may take arbitrarily long to deliver, be duplicated, or be lost, but they are not corrupted.
 
-Single-decree Paxos is a two-phase protocol. In the first phase of the protocol (prepare/promise phase), the proposer sends a message with a sequence number \\(n\\) to the acceptors (peers) -- *"Prepare"*. And the acceptor responds to the proposal if and only if the sequence number \\(n\\) is higher than every previously accepted proposal number -- *"Promise"* to never again accept the proposal numbered less than \\(n\\). If the sequence number \\(n\\) is less than or equal to any previously accepted proposal, the acceptor can ignore the proposal. Or the acceptor rejects the proposal to respond with the highest sequence number it has ever seen. In the second phase of the protocol (accept/learn), once the proposer secures the agreement to its "prepare" request from the majority of the acceptors, the proposer can now request a value \\(v\\) with the sequence number \\(n\\) to be accepted -- *"Accept"*. And once accepting the chosen value \\(v\\), the acceptor can inform its learner with the accepted value \\(v\\) -- *"Learn"*.
+Single-decree Paxos is a two-phase protocol. In the first phase of the protocol (prepare/promise phase), the proposer sends a message with a sequence number \\(n\\) to the acceptors (peers) -- *"Prepare"* with the sequence number \\(n\\). And the acceptor responds to the proposal if and only if the sequence number \\(n\\) is higher than every previously accepted proposal number -- *"Promise"* to never again accept the proposal numbered less than \\(n\\). If the sequence number \\(n\\) is less than or equal to any previously accepted proposal, the acceptor can ignore the proposal. Or the acceptor rejects the proposal to respond with the highest sequence number it has ever seen. In the second phase of the protocol (accept/learn), once the proposer secures the agreement to its "prepare" request from the majority of the acceptors, the proposer can now request a value \\(v\\) with the sequence number \\(n\\) to be accepted -- *"Accept"*. And once accepting the chosen value \\(v\\), the acceptor can inform its learner with the accepted value \\(v\\) -- *"Learn"* the agreed value and apply to its state.
 
 ![figure-1-paxos-consensus.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-1-paxos-consensus.png)
 
@@ -74,23 +76,23 @@ In normal operation, Multi-Paxos establishes a stable leader to act as the disti
 1. Each etcd node starts as a follower.
 2. The follower becomes candidate if there is no leader heartbeat for the duration of election timeout (1-second).
 3. The candidate sends `MsgVote` to its peers.
-4. The follower votes for the candidate if and only if the candidate's logs are up-to-date (log term and index).
+4. The follower votes for the candidate, if and only if the candidate's logs are up-to-date by comparing its log term and index.
 5. The candidate becomes leader for the respective term, once it receives the votes from quorum.
 6. The client requests are forwarded to leader. The leader decides what to commit or not, and always contains the latest data while follower nodes may have stale data.
 7. The client request generates `MsgProp` (proposal) to the leader. The `MsgProp` sent to follower shall be forwarded to the leader.
 8. Upon receiving `MsgProp`, the leader sends `MsgApp` (append) to its peers. The append request always flows from leader to follower.
-9. If the `MsgApp` log term and index are valid (up-to-date), the follower accepts `MsgApp` and marks the message as committed.
-10. The committed entries are safe to apply (persisted in quorum): The etcd server polls committed entries from Raft and applies to its backend storage (replicated state machine).
+9. If the incoming `MsgApp` log term and index are valid (up-to-date), the follower accepts `MsgApp` and marks the message as committed.
+10. The committed entries are safe to apply (since persisted in quorum): The etcd server polls committed entries from Raft and applies to its backend storage (replicated state machine).
 
 ### Agreement in Nakamoto
 
-The key difference is: Paxos assumes the fixed set of servers, whereas Nakamoto is permissionless and open to any participant. Paxos/Raft membership reconfiguration itself (member add/remove) requires consensus from quorum, whereas Nakamoto uses [DNS for peer discovery](https://developer.bitcoin.org/devguide/p2p_network.html#peer-discovery). Bitcoin being a public, permissionless blockchain introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism.
+The key difference is: Paxos assumes the fixed set of servers, whereas Nakamoto is permissionless and open to any participant. Paxos/Raft membership reconfiguration itself (member add/remove) requires consensus from quorum, whereas Nakamoto simply uses [DNS for peer discovery](https://developer.bitcoin.org/devguide/p2p_network.html#peer-discovery). Bitcoin being a public, permissionless blockchain introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism.
 
 #### Adversary node
 
 A malicious actor or software error may exhibit Byzantine (i.e., arbitrary) behavior. For instance, a transaction "A pays B $100" becomes "A pays C $10,000". To prevent such identity spooﬁng and detect corrupted messages, Nakamoto consensus uses cryptographic techniques.
 
-Bitcoin is a chain of digital signatures. Each Bitcoin wallet contains one or more [Elliptic Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) private keys, which are mathematically related to its addresses. The respective public key is used to determine if the signature is genuine. Bitcoin transfer generates a hash of the previous transaction and the public key of the payee (new owner), which is signed by the private key of the transferrer (previous owner). Then the new owner verifies the incoming transaction with the previous owner's public key. Which makes it virtually impossible for an adversary to impersonate without access to the private key.
+Bitcoin is a chain of digital signatures. Each Bitcoin wallet contains one or more [Elliptic Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) private keys, which are mathematically related to its addresses. The respective public key is used to determine if the signature is genuine. Bitcoin transfer generates a hash of the previous transaction and the public key of the payee (new owner), which is signed by the private key of the transferrer (previous owner). Then the new owner (payee) verifies the incoming transaction with the previous owner's public key. Which makes it virtually impossible for an adversary to impersonate without access to the private key.
 
 Such public-key cryptographic mechanism ensures only the verified owner can spend the balance, but does not prevent the double-spend: The system can still accept transactions that are cryptographically correct but conflicting spends on the same fund. For instance, the previous owner may maliciously sign earlier transactions to double-spend from the same fund -- *A currently has $100 but signs transactions that pay B and C each $100*. The traditional banking system prevents such double-spend by recording all historical transactions (thus aware of which arrived first). In order to accomplish this without the trusted third-party, each Bitcoin transaction must be publicly announced, and the linear view of the transaction history must be validated by the majority of the nodes.
 
