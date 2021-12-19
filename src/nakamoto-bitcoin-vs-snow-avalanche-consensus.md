@@ -24,7 +24,8 @@
     - [Avalanche → Snowman](#avalanche--snowman)
     - [Frosty](#frosty)
   - [Avalanche platform](#avalanche-platform)
-  - [How does X/P/C-chain actually work?](#how-does-xpc-chain-actually-work)
+  - [AvalancheGo internals](#avalanchego-internals)
+    - [X-chain internals](#x-chain-internals)
   - [Who initiates the block (data)?](#who-initiates-the-block-data)
     - [Peer/node discovery](#peernode-discovery)
     - [Message relay](#message-relay)
@@ -482,7 +483,7 @@ P-chain is an Avalanche blockchain that coordinates validators, controls staking
 
 C-chain is an Avalanche blockchain that supports smart contract creation. C-chain is an instance of the Ethereum Virtual Machine (EVM), powered by Avalanche. C-chain implements [Snowman consensus protocol](https://docs.avax.network/#snowman-consensus-protocol).
 
-#### How does X/P/C-chain actually work?
+#### AvalancheGo internals
 
 > *The receiving (Avalanche) node responds positively to the query, if and only if the transaction \\(T\\) and its ancestry are currently the preferred option in the respective conflict sets. Then the protocol builds "confidence" with the total number of chits in the progeny of the transaction. Using this "confidence" state, the querying node updates the preferred transaction of each conflict set of ancestry transactions. [...]*
 
@@ -491,6 +492,8 @@ The original Avalanche paper succinctly describes the "Avalanche" protocol with 
 > *Again how does Avalanche of sub-sample voting and DAG achieve agreement to build an immutable ordered sequence of transactions in a fully permissionless settings?*
 
 "Sub-sample voting" and "DAG" are already confusing terms to begin with, let alone connecting the Snowball algorithm with agreement problems. There’s a lot to unpack here, and we will have to review the key concepts a few times in order to understand the whole picture. So please bear with me. I will explain Avalanche consensus as implemented in [AvalancheGo](https://github.com/ava-labs/avalanchego) code.
+
+##### X-chain internals
 
 For X-chain, `avm.VM` implements the virtual machine interface `vertex.DAGVM`. `router.Handler` serialize consensus events for the engine. `Transitive` implements the consensus engine interface `avalanche.Engine`. `Topological` implements the vertex-level conflict graph with `avalanche.Consensus` interface. `Directed` implements the transaction-level conflict set via `snowstorm.Consensus` interface.
 
@@ -504,7 +507,7 @@ For X-chain, `avm.VM` implements the virtual machine interface `vertex.DAGVM`. `
 
 *[`avm.UniqueTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#UniqueTx)* -- Implements Avalanche transaction de-duplication logic and [`snowstorm.Tx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Tx) interface. `avm.UniqueTx` embeds [`TxCachedState`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#TxCachedState) for performance, which again embeds [`avm.Tx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#Tx) struct to model UTXO transaction operations.
 
-*[`avm.Tx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#Tx)* -- Represents the underlying transaction, and embeds [`avm.UnsignedTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#UnsignedTx), an interface for an unsigned transaction that defines basic transaction properties such as inputs and outputs.
+*[`avm.Tx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#Tx)* -- Represents the underlying transaction by embedding [`avm.UnsignedTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#UnsignedTx), an interface for an unsigned transaction that defines basic transaction properties such as inputs and outputs.
 
 *[`avm.BaseTx`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#BaseTx)* -- Represents the basis transaction of all transactions, created by [`Send`](https://pkg.go.dev/github.com/ava-labs/avalanchego/vms/avm#WalletService.Send), when a new transaction is initiated by the wallet service. `avm.BaseTx` wraps `avax.BaseTx` to implement `avm.UnsignedTx` interface.
 
@@ -524,7 +527,7 @@ For X-chain, `avm.VM` implements the virtual machine interface `vertex.DAGVM`. `
 
 *[`snowstorm.Directed`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Directed) implements [`snowstorm.Consensus`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Consensus)* -- Defines an interface for a Snowball instance that makes decisions between a unbounded number of non-transitive conflicts. `Directed.txs` tracks all currently processing (neither accepted nor rejected) transactions, where the key is the transaction ID and the value is the corresponding `directedTx` object. Once accepted or rejected, the transactions are removed from `Directed.txs`. `Directed.utxos` tracks all UTXO spenders, where the key is the input UTXO transaction ID to be consumed and the value is the set of transaction IDs that spend the UTXO in the key (i.e., "UTXO spenders"). Once a transaction is accepted, its inputs are removed from `Directed.utxos`.
 
-*[`snowstorm.directedTx`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/consensus/snowstorm/directed.go#L34-L51)* -- Represents a Snowball instance and embeds `snowstorm.Tx` as the underlying transaction object. `directedTx.outs` contains all preceding transactions (issued before) that consume the same UTXO as the underlying transaction, thus in conflict. Such `outs` transactions are preferred over the underlying transaction. Now that it has seen the conflict, each `outs` transaction is marked as rogue and adds the underlying transaction to its own `directedTx.ins`. That is, `directedTx.outs` are more preferred than the underlying transaction, and `directedTx.ins` are less preferred than the underlying transaction -- forming edges on the conflict graph. The edges on the transaction are redirected whenever the number of successful polls is higher than its `outs` -- see [`Directed.Add`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Directed.Add) and [`Directed.RecordPoll`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Directed.RecordPoll).
+*[`snowstorm.directedTx`](https://github.com/ava-labs/avalanchego/blob/v1.7.1/snow/consensus/snowstorm/directed.go#L34-L51)* -- Represents a Snowball instance by embedding `snowstorm.Tx` as the underlying transaction object. `directedTx.outs` contains all preceding transactions (issued before) that consume the same UTXO as the underlying transaction, thus in conflict. Such `outs` transactions are preferred over the underlying transaction. Now that it has seen the conflict, each `outs` transaction is marked as rogue and adds the underlying transaction to its own `directedTx.ins`. That is, `directedTx.outs` are more preferred than the underlying transaction, and `directedTx.ins` are less preferred than the underlying transaction -- forming edges on the conflict graph. The edges on the transaction are redirected whenever the number of successful polls is higher than its `outs` -- see [`Directed.Add`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Directed.Add) and [`Directed.RecordPoll`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowstorm#Directed.RecordPoll).
 
 ![figure-4-transactions-directed-preferred.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-4-transactions-directed-preferred.png)
 

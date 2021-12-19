@@ -145,6 +145,17 @@ cd ${HOME}/go/src/github.com/ava-labs/avalanchego
 To auto-generate the certificates and commands, install [`gyuho/avax-tester`](https://github.com/gyuho/avax-tester). `avax-tester local create` imports [`staking/tls.go`](https://github.com/ava-labs/avalanchego/blob/v1.6.4/staking/tls.go#L107-L122) to generate certificates and node IDs.
 
 ```go
+// to generate the staking key pair
+import (
+	"bytes"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/pem"
+    ...
+)
+
 key, err := rsa.GenerateKey(rand.Reader, 4096)
 
 certTemplate := &x509.Certificate{
@@ -165,6 +176,19 @@ var keyBuff bytes.Buffer
 err := pem.Encode(&keyBuff, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes})
 
 return certBuff.Bytes(), keyBuff.Bytes(), nil
+```
+
+```go
+// to generate the node ID
+import (
+    "github.com/ava-labs/avalanchego/ids"
+    "github.com/ava-labs/avalanchego/utils/constants"
+    "github.com/ava-labs/avalanchego/utils/hashing"
+    ...
+)
+
+id, err := ids.ToShortID(hashing.PubkeyBytesToAddress(n.Config.StakingTLSCert.Leaf.Raw))
+id.PrefixedString(constants.NodeIDPrefix)
 ```
 
 This command will output a set of commands to run 5-node Avalanche cluster on your local network:
