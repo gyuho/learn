@@ -19,7 +19,7 @@
     - [Slush → Snowflake: BFT](#slush--snowflake-bft)
     - [Snowflake → Snowball: adding confidence](#snowflake--snowball-adding-confidence)
     - [Snowball → Avalanche: adding chits to track confidence on DAG](#snowball--avalanche-adding-chits-to-track-confidence-on-dag)
-    - [Avalanche → Snowman](#avalanche--snowman)
+    - [Avalanche → Snowman: linear chain without DAG](#avalanche--snowman-linear-chain-without-dag)
     - [Frosty](#frosty)
   - [Avalanche platform](#avalanche-platform)
   - [Who initiates the block (data)?](#who-initiates-the-block-data)
@@ -460,7 +460,7 @@ def avalanche_loop(u):
         set_q.add(tx)
 ```
 
-##### Avalanche → Snowman
+##### Avalanche → Snowman: linear chain without DAG
 
 [Ethereum](https://ethereum.org/) supports [smart contract](https://ethereum.org/en/developers/docs/smart-contracts/), a computation model where each contract is persisted as an on-chain state, and called on a method in a transaction -- each method call creates a state transition of the smart contract, querying or updating its persistent state. Like a regular transaction, a smart contract has its own balance in Ethereum currency (ETH), which is kept as part of its state. The smart contract are written in a high-level programming language [Solidity](https://en.wikipedia.org/wiki/Solidity), and gets compiled down to the bytecode for Ethereum Virtual Machine (EVM). In order to deploy a smart contract, the bytecode is encoded in a transaction (thus block on-chain). In order to run the bytecode, one needs to instantiate the transaction with the arguments for the method calls and persist its output on-chain. That is, both contract logic and its input and output need to be encoded on-chain.
 
