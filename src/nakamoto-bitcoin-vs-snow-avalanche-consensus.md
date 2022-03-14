@@ -1,6 +1,8 @@
 # Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus
 
-*Last update: March 12, 2022*
+🚧❄️☃️❄️🚧 *Actively working on it...* 🚧❄️☃️❄️🚧
+
+*Last update: March 14, 2022*
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
@@ -102,13 +104,13 @@ Agreement in consensus is a safety property, and termination is a liveness prope
 - **We can assume synchrony.** The protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1981)](https://lamport.azurewebsites.net/pubs/byz.pdf). Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, in order to achieve termination (liveness) guarantees.
 - **We can use probabilistic termination.** To work around the impossibility of deterministic termination, the protocol can opt for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus). Thereby the path of non-termination (infinite undecision) can have an exponentially small probability.
 
-Paxos operates in a fully asynchronous setting but does not suffer such safety and livenss issues, as the proposal is only made to a known set of correct participants. However, Snow protocol operates in a permissionless setting, thus susceptible to adversary that may not transmit messages and being stuck waiting for the response. In order to ensure liveness, a node implements timeouts for the wait and probabilistic termination. Snow protocol satisfies consistency given bounded network delays, to guarantee the liveness. Likewise, Nakamoto consensus satisfies consistency as its PoW difficulty depends on the maximum network delay -- see [Analysis of the Blockchain Protocol in Asynchronous Networks (2016)](https://eprint.iacr.org/2016/454.pdf).
+Paxos operates in a fully asynchronous setting but does not suffer such safety and liveness issues, as the proposal is only made to a known set of correct participants. However, Snow protocol operates in a permissionless setting, thus susceptible to adversary that may not transmit messages and being stuck waiting for the response. In order to ensure liveness, a node implements timeouts for the wait and probabilistic termination. Snow protocol satisfies consistency given bounded network delays, to guarantee the liveness. Likewise, Nakamoto consensus satisfies consistency as its PoW difficulty depends on the maximum network delay -- see [Analysis of the Blockchain Protocol in Asynchronous Networks (2016)](https://eprint.iacr.org/2016/454.pdf).
 
 The Snow protocol defines the following key guarantees:
 
 - **P1. Safety (agreement).** Two correct nodes may make conflicting decisions on a transaction but with negligible probability \\(≤ ε\\).
-- **P2. Livenss (termination with upper bound).** The decision is made with a strictly positive probability within \\(t_{max}\\) rounds, where \\(n\\) is the total number of participants and \\(O(log n) < t_{max} < ∞\\).
-- **P3. Livenss (strong form of termination).** If \\(f ≤ O(\sqrt{n})\\) where \\(n\\) is the total number of participants and \\(f\\) is the number of adversary nodes, the decision is made with high probability \\(≥ 1 - ε\\) within \\(O(log n)\\) rounds.
+- **P2. Liveness (termination with upper bound).** The decision is made with a strictly positive probability within \\(t_{max}\\) rounds, where \\(n\\) is the total number of participants and \\(O(log n) < t_{max} < ∞\\).
+- **P3. Liveness (strong form of termination).** If \\(f ≤ O(\sqrt{n})\\) where \\(n\\) is the total number of participants and \\(f\\) is the number of adversary nodes, the decision is made with high probability \\(≥ 1 - ε\\) within \\(O(log n)\\) rounds.
 
 #### Snow family protocols
 
@@ -355,6 +357,8 @@ The key observation is the standard replication from traditional consensus proto
 
 Snowball can eventually make progress using binary decomposition, whereas Avalanche may not make progress in the presence of multi-conflict transactions. The [Avalanche paper](https://files.avalabs.org/papers/consensus.pdf) demonstrates this is a sensible tradeoff, and sufficient for building complex payment systems.
 
+The classical BFT systems (e.g., Nakamoto consensus) has 33% Byzantine fault tolerance limits both for safety and liveness -- see ["Majority is not Enough" by Ittay Eyal and Emin Gün Sirer](http://www.cs.cornell.edu/~ie53/publications/btcProcFC.pdf): The malicious party only needs to control the 33% of the network to break the network (e.g., double spends). Avalanche is different because the protocol makes trade-offs of weakened liveness for the Byzantine clients, thus higher levels of safety -- 80% safety threshold. Note that the percent in Avalanche represents the percentage of the stake held by Avalanche network validators: The malicious nodes will need control the total stake amount beyond safety thresholds. Avalanche safety limits are probabilistic as the protocol performs sample-voting against validators -- see [`IsValidatorOnly`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow#ConsensusContext.IsValidatorOnly). The validator is weighted based on its stake amount for consensus queries, and non-validator is never queried for such consensus polling.
+
 [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) is to Avalanche, as chain is to Bitcoin: Avalanche consists of multiple single-decree [Snowball](#snowflake--snowball-adding-confidence) instances to build a dynamic, append-only directed acyclic graph (DAG) of all known transactions -- each Snowball instance is a vertex in a graph. Avalanche DAG defines one single sink, "genesis" vertex, with an out-degree of zero. DAG provides more efficiency, because a single vote on a DAG vertex implicitly endorses all transactions that lead to the genesis vertex (transitive). And it also provides better security, because similar to Bitcoin blockchain, the DAG interconects transactions, thus difficult to revert past commit.
 
 When an Avalanche transaction is issued, it names one or more parents. Each transaction forms a conflict set. Avalanche instantiates a Snowball instance for each conflict set on the DAG. Each Snowball instance represents a vertex in the graph. A vertex may consist of multiple transactions. So, the vertex is a set of transactions and an instance of Snowball consensus.
@@ -464,7 +468,9 @@ def avalanche_loop(u):
 
 [Ethereum](https://ethereum.org/) supports [smart contract](https://ethereum.org/en/developers/docs/smart-contracts/), a computation model where each contract is persisted as an on-chain state, and called on a method in a transaction -- each method call creates a state transition of the smart contract, querying or updating its persistent state. Like a regular transaction, a smart contract has its own balance in Ethereum currency (ETH), which is kept as part of its state. The smart contract are written in a high-level programming language [Solidity](https://en.wikipedia.org/wiki/Solidity), and gets compiled down to the bytecode for Ethereum Virtual Machine (EVM). In order to deploy a smart contract, the bytecode is encoded in a transaction (thus block on-chain). In order to run the bytecode, one needs to instantiate the transaction with the arguments for the method calls and persist its output on-chain. That is, both contract logic and its input and output need to be encoded on-chain.
 
-Although Avalanche native VM (AVM) makes it easier to define a blockchain-based application, Ethereum smart contract became the de-facto language in the industry. This is where [Snowman](https://support.avax.network/en/articles/4058299-what-is-the-snowman-consensus-protocol) comes in to support EVM-compatible smart contract: Snowman is a linearized version of Avalanche protocol, and used for Avalanche [Platform chain (P-chain)](https://docs.avax.network/learn/platform-overview#platform-chain-p-chain) and [Contract chain (C-chain)](https://docs.avax.network/learn/platform-overview#contract-chain-c-chain). Snowman is a linear chain of totally-ordered blocks, whereas Avalanche is a DAG of vertices.
+Snowman is a linearized version of Avalanche protocol, and used for Avalanche [Platform chain (P-chain)](https://docs.avax.network/learn/platform-overview#platform-chain-p-chain) and [Contract chain (C-chain)](https://docs.avax.network/learn/platform-overview#contract-chain-c-chain). Snowman is a linear chain of totally-ordered blocks, whereas Avalanche is a DAG of vertices.
+
+Although Avalanche native VM (AVM) makes it easier to define a blockchain-based application, Ethereum smart contract became the de-facto language in the industry. This is where [Snowman](https://support.avax.network/en/articles/4058299-what-is-the-snowman-consensus-protocol) comes in to support EVM-compatible smart contract.
 
 #### Frosty
 
@@ -484,25 +490,41 @@ P-chain is an Avalanche blockchain that coordinates validators, controls staking
 
 C-chain is an Avalanche blockchain that supports smart contract creation. C-chain is an instance of the Ethereum Virtual Machine (EVM), powered by Avalanche. C-chain implements [Snowman consensus protocol](https://docs.avax.network/#snowman-consensus-protocol).
 
+> As powerful as DAG is, the core limitation is that you can either provide a partial ordering or stick a total ordering in there by essentially limiting to one UTXO per state. But, you end up having some issues with non-transitive conflict support and things like that. So, we ended up implementing snowman as kind of a second consensus instance. It is a strict subset of avalanche but allows you to do a bunch of optimizations on the consensus side, around the use of transitive conflicts. Transitive conflict means if two blocks are issued at the same height, they conflict. If a third block is issued at the same height, all three of them conflict, whereas in avalanche, if you have multiple input UTXOs, the transactions can actually not form transitive conflicts: where transaction A, B, and C, A conflicts with B, B conflicts with C, but A doesn't actually conflict with C. So, digging into snowman, we ended up implementing that out. And that kind of fleshed out two different components in consensus infrastruction. That ended up introducing two different interfaces for virtual machines to plug into on the avalanche consensus and then the other with the snowman consensus.
+>
+> P-chain and C-chain both use snowman, so they implement the VM specification for snowman blocks, and the X-chain is a DAG, so it actually implements the DAG VM interface. That's kind of how the separation works there, so when a node is running the primary network without any additional subnets, it's actually running three different consensus instances: It's running the avalanche consensus instance for the X-chain, and it's running two instances of the snowman consensus engine. That's how avalanche go ends up managing the consensus side of these two implementations.
+>
+> With snowman++, we improved snowman with reducing contention and with frosty, we'll be further improving some of the kind of theoretical bounds of the native snowman consensus.
+>
+> P-chain and X-chain are inside of avalanche go repository, but VMs are also able to dynamically be added to avalanche go, so you can set up what we call plugins to run with your VMs. C-chain is actually using coreth, which is a separate repository we manage. And coreth is a fork of geth, which defines the VM for the C-chain, essentially the EVM. These plugins are essentially used to define the state transitions of blocks, and also to be able to query the state. So, avalanche go is totally separate from really anything ethereum, but C-chain specifically is the fork. That's how avalanche go ends up being so extensible. C-chain is actually implemented as a plug-in.
+>
+> [*Stephen Buttolph (Chief Protocol Architect at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=470)
+
+> The thinking was, if we are going to push hard on this generic VM concept and if we can implement an EVM compatible chain using our plug-in interface, we should be able to implement almost any virtual machine using that plug-in interface.
+>
+> Since mainnet launch, we've been focusing on improving that experience both from a UX, like developer expected perspectives, as well as from a performance perspective of how you pipeline things over gRPC, how you cache better, how you reduce the communication overhead of running these like dynamic virtual machines. And I think that the continued growth of the C-chain has continued to push us further along that road, but it's totally separate and you could just as easily take any number of the popular virtual machines people are developing and run them just like you would coreth. So, you could take a Cosmos virtual machine, you could take Solana, you could take Rust virtual machine, and just run it just like you would coreth as the separate virtual machine.
+>
+> Generally speaking, we view ourselves as someone that provides very high fidelity examples of what you could try to do with these virtual machines such that you could take them and build as you saw fit on top of this interface. We would roll out different examples that have complicated state access, or like complicated transaction processing, or are optimized for some type of transaction processing, and then leave it to people to extend where they could see that going.
+>
+> [*Patrick O'Grady (VP of Engineering at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=886)
+
+> We can abstract all that away, they don't have to deal with the consensus. They don't have to deal with the networking. They don't have to deal with any of this stuff. They just have to deal with kind of what their core innovation is. I think that the innovation space in the VM land is so rich that, there's really not going to be like someone that implements some killer VM that kills everything. People are always going to want to make their own innovation.
+>
+> [*Stephen Buttolph (Chief Protocol Architect at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=1139)
+
 #### Who initiates the block (data)?
 
 ##### Peer/node discovery
 
-Bitcoin client uses DNS to discover the list of node IPs (see [wiki](https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery)). Similarly, Avalanche uses DNS seed nodes to find the active participants. Unlike Bitcoin that requires one correct DNS seed node (i.e., seed anchor), Avalanche only requires a simple majority of the anchors to be valid -- an Avalanche node can discover its peers by connecting to any set of seed anchors. And there is no barrier to become a DNS seed anchor -- one set of seed anchors can not dictate whether a node may or may not join the network (see [Avalanche platform paper](https://files.avalabs.org/papers/platform.pdf)).
-
-##### Peer-to-peer communication
-
-TBD
+Bitcoin client uses DNS to discover the list of node IPs (see [wiki](https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery)). Avalanche uses hard-coded beacon nodes as seed anchors -- see [beacon nodes](https://github.com/ava-labs/avalanchego/blob/v1.7.7/genesis/beacons.go). Unlike Bitcoin that requires one correct DNS seed node (i.e., seed anchor), Avalanche only requires a simple majority of the anchors to be valid -- an Avalanche node can discover its peers by connecting to any set of seed anchors. And there is no barrier to become a seed anchor -- one set of seed anchors can not dictate whether a node may or may not join the network (see [Avalanche platform paper](https://files.avalabs.org/papers/platform.pdf)).
 
 ##### Message relay
 
 New Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an `inv`entory message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers with an `inv`. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
 
-![figure-1-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-1-bitcoin-message-relay.png)
+![figure-4-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-4-bitcoin-message-relay.png)
 
-An initiated Avalanche transaction from a wallet client is sent to an Avalanche VM (node). T
-
-TODO
+Each VM bootstraps into a network by randomly sub-sampling the beacon validators set -- see [`snow/validator.Set`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/validators#Set).
 
 #### What's in the block (data)?
 
@@ -510,15 +532,13 @@ TODO
 
 The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
 
-Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus.
-
-TODO
+Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus. Snowman protocol uses the block as a unit of consensus.
 
 ##### Data structure
 
 Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. The sequence of the Bitcoin blocks is strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent. The transactions for each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. The merkle tree root represents the hash of all transactions in the block, used for proving its data integrity and ensuring the immutability of transaction ordering: Changing the order will change the merkle root (thus block hash).
 
-![figure-3-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-3-bitcoin-data-structure.png)
+![figure-5-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-5-bitcoin-data-structure.png)
 
 TODO
 
@@ -536,17 +556,13 @@ Two competing Bitcoin miners may create two blocks with different sets of transa
 
 In Avalanche, transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node prefer only one transaction in the conflict set.
 
-In Avalanche, two transactions with overlapping input IDs are in conflict (see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107)). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex (see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570)).
-
-TODO
+In Avalanche, two transactions with overlapping input IDs are in conflict -- see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex -- see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570).
 
 ##### Choice between conflicting chains
 
 Two Bitcoin nodes may broadcast different versions of blocks simultaneously, when the blocks were mined roughly at the same time. Then the neighboring node will use whichever branch it received first and save the other branch in case it becomes the longer chain. For instance, the branch A and B are both valid blocks but competing for the next block. They may share transactions so cannot be placed one after the other. This tie breaks when the node hears or mines a new block C extended on top of A. Then the node purges the block B that is not part of the longest chain, switches to the longer branch with A with the most accumulated PoW, and returns the transactions in B but not in A to the mempool, to be mined in a new block.
 
-![figure-5-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-5-bitcoin-conflict.png)
-
-Avalanche conflict is between the vertices (vs. between Bitcoin blocks).
+![figure-6-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-bitcoin-conflict.png)
 
 TODO
 
@@ -556,7 +572,7 @@ TODO
 
 When newly joined, Bitcoin node needs to wait for the data sync before participating in the consensus. Bitcoin node can create a block template and start mining regardless of how many transaction it has received -- there is no requirement that the block template must have more than 1 transaction. Bitcoin consensus is built when the node finds a PoW by enumerating the nonces and broadcasts the newly mined block to all other nodes. Bitcoin does not message its peers to build agreement, but instead performs PoW locally and disseminates the state information by gossip.
 
-TODO
+A newly issued Avalanche transaction is first validated by the node. Once validating, the node queries the preferred transactions against randomly sub-sampled validators to build transactio confidence.  Once the transaction confidence threshold is met, the transaction is marked as accepted, and other conflicting transactions are rejected.
 
 ##### Information propagation speed and finality
 
