@@ -20,12 +20,14 @@ I am interested in:
 
 ## Projects: Distributed Systems
 
+- [Avalanche Go](https://github.com/ava-labs/avalanchego) - Avalanche node
 - [`etcd`](https://github.com/etcd-io/etcd/graphs/contributors) - distributed key-value store
 - [`dbtester`](https://github.com/etcd-io/dbtester) - benchmark etcd vs. zookeeper vs. consul
 - [etcd Labs](http://play.etcd.io) - interactive etcd playground (see [`etcdlabs`](https://github.com/etcd-io/etcdlabs) for code)
 
 ## Projects: Other
 
+- [`avalanche-ops`](https://github.com/ava-labs/avalanche-ops) - Avalanche operational toolkit in Rust
 - [`learn`](https://github.com/gyuho/learn) - learning logs
 - [`dplearn`](https://github.com/gyuho/dplearn) - e2e cat vs. dog classifier backed by etcd 
 - [`goraph`](https://github.com/gyuho/goraph) - graph algorithms in Go
