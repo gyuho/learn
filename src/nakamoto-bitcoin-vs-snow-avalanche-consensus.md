@@ -12,11 +12,13 @@
 - [What is Nakamoto consensus?](#what-is-nakamoto-consensus)
 - [What is Snow consensus?](#what-is-snow-consensus)
 - [Unspent transaction output (UTXO)](#unspent-transaction-output-utxo)
-- [Proof-of-Work, Proof-of-Stake](#proof-of-work-proof-of-stake)
+- [Proof-of-Work and Proof-of-Stake](#proof-of-work-and-proof-of-stake)
 - [Proof-of-Stake (PoS)](#proof-of-stake-pos)
 - [Agreement in Nakamoto](#agreement-in-nakamoto)
 - [Agreement in Snow](#agreement-in-snow)
   - [Key guarantees](#key-guarantees)
+  - [Synchrony](#synchrony)
+  - [Safety and liveness](#safety-and-liveness)
   - [Snow family protocols](#snow-family-protocols)
     - [Slush: introducing metastability](#slush-introducing-metastability)
     - [Slush → Snowflake: BFT](#slush--snowflake-bft)
@@ -39,7 +41,6 @@
   - [How to distribute the block (data)?](#how-to-distribute-the-block-data)
     - [Build consensus](#build-consensus)
     - [Information propagation speed and finality](#information-propagation-speed-and-finality)
-- [Summary](#summary)
 - [Reference](#reference)
 
 ### What is consensus?
@@ -68,7 +69,7 @@ When a transaction occurs, the transaction input (e.g., "A has 100 BTC, and A se
 
 The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency.
 
-### Proof-of-Work, Proof-of-Stake
+### Proof-of-Work and Proof-of-Stake
 
 *Proof-of-Work (PoW)* and *Proof-of-Stake (PoS)* are not consensus algorithms but sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, or Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
 
@@ -116,6 +117,18 @@ The Snow protocol defines the following key guarantees:
 - **P1. Safety (agreement).** Two correct nodes may make conflicting decisions on a transaction but with negligible probability \\(≤ ε\\).
 - **P2. Liveness (termination with upper bound).** The decision is made with a strictly positive probability within \\(t_{max}\\) rounds, where \\(n\\) is the total number of participants and \\(O(log n) < t_{max} < ∞\\).
 - **P3. Liveness (strong form of termination).** If \\(f ≤ O(\sqrt{n})\\) where \\(n\\) is the total number of participants and \\(f\\) is the number of adversary nodes, the decision is made with high probability \\(≥ 1 - ε\\) within \\(O(log n)\\) rounds.
+
+#### Synchrony
+
+Some protocols assume a synchronous network with a strict upper bound for message delays. TODO
+
+#### Safety and liveness
+
+To recap, *safety* is a property of "agreement". The *safety* of the protocol fails when two nodes are finalized with two different blocks for the same height. *Liveness* is a property of "termination": Correct members eventually reach an agreement and produce a value to make progress.
+
+The classical consensus protocol such as Paxos or PBFT has a determinstic safety guarantee, as the proposal is only made to a known set of correct, good-behaving members. Avalanche protocol trades away such determinstic safety guarantee with a probabilistic one. That is, two correct nodes may make conflicting decisions, but with infinitely small probability. In Avalanche protocol, these "safety" and "liveness" thresholds can be parameterized. The protocol intentially trades "liveness" for higher "safety" threshold, because that is a safer way to implement payment system on the blockchain. The tradeoff is, the higher "safety" threshold requires more rounds to reach an agreement, therefore lowers the "liveness".
+
+In Avalanche protocol, "safety" and "liveness" are only guaranteed for virtuous transactions with no previously issued conflicting transaction. And the "liveness" is not guaranteed for rogue transactions that are in conflict spending with the previously issued transactions. This may sound like, the protocol does not make progress when there's a conflicting transaction (rogue), but that is not true. It is about the guarantees on the number of rounds to reach an agreement. The protocol allows malicious or double spending transactions to be stuck forever. To be more precise, the "liveness" for double spending transactions is not guaranteed. For end-users, if a transaction did not get accepted with a sub-second finality, they can simply reissue the transaction, and it will go through on retries. And if there's no conflict in the transaction, the node just relays the transaction to the other nodes to accept. The sub-sampled voting is only for resolving the transaction conflicts.
 
 #### Snow family protocols
 

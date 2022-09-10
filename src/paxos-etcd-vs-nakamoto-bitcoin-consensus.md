@@ -13,7 +13,7 @@
   - [Adversary node](#adversary-node)
   - [Sybill attack](#sybill-attack)
   - [DoS (Denial of Service) attack](#dos-denial-of-service-attack)
-- [Proof-of-Work, Proof-of-Stake](#proof-of-work-proof-of-stake)
+- [Proof-of-Work and Proof-of-Stake](#proof-of-work-and-proof-of-stake)
 - [Agreement in Nakamoto (continued)](#agreement-in-nakamoto-continued)
   - [Who initiates the block (data)?](#who-initiates-the-block-data)
     - [Peer/node discovery](#peernode-discovery)
@@ -155,7 +155,7 @@ PoW mechanism serves two purposes in Bitcoin: (1) deter the sybil attack, as eac
 
 An attacker may rapidly initiate a large number of transactions to flood the network and consume its storage. PoW rewards behaving miners, however, does not penalize the misbehaving miner. Instead the Bitcoin client implements its own protection mechanisms as [here](https://en.bitcoin.it/wiki/Weaknesses#Denial_of_Service_.28DoS.29_attacks).
 
-### Proof-of-Work, Proof-of-Stake
+### Proof-of-Work and Proof-of-Stake
 
 *Proof-of-Work (PoW)* and *Proof-of-Stake (PoS)* are not consensus algorithms but sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, or Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
 
