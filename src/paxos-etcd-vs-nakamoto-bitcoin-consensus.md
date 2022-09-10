@@ -1,6 +1,6 @@
 # Paxos(etcd) vs. Nakamoto(Bitcoin): consensus
 
-*Last update: March 12, 2022*
+*Last update: September 10, 2022*
 
 *Next: [Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus](./nakamoto-bitcoin-vs-snow-avalanche-consensus.md)*
 
@@ -13,6 +13,7 @@
   - [Adversary node](#adversary-node)
   - [Sybill attack](#sybill-attack)
   - [DoS (Denial of Service) attack](#dos-denial-of-service-attack)
+- [Proof-of-Work, Proof-of-Stake](#proof-of-work-proof-of-stake)
 - [Agreement in Nakamoto (continued)](#agreement-in-nakamoto-continued)
   - [Who initiates the block (data)?](#who-initiates-the-block-data)
     - [Peer/node discovery](#peernode-discovery)
@@ -57,7 +58,7 @@ Nakamoto consensus powers Bitcoin to achieve a distributed consensus on the chai
 
 Bitcoin uses the [unspent transaction output (UTXO) model](https://en.wikipedia.org/wiki/Unspent_transaction_output) to record the state of individual coin transfers between wallets (much like physical coins). Rather than tracking the balance of each account (as in Ethereum), a UTXO represents a transaction output that has not been spent and thus can be used as an input to a new transaction. Only the unspent output can be used for the next transaction to prevent double-spending. Each UTXO is a chain of ownership where the current owner (currency/asset sender) signs the transaction to transfer the UTXO ownership to the public key of the new owner (receiver).
 
-When a transaction occurs, the transaction input (e.g., "A has 100 BTC, and A sends 10 BTC to B") is to be destroyed from the UTXO set, and the respective outputs (e.g., "A balance changes to 90 BTC, and B receives 10 BTC from A") creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reduces the computation requirements in the network, and makes it easier to parallelize transactions.
+When a transaction occurs, the transaction input (e.g., "The wallet A has 100 BTC, and the wallet A sends 10 BTC to the wallet B") is to be destroyed from the UTXO set, and the respective outputs (e.g., "The wallet A balance changes to 90 BTC, and the wallet B receives 10 BTC from the wallet A") creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reduces the computation requirements in the network, and makes it easier to parallelize transactions.
 
 The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency.
 
@@ -65,13 +66,13 @@ The total UTXO sets in a blockchain represent the set that every transaction con
 
 Paxos assumes each process operates at arbitrary speeds and may fail or restart at any time. Messages may take arbitrarily long to deliver, be duplicated, or be lost, but they are not corrupted.
 
-Single-decree Paxos is a two-phase protocol. In the first phase of the protocol (prepare/promise phase), the proposer sends a message with a sequence number \\(n\\) to the acceptors (peers) -- *"Prepare"* with the sequence number \\(n\\). And the acceptor responds to the proposal if and only if the sequence number \\(n\\) is higher than every previously accepted proposal number -- *"Promise"* to never again accept the proposal numbered less than \\(n\\). If the sequence number \\(n\\) is less than or equal to any previously accepted proposal, the acceptor can ignore the proposal. Or the acceptor rejects the proposal to respond with the highest sequence number it has ever seen. In the second phase of the protocol (accept/learn), once the proposer secures the agreement to its "prepare" request from the majority of the acceptors, the proposer can now request a value \\(v\\) with the sequence number \\(n\\) to be accepted -- *"Accept"*. And once accepting the chosen value \\(v\\), the acceptor can inform its learner with the accepted value \\(v\\) -- *"Learn"* the agreed value and apply to its state.
+Single-decree Paxos is a two-phase protocol. In the first phase of the protocol ("prepare/promise" phase), the proposer sends a message with a sequence number \\(n\\) to the acceptors (peers) -- *"Prepare"* with the sequence number \\(n\\). And the acceptor responds to the proposal if and only if the sequence number \\(n\\) is higher than every previously accepted proposal number -- *"Promise"* to never again accept the proposal numbered less than \\(n\\). If the sequence number \\(n\\) is less than or equal to any previously accepted proposal, the acceptor ignores or rejects the proposal by responding with the highest sequence number it has ever seen. In the second phase of the protocol ("accept/learn" phase), once the proposer secures the agreement on its "prepare" request from the majority of the acceptors, the proposer can now request a value \\(v\\) with the sequence number \\(n\\) to be accepted -- *"Accept"*. And once accepting the chosen value \\(v\\), the acceptor can inform its learner with the accepted value \\(v\\) -- *"Learn"* the agreed value and apply to its state.
 
 ![figure-1-paxos-consensus.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-1-paxos-consensus.png)
 
-Then, what if two proposers keep sending a sequence of proposals with increasing sequence numbers, while acceptors keep promising to accept the highest but none of which is ever chosen? One proposer may complete the phase 1 for a sequence number but its accept message can get ignored, because the other proposer could have completed another phase 1 with a higher number in-between. To prevent such conflict, only one proposer is elected to be the leader that exclusively issues the proposals: Each single-decree Paxos instance must establish a leader, and then proceed with phase 2 to chose the value.
+Then, what if two proposers keep sending a sequence of proposals with increasing sequence numbers, while acceptors keep promising to accept the highest but none of which is ever chosen? One proposer may complete the phase 1 for a sequence number but its accept message can get ignored, because the other proposer could have completed another phase 1 with a higher number in-between. To prevent such conflict, a single proposer is elected to be the leader that exclusively issues proposals: Each single-decree Paxos instance must establish a leader, and then proceed with phase 2 to chose the value.
 
-In normal operation, Multi-Paxos establishes a stable leader to act as the distinguished proposer for multiple Paxos instances (by implementing leader lease). Clients send commands to the leader (forwarded to the leader). If no participant is acting as leader, then the cluster cannot make any progress. [Raft](https://raft.github.io) is a consensus algorithm adopting the Multi-Paxos policy. As an analogy, here's how [etcd](https://github.com/etcd-io/etcd) uses Raft to process its writes:
+In practice, Multi-Paxos establishes a stable leader to act as the distinguished proposer for multiple Paxos instances (by implementing leader lease). Clients send commands to the leader (forwarded to the leader). If no participant is acting as leader, then the cluster cannot make any progress. [Raft](https://raft.github.io) is a consensus algorithm adopting the Multi-Paxos policy. As an analogy, here's how [etcd](https://github.com/etcd-io/etcd) uses Raft to process its writes:
 
 1. Each etcd node starts as a follower.
 2. The follower becomes candidate if there is no leader heartbeat for the duration of election timeout (1-second).
@@ -86,19 +87,19 @@ In normal operation, Multi-Paxos establishes a stable leader to act as the disti
 
 ### Agreement in Nakamoto
 
-The key difference is: Paxos assumes the fixed set of servers, whereas Nakamoto is permissionless and open to any participant. Paxos/Raft membership reconfiguration itself (member add/remove) requires consensus from quorum, whereas Nakamoto simply uses [DNS for peer discovery](https://developer.bitcoin.org/devguide/p2p_network.html#peer-discovery). Bitcoin being a public, permissionless blockchain introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism.
+The key difference is: Paxos requires precise membership, whereas Nakamoto does not require a fixed set of servers. Bitcoin network is permissionless and open to any participant. Paxos/Raft membership reconfiguration itself (member add/remove) requires consensus from quorum, whereas Nakamoto simply uses [DNS for peer discovery](https://developer.bitcoin.org/devguide/p2p_network.html#peer-discovery). Bitcoin being a public, permissionless blockchain introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism.
 
 #### Adversary node
 
-A malicious actor or software error may exhibit Byzantine (i.e., arbitrary) behavior. For instance, a transaction "A pays B $100" becomes "A pays C $10,000". To prevent such identity spooﬁng and detect corrupted messages, Nakamoto consensus uses cryptographic techniques.
+A malicious actor or software error may exhibit Byzantine (i.e., arbitrary) behavior. For instance, a transaction "Person A pays the person B $100" becomes "Person A pays the person C $10,000". To prevent such identity spooﬁng and detect corrupted messages, Nakamoto consensus uses cryptographic techniques.
 
-Bitcoin is a chain of digital signatures. Each Bitcoin wallet contains one or more [Elliptic Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) private keys, which are mathematically related to its addresses. The respective public key is used to determine if the signature is genuine. Bitcoin transfer generates a hash of the previous transaction and the public key of the payee (new owner), which is signed by the private key of the transferrer (previous owner). Then the new owner (payee) verifies the incoming transaction with the previous owner's public key. Which makes it virtually impossible for an adversary to impersonate without access to the private key.
+Bitcoin is a chain of digital signatures. Each Bitcoin wallet contains one or more [Elliptic Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) private keys, which are mathematically derived to its addresses. The respective public key is used to determine whether the signature is genuine. Bitcoin transfer generates a hash of the previous transaction and the public key of the payee (new owner), which is signed by the private key of the transferrer (previous owner). Then the new owner (payee) verifies the incoming transaction with the previous owner's public key. Which makes it virtually impossible for an adversary to impersonate the ownership without access to the private key.
 
-Such public-key cryptographic mechanism ensures only the verified owner can spend the balance, but does not prevent the double-spend: The system can still accept transactions that are cryptographically correct but conflicting spends on the same fund. For instance, the previous owner may maliciously sign earlier transactions to double-spend from the same fund -- *A currently has $100 but signs transactions that pay B and C each $100*. The traditional banking system prevents such double-spend by recording all historical transactions (thus aware of which arrived first). In order to accomplish this without the trusted third-party, each Bitcoin transaction must be publicly announced, and the linear view of the transaction history must be validated by the majority of the nodes.
+Such public-key cryptographic mechanism ensures only the verified owner can spend the balance, but does not prevent the double-spend: The system can still accept transactions that are cryptographically correct but conflicting spends on the same fund. For instance, the previous owner may maliciously sign earlier transactions to double-spend from the same fund -- *The person A currently has $100 but signs transactions that pay the person B and C each $100*. The traditional banking system prevents such double-spend by recording all historical transactions (thus aware of which arrived first). Bitcoin achieves this by publicly announcing the transactions. And the linear view of the transaction history must be validated by the majority of the nodes for the transaction finality.
 
 #### Sybill attack
 
-Sybill attack is a scenario when a dishonest group controls as many nodes as required for consensus to taint the outcome in its flavor. For instance, the malicious group who controls more than half of the network may out-vote the honest nodes to exert double-spend or refuse to accept or transmit blocks. Bitcoin uses Proof-of-Work (PoW) to prevent such sybil attack (and for its agreement process).
+Sybill attack is a scenario when a dishonest group controls as many nodes as required for consensus to taint the outcome in its flavor. The malicious group who controls more than half of the network can out-vote the honest nodes to exert double-spend or refuse to accept or transmit blocks. Bitcoin uses Proof-of-Work (PoW) to prevent such sybil attack (and for its agreement process).
 
 Bitcoin defines a network-wide "target" number to control the mining difficulty that decides the average number of blocks that can be created per hour -- if blocks are generated too fast, the difficulty increases. The checksum of the block header must be less than or equal to the "target" number in order to be added to the blockchain. Bitcoin uses [SHA-256](https://en.wikipedia.org/wiki/SHA-2) to double-hash the block header -- `SHA256(SHA256(BLOCK_HEADER))`. If the 256-bit number from the hash function is greater than the "target" number, the miner retries the different input. This is where the "nonce" comes in. "nonce" is a 32-bit number embedded in the block header (4-byte field): "nonce" starts from 0, and the miner increments "nonce" by 1 for each hash function call.
 
@@ -147,11 +148,16 @@ fn main() -> Result<()> {
 }
 ```
 
-PoW mechanism serves two purposes in Bitcoin: (1) deter the sybil attack, as each mining node requires a signiﬁcant monetary investment to grind through the nonces for block creation, and (2) achieve distributed consensus when a miner expresses the acceptance of a new block by working on the next block creation. 
+PoW mechanism serves two purposes in Bitcoin: (1) deter the sybil attack, as each mining node requires a signiﬁcant monetary investment to grind through the nonces for block creation, and (2) achieve distributed consensus when a miner expresses the acceptance of a new block by working on the next block creation.
+
 
 #### DoS (Denial of Service) attack
 
 An attacker may rapidly initiate a large number of transactions to flood the network and consume its storage. PoW rewards behaving miners, however, does not penalize the misbehaving miner. Instead the Bitcoin client implements its own protection mechanisms as [here](https://en.bitcoin.it/wiki/Weaknesses#Denial_of_Service_.28DoS.29_attacks).
+
+### Proof-of-Work, Proof-of-Stake
+
+*Proof-of-Work (PoW)* and *Proof-of-Stake (PoS)* are not consensus algorithms but sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, or Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
 
 ### Agreement in Nakamoto (continued)
 
@@ -164,7 +170,7 @@ The "target" in the block header regulates the speed of new block creation. This
 
 #### Who initiates the block (data)?
 
-In Paxos, a client can propose any value (data) to any node in the cluster. The write request is forwarded to leader. For instance, an etcd client writes a key-value pair as follows:
+In Paxos, a client can propose any value (data) to any node in the cluster. The write request (or "proposal") is forwarded to the leader. For instance, an etcd client writes a key-value pair as follows:
 
 ```go
 // create an etcd client object
@@ -199,6 +205,8 @@ func stepFollower(r *raft, m pb.Message) error {
         ...
 ```
 
+![figure-2-etcd-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-2-etcd-message-relay.png)
+
 > In comparison, *how does Bitcoin initiate a block (data) to its consensus protocol?*
 
 ##### Peer/node discovery
@@ -207,15 +215,13 @@ Unlike Paxos that provides a hard-coded list of server endpoints for client inte
 
 ##### Message relay
 
-Unlike Paxos that has a centralized entity (leader) to relay proposals to, new Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an `inv`entory message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers with an `inv`. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
-
-![figure-2-etcd-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-2-etcd-message-relay.png)
+Unlike Paxos that has a centralized entity (leader) to relay proposals to, new Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an "inventory" message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers as an `inv` message. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
 
 ![figure-3-bitcoin-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-3-bitcoin-message-relay.png)
 
 #### What's in the block (data)?
 
-In Paxos, the value (data) itself can be arbitrary, as long as the "value" can be agreed upon by the consensus protocol. The protocol persists other auxiliary fields such as log term and index to track the progress of logs. For instance, in etcd, once the proposal is committed, the entry is encoded to Protocol Buffer and then persisted on disk:
+In Paxos, the value (data) itself can be arbitrary, as long as the "value" can be agreed upon by the consensus protocol. The protocol persists other auxiliary fields such as log term and index to track the progress of logs. In etcd, when a proposal is committed, the entry is encoded to Protocol Buffer and then persisted on disk:
 
 ```go
 type Storage interface {
@@ -241,13 +247,13 @@ func (w *WAL) saveEntry(e *raftpb.Entry) error {
 
 ##### Unit of consensus
 
-Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
+Unlike Paxos whose unit of consensus is a single proposed value, the unit of Bitcoin consensus is a block composed of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) must be signed by the current wallet's private key in order to provide the mathematical proof. Once the signatures are validated, the miner combines those multiple transactions into a single block, a unit of consensus, rather than initiating a new consensus for each transaction.
 
 ##### Data structure
 
-Unlike Paxos that assumes the honesty of participants, Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. Paxos entry (value/consensus unit) only contains the value and log state information (e.g., term and index), whereas Bitcoin block (value/consensus unit) contains chain-hashed metadata in addition to the value itself. Paxos does not specify any dependency or order between the entries -- log term and index are mainly used to track the progress of the Raft node state and ensure the recency of the leader's logs. The sequence of the Bitcoin blocks is strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent.
+Unlike Paxos that assumes the honesty of participants, Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. Paxos entry (value/consensus unit) only contains the value and log state information (e.g., term and index), whereas Bitcoin block (value/consensus unit) contains chain-hashed metadata in addition to the value itself. Paxos does not specify any dependency or order between the entries -- log term and index are mainly used to track the progress of the Raft node state and ensure the recency of the leader's logs. The Bitcoin blocks are strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent.
 
-The transactions for each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. So the merkle tree root represents the hash of all transactions in the block, which proves its data integrity. The merkle tree computes the root in the order the block receives each transaction. Thus, the transaction order is immutable, as changing the order will change the merkle root (thus block hash).
+The transactions in each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. So the merkle tree root represents the hash of all transactions in the block, which proves its data integrity. The merkle tree computes the root in the order the block receives each transaction. Thus, the transaction order is immutable, as changing the order will change the merkle root (thus block hash).
 
 Each block contains more than [1,500 transactions on average](https://www.blockchain.com/charts/n-transactions-per-block) with its total size limited to 1 MB. Each block is identified with a cryptographic hash value. Bitcoin computes the block hash using [SHA-256](https://en.wikipedia.org/wiki/SHA-2) twice on the block header -- `SHA256(SHA256(BLOCK_HEADER))`.
 
@@ -270,7 +276,7 @@ The [block](https://developer.bitcoin.org/reference/block_chain.html#serialized-
 
 ##### Payload and data limit
 
-Each etcd request (write, unit of consensus) is limited to 1.5 MB (see [code](https://github.com/etcd-io/etcd/blob/v3.5.1/server/embed/config.go#L57)). Each Bitcoin block (set of transactions, unit of consensus) is limited to 1 MB (see [wiki](https://en.bitcoin.it/wiki/Block_size_limit_controversy)). etcd data set is limited to 2 GB (by default) and can be configured up to 8 GB (see [code](https://github.com/etcd-io/etcd/blob/v3.5.1/server/etcdserver/quota.go#L27-L32)). The whole Bitcoin blockchain database size is over 370 GB (as of October 2021, see [chart](https://www.blockchain.com/charts/blocks-size)).
+Each etcd request (write, unit of consensus) is limited to 1.5 MB (see [code](https://github.com/etcd-io/etcd/blob/v3.5.1/server/embed/config.go#L57)). Each Bitcoin block (set of transactions, unit of consensus) is limited to 1 MB (see [wiki](https://en.bitcoin.it/wiki/Block_size_limit_controversy)). etcd data set is limited to 2 GB (by default) and can be configured up to 8 GB (see [code](https://github.com/etcd-io/etcd/blob/v3.5.1/server/etcdserver/quota.go#L27-L32)). The whole Bitcoin blockchain database size is over 430 GB (as of September 2022, see [chart](https://www.blockchain.com/charts/blocks-size)).
 
 #### How to resolve the block (data) conflicts?
 
@@ -340,7 +346,7 @@ func stepLeader(r *raft, m pb.Message) error {
 
 ##### Build consensus
 
-When newly joined, both Paxos and Bitcoin node waits for the data sync before participating in the consensus. Unlike Paxos that initiates consensus as soon as a value is proposed to the leader, Bitcoin node can create a block template and start mining regardless of how many transactions it has received -- there is no requirement that the block template must have more than 1 transaction. Unlike Paxos that builds consensus when an established leader replicates the value to other servers (learner or follower), Bitcoin consensus is built when the node finds a PoW by enumerating the nonces and broadcasts the newly mined block to all other nodes. Bitcoin does not message its peers to build agreement, but instead performs PoW locally and disseminates the state information by gossip.
+When newly joined, both Paxos and Bitcoin node wait for the data sync before participating in the consensus. Unlike Paxos that initiates consensus as soon as a value is proposed to the leader, Bitcoin node can create a block template and start mining regardless of how many transactions it has received -- there is no requirement that the block template must have more than 1 transaction. Unlike Paxos that builds consensus when an established leader replicates the value to other servers (learner or follower), Bitcoin consensus is built when the node finds a PoW by enumerating the nonces and broadcasts the newly mined block to all other nodes. Bitcoin does not message its peers to build agreement, but instead performs PoW locally and disseminates the state information by gossip mechanisms.
 
 ##### Information propagation speed and finality
 
@@ -350,14 +356,14 @@ To draw a comparison, let's define "finality" to be the affirmation of time it t
 
 ### Summary
 
-*(as of October 27, 2021)*
+*(as of September 10, 2022)*
 
 | Consensus protocols | Paxos(etcd) | Nakamoto(Bitcoin) |
 |----------|:-------------:|:-----:|
 | Publication | *Leslie Lamport, [1988](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)* | *Satoshi Nakamoto, [2008](https://bitcoin.org/bitcoin.pdf)* |
 | Unit of consensus/value | Any single value | Block (list of transactions) |
 | Payload/value limit | [1.5 MB](https://github.com/etcd-io/etcd/blob/v3.5.1/server/embed/config.go#L57) | [1 MB](https://en.bitcoin.it/wiki/Block_size_limit_controversy) |
-| Database size | [<8 GB](https://github.com/etcd-io/etcd/blob/v3.5.1/server/etcdserver/quota.go#L27-L32) | [>370 GB](https://www.blockchain.com/charts/blocks-size) |
+| Database size | [<8 GB](https://github.com/etcd-io/etcd/blob/v3.5.1/server/etcdserver/quota.go#L27-L32) | [>430 GB](https://www.blockchain.com/charts/blocks-size) |
 | Network | Permissioned | Permissionless |
 | Data replication | From leader to follower | Peer-to-peer |
 | Sybill protection | None | Proof of work |

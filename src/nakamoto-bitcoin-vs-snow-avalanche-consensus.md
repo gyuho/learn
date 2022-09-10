@@ -2,7 +2,7 @@
 
 🚧❄️☃️❄️🚧 *Actively working on it...* 🚧❄️☃️❄️🚧
 
-*Last update: March 14, 2022*
+*Last update: September 10, 2022*
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
@@ -12,6 +12,7 @@
 - [What is Nakamoto consensus?](#what-is-nakamoto-consensus)
 - [What is Snow consensus?](#what-is-snow-consensus)
 - [Unspent transaction output (UTXO)](#unspent-transaction-output-utxo)
+- [Proof-of-Work, Proof-of-Stake](#proof-of-work-proof-of-stake)
 - [Proof-of-Stake (PoS)](#proof-of-stake-pos)
 - [Agreement in Nakamoto](#agreement-in-nakamoto)
 - [Agreement in Snow](#agreement-in-snow)
@@ -66,6 +67,10 @@ Bitcoin uses the [unspent transaction output (UTXO) model](https://en.wikipedia.
 When a transaction occurs, the transaction input (e.g., "A has 100 BTC, and A sends 10 BTC to B") is to be destroyed from the UTXO set, and the respective outputs (e.g., "A balance changes to 90 BTC, and B receives 10 BTC from A") creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reduces the computation requirements in the network, and makes it easier to parallelize transactions.
 
 The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the currency.
+
+### Proof-of-Work, Proof-of-Stake
+
+*Proof-of-Work (PoW)* and *Proof-of-Stake (PoS)* are not consensus algorithms but sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, or Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
 
 ### Proof-of-Stake (PoS)
 
@@ -582,29 +587,11 @@ Let's define "finality" to be the affirmation of time it takes from a transactio
 
 Unlike Bitcoin that batches several thousands of transactions per block, Avalanche can achieve much higher throughput with smaller batch size. Bitcoin protocol is restricted to 7 TPS with [1,500 transactions on average per batch](https://www.blockchain.com/charts/n-transactions-per-block). Avalanche achieves 7,000 TPS with only 40 transactions per batch. Unlike Bitcoin whose transaction is only confirmed after 60-minute, Avalanche transaction finality is 1.35-second. Avalanche protocol is faster in making a single decision, therefore requiring a very small batch (block) size. 
 
-### Summary
-
-*(as of October 27, 2021)*
-
-| Consensus protocols | Nakamoto(Bitcoin) | Snow(Avalanche) |
-|----------|:-------------:|:-----:|
-| Publication | *Satoshi Nakamoto, [2008](https://bitcoin.org/bitcoin.pdf)* | *Team Rocket, [2020](https://files.avalabs.org/papers/consensus.pdf)* |
-| Unit of consensus/value | Block (list of transactions) | Vertex (set of transactions) |
-| Payload/value limit | [1 MB](https://en.bitcoin.it/wiki/Block_size_limit_controversy) | 2 MB |
-| Database size | [>370 GB](https://www.blockchain.com/charts/blocks-size) | >200 GB (archival node), 10 GB (pruned node) |
-| Network | Permissionless | Permissionless |
-| Data replication | Peer-to-peer | Peer-to-peer |
-| Sybill protection | Proof of work | Proof of stake |
-| Number of participants | [>13,870 nodes](https://bitnodes.io/) | [>1,000 nodes](https://explorer.avax.network/validators) |
-| Peer discovery | DNS | DNS |
-| Transaction finality | 60-minute | <2-second |
-| Transaction throughput | [7 TPS](https://en.wikipedia.org/wiki/Bitcoin_scalability_problem#cite_note-onscaling-2) | >4,500 TPS |
-
 ### Reference
 
 - [bitcoin.org](https://bitcoin.org/en/how-it-works)
 - [Avalanche](https://avax.network)
 - [Avalanche Consensus](https://docs.avax.network/learn/platform-overview/avalanche-consensus)
-- [Determinant/phd-dissertation](https://github.com/Determinant/phd-dissertation)
+- [`Determinant/phd-dissertation`](https://github.com/Determinant/phd-dissertation)
 
 [↑ top](#nakamotobitcoin-vs-snowavalanche-consensus)
