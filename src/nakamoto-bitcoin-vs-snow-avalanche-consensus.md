@@ -154,6 +154,22 @@ The goal is the nodes agree on the single value -- binary decison on the color. 
 
 ```python
 def respond_to_query(v, new_col):
+    # respond with current preference
+    # rather than its preference after
+    # observing the querying color
+    #
+    # safety analysis requires nodes to be already colored
+    # prior to receiving the query when responding affirmatively
+    #
+    # note that current coloring of the network
+    # should be independent from the current sampling
+    #
+    # "current" coloring can be biased towards the colors
+    # that are sampled if the node is uncolored
+    #
+    # ref. https://github.com/ava-labs/avalanchego/commit/20e7e388645c2898dc6eac776d8e9ca8609f7c54
+    respond(v, cur_col)
+
     # ⊥ is uncolored
     # local node own color is none
     if cur_col == ⊥:
@@ -162,7 +178,6 @@ def respond_to_query(v, new_col):
         # the same color as in transaction
         # or as the query sender
         cur_col = new_col
-    respond(v, cur_col)
 
 def slush_loop(u, col_init in {R, B, ⊥}):
     # initialize the color
@@ -208,6 +223,22 @@ The \\(α\\) threshold can be set via [`--snow-quorum-size`](https://pkg.go.dev/
 
 ```python
 def respond_to_query(v, new_col):
+    # respond with current preference
+    # rather than its preference after
+    # observing the querying color
+    #
+    # safety analysis requires nodes to be already colored
+    # prior to receiving the query when responding affirmatively
+    #
+    # note that current coloring of the network
+    # should be independent from the current sampling
+    #
+    # "current" coloring can be biased towards the colors
+    # that are sampled if the node is uncolored
+    #
+    # ref. https://github.com/ava-labs/avalanchego/commit/20e7e388645c2898dc6eac776d8e9ca8609f7c54
+    respond(v, cur_col)
+
     # ⊥ is uncolored
     # local node own color is none
     if cur_col == ⊥:
@@ -216,7 +247,6 @@ def respond_to_query(v, new_col):
         # the same color as in transaction
         # or as the query sender
         cur_col = new_col
-    respond(v, cur_col)
 
 def snowflake_loop(u, col_init in {R, B, ⊥}):
     # initialize the color
@@ -294,6 +324,22 @@ The \\(α\\) threshold can be set via [`--snow-quorum-size`](https://pkg.go.dev/
 
 ```python
 def respond_to_query(v, new_col):
+    # respond with current preference
+    # rather than its preference after
+    # observing the querying color
+    #
+    # safety analysis requires nodes to be already colored
+    # prior to receiving the query when responding affirmatively
+    #
+    # note that current coloring of the network
+    # should be independent from the current sampling
+    #
+    # "current" coloring can be biased towards the colors
+    # that are sampled if the node is uncolored
+    #
+    # ref. https://github.com/ava-labs/avalanchego/commit/20e7e388645c2898dc6eac776d8e9ca8609f7c54
+    respond(v, cur_col)
+
     # ⊥ is uncolored
     # local node own color is none
     if cur_col == ⊥:
@@ -302,7 +348,6 @@ def respond_to_query(v, new_col):
         # the same color as in transaction
         # or as the query sender
         cur_col = new_col
-    respond(v, cur_col)
 
 def snowball_loop(u, col_init in {R, B, ⊥}):
     # initialize the color
