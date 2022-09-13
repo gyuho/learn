@@ -136,8 +136,9 @@ The Avalanche protocol is *synchronous*, as it implements timeouts and retries t
 
 #### Safety and liveness
 
-> *Safety (agreement)* is "bad things never happen".
-> *Liveness (guaranteed termination)* is "good things eventually happen".
+> Safety (agreement) is "bad things never happen".
+>
+> Liveness (guaranteed termination) is "good things eventually happen".
 >
 > *[COS 418: Distributed Systems](https://www.cs.princeton.edu/courses/archive/fall18/cos418/docs/L10-consensus.pdf)*
 
