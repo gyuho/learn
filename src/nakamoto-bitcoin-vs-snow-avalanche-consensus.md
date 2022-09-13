@@ -97,7 +97,7 @@ To develop the initial intuition about the protocol, let's imagine a room full o
 
 #### Key guarantees
 
-Asynchronous network assumes each process operates at arbitrary speeds and may take arbitrarily long to deliver messages. [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf) proved that in such "asynchronous" network, even one faulty process makes it impossible for remote processes to reach agreement. In other words, for any consensus protocol, there exists a path of non-termination (against liveness).
+A synchronous network model has a upper-bound on the amount of time a process can take to respond to a message. An asynchronous network model has no such bound. That is, the asynchronous network assumes each process operates at arbitrary speeds and may take arbitrarily long to deliver messages. [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf) proved that in such "asynchronous" network, even one faulty process makes it impossible for remote processes to reach an agreement. In other words, for any consensus protocol, there exists a non-termination path against liveness.
 
 > No completely asynchronous consensus protocol can tolerate even a single unannounced process death. We do not consider Byzantine failures, and we assume that the message system is reliable -- it delivers all messages correctly and exactly once. Nevertheless, even with these assumptions, the stopping of a single process at an inopportune time can cause any distributed commit protocol to fail to reach agreement. Thus, this important problem has no robust solution without further assumptions about the computing environment or still greater restrictions on the kind of failures to be tolerated!
 >
@@ -105,12 +105,14 @@ Asynchronous network assumes each process operates at arbitrary speeds and may t
 >
 > *Michael Fischer, Nancy Lynch and Michael Paterson, [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)*
 
-Agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thereby making progress. In practice, one can weaken some problems above to achieve both safety (agreement) and liveness (termination), as follows:
+Agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thereby making progress. In practice, one can weaken some problems above to achieve both safety (agreement) and liveness (guaranteed termination), as follows:
 
-- **We can assume synchrony.** The protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1981)](https://lamport.azurewebsites.net/pubs/byz.pdf). Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, in order to achieve termination (liveness) guarantees.
-- **We can use probabilistic termination.** To work around the impossibility of deterministic termination, the protocol can opt for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus). Thereby the path of non-termination (infinite undecision) can have an exponentially small probability.
+- **We can assume synchrony.** The protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1981)](https://lamport.azurewebsites.net/pubs/byz.pdf).
+- **We can use probabilistic termination.** To work around the impossibility of deterministic termination, the protocol can opt for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus), in a way that the path of non-termination (infinite undecision) has an exponentially small probability.
 
-Paxos operates in a fully asynchronous setting but does not suffer such safety and liveness issues, as the proposal is only made to a known set of correct participants. However, Snow protocol operates in a permissionless setting, thus susceptible to adversary that may not transmit messages and being stuck waiting for the response. In order to ensure liveness, a node implements timeouts for the wait and probabilistic termination. Snow protocol satisfies consistency given bounded network delays, to guarantee the liveness. Likewise, Nakamoto consensus satisfies consistency as its PoW difficulty depends on the maximum network delay -- see [Analysis of the Blockchain Protocol in Asynchronous Networks (2016)](https://eprint.iacr.org/2016/454.pdf).
+Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, in order to achieve termination (liveness) guarantees. In other words, the protocol only terminates only when synchronicity exists, and its liveness fails when the network behaves asynchronously. And as the proposal is only made to a known set of correct participants, Paxos does not suffer any safety and liveness issues in a fully asynchronous setting.
+
+Meanwhile, Snow protocol operates in a permissionless setting, thus susceptible to adversary that may not transmit messages and being stuck waiting for the response. In order to ensure the liveness, a node implements timeouts for the wait and probabilistic termination. Snow protocol satisfies consistency given bounded network delays, to guarantee the liveness. Likewise, Nakamoto consensus satisfies consistency as its PoW difficulty depends on the maximum network delay -- see [Analysis of the Blockchain Protocol in Asynchronous Networks (2016)](https://eprint.iacr.org/2016/454.pdf).
 
 The Snow protocol defines the following key guarantees:
 
@@ -119,6 +121,8 @@ The Snow protocol defines the following key guarantees:
 - **P3. Liveness (strong form of termination).** If \\(f ≤ O(\sqrt{n})\\) where \\(n\\) is the total number of participants and \\(f\\) is the number of adversary nodes, the decision is made with high probability \\(≥ 1 - ε\\) within \\(O(log n)\\) rounds.
 
 #### Synchrony
+
+A synchronous network model has a upper-bound on the amount of time a process can take to respond to a message. An asynchronous network model has no such bound. That is, the asynchronous network assumes each process operates at arbitrary speeds and may take arbitrarily long to deliver messages.
 
 Some protocols assume a *synchronous* network with a strict upper bound for message delays (see [DWORK1988](https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf)). The synchronous network is slower than asynchronous but easier to build. The synchronous model is simple: Two machines are guaranteed to communicate with each other within a certain period of time. Nakamoto consensus is a synchronous protocol, assuming the propagation of a block for a certain amount of time. The protocol is safely synchronous as you are guaranteed to not double spend as long as the network remains within the delta of the block propagation time.
 
@@ -131,6 +135,11 @@ The *asynchronous* model is not dependent on such paremeters of speed. The netwo
 The Avalanche protocol is *synchronous*, as it implements timeouts and retries to achieve termination (liveness) guarantees. When a node happens to sample the majority of adversarial nodes, the node waits with some timeout in order to prevent itself from being stuck waiting for the responses.
 
 #### Safety and liveness
+
+> *Safety (agreement)* is "bad things never happen".
+> *Liveness (guaranteed termination)* is "good things eventually happen".
+>
+> *[COS 418: Distributed Systems](https://www.cs.princeton.edu/courses/archive/fall18/cos418/docs/L10-consensus.pdf)*
 
 To recap, *safety* is a property of "agreement". The *safety* of the protocol fails when two nodes are finalized with two different blocks for the same height. *Liveness* is a property of "termination": Correct members eventually reach an agreement and produce a value to make progress.
 
