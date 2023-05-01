@@ -22,6 +22,7 @@ I am interested in:
 
 - [Avalanche Go](https://github.com/ava-labs/avalanchego) - Avalanche node
 - [`avalanche-ops`](https://github.com/ava-labs/avalanche-ops) - Avalanche operational toolkit in Rust
+- [`avalanche-types`](https://github.com/ava-labs/avalanche-types-rs) - Avalanche primitives in Rust
 - [`etcd`](https://github.com/etcd-io/etcd/graphs/contributors) - distributed key-value store
 - [`dbtester`](https://github.com/etcd-io/dbtester) - benchmark etcd vs. zookeeper vs. consul
 - [etcd Labs](http://play.etcd.io) - interactive etcd playground (see [`etcdlabs`](https://github.com/etcd-io/etcdlabs) for code)
