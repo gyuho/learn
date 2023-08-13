@@ -4,11 +4,7 @@
 
 I am interested in:
 
-- Distributed systems
-- Database
-- Consensus (BFT/CFT)
-- etcd
-- Kubernetes
+- Distributed systems (consensus, etcd, Kubernetes)
 - Go
 - Rust
 
