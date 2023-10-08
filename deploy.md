@@ -7,7 +7,7 @@ cargo install --git https://github.com/rust-lang/mdBook.git mdbook
 
 ```bash
 # build commands
-curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar xvz && ./mdbook build
+curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-unknown-linux-gnu.tar.gz | tar xvz && ./mdbook build
 
 # output directory
 # book
@@ -17,7 +17,7 @@ curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.
 
 ```bash
 # build command
-curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar xvz && ./mdbook build
+curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-unknown-linux-gnu.tar.gz | tar xvz && ./mdbook build
 
 # publish directory
 # book
