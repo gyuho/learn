@@ -2,19 +2,14 @@
 
 ![gyuho GitHub stats](https://github-readme-stats.vercel.app/api?username=gyuho&show_icons=true)
 
-I am interested in:
-
-- Distributed systems (consensus, etcd, Kubernetes)
-- Go
-- Rust
+I am interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 
 ## Projects: Distributed Systems
 
 - [`etcd`](https://github.com/etcd-io/etcd/graphs/contributors) - distributed key-value store
 - [Avalanche Go](https://github.com/ava-labs/avalanchego) - Avalanche node
 - [`avalanche-ops`](https://github.com/ava-labs/avalanche-ops) - Avalanche operational toolkit in Rust
-- [`avalanche-rust`](https://github.com/ava-labs/avalanche-rust) - Avalanche primitives/consensus in Rust
-- [`avalanche-types`](https://github.com/ava-labs/avalanche-types-rs) - Avalanche primitives in Rust
+- [`avalanche-rs`](https://github.com/ava-labs/avalanche-rs) - Avalanche consensus, primitives, and types in Rust
 - [`dbtester`](https://github.com/etcd-io/dbtester) - benchmark etcd vs. zookeeper vs. consul
 - [etcd Labs](http://play.etcd.io) - interactive etcd playground (see [`etcdlabs`](https://github.com/etcd-io/etcdlabs) for code)
 
