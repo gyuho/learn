@@ -1,49 +1,12 @@
 # Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus
 
-🚧❄️☃️❄️🚧 *Actively working on it...* 🚧❄️☃️❄️🚧
-
-*Last update: September 10, 2022*
+*Last update: December 28, 2023*
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
-*Next: [Avalanche deep dive](./avalanche-deep-dive.md)*
+*(old link: `gyuho.dev/paxos-etcd-vs-nakamoto-bitcoin-consensus.html`)*
 
-- [What is consensus?](#what-is-consensus)
-- [What is Nakamoto consensus?](#what-is-nakamoto-consensus)
-- [What is Snow consensus?](#what-is-snow-consensus)
-- [Unspent transaction output (UTXO)](#unspent-transaction-output-utxo)
-- [Proof-of-Work and Proof-of-Stake](#proof-of-work-and-proof-of-stake)
-- [Proof-of-Stake (PoS)](#proof-of-stake-pos)
-- [Agreement in Nakamoto](#agreement-in-nakamoto)
-- [Agreement in Snow](#agreement-in-snow)
-  - [Key guarantees](#key-guarantees)
-  - [Synchrony](#synchrony)
-  - [Safety and liveness](#safety-and-liveness)
-  - [Snow family protocols](#snow-family-protocols)
-    - [Slush: introducing metastability](#slush-introducing-metastability)
-    - [Slush → Snowflake: BFT](#slush--snowflake-bft)
-    - [Snowflake → Snowball: adding confidence](#snowflake--snowball-adding-confidence)
-    - [Snowball → Avalanche: adding chits to track confidence on DAG](#snowball--avalanche-adding-chits-to-track-confidence-on-dag)
-    - [Avalanche → Snowman: linear chain without DAG](#avalanche--snowman-linear-chain-without-dag)
-    - [Frosty](#frosty)
-  - [Avalanche platform](#avalanche-platform)
-  - [Who initiates the block (data)?](#who-initiates-the-block-data)
-    - [Peer/node discovery](#peernode-discovery)
-    - [Message relay](#message-relay)
-  - [What's in the block (data)?](#whats-in-the-block-data)
-    - [Unit of consensus](#unit-of-consensus)
-    - [Data structure](#data-structure)
-    - [Payload and data limit](#payload-and-data-limit)
-  - [How to resolve the block (data) conflicts?](#how-to-resolve-the-block-data-conflicts)
-    - [Definition of conflict](#definition-of-conflict)
-    - [Definition of longest chain](#definition-of-longest-chain)
-    - [Choice between conflicting chains](#choice-between-conflicting-chains)
-  - [How to distribute the block (data)?](#how-to-distribute-the-block-data)
-    - [Build consensus](#build-consensus)
-    - [Information propagation speed and finality](#information-propagation-speed-and-finality)
-- [Reference](#reference)
-
-### What is consensus?
+## What is consensus?
 
 Applications may crash, [server hardwares fail](https://conferences.sigcomm.org/sigcomm/2011/papers/sigcomm/p350.pdf), natural disasters can take out data centers in a region. To limit the impact of such occasional but inevitable failures, the system must develop the redundancy for the service. This strategy often entails geographically distributing a system, which requires a consistent view of the system state. The distributed consensus enables this group of processes to reach an agreement on a value in the face of asynchronous, unreliable networks: critical configuration data, leader election, service/member discovery, distributed locking, etc..
 
@@ -51,43 +14,37 @@ Applications may crash, [server hardwares fail](https://conferences.sigcomm.org/
 >
 > *Leslie Lamport, [Paxos Made Simple (2001)](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)*
 
-### What is Nakamoto consensus?
+## What is Nakamoto consensus?
 
 Introduced by *Satoshi Nakamoto, [Bitcoin: A Peer-to-Peer Electronic Cash System (2008)](https://bitcoin.org/bitcoin.pdf)*, the Nakamoto algorithm solves the agreement problem in the face of Byzantine faults, where malicious nodes may pass incorrect messages.
 
-Nakamoto consensus powers [Bitcoin](https://bitcoin.org) to achieve a distributed consensus on the chain without relying on any trusted third party. That makes Bitcoin a permissionless Blockchain, allowing any participants to produce blocks. The chain state and transaction logs are transparent and accessible to the public. Bitcoin being public introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism. The focus is on the byzantine fault tolerance, [sybil attack](https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf) protection, and DoS (Denial of Service) resistance.
+Nakamoto consensus powers the [Bitcoin](https://bitcoin.org) network to achieve a distributed consensus on the chain without relying on any trusted third party. Thus a permissionless Blockchain that allows any participants to produce blocks. The chain state and transaction logs are transparent and accessible to the public. Bitcoin being public introduces different kinds of attacking vectors, which is a key to understanding its consensus mechanism. The focus is on the byzantine fault tolerance, [sybil attack](https://www.microsoft.com/en-us/research/wp-content/uploads/2002/01/IPTPS2002.pdf) protection, and DoS (Denial of Service) resistance.
 
-### What is Snow consensus?
+## What is Snow consensus?
 
-Introduced by *Team Rocket, [Scalable and Probabilistic Leaderless BFT Consensus through Metastability (2020)](https://files.avalabs.org/papers/consensus.pdf)*, the Snow algorithm similarly solves the agreement problem in the face of Byzantine nodes. Snow consensus powers [Avalanche](https://avax.network) to achieve a distributed consensus on the chain without relying on any trusted third party. Unlike Nakamoto that uses Proof-of-Work (PoW) to prevent sybil attack and build agreement among participants, Snow uses Proof-of-Stake (PoS) thus green, quiescent, and efficient (see the report [here](https://medium.com/avalancheavax/ccri-finds-avalanche-to-consume-35-000x-less-energy-than-ethereum-and-200-000x-less-than-bitcoin-70ba519d22c3)).
+Introduced in *[Scalable and Probabilistic Leaderless BFT Consensus through Metastability (2020)](https://files.avalabs.org/papers/consensus.pdf)*, the Snow algorithm similarly solves the agreement problem in the face of Byzantine nodes. Snow consensus powers the [Avalanche](https://avax.network) network to achieve a distributed consensus on the chain without relying on any trusted third party. Unlike Nakamoto that uses Proof-of-Work (PoW) to prevent sybil attack, Snow uses Proof-of-Stake (PoS) -- quiescent and thus more efficient (see the report [here](https://medium.com/avalancheavax/ccri-finds-avalanche-to-consume-35-000x-less-energy-than-ethereum-and-200-000x-less-than-bitcoin-70ba519d22c3)).
 
-### Unspent transaction output (UTXO)
+## Proof-of-Work and Proof-of-Stake
 
-Bitcoin uses the [unspent transaction output (UTXO) model](https://en.wikipedia.org/wiki/Unspent_transaction_output) to record the state of individual asset transfers between the wallets (much like physical coins). Rather than tracking the balance of each account (e.g., Ethereum), a UTXO represents a transaction output that has not been spent and thus used as an input to the new transaction. Only the unspent output can be used for the next transaction to prevent double-spending. Each UTXO is a chain of ownership where the current owner (currency/asset sender) signs the transaction to transfer the UTXO ownership to the public key of the new owner (receiver).
+Neither *Proof-of-Work (PoW)* nor *Proof-of-Stake (PoS)* is a consensus algorithm -- they are sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
 
-When a transaction occurs, the transaction input (e.g., "A has 100 BTC, and A sends 10 BTC to B") is to be destroyed from the UTXO set, and the respective outputs (e.g., "A balance changes to 90 BTC, and B receives 10 BTC from A") creates a new UTXO to the UTXO set. Such UTXO model enables client-side aggregation, reduces the computation requirements in the network, and makes it easier to parallelize transactions.
-
-The total UTXO sets in a blockchain represent the set that every transaction consumes elements from and creates new ones to, which represents the total supply of the asset.
-
-### Proof-of-Work and Proof-of-Stake
-
-*Proof-of-Work (PoW)* and *Proof-of-Stake (PoS)* are not consensus algorithms but sybil control mechanisms. PoW, by itself, is not a consensus mechanism. In order to achieve consensus, Bitcoin uses the longest chain selection rule. Likewise, PoS does not achieve consensus by itself. It has to be coupled with a consensus protocol, such as PBFT, Tendermint/Cosmos, or Avalanche, in order to make decisions. PoW or PoS does not get you agreement, it only gets you rate limiting.
-
-### Proof-of-Stake (PoS)
+## Proof-of-Stake (PoS)
 
 Proof-of-Work (PoW) requires miners to consume electricity to compute the desired hash. The increasing hash difficulty leads to more energy consumption and demands more powerful mining rigs. Such substantial cost is deterrant to decentralizaton of participants. According to [hashrate distribution](https://blockchain.info/pools) (as of November 2021), only four Bitcoin mining pools control 50% of hashrate. Apart from this, PoW generally suffers from a low throughput and other scalability issues.
 
-Unlike PoW, Proof-of-Stake (PoS) participant is only required to own and lock a certain amount of the corresponding currency, referred to as "stake". The stake acts as a guarantee that the holder will behave as per the protocol rules in the block creation process. PoS is more energy efficient as there is no need to solve a compute-intensive cryptographic puzzle, thus less susceptible to the centralization of participants.
+Unlike PoW, Proof-of-Stake (PoS) participant is only required to own and lock a certain amount of the corresponding currency, referred to as "stake". The stake acts as promissory notes that the holder will behave as per the protocol rules in the block creation process. PoS is more energy efficient as there is no need to solve a compute-intensive cryptographic puzzle, thus less susceptible to the centralization of participants.
 
-Unlike PoW that only selects the node that finds the desired hash, PoS can select any stakeholder for block creation, as per the protocol rules.
+Unlike PoW that only selects the node with the desired hash, PoS can select any stakeholder for block creation, as per the protocol rules.
 
-### Agreement in Nakamoto
+## Agreement in Nakamoto
 
 The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction. Then the node starts mining to extend the chain by enumerating the "nonces" until a hash less than or equal to the "target" value is found. Such process is referred to as mining or Proof-of-Work (PoW), as it requires substantial amount of computing work. When the proper "nonce" is found, the miner is rewarded with a new Bitcoin for its expended CPU time and electricity (i.e., [coinbase transaction](https://en.bitcoin.it/wiki/Coinbase)). Then the node broadcasts the newly mined block to its peers, subsequently with each peer forwarding the block to every one of its neighbors, eventually flooding the whole network (gossip).
 
-### Agreement in Snow
+Bitcoin nodes are always active, and the network consumes 204.50 TWh per year (estimated as of March 2022), comparable to the power consumption of Thailand (see [Bitcoin energy consumption](https://digiconomist.net/bitcoin-energy-consumption) and [CIA world factbook](https://www.cia.gov/the-world-factbook/countries/thailand/#energy)). The node builds the block template whether its mempool has any transaction or not. The miner runs through different "nonce" values until the resulting hash is below the current "target". That makes Nakamoto protocol require constant participation of miners even when there is no decision to be made.
 
-Bitcoin nodes are always active, and the network consumes 204.50 TWh per year (estimated as of March 2022), comparable to the power consumption of Thailand (see [Bitcoin energy consumption](https://digiconomist.net/bitcoin-energy-consumption) and [CIA world factbook](https://www.cia.gov/the-world-factbook/countries/thailand/#energy)). The node builds the block template whether its mempool has any transaction or not. The miner runs through different "nonce" values until the resulting hash is below the current "target". That makes Nakamoto protocol require constant participation of miners even when there is no decision to be made. Unlike Nakamoto consensus, Snow consensus is quiescent when there is no decision to be made. Similar to Nakamoto, Snow protocol trades off a determinstic safety guarantee for a probabilistic one. The key difference is the use of PoS and repeated sub-sample voting mechanism, which makes Avalanche more scalable.
+## Agreement in Snow
+
+Similar to Nakamoto, Snow protocol trades off a determinstic safety guarantee for a probabilistic one. Unlike Nakamoto consensus, Snow consensus is quiescent when there is no decision to be made. The key difference is the use of PoS and repeated sub-sample voting mechanism, which makes Avalanche more scalable.
 
 The protocol is best illustrated with this [2-minute video](https://youtu.be/Sfb8G54AM_4) by [Emin Gün Sirer](https://twitter.com/el33th4xor).
 
@@ -95,7 +52,7 @@ The protocol is best illustrated with this [2-minute video](https://youtu.be/Sfb
 
 To develop the initial intuition about the protocol, let's imagine a room full of people trying to agree on what to drink: "coffee" or "wine". Some prefer "coffee" at first, while others choosing "wine". The goal is to build consensus on the single value -- one kind of drink. Each participant starts out with no preference (uncolored state) and asks a random subset of its neighbors in the room for their drink preference (e.g., ask only 10 out of 1,000 people). The rule is each person adopts the preference of the majority (defined as \\(≥ α\\) or quorum) -- "looks like more people are leaning toward coffee, so I prefer coffee now." When everyone repeats the same process, more and more people converge onto the same preference. After enough rounds, the protocol reaches agreement on the single value that everyone prefers. The "preference" in the protocol represents the binary decision between two colors, although the protocol can be generalized to support multi-value consensus.
 
-#### Key guarantees
+### Key guarantees
 
 A synchronous network model has a upper-bound on the amount of time a process can take to respond to a message. An asynchronous network model has no such bound. That is, the asynchronous network assumes each process operates at arbitrary speeds and may take arbitrarily long to deliver messages. [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf) proved that in such "asynchronous" network, even one faulty process makes it impossible for remote processes to reach an agreement. In other words, for any consensus protocol, there exists a non-termination path against liveness.
 
@@ -105,9 +62,9 @@ A synchronous network model has a upper-bound on the amount of time a process ca
 >
 > *Michael Fischer, Nancy Lynch and Michael Paterson, [Impossibility of Distributed Consensus with One Faulty Process (1985)](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)*
 
-Agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thereby making progress. In practice, one can weaken some problems above to achieve both safety (agreement) and liveness (guaranteed termination), as follows:
+Agreement in consensus is a safety property, and termination is a liveness property where correct (non-faulty) processes can eventually produce a value thereby making progress. In practice, one can weaken some requirements above, to achieve both safety (agreement) and liveness (guaranteed termination), as follows:
 
-- **We can assume synchrony.** The protocol can assume a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1981)](https://lamport.azurewebsites.net/pubs/byz.pdf).
+- **We can assume synchrony.** The protocol assumes a synchronous network with a strict upper bound for message delays -- see [The Byzantine Generals Problem by Lamport (1981)](https://lamport.azurewebsites.net/pubs/byz.pdf).
 - **We can use probabilistic termination.** To work around the impossibility of deterministic termination, the protocol can opt for a probabilistic guarantee that some value is correct (e.g., Nakamoto consensus), in a way that the path of non-termination (infinite undecision) has an exponentially small probability.
 
 Paxos/Raft assumes synchrony by implementing timeouts and retries for building consensus, in order to achieve termination (liveness) guarantees. In other words, the protocol only terminates only when synchronicity exists, and its liveness fails when the network behaves asynchronously. And as the proposal is only made to a known set of correct participants, Paxos does not suffer any safety and liveness issues in a fully asynchronous setting.
@@ -120,7 +77,7 @@ The Snow protocol defines the following key guarantees:
 - **P2. Liveness (termination with upper bound).** The decision is made with a strictly positive probability within \\(t_{max}\\) rounds, where \\(n\\) is the total number of participants and \\(O(log n) < t_{max} < ∞\\).
 - **P3. Liveness (strong form of termination).** If \\(f ≤ O(\sqrt{n})\\) where \\(n\\) is the total number of participants and \\(f\\) is the number of adversary nodes, the decision is made with high probability \\(≥ 1 - ε\\) within \\(O(log n)\\) rounds.
 
-#### Synchrony
+### Synchrony
 
 A synchronous network model has a upper-bound on the amount of time a process can take to respond to a message. An asynchronous network model has no such bound. That is, the asynchronous network assumes each process operates at arbitrary speeds and may take arbitrarily long to deliver messages.
 
@@ -134,7 +91,7 @@ The *asynchronous* model is not dependent on such paremeters of speed. The netwo
 
 The Avalanche protocol is *synchronous*, as it implements timeouts and retries to achieve termination (liveness) guarantees. When a node happens to sample the majority of adversarial nodes, the node waits with some timeout in order to prevent itself from being stuck waiting for the responses.
 
-#### Safety and liveness
+### Safety and liveness
 
 > Safety (agreement) is "bad things never happen".
 >
@@ -150,13 +107,13 @@ In Avalanche protocol, these "safety" and "liveness" thresholds can be parameter
 
 In Avalanche protocol, "safety" and "liveness" are only guaranteed for virtuous transactions with no previously issued conflicting transaction. And the "liveness" is not guaranteed for rogue transactions that are in conflict spending with the previously issued transactions. This may sound like, the protocol does not make progress when there's a conflicting transaction (rogue), but that is not true. It is about the guarantees on the number of rounds to reach an agreement. The protocol allows malicious or double spending transactions to be stuck forever. To be more precise, the "liveness" for double spending transactions is not guaranteed. For end-users, if a transaction did not get accepted with a sub-second finality, they can simply reissue the transaction, and it will go through on retries. And if there's no conflict in the transaction, the node just relays the transaction to the other nodes to accept. The sub-sampled voting is only for resolving the transaction conflicts.
 
-#### Snow family protocols
+### Snow family protocols
 
 Snow is a family of binary BFT protocols based on a non-BFT protocol *Slush*, which incrementally builds up to *Snowflake* and *Snowball* BFT protocols in the Snow family.
 
 ![figure-1-snow-family.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-1-snow-family.png)
 
-##### Slush: introducing metastability
+#### Slush: introducing metastability
 
 Slush is the foundation of Snow family consensus and introduces metastability in decision making process. Slush is a single-decree (decide a single value) consensus protocol and not tolerant against Byzantine faults (non-BFT), but can be extended to BFT protocols of Snowflake and Snowball.
 
@@ -221,7 +178,7 @@ def slush_loop(u, col_init in {R, B, ⊥}):
 
 Similarly, for each Slush round, the protocol converts the bivalent state (e.g., 50/50 color split) into a state of full imbalance (e.g., all nodes are colored identically if the poll number \\(m\\) is high enough) -- "escape the metastable state". In other words, the sequence of random sampling perturbs the conflicting states, thereby causing one to gain more edge over time in order to amplify the imbalance.
 
-##### Slush → Snowflake: BFT
+#### Slush → Snowflake: BFT
 
 Even when honest Slush nodes develop the preference for one color, an adversary node can still attempt to flip the preference, in order to halt the decision process in the network. This is where Snowflake comes in, the first BFT protocol in Snow family. That is, Snowflake is Byzantine fault tolerant, while Slush is not.
 
@@ -315,22 +272,21 @@ def snowflake_loop(u, col_init in {R, B, ⊥}):
 
 > *Then how is Snowflake "BFT"?*
 
-A node iteratively chooses a small sample to query the preference of its neighbors, and updates its color based on voting results. The "update color" part is the core of the consensus algorithm that needs to work in the presence of Byzantine nodes which otherwise prevents the network from reaching consensus.
+A node iteratively chooses a small sample to query the preference of its neighbors, and updates its color based on the voting results. The "update color" part is the core of the consensus algorithm that needs to work in the presence of Byzantine nodes which otherwise prevents the network from reaching consensus.
 
-For safety guarantees, let's define epsilon \\(ε\\) to be the threshold on the probability of conflicting transactions. When the protocol is properly parameterized for Byzantine node ratios and desired \\(ε\\)-guarantees, the Byzantine node will lose its ability to keep the network in a bivalent state (conflicting state). The correct nodes will sway towards one color and eventually commit past the "irreversible" state -- the nodes will not switch to the other color, no matter what malicious actors do given such bounds, thus Byzantine fault tolerant.
+For safety guarantees, let's define epsilon \\(ε\\) to be the threshold on the probability of conflicting transactions. When the protocol is properly parameterized for Byzantine node ratios and \\(ε\\) probability, the Byzantine node will lose its ability to keep the network in a bivalent state (conflicting state). The correct nodes quickly sway towards one color and eventually commit past the "irreversible" state. Then the nodes will not switch to the other color, no matter what malicious actors do given such bounds, thus Byzantine fault tolerant.
 
 The key tradeoff is: conflicting transactions only come from malicious actors and the probability \\(ε\\) is sufficiently small, and thus the protocol does not need to guarantee liveness or finality for such transactions. In other words, the time for finality approaches \\(\infty\\) as the number of adversary nodes \\(f\\) approaches \\(n/2\\).
 
 The protocol can parameterize a higher Byzantine node ratio \\(f/n\\) (e.g., 80% nodes are allowed to be adversary) to sacrifice liveness (termination) for stronger safety guarantees, as it requires more rounds for convergence. And likewise, lower \\(f/n\\) threshold sacrifices the safety for liveness, as it requires less rounds to reach an agreement.
 
-##### Snowflake → Snowball: adding confidence
+#### Snowflake → Snowball: adding confidence
 
 Snowflake conviction count represents how many consecutive samples of the network from the node have all yielded the same color. However, "conviction" count is an ephemeral state, reset for each color flip, which may prevent decision making. This is where Snowball comes in.
 
 Snowball extends Snowflake with "confidence" to account for the total accrued confidence when updating its preference (color): For each query, the node increments its confidence counter for the corresponding color, and switches its color when the confidence counter of the new color exceeds the one of its current color. The confidence counter represents how many successful queries that have yielded \\(≥ α\\) responses per each color. In other words, "confidence" tracks the historical "conviction" counts for each color (whether consecutive or not), so the querying node can switch to the one with higher "confidence". And the node accepts and decides the current color when its conviction count reaches the threshold \\(β\\).
 
 The \\(α\\) threshold can be set via [`--snow-quorum-size`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowball#Parameters). The \\(β\\) thresholds can be set via [`--snow-virtuous-commit-threshold`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowball#Parameters) for virtuous transactions and [`--snow-rogue-commit-threshold`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/consensus/snowball#Parameters) for rogue transactions.
-
 
 ```python
 def respond_to_query(v, new_col):
@@ -430,7 +386,271 @@ def snowball_loop(u, col_init in {R, B, ⊥}):
 
 See [Snow BFT demo by Ted Yin, Ava Labs co-founder](https://tedyin.com/archive/snow-bft-demo/#/snow).
 
-##### Snowball → Avalanche: adding chits to track confidence on DAG
+#### Avalanche → Snowman: linear chain without DAG
+
+Snowman is a linearized version of Avalanche protocol (DAG) with block total ordering.
+
+### Who initiates the block (data)?
+
+#### Peer/node discovery
+
+Bitcoin client uses DNS to discover the list of node IPs (see [wiki](https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery)). Avalanche uses hard-coded beacon nodes as seed anchors -- see [beacon nodes](https://github.com/ava-labs/avalanchego/blob/v1.7.7/genesis/beacons.go). Unlike Bitcoin that requires one correct DNS seed node (i.e., seed anchor), Avalanche only requires a simple majority of the anchors to be valid -- an Avalanche node can discover its peers by connecting to any set of seed anchors. And there is no barrier to become a seed anchor -- one set of seed anchors can not dictate whether a node may or may not join the network (see [Avalanche platform paper](https://files.avalabs.org/papers/platform.pdf)).
+
+#### Message relay
+
+New Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an `inv`entory message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers with an `inv`. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
+
+![figure-4-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-4-bitcoin-message-relay.png)
+
+In case of the Avalanche network, each VM bootstraps into a network by randomly sub-sampling the beacon validators set -- see [`snow/validator.Set`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/validators#Set). And gossips the transactions to its neighbors, which then gossips to their neighbors, and so on.
+
+### What's in the block (data)?
+
+#### Unit of consensus
+
+The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
+
+Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. And the linearized snowman protocol uses the block as a unit of consensus.
+
+#### Data structure
+
+Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. The sequence of the Bitcoin blocks is strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent. The transactions for each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. The merkle tree root represents the hash of all transactions in the block, used for proving its data integrity and ensuring the immutability of transaction ordering: Changing the order will change the merkle root (thus block hash).
+
+![figure-5-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-5-bitcoin-data-structure.png)
+
+#### Payload and data limit
+
+Each Bitcoin block (set of transactions, unit of consensus) is limited to 1 MB (see [wiki](https://en.bitcoin.it/wiki/Block_size_limit_controversy)). The whole Bitcoin blockchain database size is over 370 GB (as of October 2021, see [chart](https://www.blockchain.com/charts/blocks-size)).
+
+Bitcoin is relatively slow in making a single decision, and thus requires a very large batch (block) size for better performance. Unlike Bitcoin, Avalanche achieves much higher throughput with smaller batch size, thus lower latency. The [test](https://files.avalabs.org/papers/consensus.pdf) shows that Avalanche can process 7,000 TPS with 40 transactions per batch (1 KB block size). The whole Avalanche blockchain database size is >200 GB for full archival node and 10 GB with pruning (as of October 2021).
+
+### How to resolve the block (data) conflicts?
+
+#### Definition of conflict
+
+Two competing Bitcoin miners may create two blocks with different sets of transactions simultaneously, having conflicting perspectives on the chain (fork). To resolve the conflict, each node always selects and extends the longest chain. Once the longest chain is selected, the other chain becomes "stale".
+
+Note that the snowman protocol is agnostic to the blockchain VM (e.g., EVM), only dealing with the blocks as a unit of consensus. In snowman, the blocks at the same height but with different block hashes are considered conflicting, as follows:
+
+```go
+blk1ID := ids.ID{}
+rand.Read(blk1ID[:])
+
+blk2ID := ids.ID{}
+copy(blk2ID[:], blk1ID[:])
+blk2ID[0] ^= byte(0xFF)
+
+blk1 := newBlock(blk1ID, genesisBlk.ID(), genesisBlk.Height()+1, now)
+blk2 := newBlock(blk2ID, genesisBlk.ID(), genesisBlk.Height()+1, now)
+
+consensus.Add(rootCtx, blk1)
+
+// blk1 and blk2 are now in conflict
+consensus.Add(rootCtx, blk2)
+```
+
+#### Choice between conflicting chains
+
+Two Bitcoin nodes may broadcast different versions of blocks simultaneously, when the blocks were mined roughly at the same time. Then the neighboring node will use whichever branch it received first and save the other branch in case it becomes the longer chain. For instance, the branch A and B are both valid blocks but competing for the next block. They may share transactions so cannot be placed one after the other. This tie breaks when the node hears or mines a new block C extended on top of A. Then the node purges the block B that is not part of the longest chain, switches to the longer branch with A with the most accumulated PoW, and returns the transactions in B but not in A to the mempool, to be mined in a new block.
+
+![figure-6-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-bitcoin-conflict.png)
+
+The snowman protocol does not use the longest chain rule. In case of conflicts (different block hashes at the same height), the protocol uses the following rules to determine the preference:
+
+```go
+blk1ID := ids.ID{}
+rand.Read(blk1ID[:])
+
+blk2ID := ids.ID{}
+copy(blk2ID[:], blk1ID[:])
+blk2ID[0] ^= byte(0xFF)
+
+blk1 := newBlock(blk1ID, genesisBlk.ID(), genesisBlk.Height()+1, now)
+blk2 := newBlock(blk2ID, genesisBlk.ID(), genesisBlk.Height()+1, now)
+
+consensus.Add(rootCtx, blk1)
+
+// blk1 and blk2 are now in conflict
+consensus.Add(rootCtx, blk2)
+
+// blk1 and blk2 are in conflict, so need beta rogue threshold to finalize
+// note that this generates consecutive votes for the blk1
+// without its confidence reset
+finalizePolls := 0
+for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
+    votes := bag.Bag[ids.ID]{}
+    votes.AddCount(blk1.ID(), runner.Params.Alpha)
+
+    consensus.RecordPoll(rootCtx, votes)
+    finalizePolls++
+
+    if consensus.NumProcessing() == 0 {
+        break
+    }
+}
+
+if consensus.NumProcessing() > 0 {
+    return errors.New("consensus should be finalized")
+}
+if finalizePolls != runner.Params.BetaRogue {
+    return fmt.Errorf("consensus should be finalized exactly after beta rogue polls, took %d polls", finalizePolls)
+}
+
+if consensus.Preference() != blk1.ID() {
+    return errors.New("consensus should prefer blk1")
+}
+if consensus.LastAccepted() != blk1.ID() {
+    return errors.New("consensus should have accepted blk1")
+}
+
+if blk1.Status() != choices.Accepted {
+    return errors.New("blk1 should have been accepted")
+}
+if blk2.Status() != choices.Rejected {
+    return errors.New("blk2 should have been rejected")
+}
+```
+
+That is, the conflict is resolved after a series of votes (polls) and the block with the most votes is chosen, called the "preferred block". If there is no conflict, only the beta virtuous rounds are sufficient to finalize the block:
+
+```go
+blk1 := example.NewBlock(ids.ID{1}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
+consensus.Add(rootCtx, blk1)
+
+// blk1 has no conflict, so it should finalize in beta virtuous
+finalizePolls := 0
+for i := 0; i < 2*runner.Params.BetaVirtuous; i++ { // 2*beta rounds to make sure it can terminate earlier
+    votes := bag.Bag[ids.ID]{}
+    votes.AddCount(blk1.ID(), runner.Params.Alpha)
+
+    consensus.RecordPoll(rootCtx, votes)
+    finalizePolls++
+
+    if consensus.NumProcessing() == 0 {
+        break
+    }
+}
+
+if consensus.NumProcessing() > 0 {
+    return errors.New("consensus should be finalized")
+}
+if finalizePolls != runner.Params.BetaVirtuous {
+    return fmt.Errorf("consensus should be finalized exactly after beta virtuous polls, took %d polls", finalizePolls)
+}
+
+if consensus.Preference() != blk1.ID() {
+    return errors.New("consensus should prefer blk1")
+}
+if consensus.LastAccepted() != blk1.ID() {
+    return errors.New("consensus should have accepted blk1")
+}
+if blk1.Status() != choices.Accepted {
+    return errors.New("blk1 should have been accepted")
+}
+```
+
+Optimizations are made to perform transitive voting, where it bubbles up the votes from the children (higher block heights) to the parents (lower block heights). For instance, if the node votes for the block B, and the block A is a parent of the block B, then the vote for the block B implies the vote for the block A and others in its transitive path:
+
+```go
+// Current graph structure:
+//   G
+//  / \
+// 1   2
+//    / \
+//   3   4
+blk1 := example.NewBlock(ids.ID{1}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
+blk2 := example.NewBlock(ids.ID{2}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
+blk3 := example.NewBlock(ids.ID{3}, blk2.ID(), blk2.Height()+1, now)
+blk4 := example.NewBlock(ids.ID{4}, blk2.ID(), blk2.Height()+1, now)
+
+for _, blk := range []snowman.Block{blk1, blk2, blk3, blk4} {
+    consensus.Add(rootCtx, blk)
+}
+
+// blk3 is in conflict with blk4, so it requires beta rogue rounds to finalize
+// if voted less than beta rogue, it should not finalize
+for i := 0; i < runner.Params.BetaRogue/2; i++ {
+    votesFor3 := bag.Bag[ids.ID]{}
+    votesFor3.AddCount(blk3.ID(), runner.Params.Alpha)
+
+    consensus.RecordPoll(rootCtx, votesFor3)
+}
+if consensus.NumProcessing() == 0 {
+    return errors.New("consensus should not be finalized yet")
+}
+if consensus.Preference() != blk3.ID() {
+    return fmt.Errorf("expected preference to be blk3, got %s", onsensus.Preference())
+}
+
+// note that this generates consecutive votes for the blk4
+// without its confidence reset
+finalizePolls := 0
+for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
+    votes := bag.Bag[ids.ID]{}
+    votes.AddCount(blk4.ID(), runner.Params.Alpha)
+
+    consensus.RecordPoll(rootCtx, votes)
+    finalizePolls++
+
+    if consensus.NumProcessing() == 0 {
+        break
+    }
+}
+if consensus.NumProcessing() > 0 {
+    return errors.New("consensus should be finalized")
+}
+if finalizePolls != runner.Params.BetaRogue {
+    return fmt.Errorf("consensus should be finalized exactly after beta rogue polls, took %d polls", finalizePolls)
+}
+
+if consensus.Preference() != blk4.ID() {
+    return errors.New("consensus should prefer blk4")
+}
+if consensus.LastAccepted() != blk4.ID() {
+    return errors.New("consensus should have accepted blk4")
+}
+if blk1.Status() != choices.Rejected {
+    return errors.New("blk1 should have been rejected")
+}
+if blk2.Status() != choices.Accepted {
+    return errors.New("blk2 should have been accepted")
+}
+if blk3.Status() != choices.Rejected {
+    return errors.New("blk3 should have been rejected")
+}
+if blk4.Status() != choices.Accepted {
+    return errors.New("blk4 should have been accepted")
+}
+```
+
+### How to distribute the block (data)?
+
+#### Build consensus
+
+When newly joined, Bitcoin node needs to wait for the data sync before participating in the consensus. Bitcoin node can create a block template and start mining regardless of how many transaction it has received -- there is no requirement that the block template must have more than 1 transaction. Bitcoin consensus is built when the node finds a PoW by enumerating the nonces and broadcasts the newly mined block to all other nodes. Bitcoin does not message its peers to build agreement, but instead performs PoW locally and disseminates the state information by gossip.
+
+A newly issued Avalanche transaction is first validated by the node. Once validating, the node queries the preferred transactions against randomly sub-sampled validators to build transactio confidence.  Once the transaction confidence threshold is met, the transaction is marked as accepted, and other conflicting transactions are rejected.
+
+#### Information propagation speed and finality
+
+New Bitcoin transactions are broadcast to all nodes using peer-to-peer network. When the transaction is validated, each peer broadcasts the transaction to all of its peers. Bitcoin regulates the speed of block creation by adjusting the "target" threshold in order to secure the network against malicious attacks. A Bitcoin node takes 12.6 seconds on average to see a newly mined block (see [paper](https://tik-old.ee.ethz.ch/file//49318d3f56c1d525aabf7fda78b23fc0/P2P2013_041.pdf)).
+
+Let's define "finality" to be the affirmation of time it takes from a transaction proposal to its consensus (see [paper](https://arxiv.org/abs/1711.03936)) -- that is, once the entry or the block is committed to the chain, the transaction won't be revoked. For Bitcoin network, it takes 6 confirmations (depth of 1 block, or 6 blocks) to reach finality, *60-minute* (see [wiki](https://en.bitcoin.it/wiki/Confirmation)).
+
+Unlike Bitcoin that batches several thousands of transactions per block, Avalanche can achieve much higher throughput with smaller batch size. Bitcoin protocol is restricted to 7 TPS with [1,500 transactions on average per batch](https://www.blockchain.com/charts/n-transactions-per-block). Avalanche achieves 7,000 TPS with only 40 transactions per batch. Unlike Bitcoin whose transaction is only confirmed after 60-minute, Avalanche transaction finality is 1.35-second. Avalanche protocol is faster in making a single decision, therefore requiring a very small batch (block) size.
+
+## Reference
+
+- [bitcoin.org](https://bitcoin.org/en/how-it-works)
+- [Avalanche](https://avax.network)
+- [Avalanche Consensus](https://docs.avax.network/learn/platform-overview/avalanche-consensus)
+- [`Determinant/phd-dissertation`](https://github.com/Determinant/phd-dissertation)
+
+## Appendix
+
+### Snowball → Avalanche: adding chits to track confidence on DAG
+
+*The DAG X-chain has been linearized, and the DAG consensus is not used anymore.*
 
 > *Then how does Snowball of repeated sub-sample voting achieve agreement to build an immutable ordered sequence of transactions in a fully permissionless settings?*
 
@@ -538,7 +758,7 @@ def avalanche_loop(u):
                     count[a] = 1
                 else:
                     count[a]++
-        
+
         else:
             for a in ancestry[tx]:
                 count[a] = 0
@@ -547,19 +767,9 @@ def avalanche_loop(u):
         set_q.add(tx)
 ```
 
-##### Avalanche → Snowman: linear chain without DAG
+Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus. Transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node prefer only one transaction in the conflict set. That is, two transactions with overlapping input IDs are in conflict -- see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex -- see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570).
 
-[Ethereum](https://ethereum.org/) supports [smart contract](https://ethereum.org/en/developers/docs/smart-contracts/), a computation model where each contract is persisted as an on-chain state, and called on a method in a transaction -- each method call creates a state transition of the smart contract, querying or updating its persistent state. Like a regular transaction, a smart contract has its own balance in Ethereum currency (ETH), which is kept as part of its state. The smart contract are written in a high-level programming language [Solidity](https://en.wikipedia.org/wiki/Solidity), and gets compiled down to the bytecode for Ethereum Virtual Machine (EVM). In order to deploy a smart contract, the bytecode is encoded in a transaction (thus block on-chain). In order to run the bytecode, one needs to instantiate the transaction with the arguments for the method calls and persist its output on-chain. That is, both contract logic and its input and output need to be encoded on-chain.
-
-Snowman is a linearized version of Avalanche protocol, and used for Avalanche [Platform chain (P-chain)](https://docs.avax.network/learn/platform-overview#platform-chain-p-chain) and [Contract chain (C-chain)](https://docs.avax.network/learn/platform-overview#contract-chain-c-chain). Snowman is a linear chain of totally-ordered blocks, whereas Avalanche is a DAG of vertices.
-
-Although Avalanche native VM (AVM) makes it easier to define a blockchain-based application, Ethereum smart contract became the de-facto language in the industry. This is where [Snowman](https://support.avax.network/en/articles/4058299-what-is-the-snowman-consensus-protocol) comes in to support EVM-compatible smart contract.
-
-#### Frosty
-
-*What is Frosty? We will find out! Coming soon...*
-
-#### Avalanche platform
+### Avalanche platform
 
 Unlike Bitcoin that has a single blockchain network, Avalanche has different types of transactions and consists of multiple blockchains: Exchange chain (X-chain), Platform chain (P-chain), Contract chain (C-chain), and subnetwork (subnet) -- see [platform overview](https://docs.avax.network/learn/platform-overview).
 
@@ -581,7 +791,7 @@ C-chain is an Avalanche blockchain that supports smart contract creation. C-chai
 >
 > P-chain and X-chain are inside of avalanche go repository, but VMs are also able to dynamically be added to avalanche go, so you can set up what we call plugins to run with your VMs. C-chain is actually using coreth, which is a separate repository we manage. And coreth is a fork of geth, which defines the VM for the C-chain, essentially the EVM. These plugins are essentially used to define the state transitions of blocks, and also to be able to query the state. So, avalanche go is totally separate from really anything ethereum, but C-chain specifically is the fork. That's how avalanche go ends up being so extensible. C-chain is actually implemented as a plug-in.
 >
-> [*Stephen Buttolph (Chief Protocol Architect at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=470)
+> [*Stephen Buttolph*](https://youtu.be/2siiIM9oUwk?t=470)
 
 > The thinking was, if we are going to push hard on this generic VM concept and if we can implement an EVM compatible chain using our plug-in interface, we should be able to implement almost any virtual machine using that plug-in interface.
 >
@@ -589,87 +799,10 @@ C-chain is an Avalanche blockchain that supports smart contract creation. C-chai
 >
 > Generally speaking, we view ourselves as someone that provides very high fidelity examples of what you could try to do with these virtual machines such that you could take them and build as you saw fit on top of this interface. We would roll out different examples that have complicated state access, or like complicated transaction processing, or are optimized for some type of transaction processing, and then leave it to people to extend where they could see that going.
 >
-> [*Patrick O'Grady (VP of Engineering at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=886)
+> [*Patrick O'Grady*](https://youtu.be/2siiIM9oUwk?t=886)
 
 > We can abstract all that away, they don't have to deal with the consensus. They don't have to deal with the networking. They don't have to deal with any of this stuff. They just have to deal with kind of what their core innovation is. I think that the innovation space in the VM land is so rich that, there's really not going to be like someone that implements some killer VM that kills everything. People are always going to want to make their own innovation.
 >
-> [*Stephen Buttolph (Chief Protocol Architect at Ava Labs)*](https://youtu.be/2siiIM9oUwk?t=1139)
-
-#### Who initiates the block (data)?
-
-##### Peer/node discovery
-
-Bitcoin client uses DNS to discover the list of node IPs (see [wiki](https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery)). Avalanche uses hard-coded beacon nodes as seed anchors -- see [beacon nodes](https://github.com/ava-labs/avalanchego/blob/v1.7.7/genesis/beacons.go). Unlike Bitcoin that requires one correct DNS seed node (i.e., seed anchor), Avalanche only requires a simple majority of the anchors to be valid -- an Avalanche node can discover its peers by connecting to any set of seed anchors. And there is no barrier to become a seed anchor -- one set of seed anchors can not dictate whether a node may or may not join the network (see [Avalanche platform paper](https://files.avalabs.org/papers/platform.pdf)).
-
-##### Message relay
-
-New Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an `inv`entory message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers with an `inv`. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
-
-![figure-4-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-4-bitcoin-message-relay.png)
-
-Each VM bootstraps into a network by randomly sub-sampling the beacon validators set -- see [`snow/validator.Set`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/validators#Set).
-
-#### What's in the block (data)?
-
-##### Unit of consensus
-
-The unit of Bitcoin consensus is a block of multiple transactions. Each transaction (e.g., send 1 BTC to a friend) is signed by the current wallet's private key with the signature to provide the mathematical proof and thus protect against malicious actors. Once the signatures are validated, the miner combines those multiple transactions into one single unit of consensus, rather than initiating a new consensus for each transaction.
-
-Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owner can spend on the respective funds. Avalanche nodes batch incoming transactions to create vertices in a DAG. And the parents of a vertex are chosen from the preferred nodes at the tip of the DAG. The protocol transactionalize the vertex as a unit of consensus. Snowman protocol uses the block as a unit of consensus.
-
-##### Data structure
-
-Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. The sequence of the Bitcoin blocks is strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent. The transactions for each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. The merkle tree root represents the hash of all transactions in the block, used for proving its data integrity and ensuring the immutability of transaction ordering: Changing the order will change the merkle root (thus block hash).
-
-![figure-5-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-5-bitcoin-data-structure.png)
-
-TODO
-
-##### Payload and data limit
-
-Each Bitcoin block (set of transactions, unit of consensus) is limited to 1 MB (see [wiki](https://en.bitcoin.it/wiki/Block_size_limit_controversy)). The whole Bitcoin blockchain database size is over 370 GB (as of October 2021, see [chart](https://www.blockchain.com/charts/blocks-size)).
-
-Bitcoin is relatively slow in making a single decision, and thus requires a very large batch (block) size for better performance. Unlike Bitcoin, Avalanche achieves much higher throughput with smaller batch size, thus lower latency. The [test](https://files.avalabs.org/papers/consensus.pdf) shows that Avalanche can process 7,000 TPS with 40 transactions per batch (1 KB block size). The whole Avalanche blockchain database size is >200 GB for full archival node and 10 GB with pruning (as of October 2021).
-
-#### How to resolve the block (data) conflicts?
-
-##### Definition of conflict
-
-Two competing Bitcoin miners may create two blocks with different sets of transactions simultaneously, having conflicting perspectives on the chain (fork). To resolve the conflict, each node always selects and extends the longest chain. Once the longest chain is selected, the other chain becomes "stale".
-
-In Avalanche, transactions that spend the same UTXO are in conflict. For instance, each Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, if \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node prefer only one transaction in the conflict set.
-
-In Avalanche, two transactions with overlapping input IDs are in conflict -- see ["Tx" interface](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/tx.go#L23-L28) and ["Conflicts" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/consensus/snowstorm/directed.go#L88-L107). The node locally pre-processes transactions so that conflicting transactions never belong to the same vertex, or drop the whole vertex if conflicts are found within a vertex -- see ["batch" method](https://github.com/ava-labs/avalanchego/blob/v1.6.4/snow/engine/avalanche/transitive.go#L550-L570).
-
-##### Choice between conflicting chains
-
-Two Bitcoin nodes may broadcast different versions of blocks simultaneously, when the blocks were mined roughly at the same time. Then the neighboring node will use whichever branch it received first and save the other branch in case it becomes the longer chain. For instance, the branch A and B are both valid blocks but competing for the next block. They may share transactions so cannot be placed one after the other. This tie breaks when the node hears or mines a new block C extended on top of A. Then the node purges the block B that is not part of the longest chain, switches to the longer branch with A with the most accumulated PoW, and returns the transactions in B but not in A to the mempool, to be mined in a new block.
-
-![figure-6-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-bitcoin-conflict.png)
-
-TODO
-
-#### How to distribute the block (data)?
-
-##### Build consensus
-
-When newly joined, Bitcoin node needs to wait for the data sync before participating in the consensus. Bitcoin node can create a block template and start mining regardless of how many transaction it has received -- there is no requirement that the block template must have more than 1 transaction. Bitcoin consensus is built when the node finds a PoW by enumerating the nonces and broadcasts the newly mined block to all other nodes. Bitcoin does not message its peers to build agreement, but instead performs PoW locally and disseminates the state information by gossip.
-
-A newly issued Avalanche transaction is first validated by the node. Once validating, the node queries the preferred transactions against randomly sub-sampled validators to build transactio confidence.  Once the transaction confidence threshold is met, the transaction is marked as accepted, and other conflicting transactions are rejected.
-
-##### Information propagation speed and finality
-
-New Bitcoin transactions are broadcast to all nodes using peer-to-peer network. When the transaction is validated, each peer broadcasts the transaction to all of its peers. Bitcoin regulates the speed of block creation by adjusting the "target" threshold in order to secure the network against malicious attacks. A Bitcoin node takes 12.6 seconds on average to see a newly mined block (see [paper](https://tik-old.ee.ethz.ch/file//49318d3f56c1d525aabf7fda78b23fc0/P2P2013_041.pdf)).
-
-Let's define "finality" to be the affirmation of time it takes from a transaction proposal to its consensus (see [paper](https://arxiv.org/abs/1711.03936)) -- that is, once the entry or the block is committed to the chain, the transaction won't be revoked. For Bitcoin network, it takes 6 confirmations (depth of 1 block, or 6 blocks) to reach finality, *60-minute* (see [wiki](https://en.bitcoin.it/wiki/Confirmation)).
-
-Unlike Bitcoin that batches several thousands of transactions per block, Avalanche can achieve much higher throughput with smaller batch size. Bitcoin protocol is restricted to 7 TPS with [1,500 transactions on average per batch](https://www.blockchain.com/charts/n-transactions-per-block). Avalanche achieves 7,000 TPS with only 40 transactions per batch. Unlike Bitcoin whose transaction is only confirmed after 60-minute, Avalanche transaction finality is 1.35-second. Avalanche protocol is faster in making a single decision, therefore requiring a very small batch (block) size. 
-
-### Reference
-
-- [bitcoin.org](https://bitcoin.org/en/how-it-works)
-- [Avalanche](https://avax.network)
-- [Avalanche Consensus](https://docs.avax.network/learn/platform-overview/avalanche-consensus)
-- [`Determinant/phd-dissertation`](https://github.com/Determinant/phd-dissertation)
+> [*Stephen Buttolph*](https://youtu.be/2siiIM9oUwk?t=1139)
 
 [↑ top](#nakamotobitcoin-vs-snowavalanche-consensus)

@@ -16,7 +16,7 @@ I am interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 ## Projects: Other
 
 - [`learn`](https://github.com/gyuho/learn) - learning logs
-- [`dplearn`](https://github.com/gyuho/dplearn) - e2e cat vs. dog classifier backed by etcd 
+- [`dplearn`](https://github.com/gyuho/dplearn) - e2e cat vs. dog classifier backed by etcd
 - [`goraph`](https://github.com/gyuho/goraph) - graph algorithms in Go
 - [`aws/aws-k8s-tester`](https://github.com/aws/aws-k8s-tester) - AWS/EKS testing framework
 - [`task-scheduler-examples`](https://github.com/gyuho/task-scheduler-examples) - toy project in Rust
