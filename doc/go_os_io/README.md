@@ -455,6 +455,7 @@ func (f *File) Read(b []byte) (n int, err error) {
 ```
 
 <br>
+
 Try this:
 
 ```go
@@ -610,6 +611,7 @@ func main() {
 
 <br>
 <br>
+
 [`ioutil.ReadAll`](http://golang.org/pkg/io/ioutil/#ReadAll) takes `io.Reader` as an argument:
 
 ```go
@@ -618,6 +620,7 @@ func ReadAll(r io.Reader) ([]byte, error)
 
 <br>
 <br>
+
 [`http.Response`](http://golang.org/pkg/net/http/#Response) struct 
 embeds `io.ReadCloser` interface.:
 
@@ -630,6 +633,7 @@ type Response struct {
 
 <br>
 <br>
+
 [`io.ReadCloser`](http://golang.org/pkg/io/#ReadCloser) interface embeds `io.Reader` interface:
 
 ```go
@@ -649,6 +653,7 @@ ioutil.ReadAll(resp.Body)
 
 
 <br>
+
 Then does `http.Response.Body` type implement `Read` method? *No.*
 `http.Response.Body` is used as `io.Reader` interface argument.
 Then you might think `http.Response.Body` type should implement 
@@ -733,6 +738,7 @@ scanner: 5
 ```
 
 <br>
+
 And note that `log` output goes to standard err (file descriptor `2`):
 
 ```go
@@ -783,6 +789,7 @@ exit status 2
 ```
 
 <br>
+
 And here's how you interact with OS standard output, input, error:
 
 ```go

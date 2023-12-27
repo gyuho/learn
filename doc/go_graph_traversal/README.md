@@ -38,6 +38,7 @@ is a graph traversal algorithm. Its time complexity is `O(|V| + |E|)`.
 - It's useful for finding shortest paths.
 
 <br>
+
 Here's [pseudocode](http://en.wikipedia.org/wiki/Breadth-first_search):
 
 ```
@@ -59,6 +60,7 @@ Here's [pseudocode](http://en.wikipedia.org/wiki/Breadth-first_search):
 ```
 
 <br>
+
 Here's how it works:
 
 ![bfs_00](img/bfs_00.png)
@@ -75,6 +77,7 @@ Here's how it works:
 ![bfs_11](img/bfs_11.png)
 
 <br>
+
 Here's Go implementation of `BFS`:
 
 ```go
@@ -558,6 +561,7 @@ is a graph traversal algorithm. Its time complexity is `O(|V| + |E|)`.
 - It's useful as a subroutine for other algorithms.
 
 <br>
+
 Here's [pseudocode](http://en.wikipedia.org/wiki/Depth-first_search):
 
 ```
@@ -581,6 +585,7 @@ Here's [pseudocode](http://en.wikipedia.org/wiki/Depth-first_search):
 ```
 
 <br>
+
 Here's how it works:
 
 ![dfs_00](img/dfs_00.png)
@@ -599,6 +604,7 @@ Here's how it works:
 ![dfs_13](img/dfs_13.png)
 
 <br>
+
 Here's Go implementation of `DFS`:
 
 ```go
@@ -1090,6 +1096,7 @@ We can also traverse the graph recursively.
 ```
 
 <br>
+
 Here's how it works:
 
 ![dfs_recursion_00](img/dfs_recursion_00.png)
@@ -1106,6 +1113,7 @@ Here's how it works:
 ![dfs_recursion_11](img/dfs_recursion_11.png)
 
 <br>
+
 Here's Go implementation of `DFS`:
 
 ```go

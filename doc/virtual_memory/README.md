@@ -113,6 +113,7 @@ system.
 ![virtual_address_space](img/virtual_address_space.png)
 
 <br>
+
 Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 
 > If you have a **compiled binary**, **each function has a fixed address**
@@ -144,6 +145,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > values.
 
 <br>
+
 > Because people began running multiple programs on a single computer
 > **simultaneously**, problems started to arise with **programs interfering
 > with each other**. The solution to this is to **present each program with
@@ -181,6 +183,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*Varnish*](https://en.wikipedia.org/wiki/Varnish_(software)) *by Wikipedia*
 
 <br>
+
 > A *CPU cache* is a **cache** used by the central processing unit (CPU) of a
 > computer to **reduce the average time to access data from the main memory**.
 > The cache is a smaller, faster memory which stores copies of the data from
@@ -191,6 +194,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*CPU cache*](https://en.wikipedia.org/wiki/CPU_cache) *by Wikipedia*
 
 <br>
+
 > A *translation lookaside buffer (TLB)* is a **cache** that memory management
 > hardware uses to **improve virtual address translation speed**. The majority
 > of desktop, laptop, and server processors includes one or more TLBs in the
@@ -202,6 +206,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > Wikipedia*
 
 <br>
+
 > A **page**, memory page, or virtual page is a **fixed-length contiguous
 > block of virtual memory**, described by a **single entry in the page table**.
 > It is the **smallest unit of data for memory management in a virtual memory**
@@ -210,6 +215,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*Page*](https://en.wikipedia.org/wiki/Page_(computer_memory)) *by Wikipedia*
 
 <br>
+
 > In computer operating systems, **paging** is one of the memory management
 > schemes by which a **computer stores and retrieves data from the secondary
 > storage for use in main memory**.
@@ -217,6 +223,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*Paging*](https://en.wikipedia.org/wiki/Paging) *by Wikipedia*
 
 <br>
+
 > A **page table** is the data structure used by a virtual memory system in a
 > computer operating system to **store the mapping between virtual addresses
 > and physical addresses**. Virtual addresses are used by the accessing process,
@@ -226,6 +233,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*Page table*](https://en.wikipedia.org/wiki/Page_table) *by Wikipedia*
 
 <br>
+
 > In computing, a **page cache**, sometimes also called **disk cache**, is a
 > transparent **cache for the pages** originating **from a secondary storage**
 > device such as a hard disk drive (HDD). The operating system keeps a **page
@@ -240,6 +248,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > [*Page cache*](https://en.wikipedia.org/wiki/Page_cache) *by Wikipedia*
 
 <br>
+
 > The **page cache caches pages of files to optimize file I/O**.
 >
 > The VM subsystem now drives I/O and it does so out of the page cache. If
@@ -253,6 +262,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > cache*](https://www.quora.com/What-is-the-major-difference-between-the-buffer-cache-and-the-page-cache) *by Robert Love*
 
 <br>
+
 > A **memory-mapped file** is a **segment of virtual memory** which has been
 > assigned a direct byte-for-byte correlation with **some portion of a file**
 > or file-like resource. This resource is **typically a file that is physically
@@ -283,6 +293,7 @@ Another great answer [here](http://stackoverflow.com/a/19349645/4211028):
 > Wikipedia*
 
 <br>
+
 > In computing, `mmap(2)` is a POSIX-compliant Unix system call that maps files
 > or devices into memory. It is a method of memory-mapped file I/O. It
 > naturally implements demand paging, because file contents are not read from

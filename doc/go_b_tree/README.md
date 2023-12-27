@@ -35,6 +35,7 @@ is **_`O(log n)`_**, *but* the **worst** case is **_`O(n)`_**.
 
 
 <br><br>
+
 Then what if we **maintain the balance of a binary search tree**? Tree would be
 always be **balanced** so **guarantee** **_searching in `O(log n)`_**. This is
 where [**red black
@@ -48,6 +49,7 @@ algorithms*.
 
 
 <br><br>
+
 And what if we have **more than two(binary) children** per node? It would be
 [**N-ary tree**](https://en.wikipedia.org/wiki/K-ary_tree). And allowing
 **_multiple branches_** per node **decreases tree height**, which means **less
@@ -140,6 +142,7 @@ explains:
 ![btree_insert_08](img/btree_insert_08.png)
 
 <br>
+
 And [*google/btree*](https://github.com/google/btree) implements `node` as follows:
 
 ```go
@@ -164,6 +167,7 @@ type node struct {
 ![btree_node](img/btree_node.png)
 
 <br>
+
 And try this [code](http://play.golang.org/p/kB0NFq7Wo2):
 
 ```go

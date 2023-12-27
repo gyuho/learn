@@ -86,6 +86,7 @@
 ```
 
 <br>
+
 Here's how it works:
 
 ![tarjan_00](img/tarjan_00.png)
@@ -106,6 +107,7 @@ Here's how it works:
 ![tarjan_15](img/tarjan_15.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go

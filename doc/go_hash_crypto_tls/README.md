@@ -37,6 +37,7 @@
    the **same hash value** for the **same input**.
 
 <br>
+
 There are many [*hash functions*](https://en.wikipedia.org/wiki/Hash_function)
 and when you pass a key to a hash function, the function returns a hashed
 value. Then you can have 1-to-1 mapping between key and value in the hash
@@ -725,6 +726,7 @@ EmailAddresses: [`test@test.com`]
 > [*Encryption*](https://en.wikipedia.org/wiki/Encryption) *by Wikipedia*
 
 <br>
+
 Go uses [`crypto/cipher`](http://golang.org/pkg/crypto/cipher/) to encrypt
 and decrypt data:
 

@@ -44,6 +44,7 @@
 > Wikipeida*
 
 <br>
+
 Then let's create some segmentation fault in Go:
 
 ```go
@@ -78,6 +79,7 @@ main.main ()
 ```
 
 <br>
+
 In C++:
 
 ```cpp
@@ -126,6 +128,7 @@ Program received signal SIGSEGV, Segmentation fault.
 > [*Stack overflow*](https://en.wikipedia.org/wiki/Stack_overflow) *by Wikipedia*
 
 <br>
+
 Here's an example of stack overflow in Go:
 
 ```go
@@ -152,6 +155,7 @@ func main() {
 ```
 
 <br>
+
 And in C++:
 
 ```cpp

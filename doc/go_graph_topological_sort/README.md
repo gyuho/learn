@@ -68,6 +68,7 @@
 ```
 
 <br>
+
 Here's how it works:
 
 ![topological_sort_00](img/topological_sort_00.png)
@@ -81,6 +82,7 @@ Here's how it works:
 ![topological_sort_08](img/topological_sort_08.png)
 
 <br>
+
 Here's Go implementation:
 
 ```go

@@ -77,6 +77,7 @@ func main() {
 
 
 <br>
+
 C++ has no built-in `byte` type; it instead has `char` array
 to represent bytes of data:
 
@@ -145,12 +146,14 @@ Linux x86_64
 ```
 
 <br>
+
 > x86-64 (also known as x64, x86_64 and **_`AMD64`_**) is the 64-bit
 > version of the x86 instruction set.
 >
 > [x86-64](https://en.wikipedia.org/wiki/X86-64) *by Wikipedia*
 
 <br>
+
 Processor `register` is a small amount of storage available as part of a CPU.
 Computers load data from a large memory into registers
 and do the arithmetic, manipulating computation
@@ -159,6 +162,7 @@ and store the data back to main memory.
 , and provides the fastest way to access data.
 
 <br>
+
 `Word`, in computing, is the natural unit of data.
 A `word` is a fixed-sized group of digits that are handled
 as a unit by the processor.
@@ -172,6 +176,7 @@ Modern processors usually have a word size of `32` or `64` bits.
 ![register_memory](img/register_memory.png)
 
 <br>
+
 Memory stores binary data by organizing them in 8-bit units (bytes).
 And we need to use multiple bytes to store data.
 Then the order of storing bytes, or data, becomes important.
@@ -212,6 +217,7 @@ func main() {
 ```
 
 <br>
+
 In C++, you can use `union`:
 
 ```cpp

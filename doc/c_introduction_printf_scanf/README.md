@@ -56,6 +56,7 @@ To compile and execute the program:
 - `cd code/` and `gcc hello.c -o hello` and `./hello`
 
 <br>
+
 In `int main(void)`, `int` is the return type and `void` is an argument type,
 and `main` is the name of the function. And the function `printf` is defined in
 a standard library `stdio.h`, which is called a `header file` to be imported

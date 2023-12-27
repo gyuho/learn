@@ -48,6 +48,7 @@ Once a *recursive* function gets called outside first, it keeps **calling
 itself**.
 
 <br>
+
 **Use recursion for multiple related decisions.**
 <br>
 
@@ -362,6 +363,7 @@ after     recursion with index 0 / key A / map done
 ```
 
 <br>
+
 Note that the lines after `recursion(index+1, rmap)` run after the **last
 call** on recursion stack, in Last-In-First-Out order from the stack.
 Understanding this recursion behavior is really important.
@@ -369,6 +371,7 @@ A good example is [Tarjan algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_st
 that puts vertices on the recursion stack, and partitions in Last-In-First-Out order.
 
 <br>
+
 For more detail, please check out:
 
 - [**_Go: graph, strongly connected components_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_strongly_connected_components)
@@ -380,6 +383,7 @@ For more detail, please check out:
 #### recursion, factorial
 
 <br>
+
 Easiest example of recursion would be *factorial*:
 
 ```go
@@ -440,6 +444,7 @@ int main()
 ```
 
 <br>
+
 If you print out all function calls:
 
 ```
@@ -464,6 +469,7 @@ return 5 * factorial(5-1)
 ```
 
 <br>
+
 [Call stack](https://en.wikipedia.org/wiki/Call_stack) is a
 **stack or LIFO (last in, first out)** data structure to keep track of
 active [subroutines](https://en.wikipedia.org/wiki/Subroutine) of a
@@ -475,6 +481,7 @@ in addition to cost of executing multiplication.
 *Recursion code* looks simpler but brings memory overhead. 
 
 <br>
+
 And there is no *memoization* or *caching* of **previous computations**.
 Can we do better?
 
@@ -592,6 +599,7 @@ int main()
 ```
 
 <br>
+
 [Closure](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 is a function with its own environment and at least on bound variable.
 Closures are used when *functions* are first-class objects in the language,
@@ -1622,6 +1630,7 @@ kadane: 7
 ```
 
 <br>
+
 Note that the [`kadane`](https://en.wikipedia.org/wiki/Maximum_subarray_problem)
 algorithm uses a simple version of dynamic programming
 using previous computation.

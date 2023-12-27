@@ -266,6 +266,7 @@ int main()
   variables.
 
 <br>
+
 Again, **array name is also a pointer**:
 
 ```c

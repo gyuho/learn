@@ -155,6 +155,7 @@ func main() {
 ```
 
 <br>
+
 In C++, you would:
 
 ```cpp
@@ -479,6 +480,7 @@ func main() {
 ```
 
 <br>
+
 In C++, you would:
 
 ```cpp

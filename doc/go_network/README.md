@@ -84,6 +84,7 @@
 #### Overview of network layers
 
 <br>
+
 ![network_layers](img/network_layers.png)
 <br>
 
@@ -102,6 +103,7 @@ and makes them act as a single network segment and share the
 bandwidth of a network.
 
 <br>
+
 ![network_hub](img/network_hub.png)
 
 Ethernet hub works by repeating bits received from one of its ports to
@@ -132,6 +134,7 @@ forwards data only to one or multiple devices that need to receive it,
 rather than replicating data to every single port.
 
 <br>
+
 ![network_switch](img/network_switch.png)
 
 But what if we want to send packets across different networks?
@@ -161,6 +164,7 @@ through your own [ISP](https://en.wikipedia.org/wiki/Internet_service_provider).
 ![network_router](img/network_router.png)
 
 <br>
+
 **Router** also does:
 
 - [Network Address Translation (NAT)](https://en.wikipedia.org/wiki/Network_address_translation)
@@ -168,6 +172,7 @@ through your own [ISP](https://en.wikipedia.org/wiki/Internet_service_provider).
 
 <br>
 <br>
+
 **NAT** remaps one IP address space into another by modifying
 network address information. It helps conserve IPv4 addresses by abstracting
 the entire IP address space with private network IP addresses.
@@ -175,6 +180,7 @@ the entire IP address space with private network IP addresses.
 
 <br>
 <br>
+
 **DHCP** dynamically distributes network configurations, such as IP addresses.
 It usually reserves a range of IP addresses, and each DHCP client requests an
 IP address from DHCP server during network initialization. It uses a lease
@@ -202,6 +208,7 @@ and [User Datagram Protocol (UDP)](https://en.wikipedia.org/wiki/User_Datagram_P
 | congestion control | Yes | No |
 
 <br>
+
 > TCP provides reliable, ordered, and error-checked delivery of a stream of
 > octets between applications running on hosts communicating over an IP
 > network. TCP is the protocol that major Internet applications such as the
@@ -271,6 +278,7 @@ to client.
 ![http](img/http.png)
 
 <br>
+
 #### cache server
 
 **`HTTP` allows intermediate networks**. Web cache server between client and
@@ -287,6 +295,7 @@ multiple content resources distributed over several regions.
 ![http_cache_reverse](img/http_cache_reverse.png)
 
 <br>
+
 #### `proxy`
 
 **`HTTP` allows intermediate networks**. `HTTP` proxy sits between client and
@@ -313,6 +322,7 @@ server.
 > [*Proxy server*](https://en.wikipedia.org/wiki/Proxy_server) *by Wikipedia*
 
 <br>
+
 > A reverse proxy taking requests from the Internet and forwarding them to
 > servers in an internal network. Those making requests to the proxy may not be
 > aware of the internal network.
@@ -323,12 +333,14 @@ server.
 > [*Reverse proxy*](https://en.wikipedia.org/wiki/Reverse_proxy) *by Wikipedia*
 
 <br>
+
 We can use [Nginx](http://wiki.nginx.org/Main) as an HTTP server, reverse proxy
 along with Go web servers:
 
 ![proxy_reverse](img/proxy_reverse.png)
 
 <br>
+
 Then why do we bother to run another web server, or reverse proxy while we can
 do pretty much everything in Go?
 
@@ -352,6 +364,7 @@ func main() {
 ```
 
 <br>
+
 It's because popular web proxies like `Nginx` provides useful features
 out-of-the box. So it's not to reinvent the wheels while we can just add
 another module to `Nginx` configuration. `Nginx` provides:
@@ -365,6 +378,7 @@ another module to `Nginx` configuration. `Nginx` provides:
 For more, please visit [Nginx wiki](http://wiki.nginx.org/Main).
 
 <br>
+
 #### `http` session
 
 > An `HTTP` **session** is a sequence of network request-response transactions.
@@ -382,6 +396,7 @@ For more, please visit [Nginx wiki](http://wiki.nginx.org/Main).
 > *by Wikipedia*
 
 <br>
+
 #### `https`
 
 [`HTTP` Secure](https://en.wikipedia.org/wiki/HTTPS) is `HTTPS` for encrypted
@@ -403,6 +418,7 @@ between two parties.
 
 
 <br>
+
 #### `http2`
 
 [`HTTP/2.0`](https://http2.github.io/) is the most recent major version of
@@ -1058,6 +1074,7 @@ And [`http.Transport`](http://golang.org/pkg/net/http/#Transport.RoundTrip)
 implements `RoundTrip` therefore satisfying the `RoundTripper` interface.
 
 <br>
+
 ```go
 package main
 
@@ -1488,6 +1505,7 @@ func FDUsage() (uint64, error) {
 ```
 
 <br>
+
 *Unix* also creates *file descriptors* for
 [anonymous pipes](https://en.wikipedia.org/wiki/Anonymous_pipe)
 and [network sockets](https://en.wikipedia.org/wiki/Network_socket).
@@ -1503,6 +1521,7 @@ has a limit on the number of maximum open files to prevent forgetting to
 close a lot of files because it will cause system-wide problems. 
 
 <br>
+
 [*Dave Cheney*](http://dave.cheney.net/) explains in this article
 [Why is a Goroutine’s stack infinite?](http://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite):
 
@@ -1636,6 +1655,7 @@ exit status 1
 ```
 
 <br>
+
 To investigate more:
 
 ```
@@ -1656,6 +1676,7 @@ go      14752 ubuntu    2u   CHR 136,24      0t0      27 /dev/pts/24
 ```
 
 <br>
+
 Nothing much. So I looked into the maximum number of file descriptors:
 
 ```
@@ -1670,6 +1691,7 @@ $ ulimit -n
 ```
 
 <br>
+
 It was **exceeding the maximum number of possible open files** in the OS(*Ubuntu*).
 To increase the limit, we can do:
 
@@ -1685,6 +1707,7 @@ $ sudo vi /etc/security/limits.conf;
 ```
 
 <br>
+
 Once the limit is increased, the same code works with no crash:
 
 ```
@@ -1716,6 +1739,7 @@ Get [ 5525] : Hello, client
 > Sameer Ajmani*
 
 <br>
+
 > **Incoming requests** to a server should **create a Context**,
 > and **outgoing calls** to servers should **accept a Context**.
 > The chain of function calls between must **propagate the Context**,
@@ -1725,6 +1749,7 @@ Get [ 5525] : Hello, client
 > [package `context`](https://godoc.org/golang.org/x/net/context)
 
 <br>
+
 And here's an simple example of `context` package:
 
 ```go
@@ -1853,6 +1878,7 @@ func send(ctx context.Context, processingTime time.Duration) {
 
 
 <br>
+
 And here's my approach to incorporate `net/context` package with Go standard
 [`http`](http://golang.org/pkg/net/http) package *as smoothly as possible*,
 and to share contexts, states, information between handlers and other services,
@@ -1910,6 +1936,7 @@ func (mux *ServeMux) ServeHTTP(w ResponseWriter, r *Request) {
 ```
 
 <br>
+
 So that they can be used as below:
 
 ```
@@ -1922,6 +1949,7 @@ func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Re
 ```
 
 <br>
+
 Then I need to come up with a type that implements `ServeHTTP`
 just like `http.HandlerFunc` and `http.ServeMux`, and then satisfy the
 interface `http.Handler` so that we can just use the same patterns.
@@ -1940,6 +1968,7 @@ type HandlerFunc func(ResponseWriter, *Request)
 ```
 
 <br>
+
 Then I need to wrap `context.Context` with methods:
 
 ```go
@@ -1960,6 +1989,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 ```
 
 <br>
+
 So now we know that we need to define a type that wraps `context.Context`,
 and the type must implement `ServeHTTP`:
 
@@ -2017,6 +2047,7 @@ func (ca *ContextAdapter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 ```
 
 <br>
+
 Now I have created an interface `ContextHandler` with a method `ContextHandlerFunc`
 in order to wrap `context.Context` in handlers. And with this interface, I have
 `ContextAdapter` type that embeds `ContextHandler` interface and implements
@@ -2126,6 +2157,7 @@ func main() {
 ```
 
 <br>
+
 Note that `context` package is for passing request-scoped values.
 I was trying to use it to pass values between handlers, but `context`
 is not the way of doing it. **Idiomatic Go** only **initialize** 
@@ -2244,6 +2276,7 @@ These are great introductory articles about Docker, rkt, containers:
 And this is just how I understand them.
 
 <br>
+
 **Docker** is like a big binary file for an application.
 Just like Unix, you can compile an application into one file, and run it as a
 process. **Docker** is an application container, not a system container.
@@ -2261,6 +2294,7 @@ It's usually faster, lighter than VMs. Pre-existing techonologies include:
 - [*`AUFS`*](https://en.wikipedia.org/wiki/Aufs)
 
 <br>
+
 > The most powerful feature of containers is the ability to run any Linux
 > userland that's compatible with the latest kernel.
 >
@@ -2268,6 +2302,7 @@ It's usually faster, lighter than VMs. Pre-existing techonologies include:
 > CoreOS*
 
 <br>
+
 Software engineering becomes frustrating when you have to deal with
 inconsistent development, production environments. This is the core problem
 that containerization solves, by **documenting** those processes in
@@ -2312,6 +2347,7 @@ methods between hosts, such as HTTP, [SSH](https://en.wikipedia.org/wiki/Secure_
 > [*Secure Shell*](https://en.wikipedia.org/wiki/Secure_Shell) *by Wikipedia*
 
 <br>
+
 > Secure copy or SCP is a means of securely transferring computer files between
 > a local host and a remote host or between two remote hosts. It is based on
 > the Secure Shell (SSH) protocol.
@@ -2329,6 +2365,7 @@ methods between hosts, such as HTTP, [SSH](https://en.wikipedia.org/wiki/Secure_
 > [Secure copy](https://en.wikipedia.org/wiki/Secure_copy) *by Wikipedia*
 
 <br>
+
 Here's how you use `ssh` and `scp` in Ubuntu:
 
 ```

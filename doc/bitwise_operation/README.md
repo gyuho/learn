@@ -86,6 +86,7 @@ func main() {
 
 
 <br>
+
 C++ has no built-in `byte` type; it instead has `char` array
 to represent bytes of data:
 
@@ -148,6 +149,7 @@ x & y:  00000101
 ```
 
 <br>
+
 **OR** (`|`) operator results in 1 at each bit position
 when either input is 1:
 
@@ -158,6 +160,7 @@ x | y:  11011111
 ```
 
 <br>
+
 **XOR** (`^`) results in 1 at each bit position
 only when two bits are different:
 
@@ -168,6 +171,7 @@ x ^ y:  0110 (decimal 6)
 ```
 
 <br>
+
 **NOT** (`^` or `~`) clears bits set to 0
 where *y*'s bits are 1:
 
@@ -177,6 +181,7 @@ where *y*'s bits are 1:
 ```
 
 <br>
+
 **AND NOT** (`&^` or `&~`) clears bits set to 0
 where *y*'s bits are 1:
 
@@ -187,6 +192,7 @@ x &^ y:  0100 (decimal 4)
 ```
 
 <br>
+
 **Left Shift** (`<<`):
 
 ```
@@ -196,6 +202,7 @@ yields: y = 10100
 ```
 
 <br>
+
 **Right Shift** (`>>`):
 
 ```
@@ -205,6 +212,7 @@ yields: y = 101
 ```
 
 <br>
+
 In Go, you would:
 
 ```go
@@ -391,6 +399,7 @@ Right Shift:  x >> 1
 
 
 <br>
+
 In C++, you would:
 
 ```cpp
@@ -542,6 +551,7 @@ EQUALS 00001010 = 0x0A
 ```
 
 <br>
+
 In Go:
 
 ```go
@@ -637,6 +647,7 @@ Bitmasking:  x & y
 ```
 
 <br>
+
 In C++:
 
 ```cpp
@@ -803,6 +814,7 @@ mybits.reset(1): 0000
 > Wikipedia*
 
 <br>
+
 In Go, you would:
 
 ```go
@@ -887,6 +899,7 @@ func toUint64(bstr string) uint64 {
 ```
 
 <br>
+
 In C++, you would:
 
 ```cpp

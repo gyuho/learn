@@ -48,6 +48,7 @@ is **_`O(log n)`_**, *but* the **worst** case is **_`O(n)`_**.
 
 
 <br><br>
+
 Then what if we **maintain the balance of a binary search tree**? Tree would be
 always be **balanced** so **guarantee** **_searching in `O(log n)`_**. This is
 where [**red black
@@ -61,6 +62,7 @@ algorithms*.
 
 
 <br><br>
+
 And what if we have **more than two(binary) children** per node? It would be
 [**N-ary tree**](https://en.wikipedia.org/wiki/K-ary_tree). And allowing
 **_multiple branches_** per node **decreases tree height**, which means **less
@@ -98,6 +100,7 @@ Here's how to [**_`RotateToLeft`_**](https://godoc.org/github.com/gyuho/goraph/l
 ![llrb_rotate_to_left_result](img/llrb_rotate_to_left_result.png)
 
 <br>
+
 And [code](http://play.golang.org/p/A7GbcIoZOT):
 
 ```go
@@ -355,6 +358,7 @@ Here's how to [**_`RotateToRight`_**](https://godoc.org/github.com/gyuho/goraph/
 ![llrb_rotate_to_right_result](img/llrb_rotate_to_right_result.png)
 
 <br>
+
 And [code](http://play.golang.org/p/8BuyravQi1):
 
 ```go
@@ -614,6 +618,7 @@ And Here's how to [**_`FlipColor`_**](https://godoc.org/github.com/gyuho/goraph/
 ![llrb_flip_color](img/llrb_flip_color.png)
 
 <br>
+
 And [code](http://play.golang.org/p/fkfZKuahNT):
 
 ```go
@@ -919,6 +924,7 @@ Note that `insertion` always sets the root as black at the end:
 ![llrb_insert_19](img/llrb_insert_19.png)
 
 <br>
+
 And [code](http://play.golang.org/p/nu_bXrICJv):
 
 ```go
@@ -2038,6 +2044,7 @@ First, let's look at how the tree changes after each deletion:
 ![llrb_delete_result_03](img/llrb_delete_result_03.png)
 
 <br>
+
 ```
 Delete Algorithm:
 1. Start 'delete' from tree Root.
@@ -2101,6 +2108,7 @@ Delete Algorithm:
 ```
 
 <br>
+
 ![llrb_delete_00](img/llrb_delete_00.png)
 ![llrb_delete_01](img/llrb_delete_01.png)
 ![llrb_delete_02](img/llrb_delete_02.png)
@@ -2131,9 +2139,11 @@ Delete Algorithm:
 ![llrb_delete_27](img/llrb_delete_27.png)
 
 <br>
+
 And here's how it actually happens:
 
 <br>
+
 And [code](http://play.golang.org/p/AT-nBWV3Ve):
 
 ```go

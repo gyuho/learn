@@ -30,6 +30,7 @@ is a measure of similarity between two vectors:
 ![cosine_similarity](img/cosine_similarity.png)
 
 <br>
+
 Since `cos 0° = 1` and `cos 90° = 0`, the similarity ranges between 0 and 1. 
 `0°` means that the two texts are equal, since two sequences point to the same
 point. 90° means that the two texts are totally different. Therefore, the
@@ -209,6 +210,7 @@ distance. **Levenshtein distance** is the **minimum number of single-character
 edits**.
 
 <br>
+
 The levenshtein distance from `kitten` to `sitting` is 3:
 
 1. **k**itten → **s**itten  (**substitution** of "s" for "k")
@@ -216,6 +218,7 @@ The levenshtein distance from `kitten` to `sitting` is 3:
 3. sittin → sittin**g**   (**insertion** of "g" at the end)
 
 <br>
+
 Levenshtein distance algorithm uses
 [dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming).
 (I also have [YouTube clip](https://www.youtube.com/watch?v=aEIhvv5p-V8) tp
@@ -242,6 +245,7 @@ space to store the results. Essentially, it sacrifices memory space for time.
 ![levenshtein_14](img/levenshtein_14.png)
 
 <br>
+
 The bigger the edit distance is, the less similar two texts are.
 So we will modify the function to return the bigger values for similarities.
 In Go, you would do [this](http://play.golang.org/p/UQI9mXCgww):

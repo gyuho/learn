@@ -29,6 +29,7 @@ gRPC is a framework from Google, to handle remote procedure calls. It uses HTTP/
 </ul>
 
 <br>
+
 A `frame` is the basic HTTP/2 protocol unit: HTTP/2 splits requests/responses into binary `frames` before sending them over TCP connections. And a `stream` is a bidirectional flow of `frames`, which share a same stream id. HTTP/2 makes `streams` independent to each other, so that one single HTTP/2 connection can have multiple concurrently open streams, and process `frames` from multiple `streams` asynchronously. And by default gRPC uses protocol buffers to exchange messages. Google developed Protocol Buffers for serializing structured data. Protocol buffers are encoded in binary format, therefore more compact efficient than JSON.
 
 ## gRPC vs JSON RPC
@@ -302,6 +303,7 @@ Tests send 300,000 requests to key/value stores. One with `jsonrpc`, the other w
 |gRPC|300,000|100|7.167s|23.892µs|
 
 <br>
+
 And if compared on memory usage:
 
 |RPC|`jsonrpc`|gRPC|delta|
@@ -323,6 +325,7 @@ And if compared on memory usage:
 |AllocedBytesPerOp|1795122672|1795831944|+0.04%|
 
 <br>
+
 As you see, gRPC is much faster and lighter than `jsonrpc`. Not only performant, but also gRPC is easier to reason about concurrency. HTTP/1.x requires multiple TCP connections for concurrent requests, while HTTP/2 can have multiple requests over one single TCP connection and still process them asynchronously. Tests above show that gRPC with multiple clients solely speeds up gRPC by 80%, without opening multiple TCP connections.
 
 ## How does etcd use gRPC?
