@@ -4,7 +4,7 @@
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
 
-*(old link: `gyuho.dev/paxos-etcd-vs-nakamoto-bitcoin-consensus.html`)*
+*(old link: `gyuho.dev/nakamoto-bitcoin-vs-snow-avalanche-consensus.html`)*
 
 ## What is consensus?
 
