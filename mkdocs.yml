@@ -53,7 +53,7 @@ plugins:
 
   # https://github.com/danielfrg/mkdocs-jupyter
   - mkdocs-jupyter:
-      execute: true
+      execute: false
       include_source: true
 
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-a-blog/
