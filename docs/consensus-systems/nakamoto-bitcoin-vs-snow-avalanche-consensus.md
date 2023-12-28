@@ -477,9 +477,9 @@ consensus.Add(rootCtx, blk2)
 // note that this generates consecutive votes for the blk1
 // without its confidence reset
 finalizePolls := 0
-for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
+for i := 0; i < 2*params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
     votes := bag.Bag[ids.ID]{}
-    votes.AddCount(blk1.ID(), runner.Params.Alpha)
+    votes.AddCount(blk1.ID(), params.Alpha)
 
     consensus.RecordPoll(rootCtx, votes)
     finalizePolls++
@@ -492,7 +492,7 @@ for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure i
 if consensus.NumProcessing() > 0 {
     return errors.New("consensus should be finalized")
 }
-if finalizePolls != runner.Params.BetaRogue {
+if finalizePolls != params.BetaRogue {
     return fmt.Errorf("consensus should be finalized exactly after beta rogue polls, took %d polls", finalizePolls)
 }
 
@@ -514,14 +514,14 @@ if blk2.Status() != choices.Rejected {
 That is, the conflict is resolved after a series of votes (polls) and the block with the most votes is chosen, called the "preferred block". If there is no conflict, only the beta virtuous rounds are sufficient to finalize the block:
 
 ```go
-blk1 := example.NewBlock(ids.ID{1}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
+blk1 := newBlock(ids.ID{1}, genesisBlk.ID(), genesisBlk.Height()+1, now)
 consensus.Add(rootCtx, blk1)
 
 // blk1 has no conflict, so it should finalize in beta virtuous
 finalizePolls := 0
-for i := 0; i < 2*runner.Params.BetaVirtuous; i++ { // 2*beta rounds to make sure it can terminate earlier
+for i := 0; i < 2*params.BetaVirtuous; i++ { // 2*beta rounds to make sure it can terminate earlier
     votes := bag.Bag[ids.ID]{}
-    votes.AddCount(blk1.ID(), runner.Params.Alpha)
+    votes.AddCount(blk1.ID(), params.Alpha)
 
     consensus.RecordPoll(rootCtx, votes)
     finalizePolls++
@@ -534,7 +534,7 @@ for i := 0; i < 2*runner.Params.BetaVirtuous; i++ { // 2*beta rounds to make sur
 if consensus.NumProcessing() > 0 {
     return errors.New("consensus should be finalized")
 }
-if finalizePolls != runner.Params.BetaVirtuous {
+if finalizePolls != params.BetaVirtuous {
     return fmt.Errorf("consensus should be finalized exactly after beta virtuous polls, took %d polls", finalizePolls)
 }
 
@@ -549,7 +549,7 @@ if blk1.Status() != choices.Accepted {
 }
 ```
 
-Optimizations are made to perform transitive voting, where it bubbles up the votes from the children (higher block heights) to the parents (lower block heights). For instance, if the node votes for the block B, and the block A is a parent of the block B, then the vote for the block B implies the vote for the block A and others in its transitive path:
+Optimizations were made via transitive voting, where it bubbles up the votes from the children (higher block heights) to the parent (lower block heights). For instance, if the node votes for the block B, and the block A is a parent of the block B, then the vote for the block B implies the vote for the block A and others in its transitive path:
 
 ```go
 // Current graph structure:
@@ -558,10 +558,10 @@ Optimizations are made to perform transitive voting, where it bubbles up the vot
 // 1   2
 //    / \
 //   3   4
-blk1 := example.NewBlock(ids.ID{1}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
-blk2 := example.NewBlock(ids.ID{2}, runner.GenesisBlk.ID(), runner.GenesisBlk.Height()+1, now)
-blk3 := example.NewBlock(ids.ID{3}, blk2.ID(), blk2.Height()+1, now)
-blk4 := example.NewBlock(ids.ID{4}, blk2.ID(), blk2.Height()+1, now)
+blk1 := newBlock(ids.ID{1}, genesisBlk.ID(), genesisBlk.Height()+1, now)
+blk2 := newBlock(ids.ID{2}, genesisBlk.ID(), genesisBlk.Height()+1, now)
+blk3 := newBlock(ids.ID{3}, blk2.ID(), blk2.Height()+1, now)
+blk4 := newBlock(ids.ID{4}, blk2.ID(), blk2.Height()+1, now)
 
 for _, blk := range []snowman.Block{blk1, blk2, blk3, blk4} {
     consensus.Add(rootCtx, blk)
@@ -569,9 +569,9 @@ for _, blk := range []snowman.Block{blk1, blk2, blk3, blk4} {
 
 // blk3 is in conflict with blk4, so it requires beta rogue rounds to finalize
 // if voted less than beta rogue, it should not finalize
-for i := 0; i < runner.Params.BetaRogue/2; i++ {
+for i := 0; i < params.BetaRogue/2; i++ {
     votesFor3 := bag.Bag[ids.ID]{}
-    votesFor3.AddCount(blk3.ID(), runner.Params.Alpha)
+    votesFor3.AddCount(blk3.ID(), params.Alpha)
 
     consensus.RecordPoll(rootCtx, votesFor3)
 }
@@ -585,9 +585,9 @@ if consensus.Preference() != blk3.ID() {
 // note that this generates consecutive votes for the blk4
 // without its confidence reset
 finalizePolls := 0
-for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
+for i := 0; i < 2*params.BetaRogue; i++ { // 2*beta rounds to make sure it can terminate earlier
     votes := bag.Bag[ids.ID]{}
-    votes.AddCount(blk4.ID(), runner.Params.Alpha)
+    votes.AddCount(blk4.ID(), params.Alpha)
 
     consensus.RecordPoll(rootCtx, votes)
     finalizePolls++
@@ -599,7 +599,7 @@ for i := 0; i < 2*runner.Params.BetaRogue; i++ { // 2*beta rounds to make sure i
 if consensus.NumProcessing() > 0 {
     return errors.New("consensus should be finalized")
 }
-if finalizePolls != runner.Params.BetaRogue {
+if finalizePolls != params.BetaRogue {
     return fmt.Errorf("consensus should be finalized exactly after beta rogue polls, took %d polls", finalizePolls)
 }
 
