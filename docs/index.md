@@ -13,11 +13,11 @@
 - [Home](index.html)
 - [About me 👋](aboutme.md)
 
-### Consensys systems
+### Consensus systems
 
 - [Paxos(etcd) vs. Nakamoto(Bitcoin)](./consensus-systems/paxos-etcd-vs-nakamoto-bitcoin-consensus.md)
 - [Nakamoto(Bitcoin) vs. Snow(Avalanche)](./consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus.md)
 
 ### Blogs
 
-[Link](./blog/index.md)
+- [Link](./blog/index.md)
