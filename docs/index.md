@@ -11,8 +11,8 @@
 
 ### Consensus systems
 
-- [Paxos(etcd) vs. Nakamoto(Bitcoin)](./consensus-systems/paxos-etcd-vs-nakamoto-bitcoin-consensus.md)
-- [Nakamoto(Bitcoin) vs. Snow(Avalanche)](./consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus.md)
+- [Paxos(etcd) vs. Nakamoto(Bitcoin)](./consensus-systems/paxos-etcd-vs-nakamoto-bitcoin.md)
+- [Nakamoto(Bitcoin) vs. Snow(Avalanche)](./consensus-systems/nakamoto-bitcoin-vs-snow-avalanche.md)
 
 ### Blogs
 

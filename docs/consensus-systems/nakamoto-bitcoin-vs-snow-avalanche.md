@@ -1,8 +1,8 @@
-# Nakamoto(Bitcoin) vs. Snow(Avalanche): consensus
+# Consensus: Nakamoto(Bitcoin) vs. Snow(Avalanche)
 
 *Last update: December 28, 2023*
 
-*Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin): consensus](./paxos-etcd-vs-nakamoto-bitcoin-consensus.md)*
+*Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin)](./paxos-etcd-vs-nakamoto-bitcoin.md)*
 
 *(old link: `gyuho.dev/nakamoto-bitcoin-vs-snow-avalanche-consensus.html`)*
 
