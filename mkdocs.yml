@@ -72,3 +72,8 @@ nav:
     - Nakamoto(Bitcoin) vs. Snow(Avalanche): ./consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus.md
   - Blog:
       - blog/index.md
+
+# https://www.mkdocs.org/user-guide/configuration/#not_in_nav
+not_in_nav: |
+  /nakamoto-bitcoin-vs-snow-avalanche-consensus.html.md
+  /paxos-etcd-vs-nakamoto-bitcoin-consensus.html.md
