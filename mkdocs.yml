@@ -75,6 +75,9 @@ nav:
 
 # https://www.mkdocs.org/user-guide/configuration/#not_in_nav
 not_in_nav: |
-  nakamoto-bitcoin-vs-snow-avalanche-consensus.html.md
-  paxos-etcd-vs-nakamoto-bitcoin-consensus.html.md
-  consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus/snowman-example
+  /nakamoto-bitcoin-vs-snow-avalanche-consensus.html.md
+  /paxos-etcd-vs-nakamoto-bitcoin-consensus.html.md
+  /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus/snowman-example
+
+exclude_docs: |
+  /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche-consensus/snowman-example
