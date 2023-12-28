@@ -4,6 +4,8 @@
 >
 > [*Terence Tao: Work hard*](https://terrytao.wordpress.com/career-advice/work-hard/)
 
+<br>
+
 > To think, you have to write. If you're thinking without writing, you only think you're thinking.
 >
 > [*Lesli Lamport: Thinking Above the Code*](https://youtu.be/-4Yp3j_jk8Q)
