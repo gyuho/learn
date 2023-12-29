@@ -4,7 +4,7 @@
 
 *Previous: [Paxos(etcd) vs. Nakamoto(Bitcoin)](./paxos-etcd-vs-nakamoto-bitcoin.md)*
 
-*(old link: `gyuho.dev/nakamoto-bitcoin-vs-snow-avalanche-consensus.html`)*
+*(old link: `gyuho.dev/nakamoto-bitcoin-vs-snow-avalanche.html`)*
 
 ## What is consensus?
 
@@ -111,7 +111,7 @@ In Avalanche protocol, "safety" and "liveness" are only guaranteed for virtuous 
 
 Snow is a family of binary BFT protocols based on a non-BFT protocol *Slush*, which incrementally builds up to *Snowflake* and *Snowball* BFT protocols in the Snow family.
 
-![figure-1-snow-family.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-1-snow-family.png)
+![figure-1-snow-family.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-1-snow-family.png)
 
 #### Slush: introducing metastability
 
@@ -400,7 +400,7 @@ Bitcoin client uses DNS to discover the list of node IPs (see [wiki](https://en.
 
 New Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an `inv`entory message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers with an `inv`. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
 
-![figure-4-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-4-bitcoin-message-relay.png)
+![figure-4-bitcoin-message-relay.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-4-bitcoin-message-relay.png)
 
 In case of the Avalanche network, each VM bootstraps into a network by randomly sub-sampling the beacon validators set -- see [`snow/validator.Set`](https://pkg.go.dev/github.com/ava-labs/avalanchego/snow/validators#Set). And gossips the transactions to its neighbors, which then gossips to their neighbors, and so on.
 
@@ -416,7 +416,7 @@ Like Bitcoin, Avalanche uses cryptographic signatures to enforce only a key owne
 
 Bitcoin network is open to arbitrary participants, thus need for auxiliary information to protect against Byzantine faults. The sequence of the Bitcoin blocks is strictly ordered, as each block is cryptographically chained to the prior. The sequence of Bitcoin transactions within a single block can be in any order, so long as a transaction which spends an output from the same block is placed after its parent. The transactions for each block are stored in a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) data structure, where every leaf node is labelled with a data block and every non-leaf node hashes the labels (transaction IDs) of its child nodes. The merkle tree root represents the hash of all transactions in the block, used for proving its data integrity and ensuring the immutability of transaction ordering: Changing the order will change the merkle root (thus block hash).
 
-![figure-5-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-5-bitcoin-data-structure.png)
+![figure-5-bitcoin-data-structure.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-5-bitcoin-data-structure.png)
 
 #### Payload and data limit
 
@@ -453,7 +453,7 @@ consensus.Add(rootCtx, blk2)
 
 Two Bitcoin nodes may broadcast different versions of blocks simultaneously, when the blocks were mined roughly at the same time. Then the neighboring node will use whichever branch it received first and save the other branch in case it becomes the longer chain. For instance, the branch A and B are both valid blocks but competing for the next block. They may share transactions so cannot be placed one after the other. This tie breaks when the node hears or mines a new block C extended on top of A. Then the node purges the block B that is not part of the longest chain, switches to the longer branch with A with the most accumulated PoW, and returns the transactions in B but not in A to the mempool, to be mined in a new block.
 
-![figure-6-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-6-bitcoin-conflict.png)
+![figure-6-bitcoin-conflict.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-6-bitcoin-conflict.png)
 
 The snowman protocol does not use the longest chain rule. In case of conflicts (different block hashes at the same height), the protocol uses the following rules to determine the preference:
 
@@ -672,7 +672,7 @@ The challenge in maintaining the DAG is to choose among conflicting transactions
 
 Note that the child transaction is not required to have any application-specific or funding dependency on the parent. Instead, it defines "ancestry" to be all transactions reachable via parent edges (ancestor set), and "progeny" to be all child transactions and their offspring.
 
-![figure-2-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-2-avalanche-transaction-ancestry-progeny.png)
+![figure-2-avalanche-transaction-ancestry-progeny.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-2-avalanche-transaction-ancestry-progeny.png)
 
 In Avalanche, transactions that spend the same UTXO are in conflict: Two transactions with overlapping input IDs are in conflict. Let's say an Avalanche transaction \\(T\\) belongs to a conflict set \\(P_{T}\\). Since conflicts are transitive in DAG, when \\(T_{i}\\) and \\(T_{j}\\) are in conflict, then they belong to the same conflict set \\(P_{T}\\), where \\(P_{T_{i}} = P_{T_{j}}\\) but to be tracked separately. Only one transaction in the conflict set can be accepted, and each node can prefer only one transaction in the conflict set. When such transaction \\(T\\) is queried, all transactions reachable from \\(T\\) are implicitly part of the query: If a transaction \\(T\\) is final from a node's perspective, the node can assume the entire ancestry of the transaction \\(T\\) are also final. Likewise, if a transaction \\(T\\) is rejected, its progeny can also be rejected. Each transaction \\(T\\) belongs to its own conflict set \\(P_{T}\\), and one vertex may have multiple transactions. The node filters transactions early, so that conflicting transactions never belong to the same vertex, or drops the whole vertex if conflicts were found within the vertex.
 
@@ -684,7 +684,7 @@ For virtuous (honest) transactions, the transaction is accepted when it is the o
 
 Below illustrates the Avalanche protocol main loop which is executed by each node. In each iteration, the node selects a transaction that has not been queried. As in Snowball, the node samples \\(k\\) peers to query. If more than \\(α\\) (quorum) respond positively to the querying node, the protocol sets the chit value of the querying node for the respective transaction \\(T\\) to 1. The receiving node responds positively to the query, if and only if the transaction \\(T\\) and its ancestry are currently the preferred option in the respective conflict sets. Then the protocol builds "confidence" with the total number of chits in the progeny of the transaction. Using this "confidence" state, the querying node updates the preferred transaction of each conflict set of ancestry transactions. And this transaction \\(T\\) is added to the set \\(Q\\) so it will never be queried again by the node. The protocol can batch multiple transactions in a vertex for queries but still tracks the confidence for each individual transaction. The protocol accepts a transaction when there is no other transaction in the conflict set and its confidence value is \\(>β\\). Similary, vertex is marked as accepted if all transactions in the vertex and its parent are accepted (transitively accept).
 
-![figure-3-avalanche-dag-conflict.png](nakamoto-bitcoin-vs-snow-avalanche-consensus/img/figure-3-avalanche-dag-conflict.png)
+![figure-3-avalanche-dag-conflict.png](nakamoto-bitcoin-vs-snow-avalanche/img/figure-3-avalanche-dag-conflict.png)
 
 ```python
 def init():
