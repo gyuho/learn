@@ -4,7 +4,7 @@
 
 *Next: [Nakamoto(Bitcoin) vs. Snow(Avalanche)](./nakamoto-bitcoin-vs-snow-avalanche.md)*
 
-*(old link: `gyuho.dev/paxos-etcd-vs-nakamoto-bitcoin-consensus.html`)*
+*(old link: `gyuho.dev/paxos-etcd-vs-nakamoto-bitcoin.html`)*
 
 ## What is consensus?
 
@@ -42,7 +42,7 @@ Paxos assumes each process operates at arbitrary speeds and may fail or restart 
 
 Single-decree Paxos is a two-phase protocol. In the first phase of the protocol ("prepare/promise" phase), the proposer sends a message with a sequence number \\(n\\) to the acceptors (peers) -- *"Prepare"* with the sequence number \\(n\\). And the acceptor responds to the proposal if and only if the sequence number \\(n\\) is higher than every previously accepted proposal number -- *"Promise"* to never again accept the proposal numbered less than \\(n\\). If the sequence number \\(n\\) is less than or equal to any previously accepted proposal, the acceptor ignores or rejects the proposal by responding with the highest sequence number it has ever seen. In the second phase of the protocol ("accept/learn" phase), once the proposer secures the agreement on its "prepare" request from the majority of the acceptors, the proposer can now request a value \\(v\\) with the sequence number \\(n\\) to be accepted -- *"Accept"*. And once accepting the chosen value \\(v\\), the acceptor can inform its learner with the accepted value \\(v\\) -- *"Learn"* the agreed value and apply to its state.
 
-![figure-1-paxos-consensus.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-1-paxos-consensus.png)
+![figure-1-paxos-consensus.png](paxos-etcd-vs-nakamoto-bitcoin/img/figure-1-paxos-consensus.png)
 
 Then, what if two proposers keep sending a sequence of proposals with increasing sequence numbers, while acceptors keep promising to accept the highest but none of which is ever chosen? One proposer may complete the phase 1 for a sequence number but its accept message can get ignored, because the other proposer could have completed another phase 1 with a higher number in-between. To prevent such conflict, a single proposer is elected to be the leader that exclusively issues proposals: Each single-decree Paxos instance must establish a leader, and then proceed with phase 2 to chose the value.
 
@@ -179,7 +179,7 @@ func stepFollower(r *raft, m pb.Message) error {
         ...
 ```
 
-![figure-2-etcd-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-2-etcd-message-relay.png)
+![figure-2-etcd-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin/img/figure-2-etcd-message-relay.png)
 
 > In comparison, *how does Bitcoin initiate a block (data) to its consensus protocol?*
 
@@ -191,7 +191,7 @@ Unlike Paxos that provides a hard-coded list of server endpoints for client inte
 
 Unlike Paxos that has a centralized entity (leader) to relay proposals to, new Bitcoin transactions are broadcast over peer-to-peer network: An initiated transaction from a wallet client is sent to a node as an "inventory" message, and the node requests the full transaction with `getdata`. After validating the transaction, the node sends the transaction to all of its peers as an `inv` message. If the connected peer has not received such announced transaction yet, it sends the `getdata` request to get the transaction details, and so on. Such mesh layout of network can quickly disseminate the announced transaction from one node to the rest of the cluster.
 
-![figure-3-bitcoin-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-3-bitcoin-message-relay.png)
+![figure-3-bitcoin-message-relay.png](paxos-etcd-vs-nakamoto-bitcoin/img/figure-3-bitcoin-message-relay.png)
 
 ### What's in the block (data)?
 
@@ -246,7 +246,7 @@ The [block](https://developer.bitcoin.org/reference/block_chain.html#serialized-
 - *Transaction count*: The total number of transactions in this block, including the coinbase transaction that rewards the miner itself.
 - *Transactions*: Includes all transactions for the block in raw transaction format.
 
-![figure-4-bitcoin-data-structure.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-4-bitcoin-data-structure.png)
+![figure-4-bitcoin-data-structure.png](paxos-etcd-vs-nakamoto-bitcoin/img/figure-4-bitcoin-data-structure.png)
 
 #### Payload and data limit
 
@@ -292,7 +292,7 @@ The rule of choosing the longest makes the other chain extinct (stale) -- the mi
 
 Two nodes may broadcast different versions of blocks simultaneously, when the blocks were mined roughly at the same time. Then the neighboring node will use whichever branch it received first and save the other branch in case it becomes the longer chain. For instance, the branch A and B are both valid blocks but competing for the next block. They may share transactions so cannot be placed one after the other. This tie breaks when the node hears or mines a new block C extended on top of A. Then the node purges the block B that is not part of the longest chain, switches to the longer branch with A with the most accumulated PoW, and returns the transactions in B but not in A to the mempool, to be mined in a new block.
 
-![figure-5-bitcoin-conflict.png](paxos-etcd-vs-nakamoto-bitcoin-consensus/img/figure-5-bitcoin-conflict.png)
+![figure-5-bitcoin-conflict.png](paxos-etcd-vs-nakamoto-bitcoin/img/figure-5-bitcoin-conflict.png)
 
 This is also how Bitcoin prevents double-spends. Both transactions that double-spend can go into the pool of unconfirmed transactions, but only one can be confirmed in a block. The second transaction from the mempool would not get confirmed for the next block, because the node will invalidate such.
 
