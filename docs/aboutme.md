@@ -2,8 +2,6 @@
 
 Interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 
-[![gyuho GitHub stats](https://github-readme-stats.vercel.app/api?username=gyuho&show_icons=true)](https://github.com/gyuho)
-
 [![gyuho GitHub stats](https://github-readme-stats.vercel.app/api?username=gyuho&show_icons=true&rank_icon=percentile&show=reviews,prs_merged,prs_merged_percentage)](https://github.com/gyuho)
 
 [![gyuho GitHub Streak](https://streak-stats.demolab.com?user=gyuho&theme=github-light)](https://github.com/gyuho)
