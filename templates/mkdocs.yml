@@ -1,0 +1,77 @@
+site_name: Public notes
+
+# https://github.com/mrdbourke/pytorch-deep-learning/blob/main/mkdocs.yml
+theme:
+  name: material
+
+  # https://squidfunk.github.io/mkdocs-material/setup/changing-the-fonts/
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  features:
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+
+  # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
+  # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#primary-color
+  palette:
+    # primary: light-blue
+    # accent: light-blue
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - meta
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - docs/javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+
+  # https://github.com/danielfrg/mkdocs-jupyter
+  - mkdocs-jupyter:
+      execute: false
+      include_source: true
+
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-a-blog/
+  - blog:
+      blog_dir: blog
+      authors_file: "{blog}/.authors.yml"
+      archive_name: Archive
+
+# https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation
+# https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/
+nav:
+  - Home: index.md
+  - About me: aboutme.md
+  - AI:
+    - Intro: ./ai/000-intro.md
+  - Blog:
+      - blog/index.md
+  - Others:
+    - Git: ./others/git.md
+  - Archive:
+    - TBD: ./archive/tbd.md

@@ -1,0 +1,3 @@
+# Public templates
+
+Public notes
