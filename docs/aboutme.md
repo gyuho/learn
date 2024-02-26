@@ -27,6 +27,7 @@ Interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 
 ## More
 
+- <a href="https://gyuho.dev" target="_blank">`gyuho.dev`</a>
 - <a href="https://github.com/gyuho" target="_blank">`github.com/gyuho`</a>
 - <a href="https://twitter.com/gyuhox" target="_blank">`twitter.com/gyuhox`</a>
 - <a href="https://www.linkedin.com/in/gyuho/" target="_blank">`linkedin.com/in/gyuho`</a>
