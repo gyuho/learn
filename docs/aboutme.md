@@ -15,7 +15,6 @@ Interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 - [etcd Labs](http://play.etcd.io) - interactive etcd playground (see [`etcdlabs`](https://github.com/etcd-io/etcdlabs) for code)
 - [`avalanche-rs`](https://github.com/ava-labs/avalanche-rs) - Avalanche consensus, primitives, and types in Rust
 - [`avalanche-ops`](https://github.com/ava-labs/avalanche-ops) - Avalanche operational toolkit in Rust
-- [Avalanche Go](https://github.com/ava-labs/avalanchego) - Avalanche node
 
 ## Projects: Other
 
