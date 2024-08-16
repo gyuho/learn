@@ -10,6 +10,7 @@ Interested in distributed systems (consensus, etcd, Kubernetes) and AI.
 
 ## Projects: Distributed Systems
 
+- [GPUd](https://github.com/leptonai/gpud) - GPU monitoring agent by Lepton AI
 - [`etcd`](https://github.com/etcd-io/etcd/graphs/contributors) - distributed key-value store
 - [`dbtester`](https://github.com/etcd-io/dbtester) - benchmark etcd vs. zookeeper vs. consul
 - [etcd Labs](http://play.etcd.io) - interactive etcd playground (see [`etcdlabs`](https://github.com/etcd-io/etcdlabs) for code)
