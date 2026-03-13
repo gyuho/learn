@@ -1,0 +1,270 @@
+我是一个终身学习者。我通过新的尝试或挑战来扩展我的知识，我期望获取知识。我的爱好是 C++ 和 Go 开发。
+
+**最好的学习方法是把你学到的知识讲授给别人**
+
+我尝试制作 [YouTube 视频](https://www.youtube.com/channel/UCWzSgIp_DYRQnEsJuH32Fww), 但维护频道内容有点困难，所以我决定写作。
+
+**我正在学习中，我所说的有些事情是无知片面的**
+
+每篇文章都在**写作中** , 没有明确的时间表。
+
+关键是要不断回顾和改进。
+
+
+这是一块我 *乱涂乱画*, 组织代码，学习经验 的**_个人白板_**.
+
+我感谢任何类型的*反馈* 或 *建议*.
+可以通过电子邮件<a href="mailto:gyuhox@gmail.com" target="_blank">gyuhox@gmail.com</a>, [`issues`](https://github.com/gyuho/learn/issues),
+or [`pull request`](https://github.com/gyuho/learn/pulls).
+
+
+<br><hr>
+### 内容
+
+- [文章](#文章)
+- [Unix, linux](#unix-linux)
+- [Assembly (汇编)](#assembly-汇编)
+- [C](#c)
+- [C++](#c-1)
+- [Go](#go)
+- [Python](#python)
+- [Computer systems](#computer-systems)
+- [Security systems](#security-systems)
+- [Database systems](#database-systems)
+- [Linguistics, natural language processing](#linguistics-natural-language-processing)
+- [Mathematics, statistics](#mathematics-statistics)
+- [Data structures and algorithms](#data-structures-and-algorithms)
+
+[↑ top](#contents)
+<br><br>
+
+
+## 文章
+
+- [etcd: distributed key-value store with grpc/http2](https://github.com/gyuho/learn/tree/master/doc/etcd_distributed_key_value_store_with_grpc_http2)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Unix, linux
+
+Unix 在软件开发中是必不可少的。
+
+>  Unix 哲学: 
+> 你写的程序，只做一件事，并把这件事做好
+> *Doug McIlroy*
+
+- [*linux 设置*](https://github.com/gyuho/learn/tree/master/doc/linux_setup)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Assembly (汇编)
+
+> 装配语言（或 汇编语言）是一种给计算机或其他可编程设备使用的 与设备强相关的  低级编程语言。这种编程语言编写的程序 要求使用机器编码的形式 一步步展示机器执行流程，与此对应的高级语言则是设备无关的，在各种设置上都可以使用。
+
+
+> [*汇编语言*](https://en.wikipedia.org/wiki/Assembly_language) *by Wikipedia*
+
+- [*汇编: 简介*](https://github.com/gyuho/learn/tree/master/doc/assembly_introduction)
+- [*Assembly: arithmetics, if*](https://github.com/gyuho/learn/tree/master/doc/assembly_arithmetics_if)
+
+
+
+[↑ top](#contents)
+<br><br>
+
+## C
+
+C 是一个小巧的语言。它也是能跨平台使用的，有一些低级特性能帮助你了解计算机运行原理。
+
+- [*C: 简介, printf 打印函数, scanf 输入函数*](https://github.com/gyuho/learn/tree/master/doc/c_introduction_printf_scanf)
+- [*C: 类型 , 变量 , 操作符*](https://github.com/gyuho/learn/tree/master/doc/c_type_variable_operator)
+- [*C: 逻辑, 循环*](https://github.com/gyuho/learn/tree/master/doc/c_logic_loop)
+- [*C: 数组, 指针*](https://github.com/gyuho/learn/tree/master/doc/c_array_pointer)
+
+[↑ top](#contents)
+<br><br>
+
+
+## C++
+
+[**_学习 C++ 还有价值吗?_**](http://www.quora.com/Is-learning-C++-still-worthwhile)
+
+当然！我还想了解有关C++的更多内容:
+
+> C++ 是世界上最流行的语言之一。
+> 写的好的C++程序 又快又高效。
+> 这个语言比其他语言更灵活，因为你能用它创建各种类型的app，从有趣的
+> 刺激的游戏，到高性能的科学软件，到设备驱动，嵌入式软件和Windows客户端应用.
+> 20年以来，C++已被用来解决这些问题还有其他。
+
+
+> [*C/C++ Language and Standard Libraries*](https://msdn.microsoft.com/en-us/library/hh279654.aspx)
+> *by Microsoft*
+
+- [*C++: introduction*](https://github.com/gyuho/learn/tree/master/doc/cpp_introduction)
+- [*C++: type, variable*](https://github.com/gyuho/learn/tree/master/doc/cpp_type_variable)
+- [*C++: logic, loop*](https://github.com/gyuho/learn/tree/master/doc/cpp_logic_loop)
+- [*C++: character, string, pointer, memory*](https://github.com/gyuho/learn/tree/master/doc/cpp_character_string_pointer_memory)
+- [*C++: function*](https://github.com/gyuho/learn/tree/master/doc/cpp_function)
+- [*C++: input, output*](https://github.com/gyuho/learn/tree/master/doc/cpp_input_output)
+- [*C++: struct, union*](https://github.com/gyuho/learn/tree/master/doc/cpp_struct_union)
+- [*C++: class, object*](https://github.com/gyuho/learn/tree/master/doc/cpp_class_object)
+- [*C++: STL*](https://github.com/gyuho/learn/tree/master/doc/cpp_stl)
+- [*C++: concurrency*](https://github.com/gyuho/learn/tree/master/doc/cpp_concurrency)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Go
+
+I like [*Go*](https://golang.org/) for its simplicity: less design 
+concerns to consider and less frameworks to learn. Plus I love its great communities.
+Go is not perfect but really good at [*doing less, enabling more*](https://blog.golang.org/open-source).
+It's a great introductory language between *Python* and *C++*.
+**I want to know a lot about [C++](https://en.wikipedia.org/wiki/C%2B%2B)
+and [Go](https://golang.org/) to build my foundation.**
+This will help my transition to other languages or frameworks if needed.
+
+- [*Go: introduction*](https://github.com/gyuho/learn/tree/master/doc/go_introduction)
+- [*Go: type, variable*](https://github.com/gyuho/learn/tree/master/doc/go_type_variable)
+- [*Go: logic, loop*](https://github.com/gyuho/learn/tree/master/doc/go_logic_loop)
+- [*Go: character, string*](https://github.com/gyuho/learn/tree/master/doc/go_character_string)
+- [*Go: strings, regex*](https://github.com/gyuho/learn/tree/master/doc/go_strings_regex)
+- [*Go: sequence*](https://github.com/gyuho/learn/tree/master/doc/go_sequence)
+- [**_Go: function, method, pointer, nil, map, slice_**](https://github.com/gyuho/learn/tree/master/doc/go_function_method_pointer_nil_map_slice)
+- [*Go: struct*](https://github.com/gyuho/learn/tree/master/doc/go_struct)
+- [**_Go: interface_**](https://github.com/gyuho/learn/tree/master/doc/go_interface)
+- [**_Go: os, io_**](https://github.com/gyuho/learn/tree/master/doc/go_os_io)
+- [**_Go: concurrency_**](https://github.com/gyuho/learn/tree/master/doc/go_concurrency)
+- [*Go: sort, algorithm*](https://github.com/gyuho/learn/tree/master/doc/go_sort_algorithm)
+- [*Go: random*](https://github.com/gyuho/learn/tree/master/doc/go_random)
+- [*Go: time*](https://github.com/gyuho/learn/tree/master/doc/go_time)
+- [*Go: archive, compress, encoding, decoding*](https://github.com/gyuho/learn/tree/master/doc/go_archive_compress_encoding_decoding)
+- [*Go: hash, crypto, tls*](https://github.com/gyuho/learn/tree/master/doc/go_hash_crypto_tls)
+- [**_Go: network_**](https://github.com/gyuho/learn/tree/master/doc/go_network)
+- [*Go: sql*](https://github.com/gyuho/learn/tree/master/doc/go_sql)
+- [*Go: boltdb*](https://github.com/gyuho/learn/tree/master/doc/go_boltdb)
+- [*Go: key/value store, redis*](https://github.com/gyuho/learn/tree/master/doc/go_key_value_store_redis)
+- [*Go: leveldb*](https://github.com/gyuho/learn/tree/master/doc/go_leveldb)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Python
+
+Python is probably fast enough for many of what we need to do today.
+And it's relatively easy to learn and use, with rich ecosystems in
+data science, web frameworks, scripting, and many others.
+
+- [*Python: introduction*](https://github.com/gyuho/learn/tree/master/doc/python_introduction)
+- [*Python: type, variable*](https://github.com/gyuho/learn/tree/master/doc/python_type_variable)
+- [*Python: logic, loop*](https://github.com/gyuho/learn/tree/master/doc/python_logic_loop)
+- [*Python: character, string*](https://github.com/gyuho/learn/tree/master/doc/python_character_string)
+- [*Python: sequence*](https://github.com/gyuho/learn/tree/master/doc/python_sequence)
+- [*Python: dictionary*](https://github.com/gyuho/learn/tree/master/doc/python_dictionary)
+- [*Python: function*](https://github.com/gyuho/learn/tree/master/doc/python_function)
+- [*Python: pointer, memory*](https://github.com/gyuho/learn/tree/master/doc/python_pointer_memory)
+- [*Python: argument, flag*](https://github.com/gyuho/learn/tree/master/doc/python_argument_flag)
+- [*Python: os, io*](https://github.com/gyuho/learn/tree/master/doc/python_os_io)
+- [*Python: sort*](https://github.com/gyuho/learn/tree/master/doc/python_sort)
+- [*Python: random*](https://github.com/gyuho/learn/tree/master/doc/python_random)
+- [*Python: time*](https://github.com/gyuho/learn/tree/master/doc/python_time)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Computer systems
+
+It's very important to understand hardware and low-level programming.
+I believe this will help a lot when you wonder why your high level program
+is not working or not performing well. I will take as much time as 
+I need―nothing like cramming 1,200 page computer systems book in 12 weeks.
+
+- [*Overview of computer architecture*](https://github.com/gyuho/learn/tree/master/doc/overview_of_computer_architecture)
+- [*What Every Programmer Should Know About Memory (2007)*](https://github.com/gyuho/learn/tree/master/doc/what_every_programmer_should_know_about_memory_2007)
+- [*Virtual memory*](https://github.com/gyuho/learn/tree/master/doc/virtual_memory)
+- [*Endianness*](https://github.com/gyuho/learn/tree/master/doc/endianness)
+- [*Bitwise operation*](https://github.com/gyuho/learn/tree/master/doc/bitwise_operation)
+- [*Segmentation fault, debug*](https://github.com/gyuho/learn/tree/master/doc/segmentation_fault_debug)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Security systems
+
+[*MIT course*](http://css.csail.mit.edu/6.858/2014/schedule.html) explains that
+*security achieves confidentiality, integrity, availability―policy*. And the goal is
+to make sure there is no way for adversary within threat model to violate this policy.
+
+- [*the matasano crypto challenges: set 1*](https://github.com/gyuho/learn/tree/master/doc/the_matasano_crypto_challenge_set_1)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Database systems
+
+We are *generating* and *consuming* vast amounts of data in unprecendented
+pace in human history. Database systems are the workhorses of our data 
+analysis applications.
+
+- [*mysql, postgresql, redshift*](https://github.com/gyuho/learn/tree/master/doc/mysql_postgresql_redshift)
+- [*Python: sql*](https://github.com/gyuho/learn/tree/master/doc/python_sql)
+- [*Python: redis*](https://github.com/gyuho/learn/tree/master/doc/python_redis)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Linguistics, natural language processing
+
+I love linguistics, and its computational applications.
+
+- [**_Go: string similarity_**](https://github.com/gyuho/learn/tree/master/doc/go_string_similarity)
+- [*Go: segment*](https://github.com/gyuho/learn/tree/master/doc/go_segment)
+- [*Go: spell check*](https://github.com/gyuho/learn/tree/master/doc/go_spell_check)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Mathematics, statistics
+
+Most prominent solutions in Computer Science often come from mathematics. 
+Arbitrary, unrelated things can fit together when you have mathematical
+backgrounds. Statistics helps solve intractable problems through approximation 
+algorithms, machine learning algorithms, etc.
+
+- [*Go: bandit algorithms, adversarial bandits*](https://github.com/gyuho/learn/tree/master/doc/go_bandit_algorithms_adversarial_bandits)
+
+[↑ top](#contents)
+<br><br>
+
+
+## Data structures and algorithms
+
+- [*Computational complexity, NP*](https://github.com/gyuho/learn/tree/master/doc/computational_complexity_np)
+- [*Recursion*](https://github.com/gyuho/learn/tree/master/doc/recursion)
+- [*Linked list*](https://github.com/gyuho/learn/tree/master/doc/linked_list)
+- [**_Binary search tree_**](https://github.com/gyuho/learn/tree/master/doc/binary_search_tree)
+- [**_Go: heap, priority queue_**](https://github.com/gyuho/learn/tree/master/doc/go_heap_priority_queue)
+- [**_Go: red black tree_**](https://github.com/gyuho/learn/tree/master/doc/go_red_black_tree)
+- [**_Go: b-tree_**](https://github.com/gyuho/learn/tree/master/doc/go_b_tree)
+- [**_Go: graph, interface_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_interface)
+- [**_Go: graph, traversal_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_traversal)
+- [**_Go: graph, shortest path_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_shortest_path)
+- [**_Go: graph, topological sort_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_topological_sort)
+- [**_Go: graph, minimum spanning tree_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_minimum_spanning_tree)
+- [**_Go: graph, strongly connected components_**](https://github.com/gyuho/learn/tree/master/doc/go_graph_strongly_connected_components)
+
+[↑ top](#contents)
+<br><br>
+
