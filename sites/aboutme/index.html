@@ -477,21 +477,24 @@ math { font-size: 1.05em; }
   --gg-bg: rgba(200, 62, 43, 0.085);
   --gg-border: rgba(200, 62, 43, 0.24);
   --gg-hi: rgba(255, 255, 255, 0.55);
+  --gg-shadow: rgba(200, 62, 43, 0.25);
   --bar-glass: color-mix(in srgb, var(--panel) 84%, transparent);
 }
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --gg: #f27059;
-    --gg-bg: rgba(242, 112, 89, 0.14);
-    --gg-border: rgba(242, 112, 89, 0.32);
-    --gg-hi: rgba(255, 255, 255, 0.08);
+    --gg: #5894f6;
+    --gg-bg: rgba(29, 78, 216, 0.24);
+    --gg-border: rgba(59, 130, 246, 0.42);
+    --gg-hi: rgba(147, 197, 253, 0.12);
+    --gg-shadow: rgba(29, 78, 216, 0.35);
   }
 }
 :root.dark {
-  --gg: #f27059;
-  --gg-bg: rgba(242, 112, 89, 0.14);
-  --gg-border: rgba(242, 112, 89, 0.32);
-  --gg-hi: rgba(255, 255, 255, 0.08);
+  --gg: #5894f6;
+  --gg-bg: rgba(29, 78, 216, 0.24);
+  --gg-border: rgba(59, 130, 246, 0.42);
+  --gg-hi: rgba(147, 197, 253, 0.12);
+  --gg-shadow: rgba(29, 78, 216, 0.35);
 }
 
 /* Sleek Golden Gate × macOS squircle section number badges */
@@ -585,7 +588,7 @@ nav#toc a.active .num {
   background: var(--gg);
   color: #ffffff;
   border-color: var(--gg);
-  box-shadow: 0 1px 2px rgba(200, 62, 43, 0.25);
+  box-shadow: 0 1px 2px var(--gg-shadow);
 }
 nav#toc .toc-section.current-section > .toc-row > a {
   color: var(--gg);
