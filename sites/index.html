@@ -1459,9 +1459,11 @@ function initSidebarNavigation() {
   nav.addEventListener("click", (e) => {
     const link = e.target.closest('a[href^="#"]');
     if (!link) return;
-    const idx = links.indexOf(link);
+    const idx = links.findIndex((a) => a.hash === link.hash);
     const target = targetFor(link);
     if (idx >= 0) {
+      const section = links[idx]?.closest(".toc-section");
+      if (section) sections.get(section)(true);
       pinnedIdx = idx;
       pinnedScrollY = null;
       setActive(idx);
