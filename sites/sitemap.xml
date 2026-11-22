@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://gyuho.dev/</loc>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gyuho.dev/aboutme/</loc>
+    <lastmod>2026-11-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gyuho.dev/consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/</loc>
+    <lastmod>2022-09-10</lastmod>
+  </url>
+  <url>
+    <loc>https://gyuho.dev/consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/</loc>
+    <lastmod>2023-12-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gyuho.dev/blog/</loc>
+    <lastmod>2023-12-27</lastmod>
+  </url>
+</urlset>
