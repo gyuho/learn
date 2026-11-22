@@ -1,0 +1,7 @@
+# Legacy gyuho.dev URLs -> canonical Cloudflare Pages routes
+/paxos-etcd-vs-nakamoto-bitcoin-consensus.html /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/paxos-etcd-vs-nakamoto-bitcoin-consensus.html/ /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/paxos-etcd-vs-nakamoto-bitcoin.html /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/nakamoto-bitcoin-vs-snow-avalanche-consensus.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
+/nakamoto-bitcoin-vs-snow-avalanche-consensus.html/ /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
+/nakamoto-bitcoin-vs-snow-avalanche.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
