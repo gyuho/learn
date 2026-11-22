@@ -470,6 +470,200 @@ math { font-size: 1.05em; }
   pre.code-block { font-size: 12px; padding: 12px; }
 }
 
+
+/* ---- Golden Gate × macOS sleek polish (desktop & mobile, light & dark) ---- */
+:root {
+  --gg: #c83e2b;
+  --gg-bg: rgba(200, 62, 43, 0.085);
+  --gg-border: rgba(200, 62, 43, 0.24);
+  --gg-hi: rgba(255, 255, 255, 0.55);
+  --bar-glass: color-mix(in srgb, var(--panel) 84%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --gg: #f27059;
+    --gg-bg: rgba(242, 112, 89, 0.14);
+    --gg-border: rgba(242, 112, 89, 0.32);
+    --gg-hi: rgba(255, 255, 255, 0.08);
+  }
+}
+:root.dark {
+  --gg: #f27059;
+  --gg-bg: rgba(242, 112, 89, 0.14);
+  --gg-border: rgba(242, 112, 89, 0.32);
+  --gg-hi: rgba(255, 255, 255, 0.08);
+}
+
+/* Sleek Golden Gate × macOS squircle section number badges */
+h1 {
+  font-size: 28px;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+h2 {
+  font-size: 21px;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h2 .num {
+  width: auto;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 7px;
+  background: var(--gg-bg);
+  color: var(--gg);
+  border: 1px solid var(--gg-border);
+  box-shadow: inset 0 1px 0 var(--gg-hi), 0 1px 2px rgba(0, 0, 0, 0.04);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+h3 {
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 26px 0 8px;
+}
+h4 {
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 20px 0 6px;
+}
+
+/* Clean flex alignment in sidebar TOC so multi-line titles align cleanly beside badges */
+nav#toc {
+  padding: 18px 12px;
+}
+nav#toc a {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 9px;
+  line-height: 1.38;
+  transition: background .14s, color .14s;
+}
+nav#toc a:hover {
+  background: var(--code-bg);
+}
+nav#toc a .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  margin: 1px 0 0;
+  border-radius: 5.5px;
+  background: var(--gg-bg);
+  color: var(--gg);
+  border: 1px solid var(--gg-border);
+  box-shadow: inset 0 1px 0 var(--gg-hi);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+nav#toc a.active {
+  background: var(--gg-bg);
+  color: var(--gg);
+  font-weight: 600;
+}
+nav#toc a.active .num {
+  background: var(--gg);
+  color: #ffffff;
+  border-color: var(--gg);
+  box-shadow: 0 1px 2px rgba(200, 62, 43, 0.25);
+}
+nav#toc .toc-section.current-section > .toc-row > a {
+  color: var(--gg);
+  font-weight: 600;
+}
+nav#toc a.sub {
+  display: block;
+  padding-left: 36px;
+  font-size: 12.5px;
+}
+nav#toc a.sub.sub2 {
+  padding-left: 48px;
+  font-size: 12px;
+}
+nav#toc .site-nav a {
+  display: block;
+}
+nav#toc .site-nav a.cur-page {
+  background: var(--gg-bg);
+  color: var(--gg);
+  font-weight: 700;
+}
+
+/* Balanced desktop & tablet content layout */
+main {
+  max-width: 980px;
+  padding: 34px 44px max(120px, 55vh);
+}
+section.chapter {
+  margin-bottom: 42px;
+}
+.sidebar-toggle {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-size: 20px;
+}
+blockquote {
+  border-left-color: var(--gg);
+}
+.fig-frame {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+@keyframes targetFlash {
+  0% { background: var(--gg-bg); box-shadow: 0 0 0 6px var(--gg-bg); border-radius: 8px; }
+  100% { background: transparent; box-shadow: 0 0 0 6px transparent; }
+}
+
+/* Tablet & medium desktop */
+@media (min-width: 901px) and (max-width: 1180px) {
+  main { padding: 28px 28px max(120px, 55vh); }
+}
+
+/* Mobile polish with macOS translucent top bar */
+@media (max-width: 900px) {
+  .mbar {
+    background: var(--bar-glass);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+  }
+  main {
+    margin-left: 0;
+    padding: 18px 16px max(96px, 45vh);
+  }
+  h1 { font-size: 22px; margin-bottom: 12px; }
+  h2 { font-size: 18.5px; gap: 8px; margin-bottom: 12px; padding-bottom: 6px; }
+  h2 .num {
+    min-width: 21px;
+    height: 21px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 11px;
+  }
+  h3 { font-size: 16px; margin-top: 22px; }
+  h4 { font-size: 14.5px; }
+  body { font-size: 14px; line-height: 1.62; }
+  .fig-frame { padding: 8px; }
+}
+
 </style>
 </head>
 <body>
