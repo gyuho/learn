@@ -98,7 +98,9 @@ input#search { width: 100%; padding: 6px 10px; border-radius: 8px; border: 1px s
 .theme button.on { background: var(--fg); color: var(--bg); }
 .lenses { display: flex; flex-wrap: wrap; gap: 4px; }
 .lenses button[aria-pressed="true"] { border-color: var(--blue); background: var(--blue-bg); }
-main { margin-left: var(--sidebar-width); padding: 28px 40px 120px; max-width: 1500px; transition: margin-left .2s; }
+main { margin-left: var(--sidebar-width); padding: 28px 40px max(120px, 55vh); max-width: 1500px; transition: margin-left .2s; }
+@keyframes targetFlash { 0% { background: var(--blue-bg); box-shadow: 0 0 0 6px var(--blue-bg); border-radius: 8px; } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+.target-flash { animation: targetFlash 1.1s ease-out; }
 @media (min-width: 901px) {
   body.sidebar-collapsed nav#toc { transform: translateX(-100%); visibility: hidden; }
   body.sidebar-collapsed main { margin-left: var(--sidebar-rail); }
@@ -1500,9 +1502,9 @@ function initSidebarNavigation() {
   };
   const targets = links.map(targetFor);
   const title = bar.querySelector(".mbar-title");
-  const onScroll = () => {
-    let idx = 0;
-    targets.forEach((t, i) => { if (t && t.getBoundingClientRect().top < 120) idx = i; });
+  let pinnedIdx = null;
+  let pinnedScrollY = null;
+  const setActive = (idx) => {
     links.forEach((a, i) => {
       a.classList.toggle("active", i === idx);
       if (i === idx) a.setAttribute("aria-current", "location");
@@ -1514,21 +1516,66 @@ function initSidebarNavigation() {
     while (ch > 0 && links[ch].classList.contains("sub")) ch--;
     title.textContent = links[ch] ? [...links[ch].childNodes].map((n) => n.textContent.trim()).filter(Boolean).join(" ") : document.title;
   };
+  const flashTarget = (el) => {
+    if (!el) return;
+    el.classList.remove("target-flash");
+    void el.offsetWidth;
+    el.classList.add("target-flash");
+  };
+  const onScroll = () => {
+    if (pinnedIdx !== null) {
+      if (pinnedScrollY === null || Math.abs(window.scrollY - pinnedScrollY) <= 12) {
+        setActive(pinnedIdx);
+        return;
+      }
+      pinnedIdx = null;
+      pinnedScrollY = null;
+    }
+    let idx = 0;
+    targets.forEach((t, i) => { if (t && t.getBoundingClientRect().top < 120) idx = i; });
+    setActive(idx);
+  };
   const revealHash = () => {
-    const link = links.find((a) => a.hash === window.location.hash);
-    const section = link?.closest(".toc-section");
+    const idx = links.findIndex((a) => a.hash === window.location.hash);
+    if (idx < 0) return;
+    const section = links[idx]?.closest(".toc-section");
     if (section) sections.get(section)(true);
+    pinnedIdx = idx;
+    pinnedScrollY = null;
+    setActive(idx);
+    requestAnimationFrame(() => { pinnedScrollY = window.scrollY; });
   };
   nav.addEventListener("click", (e) => {
     const link = e.target.closest('a[href^="#"]');
-    if (!link || !mobile.matches) return;
-    setMobileNav(false, false);
+    if (!link) return;
+    const idx = links.indexOf(link);
     const target = targetFor(link);
+    if (idx >= 0) {
+      pinnedIdx = idx;
+      pinnedScrollY = null;
+      setActive(idx);
+    }
+    if (mobile.matches) setMobileNav(false, false);
     if (target) {
-      if (!target.hasAttribute("tabindex")) target.tabIndex = -1;
-      requestAnimationFrame(() => target.focus({ preventScroll: true }));
+      e.preventDefault();
+      try {
+        if (window.location.hash !== link.hash) history.pushState(null, "", link.hash);
+      } catch (_) {
+        window.location.hash = link.hash;
+      }
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+      pinnedScrollY = window.scrollY;
+      requestAnimationFrame(() => { pinnedScrollY = window.scrollY; });
+      flashTarget(target.querySelector("h1, h2") || target);
+      if (mobile.matches) {
+        if (!target.hasAttribute("tabindex")) target.tabIndex = -1;
+        requestAnimationFrame(() => target.focus({ preventScroll: true }));
+      }
     }
   });
+  const clearPin = () => { pinnedIdx = null; pinnedScrollY = null; };
+  window.addEventListener("wheel", clearPin, { passive: true });
+  window.addEventListener("touchmove", clearPin, { passive: true });
   document.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("hashchange", revealHash);
   document.getElementById("search")?.addEventListener("keydown", (e) => {
