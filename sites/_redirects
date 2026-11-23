@@ -10,3 +10,13 @@
 /nakamoto-bitcoin-vs-snow-avalanche.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
 /nakamoto-bitcoin-vs-snow-avalanche-consensus.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
 /nakamoto-bitcoin-vs-snow-avalanche-consensus.html/ /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
+
+# Keep article .html URLs working alongside the canonical directory URLs.
+/consensus-systems/paxos-etcd-vs-nakamoto-bitcoin.html /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/consensus-systems/nakamoto-bitcoin-vs-snow-avalanche.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
+
+# Recover URLs created by repeatedly following relative links on a fallback page.
+/consensus-systems/*/paxos-etcd-vs-nakamoto-bitcoin/ /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/consensus-systems/*/paxos-etcd-vs-nakamoto-bitcoin/index.html /consensus-systems/paxos-etcd-vs-nakamoto-bitcoin/ 301
+/consensus-systems/*/nakamoto-bitcoin-vs-snow-avalanche/ /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
+/consensus-systems/*/nakamoto-bitcoin-vs-snow-avalanche/index.html /consensus-systems/nakamoto-bitcoin-vs-snow-avalanche/ 301
